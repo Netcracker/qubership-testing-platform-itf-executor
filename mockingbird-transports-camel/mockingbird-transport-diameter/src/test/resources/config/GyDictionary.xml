@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- ======================================================================= -->
+<!-- ======= Diameter Protocol Dictionary for the 3GPP Ro interface ======== -->
+<!-- ================== Based on 3GPP TS32.299 V11.9.1.0 =================== -->
+<!-- ======================================================================= -->
+
+<diameter-protocol name='unknown'>
+
+    <avp id='1016' name='QOS-Information' vendor='10415'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+
+            </required>
+        </layout>
+    </avp>
+
+    <avp id='282' name='Route-Record'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='872' name='_3GPP-Reporting-Reason' vendor='10415'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='847' name='GGSN-Address' vendor='10415'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+</diameter-protocol>
+        <!-- end of file : output/xml/RoDictionary.xml at line 3549 -->

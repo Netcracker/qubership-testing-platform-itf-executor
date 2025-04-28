@@ -1,0 +1,168 @@
+@startuml
+title Situation Event Trigger activation/deactivation
+
+actor User
+participant Configurator
+queue ActiveMQ
+participant Executor
+
+group Initiation
+    Configurator -> Configurator: activate ActiveMQ listener for "executor-configurator-topic-event-triggers" topic
+    Executor -> Executor: activate ActiveMQ listener for "configurator-executor-topic-event-triggers" topic
+    note over Executor
+        SituationEventTriggerActivationService - activate all active Situation Event Triggers
+    end note
+    Executor -> Executor: activate all Situation Event Triggers
+end
+
+group Single Activation
+    note over Configurator
+        In case of activation the trigger, updating will be performed first
+    end note
+
+    User -> Configurator: User clicks Activation button on Situation Event Trigger
+    Configurator -> Executor: send the update request
+    Executor -> Executor: changes are saved in DB
+    Executor -> Configurator: return response
+
+    note over Configurator
+        Request {
+            String type; - "single"
+            BigInteger id; - id of Situation Event Trigger;
+            User userId; - id of User
+        }
+    end note
+    Configurator --> ActiveMQ: send Request to "configurator-executor-topic-event-triggers" topic
+    Executor --> ActiveMQ: take Request from "configurator-executor-topic-event-triggers" topic
+
+    note over Executor
+        SituationEventTriggerActivationService
+    end note
+    Executor -> Executor: activate Situation Event Trigger
+
+    note over Executor
+        EventTriggerStateResponse {
+            private String state; - state of Situation Event Trigger (use TriggerState enum);
+            private String result; - result message;
+            private String errorMessage; - error message if exists;
+            User userId; - id of User
+        }
+    end note
+    Executor --> ActiveMQ: send EventTriggerStateResponse to "executor-configurator-topic-event-triggers" topic
+    Configurator --> ActiveMQ: take EventTriggerStateResponse from "executor-configurator-topic-event-triggers" topic
+    Configurator -> User: update Situation Event Trigger status in UI
+end
+
+group Single Deactivation
+    User -> Configurator: User clicks deactivation button on Situation Event Trigger
+
+    note over Configurator
+        Request {
+            String type; - "single"
+            BigInteger id; - id of Situation Event Trigger;
+            User userId; - id of User
+        }
+    end note
+    Configurator --> ActiveMQ: send Request to "configurator-executor-topic-event-triggers" topic
+    Executor --> ActiveMQ: take Request from "configurator-executor-topic-event-triggers" topic
+
+    note over Executor
+        SituationEventTriggerActivationService
+    end note
+    Executor -> Executor: deactivate Situation Event Trigger
+
+    note over Executor
+        EventTriggerStateResponse {
+            private String state; - state of Situation Event Trigger (use TriggerState enum);
+            private String result; - result message;
+            private String errorMessage; - error message if exists;
+            User userId; - id of User
+        }
+    end note
+    Executor --> ActiveMQ: send EventTriggerStateResponse to "executor-configurator-topic-event-triggers" topic
+    Configurator --> ActiveMQ: take EventTriggerStateResponse from "executor-configurator-topic-event-triggers" topic
+    Configurator -> User: update Situation Event Trigger status in UI
+end
+
+group Bulk Activation/Deactivation
+    User -> Configurator: User clicks "Turn On"/"Turn Off" button on Situations accordeon on Operation
+    note over Configurator
+        Request {
+            String type; - "bulk"
+            List<BigInteger> ids; - ids of Situations under Operation;
+            boolean turnOn; - if "Turn On" then true else false;
+            User userId; - id of User
+        }
+    end note
+    Configurator --> ActiveMQ: send Request to "configurator-executor-topic-event-triggers" topic
+    Executor --> ActiveMQ: take Request from "configurator-executor-topic-event-triggers" topic
+
+    note over Executor
+        SituationEventTriggerActivationService - execute activation/deactivation according to type from Request
+    end note
+    Executor -> Executor: activate/deactivate Situation Event Triggers under Operation
+
+    note over Executor
+        class EventTriggerStatesResponse {
+            private List<String> states; - list of Situation Event Triggers states (use TriggerState enum);
+            private List<BigInteger> triggerIds; - list of Situation Event Triggers ids;
+            private String errorMessage; - error message;
+            User userId; - id of User;
+        }
+    end note
+    Executor --> ActiveMQ: send EventTriggerStatesResponse to "executor-configurator-topic-event-triggers" topic
+    Configurator --> ActiveMQ: take EventTriggerStatesResponse from "executor-configurator-topic-event-triggers" topic
+    Configurator -> User: update Situation Event Trigger status in UI
+end
+
+group Update Operation
+    User -> Configurator: User updates Operation and clicks [Save] button
+    note over Configurator
+        If Operation doesn't have Situations or Situations doesn't have Situation Event Triggers then exit.
+    end note
+    Configurator -> User
+
+    note over Configurator
+        If Operation contains Situations which are containing active Situation Event Triggers
+    end note
+
+    Configurator -> Executor: send update request (PUT 'operation')
+    Executor -> Executor: do all actions for update \n(excluding activation actions, list of triggers to activate/deactivate \nshould be prepared instead) \norg.qubership.automation.itf.ui.controls.entities.util.SituationControllerHelper.synchronizeSituations
+    note over Executor
+        Response : {
+            List<BigInteger> triggerIdToDeactivate; - ids of active Situation Event Triggers from Situations, which were deleted during operation updating.
+            List<BigInteger> triggerIdToReactivate; - ids of active Situation Event Triggers, which were updated during operation updating.
+        }
+    end note
+    Executor -> Configurator: return Response to Configurator
+
+    note over Configurator
+        Request {
+            String type; - "sync"
+            List<BigInteger> triggerIdToDeactivate;
+            List<BigInteger> triggerIdToReactivate;
+            User userId; - id of User
+        }
+    end note
+    Configurator --> ActiveMQ: send Request to "configurator-executor-topic-event-triggers" topic
+    Executor --> ActiveMQ: take Request from "configurator-executor-topic-event-triggers" topic
+
+    note over Executor
+        SituationEventTriggerActivationService - execute activation/deactivation according to type from Request
+    end note
+    Executor -> Executor: reactivate all Situation Event Triggers from toActivate\ndeactivate all Situation Event Triggers from toDeactivate;
+
+    note over Executor
+        class EventTriggerStatesResponse {
+            private List<String> states; - list of Situation Event Triggers states (use TriggerState enum);
+            private List<BigInteger> triggerIds; - list of Situation Event Triggers ids;
+            private String errorMessage; - error message;
+            User userId; - id of User;
+        }
+    end note
+    Executor --> ActiveMQ: send EventTriggerStatesResponse to "executor-configurator-topic-event-triggers" topic
+    Configurator --> ActiveMQ: take EventTriggerStatesResponse from "executor-configurator-topic-event-triggers" topic
+    Configurator -> User: update Situation Event Trigger status in UI
+end
+
+@enduml

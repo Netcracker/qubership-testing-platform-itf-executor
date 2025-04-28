@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>parent-java</artifactId>
+        <groupId>org.qubership.mockingbird</groupId>
+        <version>${atp.service.version}</version>
+        <relativePath>../parent/parent-java/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mockingbird-interceptors</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>interceptor-utils</module>
+        <module>encrypt-interceptor</module>
+        <module>compress-interceptor</module>
+        <module>test-interceptor</module>
+        <module>decrypt-interceptor</module>
+        <module>decompress-interceptor</module>
+        <module>encrypt-xml-interceptor</module>
+        <module>decrypt-xml-interceptor</module>
+        <module>redefine-transport-params-interceptor</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.qubership.mockingbird</groupId>
+            <artifactId>mockingbird-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: remove_ss7_inbound
+      author: Aleksandr Kapustin
+      comment: Remove SS7 inbound transport configs and triggers (if any) from mb_configuration.
+      changes:
+        - sqlFile:
+            path: remove_ss7_inbound.sql
+            relativeToChangelogFile: true
+            splitStatements: false

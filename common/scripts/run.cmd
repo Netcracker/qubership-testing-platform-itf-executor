@@ -1,0 +1,24 @@
+java -cp "lib/*" ^
+-Dserver.port=8180 ^
+-Dspring.config.location=application.properties ^
+-Dspring.cloud.bootstrap.location=bootstrap.properties ^
+-Dlogging.config=logback-spring.xml ^
+-Dfeign.atp.stubs.url=http://localhost:8280 ^
+-Dmessage-broker.url=tcp://localhost:61616?wireFormat.maxInactivityDuration=0 ^
+-Dhostname=%COMPUTERNAME% ^
+-Datp.ram.url=%ATP_RAM_URL% ^
+-Datp.logger.url=%ATP_LOGGER_URL% ^
+-Dbootstrap.servers=%KAFKA_SERVERS% ^
+-Dkafka.topic.name=%KAFKA_LOGRECORD_TOPIC% ^
+-Dkafka.logrecord.topic.partitions.number=%KAFKA_LOGRECORD_TOPIC_PARTITIONS% ^
+-Dkafka.logrecord.topic.replication.factor=%KAFKA_LOGRECORD_TOPIC_REPLICATION_FACTOR% ^
+-Dkafka.logrecord.context.topic.name=%KAFKA_LOGRECORD_CONTEXT_TOPIC% ^
+-Dkafka.logrecord.context.topic.partitions.number=%KAFKA_LOGRECORD_CONTEXT_TOPIC_PARTITIONS% ^
+-Dkafka.logrecord.context.topic.replication.factor=%KAFKA_LOGRECORD_CONTEXT_TOPIC_REPLICATION_FACTOR% ^
+-Dkafka.logrecord.step.context.topic.name=%KAFKA_LOGRECORD_STEP_CONTEXT_TOPIC% ^
+-Dkafka.logrecord.step.context.topic.partitions.number=%KAFKA_LOGRECORD_STEP_CONTEXT_TOPIC_PARTITIONS% ^
+-Dkafka.logrecord.step.context.topic.replication.factor=%KAFKA_LOGRECORD_STEP_CONTEXT_TOPIC_REPLICATION_FACTOR% ^
+-Dkafka.logrecord.message.parameters.topic.name=%KAFKA_LOGRECORD_MESSAGE_PARAMETERS_TOPIC% ^
+-Dkafka.logrecord.message.parameters.topic.partitions.number=%KAFKA_LOGRECORD_MESSAGE_PARAMETERS_TOPIC_PARTITIONS% ^
+-Dkafka.logrecord.message.parameters.topic.replication.factor=%KAFKA_LOGRECORD_MESSAGE_PARAMETERS_TOPIC_REPLICATION_FACTOR% ^
+org.qubership.automation.itf.Main

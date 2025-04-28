@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_column_to_mb_userdata
+      author: Dmitrii Churbanov
+      comment: Add column date_created, date_modified to table mb_userdata.
+      changes:
+        - sqlFile:
+            path: add_column_to_mb_userdata.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: create_and_add_trigger_on_column_date_modified_to_mb_userdata
+      author: Dmitrii Churbanov
+      comment: Create and add trigger on column 'date_modified' to table mb_userdata.
+      changes:
+        - sqlFile:
+            path: create_and_add_trigger_on_column_date_modified_to_mb_userdata.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: add_function_clear_user_data
+      author: Dmitrii Churbanov
+      comment: Add function clear user data.
+      changes:
+        - sqlFile:
+            path: add_function_clear_user_data.sql
+            relativeToChangelogFile: true
+            splitStatements: false

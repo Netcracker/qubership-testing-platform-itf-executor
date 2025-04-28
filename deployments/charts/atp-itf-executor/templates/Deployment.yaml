@@ -1,0 +1,106 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: '{{ .Values.SERVICE_NAME }}'
+  labels:
+    app: '{{ .Values.SERVICE_NAME }}'
+    name: '{{ .Values.SERVICE_NAME }}'
+    servicetype: '{{ .Values.SERVICE_TYPE }}'
+spec:
+  strategy:
+    type: RollingUpdate
+  replicas: {{ .Values.NODES_COUNT }}
+  selector:
+    matchLabels:
+      name: '{{ .Values.SERVICE_NAME }}'
+      app: '{{ .Values.SERVICE_NAME }}'
+      deploymentconfig: '{{ .Values.SERVICE_NAME }}'
+  template:
+    metadata:
+      labels:
+        name: '{{ .Values.SERVICE_NAME }}'
+        app: '{{ .Values.SERVICE_NAME }}'
+        deploymentconfig: '{{ .Values.SERVICE_NAME }}'
+        servicetype: '{{ .Values.SERVICE_TYPE }}'
+    spec:
+      terminationGracePeriodSeconds: 60
+      {{- if .Values.nodeSelector }}
+      nodeSelector: {{- .Values.nodeSelector | toYaml | nindent 8 }}
+      {{- end }}
+      {{- if .Values.HEAPDUMP_ENABLED }}
+      volumes:
+        - name: heapdumps
+          emptyDir: {}
+      {{- end }}
+      containers:
+        - name: '{{ .Values.SERVICE_NAME }}'
+          image: '{{ .Values.DOCKER_TAG }}'
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: '{{ .Values.MEMORY_REQUEST }}'
+              cpu: '{{ .Values.CPU_REQUEST }}'
+            limits:
+              memory: '{{ .Values.MEMORY_LIMIT }}'
+              cpu: '{{ .Values.CPU_LIMIT }}'
+          {{- if .Values.HEAPDUMP_ENABLED }}
+          volumeMounts:
+            - mountPath: /tmp/diagnostic
+              name: heapdumps
+          {{- end }}
+          ports:
+            - containerPort: 8080
+              name: web
+            - containerPort: 8090
+              name: actuator
+            - containerPort: 10002
+              name: ffmq
+      {{- if .Values.BACKWARD_COMPATIBILITY }}
+          livenessProbe:
+            httpGet:
+              path: /rest/deployment/liveness
+              port: 8080
+            initialDelaySeconds: 300
+            periodSeconds: 60
+            failureThreshold: 20
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /rest/deployment/readiness
+              port: 8080
+            initialDelaySeconds: 300
+            periodSeconds: 60
+            failureThreshold: 20
+            timeoutSeconds: 30
+      {{- else }}
+          livenessProbe:
+            httpGet:
+              path: /rest/deployment/liveness
+              port: 8080
+            periodSeconds: 30
+            failureThreshold: 3
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /rest/deployment/readiness
+              port: 8080
+            periodSeconds: 30
+            failureThreshold: 3
+            timeoutSeconds: 30
+          startupProbe:
+            httpGet:
+              path: /rest/deployment/readiness
+              port: 8080
+            failureThreshold: 40
+            periodSeconds: 30
+            timeoutSeconds: 30
+      {{- end }}
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "/itf/pre-stop.sh" ]
+          env:
+          {{- include "env.cloud" . | indent 12 }}
+          {{- if .Values.extraEnvs }}
+          {{- toYaml .Values.extraEnvs | nindent 12 }}
+          {{- end }}

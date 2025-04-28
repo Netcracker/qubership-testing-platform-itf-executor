@@ -1,0 +1,118 @@
+{
+  "provider": {
+    "name": "atp-itf-executor"
+  },
+  "consumer": {
+    "name": "atp-itf-lite"
+  },
+  "interactions": [
+    {
+      "description": "GET /context/get OK",
+      "request": {
+        "method": "GET",
+        "path": "/context/get",
+        "query": {
+          "id": [
+            "9167234930111872000"
+          ],
+          "projectUuid": [
+            "39cae351-9e3b-4fb6-a384-1c3616f4e76f"
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "status": "STARTED"
+        }
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "PUT /velocity OK",
+      "request": {
+        "method": "PUT",
+        "path": "/velocity",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "query": {
+          "projectUuid": [
+            "39cae351-9e3b-4fb6-a384-1c3616f4e76f"
+          ]
+        },
+        "body": {
+          "context": "9167234930111872001",
+          "message": "message test",
+          "sp": "",
+          "tc": ""
+        },
+        "matchingRules": {
+          "body": {
+            "$.context": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ],
+              "combine": "AND"
+            },
+            "$.message": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ],
+              "combine": "AND"
+            },
+            "$.tc": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ],
+              "combine": "AND"
+            },
+            "$.sp": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ],
+              "combine": "AND"
+            }
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "response": "value"
+        }
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "4.1.23"
+    }
+  }
+}

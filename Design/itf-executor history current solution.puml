@@ -1,0 +1,132 @@
+@startuml
+title ITF History current solution
+
+ITF_Configurator ++
+ITF_Executor ++
+HistoryRetrieveService ++
+HistoryRestoreService ++
+database Database
+
+group Case №1 - View history
+ITF_Configurator -> ITF_Executor : Send request to executor...
+
+/note left of ITF_Executor
+[**ITF_Executor**]
+**to JaversController:** GET '/api/v1/history/{projectUuid}/{type}/{id}'
+
+where
+    **UUID** projectUuid - ATP project UUID
+    **HistoryEntityConstant** type - enum type (contains mapping of supported entities in ITF for history),
+    **BigInteger** id - entity id,
+    **Integer** offset - offset
+    **Integer** limit - limit
+end note
+
+ITF_Executor -> HistoryRetrieveService : delegates processing to history service ...
+/note over HistoryRetrieveService
+[**HistoryRetrieveService**]
+Through the received object class,
+we obtain the history class through HistoryEntityHelper.
+
+HistoryEntityHelper.getHistoryEntityClass(itemType),
+
+where
+**Class<? extends Storable> itemType** - ITF entity class
+@return **Class historyEntityClass**
+end note
+
+HistoryRetrieveService -> Database : Get data in DB by\n(objectId, historyEntityClass, offset, limit) ...
+Database -> HistoryRetrieveService : @return data
+/note over HistoryRetrieveService
+[**HistoryRetrieveService**]
+processing of received data
+ and
+create model **HistoryItemResponse** ...
+end note
+HistoryRetrieveService -> ITF_Executor --: @return ResponseEntity
+ITF_Executor -> ITF_Configurator --: @return ResponseEntity
+end
+
+group Case №2 - Compare revision
+ITF_Configurator -> ITF_Executor : Send request to executor...
+
+/note left of ITF_Executor
+[**ITF_Executor**]
+**to JaversController:** GET '/api/v1/entityversioning/{projectUuid}/{type}/{id}'
+
+where
+    **UUID** projectUuid - ATP project UUID
+    **HistoryEntityConstant** type - enum type (contains mapping of supported entities in ITF for history),
+    **BigInteger** id - entity id,
+    **List<Long>** versions - versions
+end note
+
+ITF_Executor -> HistoryRetrieveService : delegates processing to history service ...
+/note over HistoryRetrieveService
+[**HistoryRetrieveService**]
+Through the received object class,
+we obtain the history class through HistoryEntityHelper.
+
+HistoryEntityHelper.getHistoryEntityClass(itemType),
+
+where
+**Class<? extends Storable> itemType** - ITF entity class
+@return **Class historyEntityClass**
+end note
+
+HistoryRetrieveService -> Database : Get data in DB by\n(objectId, historyEntityClass, versions) ...
+Database -> HistoryRetrieveService : @return data
+
+/note over HistoryRetrieveService
+[**HistoryRetrieveService**]
+processing of received data
+ and
+create model **List<HistoryCompareEntity>** ...
+end note
+HistoryRetrieveService -> ITF_Executor --: @return ResponseEntity
+ITF_Executor -> ITF_Configurator --: @return ResponseEntity
+end
+
+group Case №3 - Restore revision
+ITF_Configurator -> ITF_Executor : Send request to executor...
+
+/note left of ITF_Executor
+[**ITF_Executor**]
+**to JaversController:** POST '/api/v1/history/restore/{projectUuid}/{type}/{id}/revision/{revision}'
+
+where
+    **UUID** projectUuid - ATP project UUID
+    **HistoryEntityConstant** type - enum type (contains mapping of supported entities in ITF for history),
+    **BigInteger** id - entity id,
+    **Long** revision - revision
+end note
+
+ITF_Executor -> HistoryRestoreService : delegates processing to history service ...
+
+/note over HistoryRestoreService
+[**HistoryRestoreService**]
+Through the received object class,
+we obtain the history class through HistoryEntityHelper.
+
+HistoryEntityHelper.getHistoryEntityClass(itemType),
+
+where
+**Class<? extends Storable> itemType** - ITF entity class
+@return **Class historyEntityClass**
+end note
+
+HistoryRestoreService -> Database : Get data in DB by\n(objectId, historyEntityClass, versions) ...
+Database -> HistoryRestoreService : @return data
+
+/note over HistoryRestoreService
+[**HistoryRestoreService**]
+**processing of received data ...**
+(copy properties from the saved ITFHistoryObject to the current state of the Storable
+and save the changes)
+end note
+
+HistoryRestoreService -> ITF_Executor --: @return ResponseEntity
+ITF_Executor -> ITF_Configurator --: @return ResponseEntity
+end
+
+@enduml

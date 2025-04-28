@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: remove_ei_session_related_objects
+      author: Aleksandr Kapustin
+      comment: Remove ei-session related objects from table mb_configuration.
+      changes:
+        - sqlFile:
+            path: remove_ei_session_related_objects.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: remove_old_history_tables
+      author: Aleksandr Kapustin
+      comment: Remove 'mb_history_object_params' and 'mb_history_objects' tables.
+      changes:
+        - sqlFile:
+            path: remove_old_history_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: false

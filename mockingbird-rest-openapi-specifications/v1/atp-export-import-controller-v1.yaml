@@ -1,0 +1,462 @@
+openapi: 3.0.1
+info:
+  title: ITF Executor API
+  description: ITF Executor API
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8080'
+tags:
+  - name: atp-export-import-controller
+    description: AtpExportImportController
+paths:
+  '/api/folders/root/callchain/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getRootItfCallChainFolderByProjectId
+      operationId: getRootItfCallChainFolderByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/folders/sub/callchain/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getAllItfCallChainSubFoldersByProjectId
+      operationId: getAllItfCallChainSubFoldersByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/callchains/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getAllItfCallChainsByProjectId
+      operationId: getAllItfCallChainsByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/folders/root/system/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getRootItfSystemFolderByProjectId
+      operationId: getRootItfSystemFolderByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/folders/sub/system/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getAllItfSystemSubFoldersByProjectId
+      operationId: getAllItfSystemSubFoldersByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/systems/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getAllItfSystemsByProjectId
+      operationId: getAllItfSystemsByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/folders/root/environment/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getRootItfEnvironmentFolderByProjectId
+      operationId: getRootItfEnvironmentFolderByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/folders/sub/environment/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getAllItfEnvironmentSubFoldersByProjectId
+      operationId: getAllItfEnvironmentSubFoldersByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+
+  '/api/environments/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getAllItfEnvironmentsByProjectId
+      operationId: getAllItfEnvironmentsByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/integrationconfigs/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getItfIntegrationConfigsByProjectId
+      operationId: getItfIntegrationConfigsByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/settings/project/{projectUuid}':
+    get:
+      tags:
+        - atp-export-import-controller
+      summary: getItfProjectSettingsByProjectId
+      operationId: getItfProjectSettingsByProjectId
+      parameters:
+        - name: projectUuid
+          in: path
+          description: projectUuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItfEntity'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/bvTcByChains':
+    post:
+      tags:
+        - atp-export-import-controller
+      summary: getBvTcByItfChains
+      operationId: getBvTcByItfChains
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              uniqueItems: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  format: uuid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/bvTcBySystems':
+    post:
+      tags:
+        - atp-export-import-controller
+      summary: getBvTcByItfSystems
+      operationId: getBvTcByItfSystems
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/bvTcByEnvs':
+    post:
+      tags:
+        - atp-export-import-controller
+      summary: getBvTcByItfEnvs
+      operationId: getBvTcByItfEnvs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/dslByChains':
+    post:
+      tags:
+        - atp-export-import-controller
+      summary: getDslByItfChains
+      operationId: getDslByItfChains
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+components:
+  schemas:
+    ItfEntity:
+      title: SimpleItfEntity
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        parentId:
+          type: string

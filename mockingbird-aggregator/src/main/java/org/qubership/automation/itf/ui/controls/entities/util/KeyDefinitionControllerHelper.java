@@ -1,0 +1,35 @@
+/*
+ * # Copyright 2024-2025 NetCracker Technology Corporation
+ * #
+ * # Licensed under the Apache License, Version 2.0 (the "License");
+ * # you may not use this file except in compliance with the License.
+ * # You may obtain a copy of the License at
+ * #
+ * #      http://www.apache.org/licenses/LICENSE-2.0
+ * #
+ * # Unless required by applicable law or agreed to in writing, software
+ * # distributed under the License is distributed on an "AS IS" BASIS,
+ * # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * # See the License for the specific language governing permissions and
+ * # limitations under the License.
+ *
+ */
+
+package org.qubership.automation.itf.ui.controls.entities.util;
+
+import org.qubership.automation.itf.core.util.provider.KeyDefinitionProvider;
+import org.qubership.automation.itf.ui.controls.util.ControllerHelper;
+import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
+
+public class KeyDefinitionControllerHelper extends ControllerHelper {
+
+    public static void editContextKeyDefinition(KeyDefinitionProvider keyDefinitionProvider,
+                                                UIWrapper<String> incomingContext, UIWrapper<String> outgoingContext) {
+        if (incomingContext != null && incomingContext.isLoaded()) {
+            keyDefinitionProvider.setIncomingContextKeyDefinition(incomingContext.getData());
+        }
+        if (outgoingContext != null && outgoingContext.isLoaded()) {
+            keyDefinitionProvider.setOutgoingContextKeyDefinition(outgoingContext.getData());
+        }
+    }
+}

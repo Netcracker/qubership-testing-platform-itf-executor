@@ -1,0 +1,14 @@
+<CER>
+    <Origin-Host>some-host-address</Origin-Host>
+    <Origin-Realm>some-realm</Origin-Realm>
+    <Host-IP-Address>127.0.0.1</Host-IP-Address>
+    <Vendor-Id>0</Vendor-Id>
+    <Product-Name>QubershipSimulator</Product-Name>
+    <Origin-State-Id>0</Origin-State-Id>
+    <Auth-Application-Id>4</Auth-Application-Id>
+    <Vendor-Specific-Application-Id>
+        <Vendor-Id>10415</Vendor-Id>
+        <Auth-Application-Id>4</Auth-Application-Id>
+    </Vendor-Specific-Application-Id>
+    <Supported-Vendor-Id>10415</Supported-Vendor-Id>
+</CER>

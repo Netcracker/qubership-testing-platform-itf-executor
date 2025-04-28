@@ -1,0 +1,598 @@
+openapi: 3.0.0
+info:
+  license:
+    name: Proprietary
+  title: ATP-Users-backend
+  version: 0.1.7
+paths:
+  /api/v1/users/projects:
+    get:
+      operationId: getAllProjects
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Project"
+                type: array
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Get all projects in collection
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/entities":
+    get:
+      operationId: getAllEntities
+      parameters:
+        - description: Project ID for check access
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: List of service entity
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Entity"
+                type: array
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Return all entities
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/group/{groupAlias}/permissions":
+    get:
+      operationId: getCustomPermissions
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - description: Group alias
+          in: path
+          name: groupAlias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Permissions for specified group in project
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  $ref: "#/components/schemas/Operations"
+                type: object
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Get custom permissions in specified project for specified group
+      tags:
+        - Projects
+    patch:
+      operationId: updatePermissionsByProjectIdAndGroupAlias
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - description: Group alias
+          in: path
+          name: groupAlias
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties:
+                $ref: "#/components/schemas/Operations"
+              type: object
+        description: Entities with custom permissions
+        required: true
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Update permissions in specified project for specified group
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/group/{groupAlias}/users":
+    get:
+      operationId: getProjectUsersByProjectIdAndGroupAlias
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - description: Group Alias
+          in: path
+          name: groupAlias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Get users on the project by id
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/groups/{groupAlias}/users":
+    put:
+      operationId: updateProjectUsersInGroup
+      parameters:
+        - description: Project Id to check access
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - description: Users group
+          in: path
+          name: groupAlias
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+        description: Project entity
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Update projects user
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/groups/{groupAlias}/users/enriched":
+    get:
+      operationId: getProjectsUsersEnrichedByUuidAndGroupAlias
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - description: Group alias
+          in: path
+          name: groupAlias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Information about unique users of the project
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/UserInfo"
+                type: array
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Get unique users of the project by project ID and group alias
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/user/permissions":
+    get:
+      operationId: getPermissionsForCurrentUser
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Return permissions for current user on project
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/users/{userId}":
+    delete:
+      operationId: deleteUserFromProject
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - description: User ID
+          in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Delete user from project
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/users/enriched":
+    get:
+      operationId: getProjectsUsersEnrichedByUuid
+      deprecated: true
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Information about unique users of the project
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/UserInfo"
+                type: array
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Get unique users of the project by project ID
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/users/groups":
+    get:
+      operationId: getAllGroups
+      parameters:
+        - description: Project ID to check access
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Default user groups and permissions
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Group"
+                type: array
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Get all groups
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}":
+    get:
+      operationId: getProjectById
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Get project by id
+      tags:
+        - Projects
+  "/api/v1/users/projects/{projectId}/users":
+    get:
+      operationId: getProjectUsersByProjectId
+      deprecated: true
+      parameters:
+        - description: Project ID
+          in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Get users on the project by id
+      tags:
+        - Projects
+  /api/v1/users/projects/update/users:
+    put:
+      operationId: updateProjectUsers
+      deprecated: true
+      parameters:
+        - description: type of user
+          in: query
+          name: type
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+        description: project entity
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: ""
+        "401":
+          description: ""
+        "403":
+          description: ""
+        "500":
+          description: ""
+      summary: Update projects user
+      tags:
+        - Projects
+servers:
+  - url: http://localhost:8080/
+components:
+  schemas:
+    Entity:
+      properties:
+        entities:
+          items:
+            type: string
+          type: array
+        service:
+          type: string
+        uuid:
+          type: string
+          format: uuid
+      type: object
+    Group:
+      properties:
+        alias:
+          type: string
+        name:
+          type: string
+        permissions:
+          additionalProperties:
+            $ref: "#/components/schemas/Operations"
+          type: object
+        uuid:
+          type: string
+          format: uuid
+      type: object
+    Operations:
+      properties:
+        create:
+          type: boolean
+        delete:
+          type: boolean
+        execute:
+          type: boolean
+        lock:
+          type: boolean
+        read:
+          type: boolean
+        unlock:
+          type: boolean
+        update:
+          type: boolean
+      type: object
+    Permissions:
+      properties:
+        atpRunners:
+          additionalProperties:
+            $ref: "#/components/schemas/Operations"
+          type: object
+        atpSupports:
+          additionalProperties:
+            $ref: "#/components/schemas/Operations"
+          type: object
+        devOpsEngineers:
+          additionalProperties:
+            $ref: "#/components/schemas/Operations"
+          type: object
+        leads:
+          additionalProperties:
+            $ref: "#/components/schemas/Operations"
+          type: object
+        qaTaEngineers:
+          additionalProperties:
+            $ref: "#/components/schemas/Operations"
+          type: object
+      type: object
+    Project:
+      properties:
+        atpRunners:
+          type: array
+          items:
+            type: string
+            format: uuid
+        atpSupports:
+          type: array
+          items:
+            type: string
+            format: uuid
+        createdBy:
+          $ref: "#/components/schemas/UserInfo"
+        createdWhen:
+          type: string
+          format: date-time
+        devOpsEngineers:
+          type: array
+          items:
+            type: string
+            format: uuid
+        leads:
+          type: array
+          items:
+            type: string
+            format: uuid
+        modifiedBy:
+          $ref: "#/components/schemas/UserInfo"
+        modifiedWhen:
+          type: string
+          format: date-time
+        permissions:
+          $ref: "#/components/schemas/Permissions"
+        qaTaEngineers:
+          type: array
+          items:
+            type: string
+            format: uuid
+        uuid:
+          type: string
+          format: uuid
+      type: object
+    UserInfo:
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        id:
+          type: string
+          format: uuid
+        lastName:
+          type: string
+        roles:
+          items:
+            type: string
+          type: array
+        username:
+          type: string
+      type: object

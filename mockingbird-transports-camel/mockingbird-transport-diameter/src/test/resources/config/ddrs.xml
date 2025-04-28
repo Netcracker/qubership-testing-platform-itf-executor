@@ -1,0 +1,1798 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<diameter-protocol name='unknown'>
+
+    <avp id='267' vendor='0' name='Firmware-Revision'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='273' vendor='0' name='Disconnect-Cause'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Enumerated'/>
+    </avp>
+
+    <avp id='421' name='CC-Total-Octets'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned64'/>
+    </avp>
+
+    <avp id='50001' vendor='3868' name='CVG-Event-Source'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='12' vendor='10415' name='_3GPP-Selection-Mode'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32057' vendor='3868' name='CVG-Extension-Days'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Signed32'/>
+    </avp>
+
+    <avp id='32046' vendor='3868' name='CVG-Currency-Code'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Signed32'/>
+    </avp>
+
+    <avp id='32077' vendor='3868' name='CVG-Total-Discounted-Usage'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='60003' vendor='3868' name='CVG-Discount-Lifecycle-EndDtm'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32071' vendor='3868' name='CVG-Message-Parameter'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='456' name='Multiple-Services-Credit-Control'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Requested-Service-Unit'/>
+                <avp-ref name='Used-Service-Unit' max='*'/>
+                <avp-ref name='Tariff-Change-Usage'/>
+                <avp-ref name='Service-Identifier' max='*'/>
+                <avp-ref name='Rating-Group'/>
+                <avp-ref name='Reporting-Reason' max='*'/>
+                <avp-ref name='Trigger'/>
+                <avp-ref name='Granted-Service-Unit'/>
+                <avp-ref name='G-S-U-Pool-Reference' max='*'/>
+                <avp-ref name='Validity-Time'/>
+                <avp-ref name='Result-Code'/>
+                <avp-ref name='Final-Unit-Indication'/>
+                <avp-ref name='Time-Quota-Threshold'/>
+                <avp-ref name='Volume-Quota-Threshold'/>
+                <avp-ref name='Unit-Quota-Threshold'/>
+                <avp-ref name='Quota-Holding-Time'/>
+                <avp-ref name='Quota-Consumption-Time'/>
+                <any-avp/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='30' name='Called-Station-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='454' name='CC-Unit-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='TIME'/>
+            <enumerator value='1' name='MONEY'/>
+            <enumerator value='2' name='TOTAL_OCTETS'/>
+            <enumerator value='3' name='INPUT_OCTETS'/>
+            <enumerator value='4' name='OUTPUT_OCTETS'/>
+            <enumerator value='5' name='SERVICE_SPECIFIC_UNITS'/>
+        </enumeration>
+    </avp>
+
+    <avp id='32070' vendor='3868' name='CVG-Message-Subtype'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='445' name='Unit-Value'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Value-Digits'/>
+            </required>
+            <optional>
+                <avp-ref name='Exponent'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='6' vendor='10415' name='_3GPP-SGSN-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Address'/>
+    </avp>
+
+    <avp id='411' name='CC-Correlation-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='451' name='Tariff-Time-Change'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+
+    <avp id='436' name='Requested-Action'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='DIRECT_DEBITING'/>
+            <enumerator value='1' name='REFUND_ACCOUNT'/>
+            <enumerator value='2' name='CHECK_BALANCE'/>
+            <enumerator value='3' name='PRICE_ENQUIRY'/>
+        </enumeration>
+    </avp>
+
+    <avp id='441' name='Service-Parameter-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='446' name='Used-Service-Unit'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Reporting-Reason'/>
+                <avp-ref name='Tariff-Change-Usage'/>
+                <avp-ref name='CC-Time'/>
+                <avp-ref name='CC-Total-Octets'/>
+                <avp-ref name='CC-Input-Octets'/>
+                <avp-ref name='CC-Output-Octets'/>
+                <avp-ref name='CC-Money'/>
+                <avp-ref name='CC-Service-Specific-Units'/>
+                <any-avp/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='459' name='User-Equipment-Info-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='IMEISV'/>
+            <enumerator value='1' name='MAC'/>
+            <enumerator value='2' name='EUI64'/>
+            <enumerator value='3' name='MODIFIED_EUI64'/>
+        </enumeration>
+    </avp>
+
+    <avp id='32063' vendor='3868' name='CVG-Pending-Payments-Mny'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Float64'/>
+    </avp>
+
+    <avp id='32069' vendor='3868' name='CVG-Message-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32049' vendor='3868' name='CVG-Event-Timestamp'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+
+    <avp id='32076' vendor='3868' name='CVG-Total-Usage'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='422' name='Check-Balance-Result'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='ENOUGH_CREDIT'/>
+            <enumerator value='1' name='NO_CREDIT'/>
+        </enumeration>
+    </avp>
+
+    <avp id='438' name='Restriction-Filter-Rule'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='435' name='Redirect-Server-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32012' vendor='3868' name='CVG-Discount'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='CVG-Discount-Level'/>
+            </required>
+            <optional>
+                <avp-ref name='CVG-Currency-Code'/>
+                <avp-ref name='CVG-Discount-Description'/>
+                <avp-ref name='CVG-Counter-Value'/>
+                <avp-ref name='CVG-Expiry-Date'/>
+                <avp-ref name='CVG-Unit-Value'/>
+                <avp-ref name='CVG-Discount-Lifecycle-StateName'/>
+                <avp-ref name='CVG-Discount-Lifecycle-StartDtm'/>
+                <avp-ref name='CVG-Discount-Lifecycle-EndDtm'/>
+                <avp-ref name='CVG-Counter-Usage'/>
+                <avp-ref name='CVG-Total-Usage'/>
+                <avp-ref name='CVG-Total-Discounted-Usage'/>
+                <avp-ref name='CVG-Total-Discounted-Mny'/>
+                <avp-ref name='CVG-Rate-Discount-Type'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='32047' vendor='3868' name='CVG-Expiry-Date'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+
+    <avp id='414' name='CC-Output-Octets'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned64'/>
+    </avp>
+
+    <avp id='21' vendor='10415' name='_3GPP-RAT-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='455' name='Multiple-Services-Indicator'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='MULTIPLE_SERVICES_NOT_SUPPORTED'/>
+            <enumerator value='1' name='MULTIPLE_SERVICES_SUPPORTED'/>
+        </enumeration>
+    </avp>
+
+    <avp id='96' name='Framed-Interface-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='must'/>
+        </flag-rules>
+        <simple-type name='Unsigned64'/>
+    </avp>
+
+    <avp id='415' name='CC-Request-Number'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='8' vendor='10415' name='_3GPP-IMSI-MCC-MNC'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='420' name='CC-Time'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32072' vendor='3868' name='CVG-Language-Code'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='1226' vendor='10415' name='Unit-Quota-Threshold'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='418' name='CC-Session-Failover'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='FAILOVER_NOT_SUPPORTED'/>
+            <enumerator value='1' name='FAILOVER_SUPPORTED'/>
+        </enumeration>
+    </avp>
+
+    <avp id='32055' vendor='3868' name='CVG-Counter-Value'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='427' name='Credit-Control-Failure-Handling'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='TERMINATE'/>
+            <enumerator value='1' name='CONTINUE'/>
+            <enumerator value='2' name='RETRY_AND_TERMINATE'/>
+        </enumeration>
+    </avp>
+
+    <avp id='32062' vendor='3868' name='CVG-Last-Recharge-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='CVG-Currency-Code'/>
+                <avp-ref name='CVG-Last-Recharge-Timestamp'/>
+                <avp-ref name='CVG-Last-Recharge-Unit-Value'/>
+                <avp-ref name='CVG-Discount-Description'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='32058' vendor='3868' name='CVG-Extension-Date'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+
+    <avp id='32075' vendor='3868' name='CVG-Counter-Usage'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32079' vendor='3868' name='CVG-Rate-Discount-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='437' name='Requested-Service-Unit'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='CC-Time'/>
+                <avp-ref name='CC-Money'/>
+                <avp-ref name='CC-Total-Octets'/>
+                <avp-ref name='CC-Input-Octets'/>
+                <avp-ref name='CC-Output-Octets'/>
+                <avp-ref name='CC-Service-Specific-Units'/>
+                <any-avp/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='32006' vendor='3868' name='CVG-Additional-Balance-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='CVG-Balance-Lifecycle-State'/>
+            </required>
+            <optional>
+                <avp-ref name='CVG-Expiry-Date'/>
+                <avp-ref name='CVG-Start-Date'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='846' vendor='10415' name='CG-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Address'/>
+    </avp>
+
+    <avp id='32008' vendor='3868' name='CVG-Cost-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='CVG-Unit-Value'/>
+                <avp-ref name='CVG-Currency-Code'/>
+            </required>
+            <optional>
+                <avp-ref name='CVG-Discounted-Unit-Value'/>
+                <avp-ref name='CVG-Cost-Unit'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='32009' vendor='3868' name='CVG-Unit-Value'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Value-Digits'/>
+                <avp-ref name='Exponent'/>
+            </required>
+        </layout>
+    </avp>
+
+    <avp id='443' name='Subscription-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Subscription-Id-Type'/>
+                <avp-ref name='Subscription-Id-Data'/>
+            </required>
+        </layout>
+    </avp>
+
+    <avp id='32061' vendor='3868' name='CVG-Old-Expiry-Date'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+
+    <avp id='32060' vendor='3868' name='CVG-Payment-Method'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='424' name='Cost-Unit'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='458' name='User-Equipment-Info'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='User-Equipment-Info-Type'/>
+                <avp-ref name='User-Equipment-Info-Value'/>
+            </required>
+        </layout>
+    </avp>
+
+    <avp id='32056' vendor='3868' name='CVG-Recharge-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='CVG-Extension-Days'/>
+                <avp-ref name='CVG-Extension-Date'/>
+                <avp-ref name='CVG-Payment-Channel'/>
+                <avp-ref name='CVG-Payment-Method'/>
+                <avp-ref name='CVG-Old-Expiry-Date'/>
+                <avp-ref name='CVG-Expiry-Date'/>
+                <avp-ref name='CVG-Discount-Description'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='4' vendor='10415' name='_3GPP-CG-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Address'/>
+    </avp>
+
+    <avp id='32054' vendor='3868' name='CVG-Discount-Description'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32078' vendor='3868' name='CVG-Total-Discounted-Mny'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='60002' vendor='3868' name='CVG-Discount-Lifecycle-StartDtm'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='425' name='Currency-Code'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='460' name='User-Equipment-Info-Value'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='449' name='Final-Unit-Action'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='TERMINATE'/>
+            <enumerator value='1' name='REDIRECT'/>
+            <enumerator value='2' name='RESTRICT_ACCESS'/>
+        </enumeration>
+    </avp>
+
+    <avp id='32053' vendor='3868' name='CVG-Earned-Loyalty-Points'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='868' vendor='10415' name='Time-Quota-Threshold'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='417' name='CC-Service-Specific-Units'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned64'/>
+    </avp>
+
+    <avp id='416' name='CC-Request-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='1' name='INITIAL_REQUEST'/>
+            <enumerator value='2' name='UPDATE_REQUEST'/>
+            <enumerator value='3' name='TERMINATION_REQUEST'/>
+            <enumerator value='4' name='EVENT_REQUEST'/>
+        </enumeration>
+    </avp>
+
+    <avp id='873' vendor='10415' name='Service-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Subscription-Id' max='*'/>
+                <avp-ref name='PS-Information'/>
+                <avp-ref name='CVG-CS-Information'/>
+                <avp-ref name='MMS-Information'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='32037' vendor='3868' name='CVG-Max-Repeating-Values'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='871' vendor='10415' name='Quota-Holding-Time'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='869' vendor='10415' name='Volume-Quota-Threshold'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='433' name='Redirect-Address-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='IPv4_Address'/>
+            <enumerator value='1' name='IPv6_Address'/>
+            <enumerator value='2' name='URL'/>
+            <enumerator value='3' name='SIP_URL'/>
+        </enumeration>
+    </avp>
+
+    <avp id='448' name='Validity-Time'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='447' name='Value-Digits'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Signed64'/>
+    </avp>
+
+    <avp id='32003' vendor='3868' name='CVG-Requested-AVP'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='CVG-AVP-Code'/>
+            </required>
+            <optional>
+                <avp-ref name='CVG-Vendor-ID'/>
+                <avp-ref name='CVG-Max-Repeating-Values'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='32018' vendor='3868' name='CVG-Calling-Party-Number'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='442' name='Service-Parameter-Value'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='413' name='CC-Money'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Unit-Value'/>
+            </required>
+            <optional>
+                <avp-ref name='Currency-Code'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='429' name='Exponent'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Signed32'/>
+    </avp>
+
+    <avp id='11' name='Filter-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32036' vendor='3868' name='CVG-Vendor-ID'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32073' vendor='3868' name='CVG-Start-Date'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+
+    <avp id='1227' vendor='10415' name='PDP-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Address'/>
+    </avp>
+
+    <avp id='18' vendor='10415' name='_3GPP-SGSN-MCC-MNC'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32010' vendor='3868' name='CVG-Discounted-Unit-Value'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Value-Digits'/>
+            </required>
+            <optional>
+                <avp-ref name='Exponent'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='440' name='Service-Parameter-Info'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Service-Parameter-Type'/>
+                <avp-ref name='Service-Parameter-Value'/>
+            </required>
+        </layout>
+    </avp>
+
+    <avp id='13' vendor='10415' name='_3GPP-Charging-Characteristics'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='5' vendor='10415' name='_3GPP-GPRS-Negotiated-QoS-Profile'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='431' name='Granted-Service-Unit'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Tariff-Time-Change'/>
+                <avp-ref name='CC-Time'/>
+                <avp-ref name='CC-Total-Octets'/>
+                <avp-ref name='CC-Input-Octets'/>
+                <avp-ref name='CC-Output-Octets'/>
+                <avp-ref name='CC-Money'/>
+                <avp-ref name='CC-Service-Specific-Units'/>
+                <any-avp/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='2021' vendor='10415' name='Remaining-Balance'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Unit-Value'/>
+                <avp-ref name='Currency-Code'/>
+            </required>
+        </layout>
+    </avp>
+
+    <avp id='32052' vendor='3868' name='CVG-Cost-Unit'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32011' vendor='3868' name='CVG-Last-Recharge-Unit-Value'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Value-Digits'/>
+            </required>
+            <optional>
+                <avp-ref name='Exponent'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='430' name='Final-Unit-Indication'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Final-Unit-Action'/>
+            </required>
+            <optional>
+                <avp-ref name='Restriction-Filter-Rule' max='*'/>
+                <avp-ref name='Redirect-Server'/>
+                <avp-ref name='Filter-Id' max='*'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='32013' vendor='3868' name='CVG-Discount-Level'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='Customer'/>
+            <enumerator value='1' name='Account'/>
+            <enumerator value='2' name='Subscription'/>
+            <enumerator value='3' name='Package'/>
+            <enumerator value='4' name='Product'/>
+            <enumerator value='5' name='Event Source'/>
+        </enumeration>
+    </avp>
+
+    <avp id='7' vendor='10415' name='_3GPP-GGSN-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Address'/>
+    </avp>
+
+    <avp id='444' name='Subscription-Id-Data'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='must'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='1247' vendor='10415' name='PDP-Context-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='PRIMARY'/>
+            <enumerator value='1' name='SECONDARY'/>
+        </enumeration>
+    </avp>
+
+    <avp id='32068' vendor='3868' name='CVG-Gap-Interval'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Signed32'/>
+    </avp>
+
+    <avp id='32014' vendor='3868' name='CVG-Message'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='CVG-Message-Type' min='0'/>
+                <avp-ref name='CVG-Message-Subtype' min='0'/>
+            </required>
+            <optional>
+                <avp-ref name='CVG-Message-Parameter' max='*'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='1228' vendor='10415' name='SGSN-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Address'/>
+    </avp>
+
+    <avp id='899' vendor='10415' name='Address-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='e-mail_address'/>
+            <enumerator value='1' name='MSISDN'/>
+            <enumerator value='2' name='IPv4_Address'/>
+            <enumerator value='3' name='IPv6_Address'/>
+            <enumerator value='4' name='Numeric_Shortcode'/>
+            <enumerator value='5' name='Alphanumeric_Shortcode'/>
+            <enumerator value='6' name='Other'/>
+            <enumerator value='7' name='IMSI'/>
+        </enumeration>
+    </avp>
+
+    <avp id='897' vendor='10415' name='Address-Data'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='1208' vendor='10415' name='Addressee-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='TO'/>
+            <enumerator value='1' name='CC'/>
+            <enumerator value='2' name='BCC'/>
+        </enumeration>
+    </avp>
+
+    <avp id='1200' vendor='10415' name='Domain-Name'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='898' vendor='10415' name='Address-Domain'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Domain-Name'/>
+                <avp-ref name='_3GPP-IMSI-MCC-MNC'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='886' vendor='10415' name='Originator-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Address-Type' min='0'/>
+            </optional>
+            <optional>
+                <avp-ref name='Address-Data' min='0'/>
+            </optional>
+            <optional>
+                <avp-ref name='Address-Domain' min='0'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='1201' vendor='10415' name='Recipient-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Address-Type' min='0'/>
+            </optional>
+            <optional>
+                <avp-ref name='Address-Data' min='0'/>
+            </optional>
+            <optional>
+                <avp-ref name='Addressee-Type' min='0'/>
+            </optional>
+            <optional>
+                <avp-ref name='Address-Domain' min='0'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='1202' vendor='10415' name='Submission-Time'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+
+    <avp id='1211' vendor='10415' name='Message-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='1' name='m-send-req'/>
+            <enumerator value='2' name='m-send-conf'/>
+            <enumerator value='3' name='m-notification-ind'/>
+            <enumerator value='4' name='m-notifyresp-ind'/>
+            <enumerator value='5' name='m-retrieve-conf'/>
+            <enumerator value='6' name='m-acknowledge-ind'/>
+            <enumerator value='7' name='m-delivery-ind'/>
+            <enumerator value='8' name='m-read-rec-ind'/>
+            <enumerator value='9' name='m-read-orig-ind'/>
+            <enumerator value='10' name='m-forward-req'/>
+            <enumerator value='11' name='m-forward-conf'/>
+            <enumerator value='12' name='m-mbox-store-conf'/>
+            <enumerator value='13' name='m-mbox-view-conf'/>
+            <enumerator value='14' name='m-mbox-upload-conf'/>
+            <enumerator value='15' name='m-mbox-delete-conf'/>
+        </enumeration>
+    </avp>
+
+    <avp id='1212' vendor='10415' name='Message-Size'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32017' vendor='3868' name='CVG-Called-Party-Number'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='432' name='Rating-Group'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32059' vendor='3868' name='CVG-Payment-Channel'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='453' name='G-S-U-Pool-Identifier'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32901' vendor='3868' name='CVG-EventCharge-Title'>
+        <flag-rules>F
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32902' vendor='3868' name='CVG-EventCharge-Category'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32034' vendor='3868' name='CVG-Last-Recharge-Timestamp'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+
+    <avp id='870' vendor='10415' name='Trigger-Type'>
+        GF
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='1' name='CHANGE_IN_SGSN_IP_ADDRESS'/>
+            <enumerator value='2' name='CHANGE_IN_QOS'/>
+            <enumerator value='3' name='CHANGE_IN_LOCATION'/>
+            <enumerator value='4' name='CHANGE_IN_RAT'/>
+            <enumerator value='10' name='CHANGEINQOS_TRAFFIC_CLASS'/>
+            <enumerator value='11' name='CHANGEINQOS_RELIABILITY_CLASS'/>
+            <enumerator value='12' name='CHANGEINQOS_DELAY_CLASS'/>
+            <enumerator value='13' name='CHANGEINQOS_PEAK_THROUGHPUT'/>
+            <enumerator value='14' name='CHANGEINQOS_PRECEDENCE_CLASS'/>
+            <enumerator value='15' name='CHANGEINQOS_MEAN_THROUGHPUT'/>
+            <enumerator value='16' name='CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_UPLINK'/>
+            <enumerator value='17' name='CHANGEINQOS_MAXIMUM_BIT_RATE_FOR_DOWNLINK'/>
+            <enumerator value='18' name='CHANGEINQOS_RESIDUAL_BER'/>
+            <enumerator value='19' name='CHANGEINQOS_SDU_ERROR_RATIO'/>
+            <enumerator value='20' name='CHANGEINQOS_TRANSFER_DELAY'/>
+            <enumerator value='21' name='CHANGEINQOS_TRAFFIC_HANDLING_PRIORITY'/>
+            <enumerator value='22' name='CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_UPLINK'/>
+            <enumerator value='23' name='CHANGEINQOS_GUARANTEED_BIT_RATE_FOR_DOWNLINK'/>
+            <enumerator value='30' name='CHANGEINLOCATION_MCC'/>
+            <enumerator value='31' name='CHANGEINLOCATION_MNC'/>
+            <enumerator value='32' name='CHANGEINLOCATION_RAC'/>
+            <enumerator value='33' name='CHANGEINLOCATION_LAC'/>
+            <enumerator value='34' name='CHANGEINLOCATION_CellId'/>
+            <enumerator value='40' name='CHANGE_IN_MEDIA_COMPOSITION'/>
+            <enumerator value='50' name='CHANGE_IN_PARTICIPANTS_NMB'/>
+            <enumerator value='51' name='CHANGE_IN_ THRSHLD_OF_PARTICIPANTS_NMB'/>
+            <enumerator value='52' name='CHANGE_IN_USER_PARTICIPATING_TYPE'/>
+            <enumerator value='60' name='CHANGE_IN_SERVICE_CONDITION'/>
+            <enumerator value='61' name='CHANGE_IN_SERVING_NODE'/>
+            <enumerator value='70' name='CHANGE_IN_USER_CSG_INFORMATION'/>
+        </enumeration>
+    </avp>
+
+    <avp id='1264' vendor='10415' name='Trigger'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Trigger-Type' max='*'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='450' name='Subscription-Id-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='END_USER_E164'/>
+            <enumerator value='1' name='END_USER_IMSI'/>
+            <enumerator value='2' name='END_USER_SIP_URI'/>
+            <enumerator value='3' name='END_USER_NAI'/>
+            <enumerator value='4' name='END_USER_PRIVATE'/>
+        </enumeration>
+    </avp>
+
+    <avp id='97' name='Framed-IPv6-Prefix'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='must'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='2' vendor='10415' name='_3GPP-Charging-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='461' name='Service-Context-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='452' name='Tariff-Change-Usage'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='UNIT_BEFORE_TARIFF_CHANGE'/>
+            <enumerator value='1' name='UNIT_AFTER_TARIFF_CHANGE'/>
+            <enumerator value='2' name='UNIT_INDETERMINATE'/>
+        </enumeration>
+    </avp>
+
+    <avp id='874' vendor='10415' name='PS-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='_3GPP-Charging-Id'/>
+                <avp-ref name='_3GPP-PDP-Type'/>
+                <avp-ref name='PDP-Address'/>
+                <avp-ref name='_3GPP-GPRS-Negotiated-QoS-Profile'/>
+                <avp-ref name='SGSN-Address'/>
+                <avp-ref name='GGSN-Address'/>
+                <avp-ref name='CG-Address'/>
+                <avp-ref name='_3GPP-IMSI-MCC-MNC'/>
+                <avp-ref name='_3GPP-GGSN-MCC-MNC'/>
+                <avp-ref name='_3GPP-NSAPI'/>
+                <avp-ref name='Called-Station-Id'/>
+                <avp-ref name='_3GPP-Session-Stop-Indicator'/>
+                <avp-ref name='_3GPP-Selection-Mode'/>
+                <avp-ref name='_3GPP-Charging-Characteristics'/>
+                <avp-ref name='_3GPP-SGSN-MCC-MNC'/>
+                <avp-ref name='_3GPP-MS-TimeZone'/>
+                <avp-ref name='_3GPP-User-Location-Info'/>
+                <avp-ref name='_3GPP-RAT-Type'/>
+                <avp-ref name='PDP-Context-Type'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='877' vendor='10415' name='MMS-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='Originator-Address'/>
+                <avp-ref name='Recipient-Address' max='*'/>
+                <avp-ref name='Submission-Time'/>
+                <avp-ref name='Message-Type'/>
+                <avp-ref name='Message-Size'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='32001' vendor='3868' name='CVG-CS-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='CVG-Called-Party-Number'/>
+                <avp-ref name='CVG-Calling-Party-Number'/>
+            </optional>
+        </layout>
+    </avp>
+
+
+    <avp id='32045' vendor='3868' name='CVG-Balance-Lifecycle-State'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='11' vendor='10415' name='_3GPP-Session-Stop-Indicator'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='434' name='Redirect-Server'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Redirect-Address-Type'/>
+                <avp-ref name='Redirect-Server-Address'/>
+            </required>
+        </layout>
+    </avp>
+
+    <avp id='426' name='Credit-Control'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='CREDIT_AUTHORIZATION'/>
+            <enumerator value='1' name='RE_AUTHORIZATION'/>
+        </enumeration>
+    </avp>
+
+    <avp id='32051' vendor='3868' name='CVG-Destination'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='32074' vendor='3868' name='CVG-Message-List'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='CVG-Message' max='*'/>
+                <avp-ref name='CVG-Currency-Code'/>
+                <avp-ref name='CVG-Language-Code'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='428' name='Direct-Debiting-Failure-Handling'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='TERMINATE_OR_BUFFER'/>
+            <enumerator value='1' name='CONTINUE'/>
+        </enumeration>
+    </avp>
+
+    <avp id='419' name='CC-Sub-Session-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned64'/>
+    </avp>
+
+    <avp id='32035' vendor='3868' name='CVG-AVP-Code'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32048' vendor='3868' name='CVG-Event-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='3' vendor='10415' name='_3GPP-PDP-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='IPv4'/>
+            <enumerator value='1' name='PPP'/>
+            <enumerator value='2' name='IPv6'/>
+        </enumeration>
+    </avp>
+
+    <avp id='32050' vendor='3868' name='CVG-Origination'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='60001' vendor='3868' name='CVG-Discount-Lifecycle-StateName'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='872' vendor='10415' name='Reporting-Reason'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='THRESHOLD'/>
+            <enumerator value='1' name='QHT'/>
+            <enumerator value='2' name='FINAL'/>
+            <enumerator value='3' name='QUOTA_EXHAUSTED'/>
+            <enumerator value='4' name='VALIDITY_TIME'/>
+            <enumerator value='5' name='OTHER_QUOTA_TYPE'/>
+            <enumerator value='6' name='RATING_CONDITION_CHANGE'/>
+            <enumerator value='7' name='FORCED_REAUTHORISATION'/>
+            <enumerator value='8' name='POOL_EXHAUSTED'/>
+        </enumeration>
+    </avp>
+
+    <avp id='881' vendor='10415' name='Quota-Consumption-Time'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='32007' vendor='3868' name='CVG-Multiple-Event-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <optional>
+                <avp-ref name='CVG-Origination'/>
+                <avp-ref name='CVG-Destination'/>
+                <avp-ref name='CVG-Event-Timestamp'/>
+                <avp-ref name='CC-Time'/>
+                <avp-ref name='CC-Total-Octets'/>
+                <avp-ref name='CC-Service-Specific-Units'/>
+                <avp-ref name='CVG-Event-Type'/>
+                <avp-ref name='CVG-Cost-Information'/>
+                <avp-ref name='CVG-Earned-Loyalty-Points'/>
+            </optional>
+        </layout>
+    </avp>
+
+    <avp id='23' vendor='10415' name='_3GPP-MS-TimeZone'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='457' name='G-S-U-Pool-Reference'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='G-S-U-Pool-Identifier'/>
+                <avp-ref name='CC-Unit-Type'/>
+                <avp-ref name='Unit-Value'/>
+            </required>
+        </layout>
+    </avp>
+
+    <avp id='423' name='Cost-Information'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <layout>
+            <required>
+                <avp-ref name='Unit-Value'/>
+                <avp-ref name='Currency-Code'/>
+            </required>
+            <optional>
+                <avp-ref name='Cost-Unit'/>
+            </optional>
+        </layout>
+    </avp>
+    <avp id='265' vendor='10415' name='Supported-Vendor-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='265' vendor='5535' name='Supported-Vendor-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='266' vendor='10415' name='Vendor-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='10' vendor='10415' name='_3GPP-NSAPI'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='439' name='Service-Identifier'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='412' name='CC-Input-Octets'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned64'/>
+    </avp>
+
+    <avp id='9' vendor='10415' name='_3GPP-GGSN-MCC-MNC'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='832' vendor='10415' name='Called-Party-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <!--<command id='272' application='4'>
+        <request name='Credit-Control-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='1'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <fixed>
+                    <avp-ref name='Session-Id'/>
+                </fixed>
+                <required>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Destination-Realm'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='Service-Context-Id'/>
+                    <avp-ref name='CC-Request-Type'/>
+                    <avp-ref name='CC-Request-Number'/>
+                </required>
+                <optional>
+                    <avp-ref name='Destination-Host'/>
+                    <avp-ref name='User-Name'/>
+                    <avp-ref name='CC-Sub-Session-Id'/>
+                    <avp-ref name='Acct-Multi-Session-Id'/>
+                    <avp-ref name='Origin-State-Id'/>
+                    <avp-ref name='Event-Timestamp'/>
+                    <avp-ref name='Subscription-Id' max='*'/>
+                    <avp-ref name='Service-Identifier'/>
+                    <avp-ref name='Termination-Cause'/>
+                    <avp-ref name='Requested-Service-Unit'/>
+                    <avp-ref name='Requested-Action'/>
+                    <avp-ref name='Used-Service-Unit' max='*'/>
+                    <avp-ref name='Multiple-Services-Indicator'/>
+                    <avp-ref name='Multiple-Services-Credit-Control' max='*'/>
+                    <avp-ref name='Service-Parameter-Info' max='*'/>
+                    <avp-ref name='CC-Correlation-Id'/>
+                    <avp-ref name='User-Equipment-Info'/>
+                    <avp-ref name='Proxy-Info' max='*'/>
+                    <avp-ref name='Route-Record' max='*'/>
+                    <avp-ref name='Called-Station-Id'/>
+                    <avp-ref name='CVG-Recharge-Information'/>
+                    <avp-ref name='CVG-Requested-AVP' max='*'/>
+                    <avp-ref name='Service-Information'/>
+                    <avp-ref name='CVG-EventCharge-Title'/>
+                    <avp-ref name='CVG-EventCharge-Category'/>
+                    <avp-ref name='Called-Party-Address'/>
+                    <any-avp/>
+                </optional>
+            </layout>
+        </request>
+        <answer name='Credit-Control-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='1'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <fixed>
+                    <avp-ref name='Session-Id'/>
+                </fixed>
+                <required>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='CC-Request-Type'/>
+                    <avp-ref name='CC-Request-Number'/>
+                </required>
+                <optional>
+                    <avp-ref name='User-Name'/>
+                    <avp-ref name='CC-Session-Failover'/>
+                    <avp-ref name='CC-Sub-Session-Id'/>
+                    <avp-ref name='Acct-Multi-Session-Id'/>
+                    <avp-ref name='Origin-State-Id'/>
+                    <avp-ref name='Event-Timestamp'/>
+                    <avp-ref name='Granted-Service-Unit'/>
+                    <avp-ref name='Multiple-Services-Credit-Control' max='*'/>
+                    <avp-ref name='Cost-Information'/>
+                    <avp-ref name='Final-Unit-Indication'/>
+                    <avp-ref name='Check-Balance-Result'/>
+                    <avp-ref name='Credit-Control-Failure-Handling'/>
+                    <avp-ref name='Direct-Debiting-Failure-Handling'/>
+                    <avp-ref name='Validity-Time'/>
+                    <avp-ref name='Redirect-Host' max='*'/>
+                    <avp-ref name='Redirect-Host-Usage'/>
+                    <avp-ref name='Redirect-Max-Cache-Time'/>
+                    <avp-ref name='Proxy-Info' max='*'/>
+                    <avp-ref name='Route-Record' max='*'/>
+                    <avp-ref name='Failed-AVP' max='*'/>
+                    <avp-ref name='Remaining-Balance'/>
+                    <avp-ref name='CVG-Recharge-Information'/>
+                    <avp-ref name='CVG-Gap-Interval'/>
+                    <avp-ref name='CVG-Message-List'/>
+                    <avp-ref name='CVG-Multiple-Event-Information' max='*'/>
+                    <avp-ref name='CVG-Discount' max='*'/>
+                    <avp-ref name='CVG-Additional-Balance-Information'/>
+                    <avp-ref name='CVG-Last-Recharge-Information'/>
+                    <avp-ref name='Service-Information'/>
+                    <avp-ref name='CVG-Pending-Payments-Mny'/>
+                    <avp-ref name='Experimental-Result'/>
+                    <any-avp/>
+                </optional>
+            </layout>
+        </answer>
+    </command>-->
+</diameter-protocol>

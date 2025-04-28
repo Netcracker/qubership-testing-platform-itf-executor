@@ -1,0 +1,67 @@
+Camel-V2
+    invoke
+        invokeId: present (0)
+        opcode: local (0)
+        InitialDPArg
+            serviceKey: 3
+            callingPartyNumber: 8415514124045503
+                1... .... = Odd/even indicator: odd number of address signals
+                .000 0100 = Nature of address indicator: international number (4)
+                0... .... = NI indicator: complete
+                .001 .... = Numbering plan indicator: ISDN (Telephony) numbering plan (1)
+                .... 01.. = Address presentation restricted indicator: presentation restricted (1)
+                .... ..01 = Screening indicator: user provided, verified and passed (1)
+                Calling Party Number: 15144240553
+            callingPartysCategory: ordinary calling subscriber (10)
+            iPSSPCapabilities: 00
+            locationNumber: 03131534089364
+            highLayerCompatibility: 9181
+            bearerCapability: bearerCap (0)
+            eventTypeBCSM: collectedInfo (2)
+            IMSI: 302510200239586
+                Mobile Country Code (MCC): Canada (302)
+                Mobile Network Code (MNC): Videotron Ltd (510)
+            locationInformation
+                ageOfLocationInformation: 0
+                vlr-number: 915141240415f4
+                cellGlobalIdOrServiceAreaIdOrLAI: cellGlobalIdOrServiceAreaIdFixedLength (0)
+            ext-basicServiceCode: ext-Teleservice (3)
+            callReferenceNumber: 400441320b7d00
+            mscAddress: 915141240415f4
+            calledPartyBCDNumber: 811554915452
+                1... .... = Extension: No Extension
+                .000 .... = Type of number: unknown (0x0)
+                .... 0001 = Numbering plan identification: ISDN/Telephony Numbering (ITU-T Rec. E.164 / ITU-T Rec. E.163) (0x1)
+                Called Party BCD Number: 5145194525
+            timeAndTimezone: 027120228012230a
+Camel
+    invoke
+        invokeId: present (0)
+        opcode: local (0)
+        EventReportBCSMArg
+            eventTypeBCSM: oAnswer (7)
+            legID: receivingSideID (1)
+            miscCallInfo
+                messageType: notification (1)
+Camel
+    invoke
+        invokeId: present (0)
+        opcode: local (0)
+        EventReportBCSMArg
+            eventTypeBCSM: oDisconnect (9)
+            eventSpecificInformationBCSM: oDisconnectSpecificInfo (7)
+                oDisconnectSpecificInfo
+                    releaseCause: 8090
+            legID: receivingSideID (1)
+                receivingSideID: 01
+Camel
+    invoke
+        invokeId: present (0)
+        opcode: local (0)
+        ApplyChargingReportArg: a00da003810101a103800119820100
+            CAMEL-CAMEL_CallResult: timeDurationChargingResult (0)
+                timeDurationChargingResult
+                    partyToCharge: receivingSideID (1)
+                    timeInformation: timeIfNoTariffSwitch (0)
+                        timeIfNoTariffSwitch: 25
+                    legActive: False

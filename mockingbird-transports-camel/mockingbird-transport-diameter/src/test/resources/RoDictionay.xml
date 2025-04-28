@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- ======================================================================= -->
+<!-- ======= Diameter Protocol Dictionary for the 3GPP Ro interface ======== -->
+<!-- ================== Based on 3GPP TS32.299 V11.9.1.0 =================== -->
+<!-- ======================================================================= -->
+
+<diameter-protocol name='unknown'>
+    <avp id='265' vendor='13421' name='Supported-Vendor-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='1' name='User-Name'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+    <avp id='1263' name='Access-Network-Information' vendor='10415'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp name="Preferred-Currency-Code" code="2195" vendor="10415" multiplicity="0+"/>
+    <avp id='2195' name='MSC-Address' vendor='10415'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+
+    <avp id='2055' vendor='10415' name='AoC-Request-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='AOC_NOT_REQUESTED'/>
+            <enumerator value='1' name='AOC_FULL'/>
+            <enumerator value='2' name='AOC_COST_ONLY'/>
+            <enumerator value='3' name='AOC_TARIFF_ONLY'/>
+        </enumeration>
+    </avp>
+
+
+    <avp id='270' name='CS-Service-Info' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+    </avp>
+    <avp id='831' name='Calling-Party-Address' vendor='10415'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+    <avp id='832' name='Called-Party-Address' vendor='10415'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='298' vendor='13421' name='CS-Cause-Code'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <enumeration>
+            <enumerator value='0' name='NORMAL_END'/>
+            <enumerator value='1' name='NO_ANSWER'/>
+            <enumerator value='2' name='BUSY'/>
+            <enumerator value='3' name='ABANDONED_BY_SSF'/>
+            <enumerator value='4' name='ROUTE_FAILURE'/>
+            <enumerator value='5' name='TIMEOUT_WAIT_ANNOUNCE_FIN'/>
+        </enumeration>
+    </avp>
+
+    <avp id='277' name='Original-Called-Party-Id' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+    <avp id='278' name='Redirecting-Party-Id' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+    <avp id='275' name='Calling-Party-Number' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+
+    <avp id='276' name='Called-Party-Number' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+    <avp id='280' name='Call-Reference-Number' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='OctetString'/>
+    </avp>
+    <avp id='281' name='MSC-Address' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+    <avp id='282' name='Teleservice-Code' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='292' name='Location-Number' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+    <avp id='293' name='VLR-Number' vendor='13421'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='293' name='Redirection-Information' vendor='296'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+
+    <avp id='439' vendor='0' name='Service-Identifier'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+</diameter-protocol>

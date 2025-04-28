@@ -1,0 +1,67 @@
+@startuml
+title Exceptional situations functionality (Multi-replica)
+
+actor User
+participant atp_itf_executor_pod1
+queue ActiveMQ
+collections Hazelcast
+participant atp_itf_executor_pod2
+participant atp_itf_stubs
+participant some_external_system
+
+group Start atp-itf-executor service pods
+    atp_itf_executor_pod1 -> atp_itf_executor_pod1: Start listener for "end/exceptional_situations_events" topic
+    atp_itf_executor_pod1 -> atp_itf_executor_pod1: EventBusProvider start
+    atp_itf_executor_pod1 -> atp_itf_executor_pod1: Connect to\get "ATP_ITF_AWAITING_CONTEXTS" hazelcast map
+    atp_itf_executor_pod2 -> atp_itf_executor_pod2: Start listener for "end/exceptional_situations_events" topic
+    atp_itf_executor_pod2 -> atp_itf_executor_pod2: EventBusProvider start
+    atp_itf_executor_pod2 -> atp_itf_executor_pod2: Connect to\get "ATP_ITF_AWAITING_CONTEXTS" hazelcast map
+end
+
+User -> atp_itf_executor_pod1: run CallChain with exceptional situation on first step
+
+group Callchain Execution
+    atp_itf_executor_pod1 -> atp_itf_executor_pod1: RunCallChainController.startChain
+    atp_itf_executor_pod1 -> atp_itf_executor_pod1: CallChainExecutorService.executeInstance
+    atp_itf_executor_pod1 -> atp_itf_executor_pod1: NextCallChainSubscriber.executeNext
+    group executeStep
+        atp_itf_executor_pod1 -> atp_itf_executor_pod1: NextCallChainSubscriber.executeStep
+        atp_itf_executor_pod1 -> atp_itf_executor_pod1: NextCallChainSubscriber.postSituationStep
+        atp_itf_executor_pod1 -> atp_itf_executor_pod1: getExceptionalSituations()
+        atp_itf_executor_pod1 -> atp_itf_executor_pod1: new StepExceptionalSituationSubscriber(...)
+        note left
+        parameters:
+            TcContext,
+            Set<ExceptionalSituations>,
+            NextCallChainSubscriberID
+        end note
+        atp_itf_executor_pod1 -> atp_itf_executor_pod1: EventBusProvider.register(StepExceptionalSituationSubscriber)
+        atp_itf_executor_pod1 -> Hazelcast: put to "ATP_ITF_AWAITING_CONTEXTS" map
+        note left: Object contextId : Object stepInstanceId
+    end
+end
+some_external_system -> atp_itf_stubs: request to stub
+atp_itf_stubs -> ActiveMQ: Event for executor
+ActiveMQ -> atp_itf_executor_pod2: get event for processing
+
+group Stub request processing
+    atp_itf_executor_pod2 -> atp_itf_executor_pod2: find operation and situation
+    atp_itf_executor_pod2 -> atp_itf_executor_pod2: executeSituationBySituationEventTrigger
+    atp_itf_executor_pod2 -> atp_itf_executor_pod2: SituationExecutorService.executeInstance
+    atp_itf_executor_pod2 -> atp_itf_executor_pod2: SituationExecutorService.executeInstanceStep
+    atp_itf_executor_pod2 -> ActiveMQ: send event to "end/exceptional_situations_events" topic
+    note right: if "ATP_ITF_AWAITING_CONTEXTS" contains contextId
+    note over atp_itf_executor_pod2: do not send finish events to bus if "ATP_ITF_AWAITING_CONTEXTS" isn't contain contextId
+    atp_itf_executor_pod2 -> atp_itf_executor_pod2: ...
+end
+
+ActiveMQ -> atp_itf_executor_pod1: getting event from "end/exceptional_situations_events" topic
+atp_itf_executor_pod1 -> atp_itf_executor_pod1: send event to EventBusProvider
+note left: EventBusProvider.post(SituationEvent.Finish finishEvent);
+atp_itf_executor_pod1 -> atp_itf_executor_pod1: StepExceptionalSituationSubscriber.handle
+note left: SituationEvent.Finish finishEvent
+atp_itf_executor_pod1 -> atp_itf_executor_pod1: finish with context status "Failed"
+note left: If finishEvent.TcContext.equals(subscriberTContext) && exceptionalSituations.contains(finishEvent.situation)
+atp_itf_executor_pod1 -> atp_itf_executor_pod1: evict contextId from "ATP_ITF_AWAITING_CONTEXTS"
+
+@enduml

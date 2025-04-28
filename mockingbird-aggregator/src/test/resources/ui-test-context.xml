@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="idGenerator" class="org.qubership.automation.itf.core.util.generator.id.CounterIdGenerator"/>
+    <bean id="IdGenerator" class="org.qubership.automation.itf.core.util.generator.id.IdGenerator">
+        <constructor-arg ref="idGenerator"/>
+    </bean>
+    <bean id="prefixFactory" class="org.qubership.automation.itf.core.util.generator.prefix.StringPrefixFactory"/>
+    <bean id="PrefixGenerator" class="org.qubership.automation.itf.core.util.generator.prefix.PrefixGenerator">
+        <constructor-arg ref="prefixFactory"/>
+    </bean>
+    <bean id="templateEngine" class="org.qubership.automation.itf.core.template.velocity.VelocityTemplateEngine"/>
+    <bean id="TemplateEngineFactory" class="org.qubership.automation.itf.core.template.TemplateEngineFactory">
+        <constructor-arg ref="templateEngine"/>
+    </bean>
+
+</beans>

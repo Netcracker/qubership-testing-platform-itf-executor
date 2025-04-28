@@ -1,0 +1,1 @@
+gpg --no-tty --yes -r "args0" -o args1 -e args2

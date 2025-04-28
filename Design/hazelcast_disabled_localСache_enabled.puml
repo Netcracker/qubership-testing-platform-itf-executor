@@ -1,0 +1,19 @@
+@startuml
+title Remote Hazelcast disabled - local hazelcast cache enabled (Multi-Replica)
+
+start
+: Start service atp-itf-executor;
+if (check property "hazelcast.cache.enabled") then (true)
+  :Used hazelcast cache on remote hazelcast cluster;
+  :class RemoteHazelcastConfig used for create remote hazelcast instance;
+else (false)
+  :Created local hazelcast cluster and created hazelcast instance;
+  :class LocalHazelcastConfig used for create local hazelcast instance;
+  :Used local instance created instance for local cache;
+endif
+stop
+
+
+
+
+@enduml

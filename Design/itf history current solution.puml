@@ -1,0 +1,69 @@
+@startuml
+title ITF History current solution
+
+actor User
+ITF_Configurator ++
+HistoryView ++
+HistoryCompare ++
+ITF_Executor ++
+
+note over User #aqua
+Available actions:
+**Case №1:** View history
+**Case №2:** Compare revision
+**Case №3:** Restore revision
+end note
+
+group Case №1
+User ->> ITF_Configurator : used
+ITF_Configurator ->> HistoryView : [**Case_№1:**] User ->> click [Show History] button
+ITF_Configurator -> ITF_Executor : open History View \n and \nsend request to executor...
+
+/note left of HistoryView
+**to JaversController:**
+GET '/api/v1/history/{projectUuid}/{type}/{id}'
+
+where
+    projectUuid - ATP project UUID
+    type - entity type
+    id - entity ID
+end note
+ITF_Executor -> ITF_Configurator --: result
+ITF_Configurator-> User: Will be displayed result\nto User in browser
+end
+
+group Case №2
+HistoryView ->> HistoryCompare: [**Case_№2:**] User ->> click [Go to Compare Versions] button
+/note right of HistoryView
+**to JaversController:**
+GET '/api/v1/entityversioning/{projectUuid}/{type}/{id}'
+
+where
+    projectUuid - ATP project UUID
+    type - entity type
+    id - entity ID
+end note
+HistoryView -> ITF_Executor : open History Compare \n and \nsend request to executor...
+ITF_Executor -> ITF_Configurator --: result
+ITF_Configurator-> User: Will be displayed result\nto User in browser
+end
+
+group Case №3
+    HistoryView ->> ITF_Executor : [**Case_№3:**] User ->> click [Restore] button
+    /note right of HistoryView
+    **to JaversController:**
+    GET '/api/v1/history/restore/{projectUuid}/{type}/{id}/revision/{revision}'
+
+    where
+        projectUuid - ATP project UUID
+        type - entity type
+        id - entity ID
+        revision - revision
+    end note
+    HistoryView -> ITF_Executor : send request to executor...
+
+    ITF_Executor -> ITF_Configurator --: result
+    ITF_Configurator-> User: Will be displayed result\nto User in browser
+end
+
+@enduml

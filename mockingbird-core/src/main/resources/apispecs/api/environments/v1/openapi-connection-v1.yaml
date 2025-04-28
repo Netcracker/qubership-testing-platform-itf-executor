@@ -1,0 +1,371 @@
+openapi: 3.0.3
+info:
+  title: Api Documentation
+  description: Api Documentation
+  version: "1.0"
+servers:
+  - url: 'http://localhost:8080'
+    description: Inferred Url
+tags:
+  - name: connection-controller
+    description: Connection Controller
+paths:
+  /api/connections:
+    get:
+      tags:
+        - connection-controller
+      summary: getConnectionsAll
+      operationId: getConnectionsAll
+      parameters:
+        - name: full
+          in: query
+          description: full
+          required: false
+          style: form
+          schema:
+            type: boolean
+
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Connection'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - connection-controller
+      summary: update
+      operationId: updateConnection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Connection'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - connection-controller
+      summary: create
+      operationId: createConnection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Connection'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/connections/getAllBy:
+    post:
+      tags:
+        - connection-controller
+      summary: getConnectionsAllBy
+      operationId: getConnectionsAllBy
+      parameters:
+        - name: full
+          in: query
+          description: full
+          required: false
+          style: form
+          schema:
+            type: boolean
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionByCategoryDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Connection'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/connections/parameters:
+    put:
+      tags:
+        - connection-controller
+      summary: updateParameters
+      operationId: updateParameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConnectionDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Connection'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/connections/templates:
+    get:
+      tags:
+        - connection-controller
+      summary: getConnectionTemplates
+      operationId: getConnectionTemplates
+      parameters:
+        - name: full
+          in: query
+          description: full
+          required: false
+          style: form
+          schema:
+            type: boolean
+
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Connection'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/connections/templates/short:
+    get:
+      tags:
+        - connection-controller
+      summary: 'Getting connection templates in abbreviated form :{id:"",name:""}'
+      operationId: getConnectionTemplatesShort
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConnectionNameView'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/api/connections/{connectionId}':
+    get:
+      tags:
+        - connection-controller
+      summary: getConnection
+      operationId: getConnection
+      parameters:
+        - name: connectionId
+          in: path
+          description: connectionId
+          required: true
+          style: simple
+          schema:
+            type: string
+            format: uuid
+        - name: full
+          in: query
+          description: full
+          required: false
+          style: form
+          schema:
+            type: boolean
+
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Connection'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - connection-controller
+      summary: delete
+      operationId: deleteConnection
+      parameters:
+        - name: connectionId
+          in: path
+          description: connectionId
+          required: true
+          style: simple
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+components:
+  schemas:
+    Connection:
+      title: Connection
+      type: object
+      properties:
+        connectionType:
+          type: string
+        created:
+          type: integer
+          format: int64
+        createdBy:
+          type: string
+          format: uuid
+        description:
+          type: string
+        id:
+          type: string
+          format: uuid
+        modified:
+          type: integer
+          format: int64
+        modifiedBy:
+          type: string
+          format: uuid
+        name:
+          type: string
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+        services:
+          type: array
+          items:
+            type: string
+        sourceTemplateId:
+          type: string
+          format: uuid
+        systemId:
+          type: string
+          format: uuid
+    ConnectionByCategoryDto:
+      title: ConnectionByCategoryDto
+      type: object
+      properties:
+        environmentIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        systemCategoryId:
+          type: string
+          format: uuid
+    ConnectionDto:
+      title: ConnectionDto
+      type: object
+      properties:
+        connectionType:
+          type: string
+        created:
+          type: integer
+          format: int64
+        createdBy:
+          type: string
+          format: uuid
+        description:
+          type: string
+        id:
+          type: string
+          format: uuid
+        modified:
+          type: integer
+          format: int64
+        modifiedBy:
+          type: string
+          format: uuid
+        name:
+          type: string
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+        projectId:
+          type: string
+          format: uuid
+        services:
+          type: array
+          items:
+            type: string
+        sourceTemplateId:
+          type: string
+          format: uuid
+        systemId:
+          type: string
+          format: uuid
+    ConnectionNameView:
+      title: ConnectionNameView
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string

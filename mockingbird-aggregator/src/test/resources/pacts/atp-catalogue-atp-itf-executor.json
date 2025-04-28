@@ -1,0 +1,407 @@
+{
+  "provider": {
+    "name": "atp-itf-executor"
+  },
+  "consumer": {
+    "name": "atp-catalogue"
+  },
+  "interactions": [
+    {
+      "description": "GET /api/callchains/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/callchains/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "9167234930111872003",
+            "name": "entityDto",
+            "parentId": "9167234930111872004"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/environments/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/environments/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "9167234930111872003",
+            "name": "entityDto",
+            "parentId": "9167234930111872004"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/folders/root/callchain/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/folders/root/callchain/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "9167234930111872003",
+          "name": "entityDto",
+          "parentId": "9167234930111872004"
+        }
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/folders/root/environment/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/folders/root/environment/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "9167234930111872003",
+          "name": "entityDto",
+          "parentId": "9167234930111872004"
+        }
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/folders/root/system/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/folders/root/system/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "9167234930111872003",
+          "name": "entityDto",
+          "parentId": "9167234930111872004"
+        }
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/folders/sub/callchain/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/folders/sub/callchain/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "9167234930111872003",
+            "name": "entityDto",
+            "parentId": "9167234930111872004"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/folders/sub/environment/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/folders/sub/environment/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "9167234930111872003",
+            "name": "entityDto",
+            "parentId": "9167234930111872004"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/folders/sub/system/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/folders/sub/system/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "9167234930111872003",
+            "name": "entityDto",
+            "parentId": "9167234930111872004"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/integrationconfigs/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/integrationconfigs/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "9167234930111872003",
+            "name": "entityDto",
+            "parentId": "9167234930111872004"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/settings/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/settings/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "9167234930111872003",
+            "name": "entityDto",
+            "parentId": "9167234930111872004"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /api/systems/project/{projectUuid} OK",
+      "request": {
+        "method": "GET",
+        "path": "/api/systems/project/7c9dafe9-2cd1-4ffc-ae54-45867f2b9701"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "9167234930111872003",
+            "name": "entityDto",
+            "parentId": "9167234930111872004"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "POST /api/bvTcByChains OK",
+      "request": {
+        "method": "POST",
+        "path": "/api/bvTcByChains",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          "9167234930111872000",
+          "9167234930111872001",
+          "9167234930111872002"
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          "7c9dafe9-2cd1-4ffc-ae54-45867f2b9702",
+          "7c9dafe9-2cd1-4ffc-ae54-45867f2b9703"
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "POST /api/bvTcByEnvs OK",
+      "request": {
+        "method": "POST",
+        "path": "/api/bvTcByEnvs",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          "9167234930111872000",
+          "9167234930111872001",
+          "9167234930111872002"
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          "7c9dafe9-2cd1-4ffc-ae54-45867f2b9702",
+          "7c9dafe9-2cd1-4ffc-ae54-45867f2b9703"
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "POST /api/bvTcBySystems OK",
+      "request": {
+        "method": "POST",
+        "path": "/api/bvTcBySystems",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          "9167234930111872000",
+          "9167234930111872001",
+          "9167234930111872002"
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          "7c9dafe9-2cd1-4ffc-ae54-45867f2b9702",
+          "7c9dafe9-2cd1-4ffc-ae54-45867f2b9703"
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "POST /api/dslByChains OK",
+      "request": {
+        "method": "POST",
+        "path": "/api/dslByChains",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          "9167234930111872000",
+          "9167234930111872001",
+          "9167234930111872002"
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          "7c9dafe9-2cd1-4ffc-ae54-45867f2b9702",
+          "7c9dafe9-2cd1-4ffc-ae54-45867f2b9703"
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "4.1.23"
+    }
+  }
+}

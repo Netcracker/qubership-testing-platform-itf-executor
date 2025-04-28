@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_project_property_for_itf_fast_stubs
+      author: Dmitrii Churbanov
+      comment: Add project property 'enable.fastStubs' in table mb_project_settings to all projects.
+      changes:
+        - sqlFile:
+            path: add_project_property_for_itf_fast_stubs.sql
+            relativeToChangelogFile: true
+            splitStatements: false

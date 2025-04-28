@@ -1,0 +1,87 @@
+@startuml
+
+agent "ATP\n Orchestrator" as orch
+agent "ATP\n Executor" as executor
+agent "ATP Dataset\n Service" as tds
+agent "ATP Environments\n Service" as env
+agent "ATP Export-Import\n Service" as ei
+agent "ATP\n BulkValidator" as bulk
+agent "ATP\n ITF-Lite" as itflite
+agent "ATP Users\n Service" as users
+agent "ATP Catalogue\n Service" as catalog
+agent "ATP Catalogue\n Service" as catalog1
+agent "ATP\n RAM" as ram
+
+agent "ATP Public\n Gateway" as pgw #Grey
+agent "ATP Internal\n Gateway" as igw #Grey
+
+queue "ActiveMq" as activemqrep #LightBlue
+queue "ActiveMq" as activemqstub #LightBlue
+queue "Kafka" as Kafka #LightBlue
+queue "Kafka" as KafkaCat #LightBlue
+collections "HazelCast" as hazel #LightBlue
+agent "GridFS" as gridfs #LightBlue
+
+agent "ITF Configurator\n (frontend)" as itfconfig #Yellow
+collections "ITF Executor (backend) \n(1..n pods)" as itfexecutor #Yellow
+collections "ITF Stubs\n (backend) (1..n pods)" as itfstubs #Yellow
+collections "ITF Reporting\n (backend) (1..n pods)" as itfreporting #Yellow
+
+agent "External System" as external
+actor "User" as user
+
+database "ITF Reporting\nDatabase" as dbitfreporting
+database "ITF Executor\nDatabase" as dbitfexecutor
+
+itfexecutor <-Down-> dbitfexecutor: Read / Write\nconfiguration data
+itfexecutor <-Down-> hazel: Get / Put\ncached data
+itfexecutor -Down-> activemqrep: Message\nto reporting
+itfexecutor -Down-> Kafka: Message\nto RAM
+
+activemqrep -Down-> itfreporting: Message\nto reporting
+itfreporting <-Down-> dbitfreporting: Read / Write\nreporting data
+
+Kafka -Down-> ram: Message\nto RAM
+
+external .Down-> itfstubs: Request to stub /\nResponse from stub
+itfstubs .Down-> activemqstub: Service message to executor /\nPrepared response to stubs
+activemqstub .Down-> itfexecutor: Service message to executor /\nPrepared response to stubs
+
+orch -Down-> itfexecutor: Execute ITF action /\nResponse
+itfexecutor <-Down- executor: Execute ITF-Executor action /\nResponse
+ei -Down-> itfexecutor: Export / Import task /\nResponse
+
+itfexecutor -Down-> igw: Request via Feign-client / \nResponse
+igw -Down-> bulk: Request /\nResponse
+igw -Down-> tds: Request /\nResponse
+igw -Down-> env: Request /\nResponse
+igw -Down-> users: Request /\nResponse
+igw -Down-> itfreporting: Request /\nResponse
+
+itfstubs -Down-> igw: Request via Feign-client / \nResponse
+igw -Down-> itfexecutor: Request /\nResponse
+
+user -Down-> itfconfig: Request from web-browser/\nResponse
+itfconfig -Down-> pgw: Request to ITF subservice/\nResponse
+pgw -Down-> itfexecutor: Request /\nResponse
+pgw -Down-> itfstubs: Request /\nResponse
+pgw -Down-> itfreporting: Request /\nResponse
+
+itfexecutor .Up-> activemqstub: File event \nMessage
+activemqstub .Up-> itfexecutor: File event \nMessage
+activemqstub .Up-> itfstubs: File event \nMessage
+
+itfexecutor -Up-> activemqstub: Activate / Sync\nMessage
+activemqstub -Up-> itfstubs: Activate / Sync\nMessage
+
+itfexecutor -Right-> gridfs: Get / Put files
+itfstubs -Right-> gridfs: Get files
+
+catalog -Down-> KafkaCat: Change Project\nEvent
+KafkaCat <.-Down-> itfexecutor: Change project Event,\n Import Request/Response
+
+itfexecutor -Down-> catalog1: Project info \nRequest / Response
+
+itflite <-Down-> itfexecutor: REST Request /\nResponse
+itflite <-Down-> KafkaCat: Import Request /\nResponse
+@enduml

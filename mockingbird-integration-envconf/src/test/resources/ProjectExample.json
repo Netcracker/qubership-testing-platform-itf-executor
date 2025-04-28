@@ -1,0 +1,60 @@
+{
+  "id": "736571ae-b3f8-45ea-a1e7-703fc44b0ae0",
+  "name": "Mockingbird",
+  "description": "Project for developing the integration",
+  "created": 1544512174297,
+  "createdBy": null,
+  "modified": null,
+  "modifiedBy": null,
+  "shortName": "Mockingbird",
+  "environments": [
+    {
+      "id": "3690b7b7-3484-46a7-84ce-8d4cac686bf0",
+      "name": "Environment 1",
+      "description": "",
+      "created": 1544512189663,
+      "createdBy": null,
+      "modified": null,
+      "modifiedBy": null,
+      "projectId": "736571ae-b3f8-45ea-a1e7-703fc44b0ae0",
+      "systems": [
+        {
+          "id": "2f316f39-48e2-4029-9128-cb9ad426a538",
+          "description": "",
+          "created": 1544512220340,
+          "modified": null,
+          "connections": [
+            {
+              "id": "abee3716-5d4c-4ae7-ba5c-5bafa927ec93",
+              "name": "REST over HTTP",
+              "description": "",
+              "created": 1544512285900,
+              "createdBy": null,
+              "modified": null,
+              "modifiedBy": null,
+              "parameters": {
+                "endpointUri": "/test",
+                "allowStatus": "200",
+                "headers": "",
+                "credentials": "test",
+                "principal": "test",
+                "method": "GET",
+                "direction": "outbound"
+              },
+              "sourceTemplateId": "d58679cd-3616-4a26-b2e3-721638c535ff",
+              "connectionType": null,
+              "systemId": "2f316f39-48e2-4029-9128-cb9ad426a538"
+            }
+          ],
+          "createdBy": null,
+          "modifiedBy": null,
+          "name": "System 1",
+          "environmentIds": [
+            "3690b7b7-3484-46a7-84ce-8d4cac686bf0"
+          ],
+          "systemCategoryId": null
+        }
+      ]
+    }
+  ]
+}

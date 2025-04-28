@@ -1,0 +1,158 @@
+{
+  "provider": {
+    "name": "atp-itf-executor"
+  },
+  "consumer": {
+    "name": "atp-itf-stubs"
+  },
+  "interactions": [
+    {
+      "description": "GET /trigger/all/active OK",
+      "request": {
+        "method": "GET",
+        "path": "/trigger/all/active"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "triggerId": "9167234930111872000",
+            "triggerName": "trig_name",
+            "triggerTypeName": "org.qubership.automation.itf.transport.rest.outbound.RESTOutboundTransport",
+            "transportName": "Outbound REST Synchronous",
+            "serverName": "server_test",
+            "transportType": "REST_INBOUND",
+            "triggerProperties": {
+              "isStub": "Yes",
+              "endpoint": "/test",
+              "contentType": "application/json; charset=utf-8",
+              "responseCode": "200"
+            },
+            "projectUuid": "3d6a138d-057b-4e35-8348-17aee2f2b0f8"
+          }
+        ]
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /trigger/environmentId/{id} OK",
+      "request": {
+        "method": "GET",
+        "path": "/trigger/environmentId/9167234930111872001"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "envId": 9167234930111872001,
+          "turnedOn": true,
+          "triggerSamples": [
+            {
+              "triggerId": "9167234930111872000",
+              "triggerName": "trig_name",
+              "triggerTypeName": "org.qubership.automation.itf.transport.rest.outbound.RESTOutboundTransport",
+              "transportName": "Outbound REST Synchronous",
+              "serverName": "server_test",
+              "transportType": "REST_INBOUND",
+              "triggerProperties": {
+                "isStub": "Yes",
+                "endpoint": "/test",
+                "contentType": "application/json; charset=utf-8",
+                "responseCode": "200"
+              },
+              "projectUuid": "3d6a138d-057b-4e35-8348-17aee2f2b0f8"
+            }
+          ]
+        }
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "GET /trigger/{id} OK",
+      "request": {
+        "method": "GET",
+        "path": "/trigger/9167234930111872000"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "triggerId": "9167234930111872000",
+          "triggerName": "trig_name",
+          "triggerTypeName": "org.qubership.automation.itf.transport.rest.outbound.RESTOutboundTransport",
+          "transportName": "Outbound REST Synchronous",
+          "serverName": "server_test",
+          "transportType": "REST_INBOUND",
+          "triggerProperties": {
+            "isStub": "Yes",
+            "endpoint": "/test",
+            "contentType": "application/json; charset=utf-8",
+            "responseCode": "200"
+          },
+          "projectUuid": "3d6a138d-057b-4e35-8348-17aee2f2b0f8"
+        }
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    },
+    {
+      "description": "PATCH /trigger OK",
+      "request": {
+        "method": "PATCH",
+        "path": "/trigger",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": 9167234930111872000,
+          "status": "ACTIVE",
+          "description": "description"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "success": true,
+          "message": "message",
+          "data": {
+            "key": "value"
+          }
+        }
+      },
+      "providerStates": [
+        {
+          "name": "all ok"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "4.1.23"
+    }
+  }
+}

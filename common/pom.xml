@@ -1,0 +1,310 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.qubership.mockingbird</groupId>
+        <artifactId>parent-java</artifactId>
+        <version>${atp.service.version}</version>
+        <relativePath>../parent/parent-java/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>common</artifactId>
+    <packaging>pom</packaging>
+    <properties>
+        <abbreviation>mockingbird</abbreviation>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMdd-HHmmss</maven.build.timestamp.format>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <artifactId>ant</artifactId>
+                                <groupId>ant</groupId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>generate-transport-jars</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <target name="generate-transport-jars">
+                                <mkdir dir="../transports"/>
+                                <copy todir="../transports">
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-cli/target"
+                                             includes="mockingbird-transport-cli.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-file/target"
+                                             includes="mockingbird-transport-file.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-diameter/target"
+                                             includes="mockingbird-transport-diameter.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-http2/target"
+                                             includes="mockingbird-transport-http2.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-jms/target"
+                                             includes="mockingbird-transport-jms.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-kafka/target"
+                                             includes="mockingbird-transport-kafka.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-ldap/target"
+                                             includes="mockingbird-transport-ldap.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-rest/target"
+                                             includes="mockingbird-transport-rest.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-snmp/target"
+                                             includes="mockingbird-transport-snmp.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-smpp/target"
+                                             includes="mockingbird-transport-smpp.jar"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-soap-http/target"
+                                            includes="mockingbird-transport-soap-http.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-sql/target"
+                                             includes="mockingbird-transport-sql.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-ss7/target"
+                                             includes="mockingbird-transport-ss7.jar"/>
+                                </copy>
+                                <mkdir dir="../transports/lib"/>
+                                <copy todir="../transports/lib">
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-camel-common/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-cli/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-diameter/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-file/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-http2/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-jms/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-kafka/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-ldap/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-rest/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-snmp/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-smpp/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-soap-http/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-sql/target/lib"/>
+                                    <fileset
+                                            dir="../mockingbird-transports-camel/mockingbird-transport-ss7/target/lib"/>
+                                </copy>
+                                <mkdir dir="../transports/lib/mockingbird-transport-jms" />
+                                <copy todir="../transports/lib/mockingbird-transport-jms">
+                                    <fileset dir="../common/transport-jms-lib"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-interceptor-jars</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <target name="generate-interceptor-jars">
+                                <mkdir dir="../interceptors/"/>
+                                <copy todir="../interceptors/">
+                                    <fileset dir="../mockingbird-interceptors/interceptor-utils/target"
+                                             includes="interceptor-utils.jar"/>
+                                </copy>
+                                <mkdir dir="../interceptors/compress-interceptor/"/>
+                                <copy todir="../interceptors/compress-interceptor/">
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target"
+                                             includes="compress-interceptor.jar"/>
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/"
+                                             includes="gzip.interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/"
+                                             includes="rar.interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/"
+                                             includes="tar.interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/"
+                                             includes="zip.interceptor.command"/>
+                                </copy>
+                                <mkdir dir="../interceptors/decompress-interceptor/"/>
+                                <copy todir="../interceptors/decompress-interceptor/">
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target"
+                                             includes="decompress-interceptor.jar"/>
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/"
+                                             includes="gzip.interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/"
+                                             includes="tar.interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/"
+                                             includes="unrar.interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/"
+                                             includes="unzip.interceptor.command"/>
+                                </copy>
+                                <mkdir dir="../interceptors/decrypt-interceptor/"/>
+                                <copy todir="../interceptors/decrypt-interceptor/">
+                                    <fileset dir="../mockingbird-interceptors/decrypt-interceptor/target"
+                                             includes="decrypt-interceptor.jar"/>
+                                    <fileset dir="../mockingbird-interceptors/decrypt-interceptor/target/classes/"
+                                             includes="interceptor.command"/>
+                                </copy>
+                                <mkdir dir="../interceptors/encrypt-interceptor/"/>
+                                <copy todir="../interceptors/encrypt-interceptor/">
+                                    <fileset dir="../mockingbird-interceptors/encrypt-interceptor/target"
+                                             includes="encrypt-interceptor.jar"/>
+                                    <fileset dir="../mockingbird-interceptors/encrypt-interceptor/target/classes/"
+                                             includes="interceptor.command"/>
+                                </copy>
+                                <mkdir dir="../interceptors/decrypt-xml-interceptor/"/>
+                                <copy todir="../interceptors/decrypt-xml-interceptor/">
+                                    <fileset dir="../mockingbird-interceptors/decrypt-xml-interceptor/target"
+                                             includes="decrypt-xml-interceptor.jar"/>
+                                </copy>
+                                <mkdir dir="../interceptors/encrypt-xml-interceptor/"/>
+                                <copy todir="../interceptors/encrypt-xml-interceptor/">
+                                    <fileset dir="../mockingbird-interceptors/encrypt-xml-interceptor/target"
+                                             includes="encrypt-xml-interceptor.jar"/>
+                                </copy>
+                                <mkdir dir="../interceptors/redefine-transport-params-interceptor/"/>
+                                <copy todir="../interceptors/redefine-transport-params-interceptor/">
+                                    <fileset dir="../mockingbird-interceptors/redefine-transport-params-interceptor/target"
+                                             includes="redefine-transport-params-interceptor.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>check-dir-exists</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <target>
+                                <available file="../transports" property="transportsDirExists"/>
+                                <available file="../interceptors" property="interceptorsDirExists"/>
+                            </target>
+                            <exportAntProperties>true</exportAntProperties>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>clean-generate-transport-jars</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <target if="${transportsDirExists}">
+                                <delete>
+                                    <fileset dir="../transports"/>
+                                </delete>
+                                <echo message="Folder [../transports] with transport files *.jar has been cleared."/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>clean-generate-interceptor-jars</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <target if="${interceptorsDirExists}">
+                                <delete>
+                                    <fileset dir="../interceptors"/>
+                                </delete>
+                                <echo message="Folder [../interceptors] with interceptor files *.jar has been cleared."/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <attach>false</attach>
+                    <descriptors>
+                        <descriptor>maven/assembly/build-modules.xml</descriptor>
+                    </descriptors>
+                    <!-- For release branches ${scmBranch} must be replaced with 'release'.
+                         It must be done for release branches only, because their names are like 'release/4.2.28'.
+                         Due to so specific names (containing '/') jenkins job is failed.
+                         Root cause is: due to '/' subfolder is created. The job doesn't consider such behaviour -->
+                    <!--suppress UnresolvedMavenProperty -->
+                    <finalName>mockingbird-app_${project.version}_${scmBranch}_${timestamp}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>pd.sandbox.mvn.staging</id>
+            <url>${repo.prefix}/pd.sandbox.mvn.staging/</url>
+        </repository>
+        <snapshotRepository>
+            <id>pd.sandbox.mvn.snapshots</id>
+            <url>${repo.prefix}/pd.sandbox.mvn.snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>

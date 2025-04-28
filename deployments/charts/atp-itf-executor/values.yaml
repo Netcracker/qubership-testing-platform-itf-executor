@@ -1,0 +1,278 @@
+PAAS_PLATFORM: "KUBERNETES"
+ATP_NET: ""
+# Activenq port
+ACTIVEMQ_PORT_PARAM: "10002"
+#Url of ATP ITF Executor service
+ATP_ITF_EXECUTOR_URL: "https://atp-itf-executor-service-address"
+# Flag to enable HTTPS support
+EMBEDDED_HTTPS_ENABLED: "false"
+# Path to keystore file in .jks format
+KEYSTORE_FILE: "/itf/custom-storage/itf.jks"
+# Password for keystore
+KEYSTORE_PASSWORD: "changeit"
+# Undertow session timeout (in minutes) before authorization is expired
+UNDERTOW_SESSION_TIMEOUT: "58m"
+# Undertow compression enabled flag.
+UNDERTOW_COMPRESSION_ENABLED: "false"
+# Undertow compression mimetypes
+UNDERTOW_COMPRESSION_MIMETYPE: "text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json,application/xml"
+# Url of datasets service
+ATP_DATASET_URL: "https://atp-datasets-service-address"
+# Url of public gateway service
+ATP_PUBLIC_GATEWAY_URL: "http://atp-public-gateway:8080"
+# Url of ITF Executor service for feign interaction
+FEIGN_ATP_ITF_EXECUTOR_URL: "https://atp-itf-executor-service-address"
+# Catalogue for feign configs
+FEIGN_ATP_CATALOGUE_NAME: "ATP-CATALOGUE"
+FEIGN_ATP_CATALOGUE_ROUTE: "api/atp-catalogue/v1"
+FEIGN_ATP_CATALOGUE_URL: ""
+# User service for feign configs
+FEIGN_ATP_USERS_NAME: "ATP-USERS-BACKEND"
+FEIGN_ATP_USERS_ROUTE: "api/atp-users-backend/v1"
+FEIGN_ATP_USERS_URL: ""
+# Reports service for feign configs
+FEIGN_ATP_ITF_REPORTS_NAME: "ATP-ITF-REPORTS"
+FEIGN_ATP_ITF_REPORTS_ROUTE: "api/atp-itf-reports/v1"
+FEIGN_ATP_ITF_REPORTS_URL: ""
+# Export-import service for feign configs
+FEIGN_ATP_EI_NAME: "ATP-EXPORT-IMPORT"
+FEIGN_ATP_EI_ROUTE: "api/atp-export-import/v1"
+FEIGN_ATP_EI_URL: ""
+# Url of bulk validator service
+ATP_BVT_URL: "https://atp-bv-service-address"
+# Url of environments configurator service
+ATP_ENVIRONMENTS_URL: "https://atp-environments-service-address"
+# Url of export-import service
+ATP_EXPORT_IMPORT_URL: "https://atp-export-import-service-address"
+# Url of catalogue service
+CATALOGUE_URL: "https://atp-catalogue-service-address"
+# Which docker image should be used to deploy
+DOCKER_TAG: "artifactory-service-address/path-to-image"
+# Switching-on of Eureka client
+EUREKA_CLIENT_ENABLED: "true"
+# Property for eureka to prefer ip
+EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+# Host of graylog
+GRAYLOG_HOST: "tcp:graylog-service-address"
+# This option turns on or off logging in graylog
+GRAYLOG_ON: "false"
+# Port of graylog
+GRAYLOG_PORT: "12201"
+# This option turns on or off kafka enable
+KAFKA_ENABLE: "true"
+# KAFKA LOGRECORD Topics (names are finally calculated in helpers.tpl)
+KAFKA_LOGRECORD_TOPIC: ""
+KAFKA_LOGRECORD_TOPIC_PARTITIONS: "1"
+KAFKA_LOGRECORD_TOPIC_REPLICATION_FACTOR: ""
+KAFKA_LOGRECORD_CONTEXT_TOPIC: ""
+KAFKA_LOGRECORD_CONTEXT_TOPIC_PARTITIONS: "1"
+KAFKA_LOGRECORD_CONTEXT_TOPIC_REPLICATION_FACTOR: ""
+KAFKA_LOGRECORD_STEP_CONTEXT_TOPIC: ""
+KAFKA_LOGRECORD_STEP_CONTEXT_TOPIC_PARTITIONS: "1"
+KAFKA_LOGRECORD_STEP_CONTEXT_TOPIC_REPLICATION_FACTOR: ""
+KAFKA_LOGRECORD_MESSAGE_PARAMETERS_TOPIC: ""
+KAFKA_LOGRECORD_MESSAGE_PARAMETERS_TOPIC_PARTITIONS: "1"
+KAFKA_LOGRECORD_MESSAGE_PARAMETERS_TOPIC_REPLICATION_FACTOR: ""
+# Service entities topic of kafka (finally calculated in helpers.tpl)
+KAFKA_SERVICE_ENTITIES_TOPIC: ""
+KAFKA_SERVICE_ENTITIES_TOPIC_PARTITIONS: "1"
+KAFKA_SERVICE_ENTITIES_TOPIC_REPLICATION_FACTOR: ""
+# The path to kafka service
+KAFKA_SERVERS: "kafka:9092"
+# The name of kafka topic for project change events (finally calculated in helpers.tpl)
+KAFKA_TOPIC: ""
+# Names of kafka topics for ITF-Lite export events (finally calculated in helpers.tpl)
+KAFKA_ITF_LITE_EXPORT_ITF_FINISH_TOPIC: ""
+KAFKA_ITF_LITE_EXPORT_ITF_START_TOPIC: ""
+# Name of kafka topic for Environment service notifications (finally calculated in helpers.tpl)
+KAFKA_ENVIRONMENTS_NOTIFICATION_TOPIC: ""
+# The name of kafka client id for project change events
+KAFKA_CLIENT_ID: "atp-itf-executor"
+# The name of kafka group id for project change events
+KAFKA_GROUP_ID: "atp-itf-executor"
+# Keycloak service integration config
+KEYCLOAK_ENABLED: "true"
+KEYCLOAK_AUTH_URL: "https://atp-keycloak-service-address/auth"
+# IP of db
+PG_DB_ADDR: "pg-common.postgrescluster.svc"
+# PORT of db
+PG_DB_PORT: "5432"
+# enabling profiler option
+PROFILER_ENABLED: "false"
+# Rest end point for projects
+PROJECT_INFO_ENDPOINT: "/api/v1/users/projects"
+# Url to RAM logger
+ATP_RAM_RECEIVER_URL: "http://atp-ram-report-receiver-service-address"
+# Url to RAM
+ATP_RAM_URL: "http://atp-ram-service-address"
+# host of profiler collector
+REMOTE_DUMP_HOST: "profiler-collector-service.profiler.svc"
+# port of profiler collector
+REMOTE_DUMP_PORT: "1710"
+# Name tool.
+SERVICE_NAME: "atp-itf-executor"
+# ATP Integration config
+ATP_INTEGRATION_ENABLED: "true"
+# Register to public gateway in eureka
+ATP_SERVICE_PUBLIC: "true"
+# Register to internal gateway in eureka
+ATP_SERVICE_INTERNAL: "true"
+# Security profile: default or disable-security
+SPRING_PROFILES: "default"
+# Url of registry service
+SERVICE_REGISTRY_URL: "http://atp-registry-service:8761/eureka"
+KEYCLOAK_CLIENT_NAME: "atp-itf"
+KEYCLOAK_SECRET: "71b6a213-e3b0-4bf4-86c8-dfe11ce9e248"
+PROJECT_ID: "ce7771ff-4dc8-46a0-9b67-f30e3085ec75"
+FEIGN_ROUTE: "api/atp-catalogue/v1"
+#tcp Url of ActiveMQ broker
+ATP_ITF_BROKER_URL_TCP: "tcp://atp-activemq:61616?wireFormat.maxInactivityDuration=0&wireFormat.maxFrameSize=104857600"
+ATP_ITF_BROKER_URL_WS: "ws://atp-activemq:61614"
+HAZELCAST_CACHE_ENABLED: "true"
+HAZELCAST_ADDRESS: "atp-hazelcast:5701"
+HAZELCAST_EXPIRATION_TASK_PERIOD_SECONDS: "5"
+HAZELCAST_EXPIRATION_CLEANUP_PERCENTAGE: "10"
+HAZELCAST_PROJECT_SETTINGS_CACHE_REFILL_TIME_SECONDS: "3600"
+ATP_INTERNAL_GATEWAY_ENABLED: "false"
+ATP_INTERNAL_GATEWAY_URL: "http://atp-internal-gateway:8080"
+ATP_INTERNAL_GATEWAY_NAME: "atp-internal-gateway"
+TLS_ENABLED: "true"
+# Consul
+CONSUL_PREFIX: "devci"
+CONSUL_CONFIG_DATA_KEY: "data"
+CONSUL_CONFIG_FORMAT: "properties"
+CONSUL_ENABLED: "false"
+CONSUL_HEALTH_CHECK_ENABLED: "false"
+CONSUL_URL: "localhost"
+CONSUL_PORT: "8500"
+CONSUL_TOKEN: "1234"
+# ActiveMQ topics/queues names (finally calculated in helpers.tpl)
+CONFIGURATOR_EXECUTOR_EVENT_TRIGGERS_TOPIC: ""
+EXECUTOR_CONFIGURATOR_EVENT_TRIGGERS_TOPIC: ""
+EXECUTOR_TCCONTEXT_OPERATIONS_TOPIC: ""
+EXECUTOR_DISABLING_STEPBYSTEP_TOPIC: ""
+EXECUTOR_SYNC_RELOAD_DICTIONARY_TOPIC: ""
+EXECUTOR_STUBS_SYNC_TOPIC: ""
+CONFIGURATOR_STUBS_TOPIC: ""
+STUBS_CONFIGURATOR_TOPIC: ""
+END_EXCEPTIONAL_SITUATIONS_EVENTS_TOPIC: ""
+EDS_UPDATE_TOPIC: ""
+REPORT_QUEUE: ""
+STUBS_EXECUTOR_INCOMING_QUEUE: ""
+EXECUTOR_STUBS_OUTGOING_QUEUE: ""
+# ActiveMQ topics/queues TTLs
+END_EXCEPTIONAL_SITUATIONS_EVENTS_MESSAGES_TTL: "180000"
+OTHER_TOPICS_MESSAGES_TTL: "180000"
+EXECUTOR_STUBS_OUTGOING_MESSAGES_TTL: "90000"
+REPORTS_MESSAGES_TTL: "1800000"
+# Specific JMS Listeners settings
+STUBS_EXECUTOR_CONCURRENCY: "120-900"
+STUBS_EXECUTOR_MAX_MESSAGES_PER_TASK: "90"
+REPORT_USE_COMPRESSION: "true"
+REPORT_USE_ASYNC_SEND: "true"
+REPORT_MAX_THREAD_POOL_SIZE: "1200"
+# atploggerurl
+ATP_LOGGER_URL: "https://atp-ram-report-receiver-service-address"
+# Urls of atp-itf services
+ATP_ITF_CONFIGURATOR_URL: "https://atp-itf-configurator-service-address"
+ATP_ITF_STUBS_URL: "https://atp-itf-stubs-service-address"
+# Zipkin
+ZIPKIN_ENABLE: "false"
+ZIPKIN_PROBABILITY: "1.0"
+ZIPKIN_URL: "http://zipkin.zipkin.svc:9411"
+# GridsFs Settings
+EDS_GRIDFS_ENABLED: "true"
+MONGO_DB_ADDR: "mongos.mongocluster.svc"
+MONGO_DB_PORT: "27017"
+SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: "256MB"
+SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: "256MB"
+# Server-Sent Events settings
+ATP_ITF_EXECUTOR_SSE_TIMEOUT: "60000"
+EI_GRIDFS_DB: ""
+EI_GRIDFS_USER: ""
+EI_GRIDFS_PASSWORD: ""
+EDS_GRIDFS_DB: ""
+EDS_GRIDFS_USER: ""
+EDS_GRIDFS_PASSWORD: ""
+ITF_EXECUTOR_DB: ""
+ITF_EXECUTOR_DB_USER: ""
+ITF_EXECUTOR_DB_PASSWORD: ""
+GRIDFS_DB_ADDR: "gridfs.mongocluster.svc"
+GRIDFS_DB_PORT: "27017"
+MEMORY_REQUEST: "1Gi"
+MEMORY_LIMIT: "3Gi"
+CPU_REQUEST: "0.1"
+CPU_LIMIT: "1.5"
+MAX_RAM_SIZE: "3000m"
+SCHEDULED_CLEANUP_TEMPFILES_FIXEDRATE_MS: "3600000"
+SCHEDULED_CLEANUP_TEMPFILES_MODIFIED_BEFORE_MS: "3600000"
+# insecure Edge Termination Policy
+TERMINATION_POLICY: "Redirect"
+# Service nodes (replicas) count
+NODES_COUNT: "1"
+# Set advanced pools parameters (Increased defaults are from prod kuber, 2023-02-22)
+EXECUTOR_THREAD_POOL_SIZE: "1000"
+EXECUTOR_THREAD_POOL_CORE_SIZE: "150"
+BACKGROUND_EXECUTOR_THREAD_POOL_SIZE: "20"
+SPRING_DATASOURCE_MAXTOTAL: "400"
+SPRING_DATASOURCE_MINIDLE: "40"
+SERVER_UNDERTOW_IO_THREADS: "120"
+SERVER_UNDERTOW_WORKER_THREADS: "960"
+SERVER_UNDERTOW_ACCESSLOG_ENABLED: "true"
+JBOSS_THREADS_EQE_STATISTICS: "true"
+NEWRATIO: "1"
+# Set to ATP2 to enable Prometheus scrapping
+SERVICE_TYPE: "ATP2"
+JMX_ENABLE: "true"
+JMX_PORT: "3000"
+JMX_RMI_PORT: "3001"
+SERVICE_ENTITIES_MIGRATION_ENABLED: "true"
+BACKWARD_COMPATIBILITY: true
+# Hibernate multi-tenancy
+MULTI_TENANCY_HIBERNATE_ENABLED: false
+#Example:  "additionalClusters": {
+#			    "cluster1": {
+#			        "url": "jdbc:postgresql://pg-patroni-direct.postgresnew.svc:5432/devops_itf_reporting_cluster1_test",
+#			        "user": "devops_itf_executor_cluster1_test",
+#			        "password": "devops_itf_executor_cluster1_test",
+#			        "driver": "org.postgresql.Driver",
+#			        "projects": ["f9fd9d05-011b-409f-be4a-8e2e88233125"]
+#			}
+#			}
+additionalClusters: {}
+#  kubernetes.io/hostname: worker1-atpkub
+#Example:  "nodeSelector": {"kubernetes.io/hostname": "worker16-atp2k8"}
+nodeSelector: {}
+HEAPDUMP_ENABLED: false
+TRANSPORT_CUSTOM_LIB_FOLDER: ""
+# Swagger
+SWAGGER_ENABLED: "false"
+# Scheduled Clean User Data
+USERDATA_CLEAN_LEAVE_DAYS: "7"
+USERDATA_CLEAN_LEAVE_DAYS_TIMEUNIT: "days"
+USERDATA_CLEAN_JOB_EXPRESSION: "0 0 3 1/3 * ?"
+#Audit logging settings
+# The name of kafka topic for audit logging (finally calculated in helpers.tpl)
+AUDIT_LOGGING_TOPIC_NAME: ""
+AUDIT_LOGGING_ENABLE: "false"
+AUDIT_LOGGING_TOPIC_PARTITIONS: "1"
+AUDIT_LOGGING_TOPIC_REPLICAS: ""
+KAFKA_REPORTING_SERVERS: "kafka:9092"
+# EI temp files scheduled cleanup
+EI_CLEAN_JOB_WORKDIR: "exportimport/node"
+EI_CLEAN_JOB_ENABLED: "true"
+EI_CLEAN_SCHEDULED_JOB_PERIOD_MS: "86400000"
+EI_CLEAN_JOB_FILE_DELETE_AFTER_MS: "172800000"
+#Example: "extraEnvs": [
+#    {
+#      "name": "DISABLE_INSTALL_DEMO_CONFIG",
+#      "value": "true"
+#    },
+#    {
+#      "name": "DISABLE_SECURITY_PLUGIN",
+#      "value": "true"
+#    }
+#  ]
+extraEnvs: []
+keepHookLogs: false
+HELPER_IMAGE: "artifactory-service-address/path-to-image"

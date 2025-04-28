@@ -1,0 +1,224 @@
+openapi: 3.0.3
+info:
+  title: Api Documentation
+  description: Api Documentation
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8080'
+    description: Inferred Url
+tags:
+  - name: project-controller
+    description: Project Controller
+paths:
+  /catalog/api/v1/projects:
+    get:
+      tags:
+        - project-controller
+      summary: getAll
+      operationId: getAll
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/catalog/api/v1/projects/{uuid}':
+    get:
+      tags:
+        - project-controller
+      summary: getProjectById
+      operationId: getProjectById
+      parameters:
+        - name: uuid
+          in: path
+          description: uuid
+          required: true
+          style: simple
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+components:
+  schemas:
+    Project:
+      title: Project
+      type: object
+      properties:
+        numberOfThreshold:
+          type: integer
+          format: int32
+        dataSets:
+          type: array
+          items:
+            type: string
+        datasetFormat:
+          type: string
+          enum:
+            - Default
+            - Object
+            - Optimized
+        leads:
+          type: array
+          items:
+            type: string
+            format: uuid
+        qaTaEngineers:
+          type: array
+          items:
+            type: string
+            format: uuid
+        devOpsEngineers:
+          type: array
+          items:
+            type: string
+            format: uuid
+        atpRunners:
+          type: array
+          items:
+            type: string
+            format: uuid
+        atpSupports:
+          type: array
+          items:
+            type: string
+            format: uuid
+        taTools:
+          type: array
+          items:
+            type: string
+            format: uuid
+        disableWarnMsgSizeExceed:
+          type: boolean
+        disableWarnOutOfSyncTime:
+          type: boolean
+        disableAutoSyncAtpTestCasesWithJiraTickets:
+          type: boolean
+        projectLabel:
+          type: string
+        notificationMessageSubjectTemplate:
+          type: string
+        projectType:
+          type: string
+          enum:
+            - IMPLEMENTATION
+            - PRODUCT
+            - OTHER
+            - SANDBOX
+        tshooterUrl:
+          type: string
+        monitoringToolUrl:
+          type: string
+        missionControlToolUrl:
+          type: string
+        childrenOperations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObjectOperation'
+        certificate:
+          $ref: '#/components/schemas/Certificate'
+        dateFormat:
+          type: string
+        timeFormat:
+          type: string
+        timeZone:
+          type: string
+        createdBy:
+          $ref: '#/components/schemas/UserInfo'
+        createdWhen:
+          type: string
+          format: date-time
+          example: '1970-01-01T04:00:00.001+0400'
+        modifiedBy:
+          $ref: '#/components/schemas/UserInfo'
+        modifiedWhen:
+          type: string
+          format: date-time
+          example: '1970-01-01T04:00:00.001+0400'
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        sourceId:
+          type: string
+          format: uuid
+    Certificate:
+      title: Certificate
+      type: object
+      properties:
+        enableCertificateVerification:
+          type: boolean
+        trustStorePassphrase:
+          type: string
+        protocol:
+          type: string
+        trustStoreFileInfo:
+          $ref: '#/components/schemas/FileInfo'
+        enableClientCertificate:
+          type: boolean
+        keyStorePassphrase:
+          type: string
+        keyStoreFileInfo:
+          $ref: '#/components/schemas/FileInfo'
+    FileInfo:
+      title: FileInfo
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+    ObjectOperation:
+      title: ObjectOperation
+      type: object
+      properties:
+        name:
+          type: string
+        operationType:
+          type: string
+          enum:
+            - ADD
+            - REMOVE
+    UserInfo:
+      title: UserInfo
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string

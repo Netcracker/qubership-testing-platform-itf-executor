@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - include:
+      file: init/db.changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: after_4_4_165/db.changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: after_4_4_190/db.changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: after_4_4_262/db.changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: after_4_4_305/db.changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: after_4_4_315/db.changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: after_4_4_335/db.changelog.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: after_4_4_341/db.changelog.yaml
+      relativeToChangelogFile: true

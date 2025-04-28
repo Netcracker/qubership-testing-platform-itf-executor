@@ -1,0 +1,16 @@
+@startuml
+
+start
+:StubsExecutorIncomingRequest.handleRequest();
+:call TriggerExecutor(TriggerExecutionMessage);
+if (TriggerExecutionMessage instance of DiameterTriggerExecutionMessage) then (true)
+  :TriggerExecutor.produceEvent(DiameterTriggerExecutionMessage);
+else (false)
+:TriggerExecutor.produceEvent(CommonTriggerExecutionMessage);
+endif
+:prepare new TriggerExecutionMessage with execution result;
+:put responseMessage to "executor-stubs-outgoing-response" queue
+TriggerExecutionResultMessageSender.send(TriggerExecutionMessage);
+stop
+
+@enduml

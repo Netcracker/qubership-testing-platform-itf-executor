@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: initial_db_structure
+      author: itf
+      validCheckSum: 8:86cee11588426de9382455eb9342930a
+      preConditions:
+        - onError: WARN
+        - onErrorMessage: Init script was skipped because db is exist and it has not empty schema. (mb_project table is exist)
+        - onFail: MARK_RAN
+        - not:
+          - tableExists:
+              tableName: mb_projects
+      comment: The script creates a structure in the database if it is necessary. (if mb_projects is not exist)
+      changes:
+        - sqlFile:
+            path: sql/executor_schemaonly_plain.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: send_itf_entities_to_user_service
+      author: itf
+      validCheckSum: 8:98824711866cbd09c20b1e5c7dcaf7df
+      preConditions:
+        - onError: WARN
+        - onErrorMessage: Sending service entities to UserService via kafka topic is skipped because some error happened while checking precondition.
+        - onFail: CONTINUE
+        - onFailMessage: Sending service entities to UserService via kafka topic is skipped because preconditions was failed.
+        - changeLogPropertyDefined:
+            property: service.entities.migration.enabled
+            value: true
+      comment: Sending service entities to user service via kafka topic (it was implemented for checking grants to execute call chains or other itf entities for some user for example) ATPII-27747
+      changes:
+        - customChange: {
+          "class": "org.qubership.automation.itf.ui.services.ServiceEntitiesMigrationCustomChange",
+          "serviceName": "${spring.application.name}"
+        }

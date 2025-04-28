@@ -1,0 +1,39 @@
+{
+  "EventTypes" : {
+    "1" : {
+      "22" : "Rounded VAT Amount",
+      "23" : "TADIG",
+      "24" : "Raw Duration",
+      "25" : "Formatted B Number",
+      "26" : "Roaming Flag",
+      "27" : "Billing Tariff name",
+      "28" : "TLO Tariff Name",
+      "29" : "Bearer Service Code",
+      "10" : "Event Class",
+      "11" : "Rounded Event Scalar",
+      "12" : "BucketName",
+      "13" : "Offer Zone",
+      "14" : "Rate Plan Name",
+      "15" : "FixedChargeMoney",
+      "16" : "Charging Rate",
+      "17" : "Tax Rate",
+      "18" : "Tax Code Name",
+      "19" : "Unrounded Net Cost",
+      "1" : "Calling Number",
+      "2" : "Called Number",
+      "3" : "Duration",
+      "4" : "Usage category",
+      "5" : "Origination Country Name",
+      "6" : "Termination Country Name",
+      "7" : "Origination Zone",
+      "8" : "Termination Zone",
+      "9" : "Cost Band Name",
+      "20" : "Rounded Net Cost",
+      "21" : "Unrounded VAT Amount"
+    },
+    "2" : [ ],
+    "3" : { },
+    "4" : { },
+    "5" : { }
+  }
+}

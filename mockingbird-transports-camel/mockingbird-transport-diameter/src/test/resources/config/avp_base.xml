@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<diameter-protocol name='unknown'>
+    <avp id='257' name='Host-IP-Address'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Address'/>
+    </avp>
+    <avp id='55' name='Event-Timestamp'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Time'/>
+    </avp>
+    <avp id='258' name='Auth-Application-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='263' name='Session-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+    <avp id='264' name='Origin-Host'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='DiameterIdentity'/>
+    </avp>
+    <avp id='259' name='Acct-Application-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='268' name='Result-Code'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='269' name='Product-Name'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+    <avp id='279' name='Failed-AVP'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Grouped'/>
+    </avp>
+    <avp id='283' name='Destination-Realm'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='DiameterIdentity'/>
+    </avp>
+    <avp id='293' name='Destination-Host'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='DiameterIdentity'/>
+    </avp>
+    <avp id='296' name='Origin-Realm'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='DiameterIdentity'/>
+    </avp>
+    <avp id='297' name='Experimental-Result'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Grouped'/>
+    </avp>
+    <avp id='298' name='Experimental-Result-Code'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='299' name='Inband-Security-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='must'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='265' name='Supported-Vendor-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='266' name='Vendor-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='285' name='Re-Auth-Request-Type'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='295' name='Termination-Cause'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='278' name='Origin-State-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Unsigned32'/>
+    </avp>
+    <avp id='281' name='Error-Message'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='UTF8String'/>
+    </avp>
+    <avp id='260' name='Vendor-Specific-Application-Id'>
+        <flag-rules>
+            <flag-rule name='mandatory' rule='may'/>
+            <flag-rule name='protected' rule='may'/>
+        </flag-rules>
+        <simple-type name='Grouped'/>
+    </avp>
+	
+</diameter-protocol>

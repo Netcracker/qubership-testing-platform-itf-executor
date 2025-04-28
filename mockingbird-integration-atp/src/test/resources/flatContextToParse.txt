@@ -1,0 +1,2381 @@
+{
+    "": "",
+    "1234556": "",
+    "1234556.file": "file",
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.name": "uCPE Medium #1",
+    "parentStatusUpdate": false,
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_2.id": "bb05c6b1-d9e3-46bd-a195-16c5cc3449a0",
+    "quote_response.validFor.startDateTime": "2024-06-06T06:31:08.544021525Z",
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.parentQuoteItemId": "no",
+    "TEST_RUN_SHORT_NAME": "[SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]][10[10",
+    "Customer.contactMethod": "Telegram",
+    "labelIds": [],
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.visible": "true",
+    "attach_jpg": "/attachment/4884a48b-e61f-4c03-9778-7e7c2a49f1ef",
+    "Location.Address": "3JRG+X4 Taraq - Abu Dhabi - United Arab Emirates",
+    "saved.created_customer_id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+    "slo_list": [{
+            "productOffering.childOffering": [{
+                    "name": "pSIM",
+                    "id": "48dda4dd-cd70-4de8-8edd-3c86046270a4"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }, {
+                    "name": "5G Router",
+                    "id": "c96827c4-a93e-4747-9aa4-c2e4e636343e"
+                }
+            ],
+            "name": "5G OBN",
+            "id": "a7d8201c-6c58-4dbb-87c9-2b9417f4968b"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "DDoS Platinum",
+            "id": "c0eb7d4c-563d-4164-b88e-98088b48d10b"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "pSIM",
+                    "id": "48dda4dd-cd70-4de8-8edd-3c86046270a4"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }, {
+                    "name": "5G Router",
+                    "id": "c96827c4-a93e-4747-9aa4-c2e4e636343e"
+                }
+            ],
+            "name": "5G Backup",
+            "id": "936f923f-d60e-4ee2-b478-ba329a365cca"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Retail DDoS Platinum",
+            "id": "1f07abee-33ab-459c-9b72-e5c301442d53"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Fortinet UTM",
+            "id": "71057b9e-1669-484f-a1b2-5b622cf01a10"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Light - Laner",
+            "id": "51a919bb-c8a2-4b7a-96a8-b988221f210e"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Heavy",
+            "id": "06c4a53e-c4b6-4e55-9552-dd3a683faf61"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "DDoS Gold",
+            "id": "a8324860-b1af-4bb2-af19-773e6132bb9e"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Cisco Advantage",
+            "id": "d225fa42-1d5f-4a54-837b-60ebc16fce55"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Retail DDoS Silver",
+            "id": "b90a1ca4-64e7-4918-8c47-c09f9931c282"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "DDoS Silver",
+            "id": "6cc78c12-4978-44f8-877b-b7c6ef3c326d"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "Refund Charge",
+            "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Medium - Laner",
+            "id": "833b4f38-0322-4de2-bf58-d3974007308f"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "Downgrade Charge",
+            "id": "44363142-81fc-4260-aedb-da289b47d5b3"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Cisco Essential",
+            "id": "5cfe00e3-c89d-4430-bd0a-f7bae4e82a1d"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Co-managed Firewall",
+                    "id": "78ef0501-578a-45bb-9df2-249ae83a8794"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Firewall Silver",
+            "id": "d61b67f1-1b07-4b4b-abbe-473670d00714"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "8 Static IP's",
+            "id": "15dccf6d-4e6f-469c-84f9-5ebf7142d157"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "GPON Connectivity",
+            "id": "f9b11340-da72-4c7c-bf7e-b5fbfad0620d"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Light",
+            "id": "21762d43-8c0d-4af3-b65a-40e6e8e7066f"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Medium",
+            "id": "86b9c3c3-ed89-4b83-a895-060c90f8ab61"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "4 Static IP's",
+            "id": "ad3dc1ef-f813-4139-9d0e-e5079c256fad"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "B1 Legacy Product",
+            "id": "15abeee0-416c-4d72-a584-097730f5060f"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "Exit Charge",
+            "id": "f5cc0912-bfad-45ed-92b4-9a024a5767d9"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Co-managed Firewall",
+                    "id": "78ef0501-578a-45bb-9df2-249ae83a8794"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Firewall Gold",
+            "id": "64c202e9-0661-4860-83be-85be9ecead5c"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Fortinet Basic",
+            "id": "a9d863ee-50e4-4858-9ec6-20e616946f4a"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Retail DDoS Gold",
+            "id": "94b0374c-b759-4c6b-a229-338919b3e7af"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Fortinet ATP",
+            "id": "ab4ccff8-9772-4bcd-bf63-e242c0522017"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Co-managed Firewall",
+                    "id": "78ef0501-578a-45bb-9df2-249ae83a8794"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Firewall Platinum",
+            "id": "76098ac5-8b26-4954-b88a-9a7d2e386101"
+        }
+    ],
+    "DATASET_METADATA.Location.DATASET_NAME": "3JRG+X4 Taraq - Abu Dhabi - United Arab Emirates",
+    "logCollectorData": null,
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_2.name": "Connectivity",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.name": "5G modem #1",
+    "TEST_CASE_NAME": "SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_2.visible": "false",
+    "Quote.TLO.TLO_1.SLO.SLO_4.product.productSpecification.name": "DDoS Protection",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_4.technical": "false",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_6.technical": "false",
+    "currentSection.createdDateStamp": 36899842743511476,
+    "currentSection.isMessageParametersPresent": false,
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.quoteItemType": "Product offering",
+    "testPlanId": "3703ef62-03f7-467f-916a-33caab95cca9",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_1.visible": "false",
+    "currentSectionChanged": false,
+    "Quote.TLO.TLO_1.amount": "1",
+    "DATASET_METADATA.Quote_Modify.Quote_Modify_1.TLOs.TLO_1.DATASET_LIST_NAME": "TLOs Copy",
+    "lineNumber": null,
+    "Quote.TLO.TLO_1.SLO.SLO_2.quoteItemType": "Product offering",
+    "Quote.TLO.TLO_1.SLO.SLO_1.distributionChannelId": "ecfb4078-4542-43db-994a-27f70eda1184",
+    "Quote.TLO.TLO_1.product.productSpecification.id": "cd7bd74a-0ca3-4b01-966c-4e3051a2f14d",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_4.name": "Upstream Bandwidth, Mbps",
+    "DATASET_METADATA.Quote_Modify.Quote_Modify_1.TLOs.TLO_1.DATASET_NAME": "[E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "Quote.TLO.TLO_1.productOfferingID": "fa6ee4e9-ffc3-4c71-a540-1993dbc56e21",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_1.DATASET_NAME": "Main Connectivity 5G",
+    "atpLogRecordId": null,
+    "currentSection.name": "Run and validate \"Get public token\" call chain with atp dataset",
+    "CONFIGURATION_ID": "8c4f1b67-8b11-4745-bdde-fee049158337",
+    "lastSectionInStep": "3ea1695e-59e8-4e79-9494-d91fe85f3ba5",
+    "EXECUTION_REQUEST_NAME": "[SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]][10[10[10:28:47 AM]",
+    "Quote.TLO.TLO_1.product.name": "Digital Internet 5G - 60 Mbps #1",
+    "Interaction.type": "Call",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.DATASET_LIST_NAME": "SLOlvl2",
+    "DATASET_METADATA.Quote_Modify.Quote_Modify_1.TLOs.TLO_1.product.DATASET_LIST_NAME": "Product",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_1.id": "212e5109-5174-4aa4-bf91-a5bb2d731718",
+    "Quote_Modify.Quote_Modify_1.action": "upgrade",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_6.visible": "true",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.productSpecification.id": "59a91f17-9dfe-4463-81a5-7f664834392b",
+    "saved.top_id": "915dcb84-d222-ce01-759f-efccf6d57965",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_3.id": "7a552f7f-180c-40a3-a0c9-ef678e66174c",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_3.product.DATASET_LIST_NAME": "Product",
+    "quote_response.validFor.endDateTime": "2024-09-04T06:31:08.544021525Z",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.visible": "true",
+    "saved.created_organization_name": "AT_OrganizationName85020612913",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_3.visible": "true",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.characteristicList.Item_1.value": "pSIM",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_2.technical": "false",
+    "quote_response.customerId": "018fde26-27e3-7a71-91ef-4565f47aa933",
+    "ProjectTenantName": "cpq",
+    "quote_response.customerCategory": "71fb4fcb-e64e-4b51-9789-c1f248c5f4f1",
+    "PartyRole.PartyRole_1.engagedPartyType": "Organization",
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.productOfferingName": "Digital Internet 5G - 100 Mbps",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_4.product.DATASET_LIST_NAME": "Product",
+    "Quote.distributionChannel": "CSR",
+    "DATASET_METADATA.Quote.TLO.TLO_1.DATASET_NAME": " [TD4] SMB Customer with Digital Internet 5G - 60 Mbps",
+    "Quote.TLO.TLO_1.SLO.SLO_1.marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_4.id": "ee64389c-d87b-4c6a-86e4-0c698e054c57",
+    "currentSection.metaInfo.hidden": false,
+    "currentSection.executionStatus": "NOT_STARTED",
+    "quote_response.href": "https://some-service-address/quote-tmf-service/quoteManagement/v6/quote/963bf1be-8f3e-49ba-85a0-4d8189f0c6ec",
+    "Quote.TLO.TLO_1.distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "quote_response.revision": 0,
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.productSpecification.id": "6cb33bc6-fa54-4ab6-b256-8c2406d6729e",
+    "currentSection.metaInfo.definitionId": "4a8e38ed-c03d-4a66-bf4c-ebe4b8635498",
+    "Quote.TLO.TLO_1.SLO.SLO_1.action": "ADD",
+    "labelTemplateId": "null",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_3.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.parentQuoteItemId": "yes",
+    "EXECUTION_REQUEST_KEY": "cdd7782b-c582-4154-a2dc-fb978c6bddc2",
+    "Location.marketName": "UAE",
+    "quote_response.id": "963bf1be-8f3e-49ba-85a0-4d8189f0c6ec",
+    "Quote.TLO.TLO_1.SLO.SLO_3.quoteItemType": "Product offering",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_4.value": "10",
+    "Quote.TLO.TLO_1.SLO.SLO_4.action": "ADD",
+    "saved.customer_products.extensions.listProducts.totalCount": 1,
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_1.id": "2f791da0-7d60-452d-8eac-cd73872ca669",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.DATASET_LIST_NAME": "Product",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.name": "Device Model",
+    "quote_response.overrideMode": "catalogDriven",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_1.type": "ProductOfferingCharacteristic",
+    "projectId": "528767fc-c5af-46bf-9c4f-2e6d020cf072",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_1.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.name": "5G Connectivity #1",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.characteristicList.Item_1.value": "/30 (4 IPs)",
+    "get_product_offering.data.getProductOffering.validFor.startDateTime": "1970-12-31T20:00:00.000Z",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.productOfferingID": "c96827c4-a93e-4747-9aa4-c2e4e636343e",
+    "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "get_product_offering.data.getProductOffering.id": "2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.value": "Rent",
+    "Dates.date": "2024/06/06",
+    "currentSection.section": true,
+    "currentSection.metaInfo.editorMetaInfo": "",
+    "Quote.TLO.TLO_1.SLO.SLO_1.quoteItemType": "Product offering",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.name": "pSIM #1",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.name": "4 Static IP's #1",
+    "Quote.TLO.TLO_1.quoteItemType": "Product offering",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_2.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.characteristicList.Item_1.visible": "true",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.characteristicList.Item_1.visible": "false",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_6.value": "3463463",
+    "quote_response.updatedWhen": "2024-06-06T06:31:09.253714171Z",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.DATASET_LIST_NAME": "SLOlvl2",
+    "Customer.phone": "83172678608",
+    "quote_response.category": "Enterprise",
+    "currentSection.type": "ITF",
+    "DATASET_METADATA.Quote.DATASET_LIST_NAME": "Quote",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.value": "3463463",
+    "Quote.TLO.TLO_1.SLO.SLO_4.product.productSpecification.id": "b4010670-03ce-4230-89bb-bfa777354d5c",
+    "username": "csrd@some-domain",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_2.value": "Yes",
+    "EXECUTION_REQUEST_SHORT_NAME": "[SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]][10[10",
+    "atpExecutionRequestId": "cdd7782b-c582-4154-a2dc-fb978c6bddc2",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.productSpecification.id": "7c2158e4-65ef-4940-9c0d-cf8021c745c6",
+    "attach_pdf": "/attachment/b997e292-8035-45fd-b5f4-212f5f4a5305",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_1.name": "Fixed IP",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_4.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_1.technical": "true",
+    "Customer.category": "Small & Medium Business",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_3.value": "Main",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.characteristicList.Item_1.technical": "true",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_5.visible": "true",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_2.technical": "false",
+    "executor": "Admin Adminovich",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_3.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.characteristicList.Item_1.value": "Silver",
+    "order": 0,
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_2.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.quoteItemType": "Product offering",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_3.name": "5G Connectivity Type",
+    "currentSection.metaInfo.scenarioHashSum": "aedfbb90667557b3d67856dffabd9bf8",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_3.name": "Downstream Bandwidth, Mbps",
+    "saved.created_id": "",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.productSpecification.DATASET_LIST_NAME": "ProductSpecification",
+    "DATASET_METADATA.Location.DATASET_LIST_NAME": "Location",
+    "currentSection.message": "",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_4.DATASET_NAME": "Upstream Bandwidth 10",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.businessType": "SALE_TYPE",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_5.DATASET_NAME": "Account ID",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.productSpecification.name": "vFirewall",
+    "testCaseId": "2bef34af-ed6f-4fd7-bf8d-5dcb4253b7f8",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.characteristicList.Item_1.id": "3f14d804-9794-4d8e-9b7f-ac4bda842c5b",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.characteristicList.Item_1.type": "ProductOfferingCharacteristic",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_4.DATASET_LIST_NAME": "SLOs Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.productSpecification.name": "Additional IP Address",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_5.product.DATASET_LIST_NAME": "Product",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.characteristicList.Item_1.type": "ProductOfferingCharacteristic",
+    "DATASET_METADATA.Quote.CustomerCategory.DATASET_NAME": "Small & Medium Business",
+    "get_product_offering.data.getProductOffering.marketSegment": [{
+            "name": "UAE",
+            "id": "71a213db-340b-48d3-9e44-5bb9b542e72c"
+        }
+    ],
+    "quote_response.agreement": [{
+            "id": "d7340d66-61e7-4d95-8023-ac8dd7ff5056",
+            "name": "Agreement #12246",
+            "href": "https://some-service-address/agreement-mgmt-tmf/agreementManagement/agreement/6570d59d-66db-4f37-b3f7-b779f72be85a",
+            "externalId": "6570d59d-66db-4f37-b3f7-b779f72be85a",
+            "agreementType": "CommercialAgreement",
+            "accepted": true,
+            "action": "DASH"
+        }
+    ],
+    "DATASET_METADATA.Dates.DATASET_LIST_NAME": "Dates",
+    "Quote.TLO.TLO_1.SLO.SLO_3.marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "currentSection.configInfoId": [],
+    "executorId": "46173e29-8167-41b0-bd3f-e86279671de4",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_2.value": "5G",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_1.technical": "false",
+    "quote_response.quoteTotalPrice": [{
+            "priceType": "Total NRC",
+            "name": "Total NRC by Quote",
+            "price.taxIncludedAmount.value": 0.0,
+            "price.dutyFreeAmount.value": 0.0,
+            "price.valueExcludingTaxRounded": "0.00",
+            "price.valueIncludingTaxRounded": "0.00",
+            "price.@type": "Price"
+        }, {
+            "priceType": "Total NRC Tax",
+            "name": "Total NRC Tax by Quote",
+            "price.taxIncludedAmount.value": 0.0,
+            "price.valueIncludingTaxRounded": "0.00",
+            "price.@type": "Price"
+        }, {
+            "priceType": "Total NRC Reduction",
+            "name": "Total NRC Reduction by Quote",
+            "price.taxIncludedAmount.value": 0.0,
+            "price.dutyFreeAmount.value": 0.0,
+            "price.valueExcludingTaxRounded": "0.00",
+            "price.valueIncludingTaxRounded": "0.00",
+            "price.@type": "Price"
+        }, {
+            "priceType": "Total RC",
+            "recurringChargePeriod": "MONTH",
+            "name": "Total RC by Quote",
+            "price.taxIncludedAmount.value": 4770.0,
+            "price.taxIncludedAmount.unit": "AED",
+            "price.dutyFreeAmount.value": 4550.0,
+            "price.dutyFreeAmount.unit": "AED",
+            "price.valueExcludingTaxRounded": "4550.00",
+            "price.valueIncludingTaxRounded": "4770.00",
+            "price.@type": "Price",
+            "priceCurrency": "AED"
+        }, {
+            "priceType": "Total RC Tax",
+            "recurringChargePeriod": "MONTH",
+            "name": "Total RC Tax by Quote",
+            "price.taxIncludedAmount.value": 220.0,
+            "price.taxIncludedAmount.unit": "AED",
+            "price.valueIncludingTaxRounded": "220.00",
+            "price.@type": "Price",
+            "priceCurrency": "AED"
+        }, {
+            "priceType": "Total RC Reduction",
+            "recurringChargePeriod": "MONTH",
+            "name": "Total RC Reduction by Quote",
+            "price.taxIncludedAmount.value": 0.0,
+            "price.taxIncludedAmount.unit": "AED",
+            "price.dutyFreeAmount.value": 0.0,
+            "price.dutyFreeAmount.unit": "AED",
+            "price.valueExcludingTaxRounded": "0.00",
+            "price.valueIncludingTaxRounded": "0.00",
+            "price.@type": "Price",
+            "priceCurrency": "AED"
+        }
+    ],
+    "Quote.TLO.TLO_1.product.characteristicList.Item_5.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_4.quoteItemType": "Product offering",
+    "currentSection.uuid": "d0cf4f09-c5b6-4303-9c7f-6e222d167a3b",
+    "TEST_CASE_SHORT_NAME": "SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.quoteItemType": "Product offering",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_1.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "Quote.TLO.TLO_1.SLO.SLO_5.distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "Quote.TLO.TLO_1.SLO.SLO_1.productOfferingName": "5G Connectivity",
+    "PartyRole.PartyRole_2.name": "AT_PRCustomRep#88384631342",
+    "currentSection.isPreScriptPresent": false,
+    "Quote.TLO.TLO_1.action": "ADD",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.productOfferingName": "5G modem",
+    "saved.created_customer_name": "AT_OrganizationName85020612913",
+    "get_product_offering.data.getProductOffering.validFor.endDateTime": "",
+    "revenue": "",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.productSpecification.DATASET_NAME": "pSIM",
+    "DATASET_NAME": "Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "qaHost": null,
+    "Quote.TLO.TLO_1.SLO.SLO_5.quoteItemType": "Product offering",
+    "scenarioHashSum": "e2bf8d47fc5cb71a1ce718a99bdee73b",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_3.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_3.productOfferingID": "d61b67f1-1b07-4b4b-abbe-473670d00714",
+    "quote_response.version": "11",
+    "distributionChannel": "",
+    "executionRequestName": "[SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]][10[10[10:28:47 AM]",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_3.product.characteristicList.Item_1.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "EXECUTION_REQUEST_ID": "cdd7782b-c582-4154-a2dc-fb978c6bddc2",
+    "Quote.CustomerCategory.customerCategoryId": "b1547392-e4d6-4da5-93ae-46907ce165ad",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.value": "VEP4600-V930",
+    "quote_response.createdBy.name": "csrd@some-domain",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.productSpecification.DATASET_LIST_NAME": "ProductSpecification",
+    "mailList": "",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_3.product.DATASET_NAME": "Firewall Silver #1",
+    "currentSection.duplicateId": [],
+    "Quote.TLO.TLO_1.product.characteristicList.Item_1.id": "c4f54752-37e1-4a14-a4d8-20e7f7ef4083",
+    "currentSection.testingStatus": "NOT_STARTED",
+    "get_product_offering.data.getProductOffering.channel": [{
+            "name": "All",
+            "id": "ecfb4078-4542-43db-994a-27f70eda1184"
+        }, {
+            "name": "CSR",
+            "id": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63"
+        }
+    ],
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.action": "ADD",
+    "saved.created_quote_id": "963bf1be-8f3e-49ba-85a0-4d8189f0c6ec",
+    "TEST_RUN_KEY": "1eb41fae-78c9-4e6a-9266-2be621298715",
+    "Quote.TLO.TLO_1.SLO.SLO_4.productOfferingID": "6cc78c12-4978-44f8-877b-b7c6ef3c326d",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_6.DATASET_NAME": "Account Number",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.name": "Sale Type",
+    "DATASET_METADATA.Customer.DATASET_NAME": "Customer_common",
+    "Quote.TLO.TLO_1.SLO.SLO_3.productOfferingName": "Firewall Silver",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_3.technical": "false",
+    "TEST_RUN_NUMBER": "0273610520",
+    "saved.created_name": "",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_2.id": "ed026ca2-93a8-4bf8-a1ff-2bed76a5a6d5",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.technical": "false",
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.productOfferingID": "794b82da-f674-4fc4-8faa-2877bdafa94c",
+    "Quote.TLO.TLO_1.marketId": "37b14691-7224-4d2d-9b77-fadd23e28b27",
+    "environmentId": "8c4f1b67-8b11-4745-bdde-fee049158337",
+    "saved.incoming_id": "2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+    "saved.response_json": "",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_5.name": "Account ID",
+    "marketSegment": "",
+    "DATASET_METADATA.Quote.CustomerCategory.DATASET_LIST_NAME": "CustomerCategory",
+    "logRecordUuid": "3ea1695e-59e8-4e79-9494-d91fe85f3ba5",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.DATASET_LIST_NAME": "Product",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.id": "aa8ea843-ba1c-468e-8e72-a74332323789",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_4.product.productSpecification.DATASET_LIST_NAME": "ProductSpecification",
+    "Quote.TLO.TLO_1.SLO.SLO_5.action": "ADD",
+    "Customer.lastName": "AT_Last_Name_06062024062848",
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.amount": "1",
+    "saved.incoming_name": "Digital Internet/ 500 Mbps",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_5.DATASET_LIST_NAME": "SLOs Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.characteristicList.Item_1.name": "Package Type",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.parentQuoteItemId": "yes",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.DATASET_NAME": "uCPE Medium",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_1.name": "Package Type",
+    "DATASET_METADATA.Interaction.DATASET_NAME": "Common",
+    "testPlanName": "TestPlan ATP2",
+    "Customer.language": "English",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.productSpecification.name": "pSIM",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_1.value": "Gold",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.characteristicList.Item_1.name": "c51726d2-6146-49a0-abac-547980f9f2f9",
+    "DATASET_METADATA.Quote_Modify.Quote_Modify_1.DATASET_NAME": "[E2E_Ph1_R2C_O2A_MODIFY_07] Upgrade",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_5.technical": "false",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_3.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_4.marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "testingStatus": "NOT_STARTED",
+    "quote_response.relatedParty": [{
+            "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+            "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+            "role": "Customer",
+            "@referredType": "Customer"
+        }
+    ],
+    "currentSectionId": "3ea1695e-59e8-4e79-9494-d91fe85f3ba5",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_3.DATASET_NAME": "5G Connectivity Type Main",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_3.product.productSpecification.DATASET_LIST_NAME": "ProductSpecification",
+    "quote_response.productOfferingRefByMarketRefs": [{
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "productOfferingId": "c96827c4-a93e-4747-9aa4-c2e4e636343e",
+            "pricesByOffering": [{
+                    "priceType": "Sub-Total RC",
+                    "name": "Sub-Total RC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Sub-Total NRC",
+                    "name": "Sub-Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ]
+        }, {
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "productOfferingId": "c0eb7d4c-563d-4164-b88e-98088b48d10b",
+            "pricesByOffering": [{
+                    "priceType": "Sub-Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Monthly Fee",
+                    "price.taxIncludedAmount.value": 2205.0,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 2100.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueBasePriceExcludingTax": "2100",
+                    "price.valueBasePriceExcludingTaxRounded": "2100.00",
+                    "price.valueBasePriceIncludingTax": "2205.000000",
+                    "price.valueBasePriceIncludingTaxRounded": "2205.00",
+                    "price.valueExcludingTax": "2100",
+                    "price.valueExcludingTaxRounded": "2100.00",
+                    "price.valueIncludingTax": "2205.000000",
+                    "price.valueIncludingTaxRounded": "2205.00",
+                    "price.valueSubTotalPriceExcludingTax": "2100",
+                    "price.valueSubTotalPriceExcludingTaxRounded": "2100.00",
+                    "price.valueSubTotalPriceIncludingTax": "2205.000000",
+                    "price.valueSubTotalPriceIncludingTaxRounded": "2205.00",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Sub-Total NRC",
+                    "name": "Sub-Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ]
+        }, {
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "productOfferingId": "ad3dc1ef-f813-4139-9d0e-e5079c256fad",
+            "pricesByOffering": [{
+                    "priceType": "Sub-Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Monthly Fee",
+                    "price.taxIncludedAmount.value": 5.25,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 5.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueBasePriceExcludingTax": "5",
+                    "price.valueBasePriceExcludingTaxRounded": "5.00",
+                    "price.valueBasePriceIncludingTax": "5.250000",
+                    "price.valueBasePriceIncludingTaxRounded": "5.25",
+                    "price.valueExcludingTax": "5",
+                    "price.valueExcludingTaxRounded": "5.00",
+                    "price.valueIncludingTax": "5.250000",
+                    "price.valueIncludingTaxRounded": "5.25",
+                    "price.valueSubTotalPriceExcludingTax": "5",
+                    "price.valueSubTotalPriceExcludingTaxRounded": "5.00",
+                    "price.valueSubTotalPriceIncludingTax": "5.250000",
+                    "price.valueSubTotalPriceIncludingTaxRounded": "5.25",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Sub-Total NRC",
+                    "name": "Sub-Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ]
+        }, {
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "productOfferingId": "2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+            "pricesByOffering": [{
+                    "priceType": "Sub-Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Monthly Fee",
+                    "price.taxIncludedAmount.value": 1779.75,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 1695.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueBasePriceExcludingTax": "1695",
+                    "price.valueBasePriceExcludingTaxRounded": "1695.00",
+                    "price.valueBasePriceIncludingTax": "1779.750000",
+                    "price.valueBasePriceIncludingTaxRounded": "1779.75",
+                    "price.valueExcludingTax": "1695",
+                    "price.valueExcludingTaxRounded": "1695.00",
+                    "price.valueIncludingTax": "1779.750000",
+                    "price.valueIncludingTaxRounded": "1779.75",
+                    "price.valueSubTotalPriceExcludingTax": "1695",
+                    "price.valueSubTotalPriceExcludingTaxRounded": "1695.00",
+                    "price.valueSubTotalPriceIncludingTax": "1779.750000",
+                    "price.valueSubTotalPriceIncludingTaxRounded": "1779.75",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Sub-Total NRC",
+                    "name": "Sub-Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Total RC by Product",
+                    "price.taxIncludedAmount.value": 4770.0,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 4550.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueExcludingTax": "4550",
+                    "price.valueExcludingTaxRounded": "4550.00",
+                    "price.valueIncludingTax": "4770.000000",
+                    "price.valueIncludingTaxRounded": "4770.00",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Total NRC",
+                    "name": "Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ]
+        }, {
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "productOfferingId": "76098ac5-8b26-4954-b88a-9a7d2e386101",
+            "pricesByOffering": [{
+                    "priceType": "Sub-Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Monthly Fee",
+                    "price.taxIncludedAmount.value": 210.0,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 200.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueBasePriceExcludingTax": "200",
+                    "price.valueBasePriceExcludingTaxRounded": "200.00",
+                    "price.valueBasePriceIncludingTax": "210.000000",
+                    "price.valueBasePriceIncludingTaxRounded": "210.00",
+                    "price.valueExcludingTax": "200",
+                    "price.valueExcludingTaxRounded": "200.00",
+                    "price.valueIncludingTax": "210.000000",
+                    "price.valueIncludingTaxRounded": "210.00",
+                    "price.valueSubTotalPriceExcludingTax": "200",
+                    "price.valueSubTotalPriceExcludingTaxRounded": "200.00",
+                    "price.valueSubTotalPriceIncludingTax": "210.000000",
+                    "price.valueSubTotalPriceIncludingTaxRounded": "210.00",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Sub-Total NRC",
+                    "name": "Sub-Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ]
+        }, {
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "productOfferingId": "86b9c3c3-ed89-4b83-a895-060c90f8ab61",
+            "pricesByOffering": [{
+                    "priceType": "Sub-Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Monthly Fee",
+                    "price.taxIncludedAmount.value": 420.0,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 400.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueBasePriceExcludingTax": "400",
+                    "price.valueBasePriceExcludingTaxRounded": "400.00",
+                    "price.valueBasePriceIncludingTax": "420.000000",
+                    "price.valueBasePriceIncludingTaxRounded": "420.00",
+                    "price.valueExcludingTax": "400",
+                    "price.valueExcludingTaxRounded": "400.00",
+                    "price.valueIncludingTax": "420.000000",
+                    "price.valueIncludingTaxRounded": "420.00",
+                    "price.valueSubTotalPriceExcludingTax": "400",
+                    "price.valueSubTotalPriceExcludingTaxRounded": "400.00",
+                    "price.valueSubTotalPriceIncludingTax": "420.000000",
+                    "price.valueSubTotalPriceIncludingTaxRounded": "420.00",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Sub-Total NRC",
+                    "name": "Sub-Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ]
+        }, {
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "productOfferingId": "f9b11340-da72-4c7c-bf7e-b5fbfad0620d",
+            "pricesByOffering": [{
+                    "priceType": "Sub-Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Monthly Fee",
+                    "price.taxIncludedAmount.value": 0.0,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 0.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueBasePriceExcludingTax": "0",
+                    "price.valueBasePriceExcludingTaxRounded": "0.00",
+                    "price.valueBasePriceIncludingTax": "0.000000",
+                    "price.valueBasePriceIncludingTaxRounded": "0.00",
+                    "price.valueExcludingTax": "0",
+                    "price.valueExcludingTaxRounded": "0.00",
+                    "price.valueIncludingTax": "0.000000",
+                    "price.valueIncludingTaxRounded": "0.00",
+                    "price.valueSubTotalPriceExcludingTax": "0",
+                    "price.valueSubTotalPriceExcludingTaxRounded": "0.00",
+                    "price.valueSubTotalPriceIncludingTax": "0.000000",
+                    "price.valueSubTotalPriceIncludingTaxRounded": "0.00",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Sub-Total NRC",
+                    "name": "Sub-Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ]
+        }, {
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "productOfferingId": "936f923f-d60e-4ee2-b478-ba329a365cca",
+            "pricesByOffering": [{
+                    "priceType": "Sub-Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Monthly Fee",
+                    "price.taxIncludedAmount.value": 150.0,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 150.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueBasePriceExcludingTax": "150",
+                    "price.valueBasePriceExcludingTaxRounded": "150.00",
+                    "price.valueBasePriceIncludingTax": "150",
+                    "price.valueBasePriceIncludingTaxRounded": "150.00",
+                    "price.valueExcludingTax": "150",
+                    "price.valueExcludingTaxRounded": "150.00",
+                    "price.valueIncludingTax": "150",
+                    "price.valueIncludingTaxRounded": "150.00",
+                    "price.valueSubTotalPriceExcludingTax": "150",
+                    "price.valueSubTotalPriceExcludingTaxRounded": "150.00",
+                    "price.valueSubTotalPriceIncludingTax": "150",
+                    "price.valueSubTotalPriceIncludingTaxRounded": "150.00",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Sub-Total NRC",
+                    "name": "Sub-Total NRC by Product",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ]
+        }
+    ],
+    "quote_response.marketRefs": [{
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "marketName": "UAE"
+        }
+    ],
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_1.value": "Yes",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.productSpecification.name": "uCPE",
+    "password": "some-password",
+    "currentSection.testRunId": "1eb41fae-78c9-4e6a-9266-2be621298715",
+    "saved.customer_products.data.listProducts": [{
+            "isOneTimeOffering": false,
+            "product": null,
+            "productOffering.id": "2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+            "productOffering.origin.localizedData": [{
+                    "name": "Digital Internet/ 500 Mbps",
+                    "locale": "eng"
+                }
+            ],
+            "parentProductId": null,
+            "billingAccount": [{
+                    "id": "c288d5df-0785-4588-9984-2da34b597d67"
+                }
+            ],
+            "relatedParty": [{
+                    "name": null,
+                    "id": "018fde26-27e3-7a71-91ef-4565f47aa933"
+                }
+            ],
+            "characteristic": [{
+                    "technical": false,
+                    "name": "IN OBN Offer ID",
+                    "id": "44bcf40f-7534-48bc-b9c2-0a5f0ba1e987",
+                    "businessType": null,
+                    "value": ["6980"],
+                    "mask": null
+                }, {
+                    "technical": false,
+                    "name": "Contract Term",
+                    "id": "bbf2f7e3-82bf-4956-a898-df1e61e96da5",
+                    "businessType": "CONTRACT_TERM",
+                    "value": ["12"],
+                    "mask": null
+                }, {
+                    "technical": false,
+                    "name": "IN Data Offer ID",
+                    "id": "d65abbf5-0c50-41d8-b190-13fbb24c76ba",
+                    "businessType": null,
+                    "value": ["868"],
+                    "mask": null
+                }, {
+                    "technical": false,
+                    "name": "Account ID",
+                    "id": "986bd272-3f1d-4a37-a6d5-19841b83a811",
+                    "businessType": "ACCOUNT_ID",
+                    "value": ["7000000184"],
+                    "mask": null
+                }, {
+                    "technical": false,
+                    "name": "Account Number",
+                    "id": "6dc9af0c-e8b8-4921-907d-2126b5a1eba7",
+                    "businessType": "ACCOUNT_NUMBER",
+                    "value": ["900900000184"],
+                    "mask": null
+                }, {
+                    "technical": true,
+                    "name": "Downstream Bandwidth, Mbps",
+                    "id": "218c74a3-2988-45ab-ac06-3846279e3f34",
+                    "businessType": "DOWNSTREAM_BANDWIDTH",
+                    "value": ["500"],
+                    "mask": null
+                }, {
+                    "technical": false,
+                    "name": "IN TOS Offer ID",
+                    "id": "e42fc92d-c209-42b6-8428-c4419a6d878c",
+                    "businessType": null,
+                    "value": ["854"],
+                    "mask": null
+                }, {
+                    "technical": true,
+                    "name": "Upstream Bandwidth, Mbps",
+                    "id": "07f3de96-db61-4f85-ac62-fca39c4bc8e4",
+                    "businessType": null,
+                    "value": ["75"],
+                    "mask": null
+                }
+            ],
+            "terminationDate": null,
+            "productFamily.id": "00e75772-3c9e-43aa-b86f-cc22ffbac473",
+            "name": "Digital Internet/ 500 Mbps #1",
+            "id": "915dcb84-d222-ce01-759f-efccf6d57965",
+            "place": [{
+                    "name": "3JRG+X4 Taraq - Abu Dhabi - United Arab Emirates"
+                }
+            ],
+            "productFamily.name": "Fixed Internet",
+            "startDate": "2024-06-03T13:03:58.989Z",
+            "productPrice": [{
+                    "priceCurrency": "AED",
+                    "price.valueIncludingTaxRounded": "1779.75",
+                    "price.valueExcludingTaxRounded": "1695.00",
+                    "priceType": "RC",
+                    "priceAlteration": null
+                }, {
+                    "priceCurrency": "AED",
+                    "price.valueIncludingTaxRounded": "236.25",
+                    "price.valueExcludingTaxRounded": "225.00",
+                    "priceType": "NRC",
+                    "priceAlteration": null
+                }, {
+                    "priceCurrency": "AED",
+                    "price.valueIncludingTaxRounded": "4770.00",
+                    "price.valueExcludingTaxRounded": "4550.00",
+                    "priceType": "Total RC",
+                    "priceAlteration": null
+                }, {
+                    "priceCurrency": "AED",
+                    "price.valueIncludingTaxRounded": "236.25",
+                    "price.valueExcludingTaxRounded": "225.00",
+                    "priceType": "Total NRC",
+                    "priceAlteration": null
+                }
+            ],
+            "status": "ACTIVE"
+        }
+    ],
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.productSpecification.DATASET_NAME": "5G Data Modem",
+    "Quote.TLO.TLO_1.SLO.SLO_5.productOfferingName": "4 Static IP's",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.productSpecification.DATASET_LIST_NAME": "ProductSpecification",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_2.name": "Contract Term",
+    "Quote.TLO.TLO_1.SLO.SLO_5.parentQuoteItemId": "yes",
+    "flagIds": [],
+    "get_product_offering.data.getProductOffering.productFamily.id": "00e75772-3c9e-43aa-b86f-cc22ffbac473",
+    "get_product_offering.data.getProductOffering.productFamily.name": "Fixed Internet",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_2.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "saved.access_token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIxMDdZc1lFRWJzNVRKTmR1QWV3ZHM4cXFfWVdaUm1MOWJYN2FKVlhEcEhjIn0.eyJleHAiOjE3MTc2NTYzMTYsImlhdCI6MTcxNzY1NTQxNSwianRpIjoiNzFiYzc5MjEtYWNlMS00NGQ1LWJlNmMtM2Y3YjBiN2FhNTkzIiwiaXNzIjoiaHR0cHM6Ly9wdWJsaWMtZ2F0ZXdheS1lbnYtMi1ic3MuYXBwcy5ldGJzcy1vY3AtbWRjLTA3Lm1hbmFnZWQubmV0Y3JhY2tlci5jbG91ZC9hdXRoL3JlYWxtcy9mZmY4MWI4ZC0wMzNiLTQ3ZmItOTVjYy1lYmQzM2EyNzExZTAiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiMjEyMzA3NTItNjgxYi00MWY2LThlYTYtYTU3N2NjOWM4YWRiIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZnJvbnRlbmQiLCJzZXNzaW9uX3N0YXRlIjoiYzU1NmJhMzAtZGMxNC00MTQ4LTg5MzEtMWUzNjA0ZWFkM2U4IiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIlJPTEVfUFJPSkVDVF9NQU5BR0VSIiwiUk9MRV9TRVNTSU9OX0NPTlRFWFRfQURNSU4iLCJST0xFX1JURC1TQ1JJUFRTLUFETUlOSVNUUkFUT1IiLCJST0xFX0NPTlRFTlQtTUFOQUdFUiIsIlJPTEVfT1JHQ0hBUlRfVEVBTV9MRUFEIiwiUk9MRV9QUk9KRUNUX01BTkFHRVJfTEVBRCIsIkFkbWluaXN0cmF0b3IiLCJDQVRBTE9HLVJFRlJFU0giLCJST0xFX1BNV1BfVVNFUiIsIlJPTEVfRFNfU3VwZXJVc2VyIiwiUk9MRV9SVEMtRC1FWFQtQ0xJRU5UIiwiZGVmYXVsdC1yb2xlcy1mZmY4MWI4ZC0wMzNiLTQ3ZmItOTVjYy1lYmQzM2EyNzExZTAiLCJURU5BTlQtQURNSU4iLCJST0xFX0RTX1NhbGVzX0FnZW50IiwiUk9MRV9CQ19VU0VSIiwidW1hX2F1dGhvcml6YXRpb24iLCJST0xFX1RFTkFOVF9BRE1JTiIsIlJPTEVfQ0ROLUFETUlOIiwiUk9MRV9VVE1fQURNSU5JU1RSQVRPUiIsIlJPTEVfT1JHQ0hBUlRfVVNFUiIsIlJPTEVfQ1BNX0FkbWluIiwiUk9MRV9DSVBfREVWIiwiUk9MRV9DSVBfQURNSU4iLCJST0xFX0UyRV9FWFRFUk5BTF9VU0VSIiwiUk9MRV9BQ01fUE1NX0FkbWluIiwiUk9MRV9EU19TYWxlc19NYW5hZ2VyIiwiRVRTTFRfY3NyZCIsIlJPTEVfSUJTX0FkbWluIiwiUk9MRV9DSVBfQ1VTVE9NRVIiLCJST0xFX0NQUV9BZG1pbiIsIlJPTEVfRE9DX0dFTl9BRE1JTiIsIlJPTEVfQ1VTVE9NRVItU1VQUE9SVC1BR0VOVCIsIlJPTEVfUFJPSkVDVF9NQU5BR0VSX1NVUEVSX0xFQUQiLCJST0xFX1RFTkFOVC1BRE1JTiIsIlJPTEVfQUdNX0FkbWluIiwiUk9MRV9TYWxlc19NYW5hZ2VyIiwiUk9MRV9CSVNfUlciLCJST0xFX1BNV1BfQURNSU5JU1RSQVRPUiIsIlJPTEVfQkNfQURNSU5JU1RSQVRPUiIsIlJPTEVfQ1NSIiwiUk9MRV9SVEQtUkVBRC1PTkxZLVVTRVIiLCJST0xFX1BPUlRGT0xJTy1NQU5BR0VSIiwiUk9MRV9VVE1fU1VQRVJWSVNPUiIsIlJPTEVfT1JHQ0hBUlRfTUFOQUdFUiIsIlJPTEVfUlRELUFETUlOSVNUUkFUT1IiLCJvZmZsaW5lX2FjY2VzcyIsIlJPTEVfQ0lNX0FkbWluIiwiQ3BxX0FkbWluIiwiUk9MRV9HTE9CQUwtQ1VTVE9NRVItU0FMRVMtUkVQUkVTRU5UQVRJVkUiLCJST0xFX0NVU1RPTUVSLVNBTEVTLVJFUFJFU0VOVEFUSVZFIiwiUk9MRV9QUk9EVUNULU1BTkFHRVIiLCJST0xFX1VUTV9FWEVDVVRPUiIsIlJPTEVfRFNfQWRtaW5pc3RyYXRvciIsIlJPTEVfQ0lQX1NFU1NJT05fUkVUUlkiLCJST0xFX2Nsb3VkLW1pZ3JhdGlvbi1lbmdpbmUtYWRtaW4iLCJST0xFX09SR0NIQVJUX0FETUlOSVNUUkFUT1IiLCJST0xFX01BUktFVElOR19DTElFTlQiLCJST0xFX0JJU19STyIsIlJPTEVfVVRNX1VTRVIiLCJST0xFX0N1c3RvbWVyIiwiUk9MRV9SVEQtUFVCTElTSElORy1KT0IiXX0sInNjb3BlIjoib3BlbmlkIiwic2lkIjoiYzU1NmJhMzAtZGMxNC00MTQ4LTg5MzEtMWUzNjA0ZWFkM2U4IiwidGVuYW50LWlkIjoiZmZmODFiOGQtMDMzYi00N2ZiLTk1Y2MtZWJkMzNhMjcxMWUwIn0.E2VR9wJYjgf2nSEqfqPvjz7CghQ7-JMLrsJKuwF3kXiVyyvdeUH4N0n_Bd7aZJNaiWOp-hyKtXA503nueLyGubqf-TFo0mTfTbHwKcg8oLkpdGjnZWvwZ7W0P_PueZlBdK0sgwyQHXSR4mPUFcVVgQqSyfx0C0PX1J7cX5wfHj-4_Y9cZi_0YyNyH3r228jV107pQsF1V7rkG5chjVM4i92A9LXBAeo8azoDSWF0TT8s6CcM5MugdWlNmzTflRdNWtphYdAxfaDJU3oTE3SzQEYLoEtA1Pg9ue1FGNtIPOTKp3kqMu_y5ZBYR40M9VynTtu15HCpl4iKfnJs933jyg",
+    "dataSetListId": "fc6b7c0e-230a-473b-bfba-b091fe48be27",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.DATASET_NAME": "Device Model VEP4600-V930",
+    "dataSetId": "d3648093-c5dd-4bd5-bd2e-bd3f627e6271",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_1.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "testRunName": "SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "startDate": 1717655330187,
+    "DSL_ID": "fc6b7c0e-230a-473b-bfba-b091fe48be27",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_2.DATASET_NAME": "Connectivity 5G",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.productSpecification.id": "f615b8f6-1bd9-43dd-af31-915566f989d8",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.DATASET_NAME": "Account ID",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.distributionChannelId": "ecfb4078-4542-43db-994a-27f70eda1184",
+    "quote_response.distributionChannelName": "CSR",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_2.name": "Replaced",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_5.product.productSpecification.DATASET_LIST_NAME": "ProductSpecification",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_1.value": "No",
+    "isExecuteAnyway": false,
+    "TEST_RUN_NAME": "SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.productSpecification.id": "ca1a3533-3efd-443a-bff5-634d2b4e05bc",
+    "quote_response.initialDistributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_2.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.DATASET_NAME": "[pSIM]5G Connectivity",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_3.DATASET_NAME": "Firewall Silver",
+    "Quote.TLO.TLO_1.SLO.SLO_3.parentQuoteItemId": "yes",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.DATASET_NAME": "pSIM",
+    "Quote.TLO.TLO_1.SLO.SLO_1.productOfferingID": "2462688e-2a17-414c-a164-160f2d80a454",
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.marketId": "37b14691-7224-4d2d-9b77-fadd23e28b27",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.DATASET_NAME": "5G Connectivity #1",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.type": "ProductOfferingCharacteristic",
+    "saved.incoming_customer_category": "",
+    "DATASET_METADATA.PartyRole.PartyRole_3.DATASET_LIST_NAME": "PartyRole",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.DATASET_NAME": "Account Number",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.DATASET_LIST_NAME": "Product",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_1.DATASET_NAME": "Fixed IP",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.DATASET_NAME": "uCPE Medium #1",
+    "currentSection.createdDate": 1717655329806,
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.action": "ADD",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_4.DATASET_NAME": "DDoS Silver",
+    "EXECUTION_REQUEST_NUMBER": "0273610520",
+    "GeographicSiteName": "AT_Site_Name_88904174973",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_1.technical": "false",
+    "Quote.TLO.TLO_1.SLO.SLO_3.action": "ADD",
+    "currentSection.duration": 0,
+    "Quote.TLO.TLO_1.SLO.SLO_1.parentQuoteItemId": "yes",
+    "customerCategory": "",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.productSpecification.DATASET_LIST_NAME": "ProductSpecification",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.characteristicList.Item_1.id": "c51726d2-6146-49a0-abac-547980f9f2f9",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.businessType": "ACCOUNT_ID",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.businessType": "ACCOUNT_NUMBER",
+    "Quote.TLO.TLO_1.SLO.SLO_3.distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "TEST_RUN_ID": "1eb41fae-78c9-4e6a-9266-2be621298715",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.visible": "true",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "Quote.TLO.TLO_1.SLO.SLO_5.productOfferingID": "ad3dc1ef-f813-4139-9d0e-e5079c256fad",
+    "sections": [{
+            "uuid": "3ea1695e-59e8-4e79-9494-d91fe85f3ba5",
+            "name": "Run and validate \"[TMF648]Patch quote (upgrade/downgrade) SVKLTEST\" call chain with atp dataset",
+            "createdDate": 1717655330186,
+            "createdDateStamp": 36899843123596876,
+            "message": "",
+            "testRunId": "1eb41fae-78c9-4e6a-9266-2be621298715",
+            "testingStatus": "NOT_STARTED",
+            "executionStatus": "NOT_STARTED",
+            "duration": 0,
+            "configInfoId": [],
+            "type": "ITF",
+            "duplicateId": [],
+            "metaInfo": {
+                "scenarioId": "9413f393-fbe1-40ec-ba27-aee8e6479b20",
+                "line": 13,
+                "scenarioHashSum": "ae3ed8b1198f55d87a5ed1906db3bbde",
+                "definitionId": "4a8e38ed-c03d-4a66-bf4c-ebe4b8635498",
+                "hidden": false,
+                "editorMetaInfo": null
+            },
+            "section": true,
+            "contextVariablesPresent": false,
+            "compaund": false,
+            "isBrowserConsoleLogsPresent": false,
+            "isPreScriptPresent": false,
+            "isPostScriptPresent": false,
+            "isMessageParametersPresent": false
+        }
+    ],
+    "quote_response.lifecycleId": "cpq.qes.quote.state_model",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_1.DATASET_NAME": "Package Type Gold",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.characteristicList.Item_1.visible": "false",
+    "Quote.TLO.TLO_1.SLO.SLO_4.distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "quote_response.number": "699",
+    "TradingName": "AT_OrganizationName86046327471",
+    "projectName": "ATP2",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_1.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_5.value": "56324646",
+    "currentSection.metaInfo.line": 5,
+    "quote_response.newMSA": false,
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_4.product.DATASET_NAME": "DDoS Silver #1",
+    "Quote.TLO.TLO_1.SLO.SLO_5.product.characteristicList.Item_1.technical": "false",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.id": "169c6c66-2e69-4b8e-b2fd-0d7c6542e1ae",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_4.visible": "true",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.value": "56324646",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.productSpecification.id": "50589881-075d-431b-afdc-afda0e8e8ee6",
+    "DATASET_METADATA.Quote_Modify.Quote_Modify_1.DATASET_LIST_NAME": "Quote_Modify",
+    "urlToBrowserOrLogs": null,
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.id": "b54ae916-8b69-40e7-bb93-9e4abc1dbf65",
+    "Quote.TLO.TLO_1.SLO.SLO_4.parentQuoteItemId": "yes",
+    "PartyRole.PartyRole_3.engagedPartyType": "Employee",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_6.type": "ProductOfferingCharacteristic",
+    "testScopeId": "null",
+    "taHost": null,
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.technical": "false",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_2.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_1.visible": "true",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.productSpecification.DATASET_LIST_NAME": "ProductSpecification",
+    "Quote.TLO.TLO_1.SLO.SLO_2.productOfferingID": "86b9c3c3-ed89-4b83-a895-060c90f8ab61",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_1.visible": "true",
+    "initialExecutionRequestId": "null",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_1.visible": "false",
+    "initialTestRunId": "b1215e45-d752-4992-876c-d3de3a5bc0b6",
+    "VISIBILITY_AREA_NAME": "ATP2",
+    "entityId": "2bef34af-ed6f-4fd7-bf8d-5dcb4253b7f8",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.DATASET_NAME": "5G modem #1",
+    "Location.geoAddressId": "GhIJv43euqwXN0ARg3HLogvQSkA",
+    "DATASET_METADATA.PartyRole.PartyRole_1.DATASET_NAME": "Organization",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.name": "Account ID",
+    "Location.marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_1.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_5.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "quote_response.quoteDate": "2024-06-06T06:31:08.544021525Z",
+    "atpTestRunId": "SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "saved.created_customer_number": "a8511827faf24ee6be28",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.DATASET_NAME": "pSIM #1",
+    "DATASET_METADATA.Quote.TLO.TLO_1.DATASET_LIST_NAME": "TLOs Copy",
+    "quote_response.initialBaselineQuoteId": "963bf1be-8f3e-49ba-85a0-4d8189f0c6ec",
+    "DATASET_STORAGE_NAME": "[QA\\TA] E2E",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_2.technical": "true",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.DATASET_LIST_NAME": "SLOs Copy _1",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_1.name": "Main Connectivity",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_1.DATASET_NAME": "Replaced_Yes",
+    "currentSection.isPostScriptPresent": false,
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.productSpecification.name": "5G Data Modem",
+    "quote_response.createdBy.id": "21230752-681b-41f6-8ea6-a577cc9c8adb",
+    "quote_response.createdBy.@referredType": "User",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.DATASET_LIST_NAME": "Product",
+    "widgetConfigTemplateId": null,
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.DATASET_NAME": "[Iter#1][E2E-02]Digital Internet 5G - 60 Mbps",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_3.value": "60",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_3.id": "d6722408-9a96-444c-850d-0ff6d7331603",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_3.technical": "false",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_3.DATASET_LIST_NAME": "SLOs Copy _1",
+    "quote_response.name": "Quote #699",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_5.id": "5e9d487e-21db-4292-b9e9-468e5792e688",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_2.visible": "true",
+    "PartyRole.PartyRole_2.engagedPartyType": "Customer Representative",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_1.technical": "false",
+    "LoginUserName": "",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_5.product.characteristicList.Item_1.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.DATASET_LIST_NAME": "SLOs Copy _1",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.DATASET_NAME": "5G modem #1",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.characteristicList.Item_1.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.technical": "false",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_5.product.characteristicList.Item_1.DATASET_NAME": "LAN Public Subnet 30 (4 IPs)",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.characteristicList.Item_1.id": "2f791da0-7d60-452d-8eac-cd73872ca669",
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.action": "MODIFY",
+    "Quote.TLO.TLO_1.SLO.SLO_4.productOfferingName": "DDoS Silver",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.technical": "false",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.DATASET_NAME": "Sale Type Rent",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_6.id": "169c6c66-2e69-4b8e-b2fd-0d7c6542e1ae",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_6.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.characteristicList.Item_1.technical": "true",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_3.DATASET_NAME": "Downstream Bandwidth 60",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.productSpecification.DATASET_NAME": "Digital Internet Product",
+    "ENV_NAME": "ocp-mdc-07-env-2",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_5.DATASET_NAME": "4 Static IP's",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_1.DATASET_LIST_NAME": "Characteristics Copy _1",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.name": "Account Number",
+    "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.product.name": "Digital Internet 5G - 100 Mbps",
+    "testScopeSection": "EXECUTION",
+    "Quote.market": "Common",
+    "Customer.email": "some_email@testmail.some-domain",
+    "testCaseName": "SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_2.type": "ProductOfferingCharacteristic",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_3.product.characteristicList.Item_1.DATASET_NAME": "Package Type Silver",
+    "testRunId": "1eb41fae-78c9-4e6a-9266-2be621298715",
+    "executionRequestId": "cdd7782b-c582-4154-a2dc-fb978c6bddc2",
+    "quote_response.quoteItem": [{
+            "id": "915dcb84-d222-ce01-759f-efccf6d57965",
+            "state": "QUALIFIED",
+            "quantity.amount": 1,
+            "action": "DASH",
+            "relatedParty": [{
+                    "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "role": "Customer",
+                    "@referredType": "Customer"
+                }
+            ],
+            "productOffering.id": "2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+            "productOffering.name": "Digital Internet/ 500 Mbps",
+            "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+            "productOffering.@referredType": "ProductOffering",
+            "quoteItemPrice": [{
+                    "priceType": "RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Monthly Fee",
+                    "price.taxIncludedAmount.value": 1779.75,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 1695.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.taxRate": 5.0,
+                    "price.overridden": false,
+                    "price.priceValueRef": "6022ed34-9d12-4b3b-b019-b538af302437",
+                    "price.prodOfferingPriceTaxAlterationId": "5ad4ef6f-975d-405a-8ec7-cb0c28530ef4",
+                    "price.valueBasePriceExcludingTax": "1695",
+                    "price.valueBasePriceExcludingTaxRounded": "1695.00",
+                    "price.valueBasePriceIncludingTax": "1779.750000",
+                    "price.valueBasePriceIncludingTaxRounded": "1779.75",
+                    "price.valueExcludingTax": "1695",
+                    "price.valueExcludingTaxRounded": "1695.00",
+                    "price.valueIncludingTax": "1779.750000",
+                    "price.valueIncludingTaxRounded": "1779.75",
+                    "price.valueSubTotalPriceExcludingTax": "1695",
+                    "price.valueSubTotalPriceExcludingTaxRounded": "1695.00",
+                    "price.valueSubTotalPriceIncludingTax": "1779.750000",
+                    "price.valueSubTotalPriceIncludingTaxRounded": "1779.75",
+                    "price.pricePlanId": "6022ed34-9d12-4b3b-b019-b538af302437",
+                    "price.@type": "Price",
+                    "priceComponentSpecificationRef": "fe7a979f-40b6-410f-89a9-6bd3fb351e3a",
+                    "priceSpecificationType": "Monthly Fee",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Total RC",
+                    "recurringChargePeriod": "MONTH",
+                    "name": "Total RC by Quote Item",
+                    "price.taxIncludedAmount.value": 4770.0,
+                    "price.taxIncludedAmount.unit": "AED",
+                    "price.dutyFreeAmount.value": 4550.0,
+                    "price.dutyFreeAmount.unit": "AED",
+                    "price.valueExcludingTax": "4550",
+                    "price.valueExcludingTaxRounded": "4550.00",
+                    "price.valueIncludingTax": "4770.000000",
+                    "price.valueIncludingTaxRounded": "4770.00",
+                    "price.@type": "Price",
+                    "priceCurrency": "AED",
+                    "@type": "QuotePrice"
+                }, {
+                    "priceType": "Total NRC",
+                    "name": "Total NRC by Quote Item",
+                    "price.@type": "Price",
+                    "@type": "QuotePrice"
+                }
+            ],
+            "product.id": "915dcb84-d222-ce01-759f-efccf6d57965",
+            "product.name": "Digital Internet/ 500 Mbps #1",
+            "product.href": "https://some-service-address/install-base-tmf-service/productInventory/product/915dcb84-d222-ce01-759f-efccf6d57965",
+            "product.place": [{
+                    "id": "8c544879-23a6-4ba4-8fa7-8ec3f2ea8186",
+                    "name": "3JRG+X4 Taraq - Abu Dhabi - United Arab Emirates",
+                    "role": "customerLocation",
+                    "address": "3JRG+X4 Taraq - Abu Dhabi - United Arab Emirates",
+                    "externalId": "f1ce1211-743a-4bb5-94d8-d5c2ac7f075b",
+                    "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+                    "marketName": "UAE",
+                    "totalPricesByLocation": [{
+                            "priceType": "Total RC",
+                            "recurringChargePeriod": "MONTH",
+                            "name": "Total RC by Location",
+                            "price.taxIncludedAmount.value": 4770.0,
+                            "price.taxIncludedAmount.unit": "AED",
+                            "price.dutyFreeAmount.value": 4550.0,
+                            "price.dutyFreeAmount.unit": "AED",
+                            "price.valueExcludingTax": "4550",
+                            "price.valueExcludingTaxRounded": "4550.00",
+                            "price.valueIncludingTax": "4770.000000",
+                            "price.valueIncludingTaxRounded": "4770.00",
+                            "price.@type": "Price",
+                            "priceCurrency": "AED",
+                            "@type": "QuotePrice"
+                        }, {
+                            "priceType": "Total NRC",
+                            "name": "Total NRC by Location",
+                            "price.@type": "Price",
+                            "@type": "QuotePrice"
+                        }
+                    ],
+                    "extendedParameters": {}
+                }
+            ],
+            "product.productCharacteristic": [{
+                    "id": "944ef67c-7507-4587-b37e-32379cb97423",
+                    "name": "IN TOS Offer ID",
+                    "value": ["854"],
+                    "rawValue": ["854"],
+                    "visible": false,
+                    "technical": false,
+                    "@type": "ProductOfferingCharacteristic"
+                }, {
+                    "id": "ed026ca2-93a8-4bf8-a1ff-2bed76a5a6d5",
+                    "name": "Contract Term",
+                    "value": ["12 Months"],
+                    "rawValue": ["12"],
+                    "visible": true,
+                    "technical": false,
+                    "businessType": "CONTRACT_TERM",
+                    "@type": "ProductOfferingCharacteristic"
+                }, {
+                    "id": "7a552f7f-180c-40a3-a0c9-ef678e66174c",
+                    "name": "Downstream Bandwidth, Mbps",
+                    "value": ["500"],
+                    "rawValue": ["500"],
+                    "visible": false,
+                    "technical": true,
+                    "businessType": "DOWNSTREAM_BANDWIDTH",
+                    "@type": "ProductOfferingCharacteristic"
+                }, {
+                    "id": "5679b441-0c51-4964-a69c-7bc26c7d25ca",
+                    "name": "IN OBN Offer ID",
+                    "value": ["6980"],
+                    "rawValue": ["6980"],
+                    "visible": false,
+                    "technical": false,
+                    "@type": "ProductOfferingCharacteristic"
+                }, {
+                    "id": "ba641803-ea58-498d-a46e-6fc21824f1dd",
+                    "name": "IN Data Offer ID",
+                    "value": ["868"],
+                    "rawValue": ["868"],
+                    "visible": false,
+                    "technical": false,
+                    "@type": "ProductOfferingCharacteristic"
+                }, {
+                    "id": "5e9d487e-21db-4292-b9e9-468e5792e688",
+                    "name": "Account ID",
+                    "value": ["7000000184"],
+                    "rawValue": ["7000000184"],
+                    "visible": false,
+                    "technical": false,
+                    "businessType": "ACCOUNT_ID",
+                    "@type": "ProductOfferingCharacteristic"
+                }, {
+                    "id": "ee64389c-d87b-4c6a-86e4-0c698e054c57",
+                    "name": "Upstream Bandwidth, Mbps",
+                    "value": ["75"],
+                    "rawValue": ["75"],
+                    "visible": false,
+                    "technical": true,
+                    "@type": "ProductOfferingCharacteristic"
+                }, {
+                    "id": "169c6c66-2e69-4b8e-b2fd-0d7c6542e1ae",
+                    "name": "Account Number",
+                    "value": ["900900000184"],
+                    "rawValue": ["900900000184"],
+                    "visible": false,
+                    "technical": false,
+                    "businessType": "ACCOUNT_NUMBER",
+                    "@type": "ProductOfferingCharacteristic"
+                }
+            ],
+            "product.productSpecification.id": "cd7bd74a-0ca3-4b01-966c-4e3051a2f14d",
+            "product.productSpecification.name": "Digital Internet Product",
+            "product.productSpecification.href": "https://some-service-address/productCatalogManagement/productOffering/2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+            "product.productSpecification.version": "0.40",
+            "product.productSpecification.@referredType": "ProductSpecification",
+            "product.productOffering.id": "2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+            "product.productOffering.name": "Digital Internet/ 500 Mbps",
+            "product.productOffering.@referredType": "ProductOffering",
+            "product.@referredType": "Product",
+            "agreementIds": ["d7340d66-61e7-4d95-8023-ac8dd7ff5056"],
+            "billingAccount": [{
+                    "id": "c288d5df-0785-4588-9984-2da34b597d67"
+                }
+            ],
+            "rootQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+            "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+            "activeFrom": "2024-06-03T13:03:58.989Z",
+            "approvalLevel": 0,
+            "extendedParameters": {},
+            "creationTime": "2024-06-06T06:31:09.083278305Z",
+            "cpiVersion": 2,
+            "cpiState": "ACTIVE",
+            "overrideMode": "NET",
+            "productFamily.id": "00e75772-3c9e-43aa-b86f-cc22ffbac473",
+            "productFamily.name": "Fixed Internet",
+            "productFamily.@referredType": "ProductFamily",
+            "cpiAgreementExternalIds": ["6570d59d-66db-4f37-b3f7-b779f72be85a"],
+            "isOneTimeOffering": false,
+            "cpiPlaceExternalId": "f1ce1211-743a-4bb5-94d8-d5c2ac7f075b",
+            "quoteItem": [{
+                    "id": "0bc6b0b7-c961-3c2b-34b1-7771fc1d3696",
+                    "state": "QUALIFIED",
+                    "quantity.amount": 1,
+                    "action": "DASH",
+                    "relatedParty": [{
+                            "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "role": "Customer",
+                            "@referredType": "Customer"
+                        }
+                    ],
+                    "productOffering.id": "c0eb7d4c-563d-4164-b88e-98088b48d10b",
+                    "productOffering.name": "DDoS Platinum",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/c0eb7d4c-563d-4164-b88e-98088b48d10b",
+                    "productOffering.@referredType": "ProductOffering",
+                    "quoteItemPrice": [{
+                            "priceType": "RC",
+                            "recurringChargePeriod": "MONTH",
+                            "name": "Monthly Fee",
+                            "price.taxIncludedAmount.value": 2205.0,
+                            "price.taxIncludedAmount.unit": "AED",
+                            "price.dutyFreeAmount.value": 2100.0,
+                            "price.dutyFreeAmount.unit": "AED",
+                            "price.taxRate": 5.0,
+                            "price.overridden": false,
+                            "price.priceValueRef": "a0ceb1e0-f7eb-43ec-8a33-97430d11806a",
+                            "price.prodOfferingPriceTaxAlterationId": "5ad4ef6f-975d-405a-8ec7-cb0c28530ef4",
+                            "price.valueBasePriceExcludingTax": "2100",
+                            "price.valueBasePriceExcludingTaxRounded": "2100.00",
+                            "price.valueBasePriceIncludingTax": "2205.000000",
+                            "price.valueBasePriceIncludingTaxRounded": "2205.00",
+                            "price.valueExcludingTax": "2100",
+                            "price.valueExcludingTaxRounded": "2100.00",
+                            "price.valueIncludingTax": "2205.000000",
+                            "price.valueIncludingTaxRounded": "2205.00",
+                            "price.valueSubTotalPriceExcludingTax": "2100",
+                            "price.valueSubTotalPriceExcludingTaxRounded": "2100.00",
+                            "price.valueSubTotalPriceIncludingTax": "2205.000000",
+                            "price.valueSubTotalPriceIncludingTaxRounded": "2205.00",
+                            "price.pricePlanId": "a0ceb1e0-f7eb-43ec-8a33-97430d11806a",
+                            "price.@type": "Price",
+                            "priceComponentSpecificationRef": "fe7a979f-40b6-410f-89a9-6bd3fb351e3a",
+                            "priceSpecificationType": "Monthly Fee",
+                            "priceCurrency": "AED",
+                            "@type": "QuotePrice"
+                        }
+                    ],
+                    "product.id": "0bc6b0b7-c961-3c2b-34b1-7771fc1d3696",
+                    "product.name": "DDoS Platinum #1",
+                    "product.href": "https://some-service-address/install-base-tmf-service/productInventory/product/0bc6b0b7-c961-3c2b-34b1-7771fc1d3696",
+                    "product.productCharacteristic": [{
+                            "id": "2f791da0-7d60-452d-8eac-cd73872ca669",
+                            "name": "DDoS Protection Type",
+                            "value": ["Platinum"],
+                            "rawValue": ["Platinum"],
+                            "visible": false,
+                            "technical": false,
+                            "@type": "ProductOfferingCharacteristic"
+                        }
+                    ],
+                    "product.productSpecification.id": "b4010670-03ce-4230-89bb-bfa777354d5c",
+                    "product.productSpecification.name": "DDoS Protection",
+                    "product.productSpecification.href": "https://some-service-address/productCatalogManagement/productOffering/c0eb7d4c-563d-4164-b88e-98088b48d10b",
+                    "product.productSpecification.version": "0.8",
+                    "product.productSpecification.@referredType": "ProductSpecification",
+                    "product.productOffering.id": "c0eb7d4c-563d-4164-b88e-98088b48d10b",
+                    "product.productOffering.name": "DDoS Platinum",
+                    "product.productOffering.@referredType": "ProductOffering",
+                    "product.@referredType": "Product",
+                    "parentQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "rootQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+                    "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+                    "activeFrom": "2024-06-03T13:03:58.989Z",
+                    "approvalLevel": 0,
+                    "extendedParameters": {},
+                    "creationTime": "2024-06-06T06:31:09.083234831Z",
+                    "cpiVersion": 2,
+                    "cpiState": "ACTIVE",
+                    "overrideMode": "NET",
+                    "isOneTimeOffering": false,
+                    "@type": "QuoteItem"
+                }, {
+                    "id": "412810b8-c0cb-a3cb-4153-755ed38f0744",
+                    "state": "QUALIFIED",
+                    "quantity.amount": 1,
+                    "action": "DASH",
+                    "relatedParty": [{
+                            "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "role": "Customer",
+                            "@referredType": "Customer"
+                        }
+                    ],
+                    "productOffering.id": "ad3dc1ef-f813-4139-9d0e-e5079c256fad",
+                    "productOffering.name": "4 Static IP's",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/ad3dc1ef-f813-4139-9d0e-e5079c256fad",
+                    "productOffering.externalId": "TEST_EXTERNAL_ID_IP_4",
+                    "productOffering.@referredType": "ProductOffering",
+                    "quoteItemPrice": [{
+                            "priceType": "RC",
+                            "recurringChargePeriod": "MONTH",
+                            "name": "Monthly Fee",
+                            "price.taxIncludedAmount.value": 5.25,
+                            "price.taxIncludedAmount.unit": "AED",
+                            "price.dutyFreeAmount.value": 5.0,
+                            "price.dutyFreeAmount.unit": "AED",
+                            "price.taxRate": 5.0,
+                            "price.overridden": false,
+                            "price.priceValueRef": "c6cec8c4-2ed5-419d-bc5d-627b770aeaa8",
+                            "price.prodOfferingPriceTaxAlterationId": "5ad4ef6f-975d-405a-8ec7-cb0c28530ef4",
+                            "price.valueBasePriceExcludingTax": "5",
+                            "price.valueBasePriceExcludingTaxRounded": "5.00",
+                            "price.valueBasePriceIncludingTax": "5.250000",
+                            "price.valueBasePriceIncludingTaxRounded": "5.25",
+                            "price.valueExcludingTax": "5",
+                            "price.valueExcludingTaxRounded": "5.00",
+                            "price.valueIncludingTax": "5.250000",
+                            "price.valueIncludingTaxRounded": "5.25",
+                            "price.valueSubTotalPriceExcludingTax": "5",
+                            "price.valueSubTotalPriceExcludingTaxRounded": "5.00",
+                            "price.valueSubTotalPriceIncludingTax": "5.250000",
+                            "price.valueSubTotalPriceIncludingTaxRounded": "5.25",
+                            "price.pricePlanId": "c6cec8c4-2ed5-419d-bc5d-627b770aeaa8",
+                            "price.@type": "Price",
+                            "priceComponentSpecificationRef": "fe7a979f-40b6-410f-89a9-6bd3fb351e3a",
+                            "priceSpecificationType": "Monthly Fee",
+                            "priceCurrency": "AED",
+                            "@type": "QuotePrice"
+                        }
+                    ],
+                    "product.id": "412810b8-c0cb-a3cb-4153-755ed38f0744",
+                    "product.name": "4 Static IP's #1",
+                    "product.href": "https://some-service-address/install-base-tmf-service/productInventory/product/412810b8-c0cb-a3cb-4153-755ed38f0744",
+                    "product.productCharacteristic": [{
+                            "id": "c51726d2-6146-49a0-abac-547980f9f2f9",
+                            "name": "LAN Public Subnet",
+                            "value": ["/30 (4 IPs)"],
+                            "rawValue": ["/30 (4 IPs)"],
+                            "visible": true,
+                            "technical": false,
+                            "@type": "ProductOfferingCharacteristic"
+                        }
+                    ],
+                    "product.productSpecification.id": "7c2158e4-65ef-4940-9c0d-cf8021c745c6",
+                    "product.productSpecification.name": "Additional IP Address",
+                    "product.productSpecification.href": "https://some-service-address/productCatalogManagement/productOffering/ad3dc1ef-f813-4139-9d0e-e5079c256fad",
+                    "product.productSpecification.version": "0.6",
+                    "product.productSpecification.@referredType": "ProductSpecification",
+                    "product.productOffering.id": "ad3dc1ef-f813-4139-9d0e-e5079c256fad",
+                    "product.productOffering.name": "4 Static IP's",
+                    "product.productOffering.externalId": "TEST_EXTERNAL_ID_IP_4",
+                    "product.productOffering.@referredType": "ProductOffering",
+                    "product.@referredType": "Product",
+                    "parentQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "rootQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+                    "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+                    "activeFrom": "2024-06-03T13:03:58.989Z",
+                    "approvalLevel": 0,
+                    "extendedParameters": {},
+                    "creationTime": "2024-06-06T06:31:09.082459299Z",
+                    "cpiVersion": 2,
+                    "cpiState": "ACTIVE",
+                    "overrideMode": "NET",
+                    "isOneTimeOffering": false,
+                    "@type": "QuoteItem"
+                }, {
+                    "id": "133a14c4-0b77-6e1d-a1e2-24373db05c18",
+                    "state": "QUALIFIED",
+                    "quantity.amount": 1,
+                    "action": "DASH",
+                    "relatedParty": [{
+                            "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "role": "Customer",
+                            "@referredType": "Customer"
+                        }
+                    ],
+                    "productOffering.id": "76098ac5-8b26-4954-b88a-9a7d2e386101",
+                    "productOffering.name": "Firewall Platinum",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/76098ac5-8b26-4954-b88a-9a7d2e386101",
+                    "productOffering.@referredType": "ProductOffering",
+                    "quoteItemPrice": [{
+                            "priceType": "RC",
+                            "recurringChargePeriod": "MONTH",
+                            "name": "Monthly Fee",
+                            "price.taxIncludedAmount.value": 210.0,
+                            "price.taxIncludedAmount.unit": "AED",
+                            "price.dutyFreeAmount.value": 200.0,
+                            "price.dutyFreeAmount.unit": "AED",
+                            "price.taxRate": 5.0,
+                            "price.overridden": false,
+                            "price.priceValueRef": "b1933b44-4798-4946-8c72-67aa6c05b18a",
+                            "price.prodOfferingPriceTaxAlterationId": "5ad4ef6f-975d-405a-8ec7-cb0c28530ef4",
+                            "price.valueBasePriceExcludingTax": "200",
+                            "price.valueBasePriceExcludingTaxRounded": "200.00",
+                            "price.valueBasePriceIncludingTax": "210.000000",
+                            "price.valueBasePriceIncludingTaxRounded": "210.00",
+                            "price.valueExcludingTax": "200",
+                            "price.valueExcludingTaxRounded": "200.00",
+                            "price.valueIncludingTax": "210.000000",
+                            "price.valueIncludingTaxRounded": "210.00",
+                            "price.valueSubTotalPriceExcludingTax": "200",
+                            "price.valueSubTotalPriceExcludingTaxRounded": "200.00",
+                            "price.valueSubTotalPriceIncludingTax": "210.000000",
+                            "price.valueSubTotalPriceIncludingTaxRounded": "210.00",
+                            "price.pricePlanId": "b1933b44-4798-4946-8c72-67aa6c05b18a",
+                            "price.@type": "Price",
+                            "priceComponentSpecificationRef": "fe7a979f-40b6-410f-89a9-6bd3fb351e3a",
+                            "priceSpecificationType": "Monthly Fee",
+                            "priceCurrency": "AED",
+                            "@type": "QuotePrice"
+                        }
+                    ],
+                    "product.id": "133a14c4-0b77-6e1d-a1e2-24373db05c18",
+                    "product.name": "Firewall Platinum #1",
+                    "product.href": "https://some-service-address/install-base-tmf-service/productInventory/product/133a14c4-0b77-6e1d-a1e2-24373db05c18",
+                    "product.productCharacteristic": [{
+                            "id": "2f791da0-7d60-452d-8eac-cd73872ca669",
+                            "name": "Firewall Type",
+                            "value": ["Platinum"],
+                            "rawValue": ["Platinum"],
+                            "visible": false,
+                            "technical": true,
+                            "@type": "ProductOfferingCharacteristic"
+                        }
+                    ],
+                    "product.productSpecification.id": "50589881-075d-431b-afdc-afda0e8e8ee6",
+                    "product.productSpecification.name": "vFirewall",
+                    "product.productSpecification.href": "https://some-service-address/productCatalogManagement/productOffering/76098ac5-8b26-4954-b88a-9a7d2e386101",
+                    "product.productSpecification.version": "0.8",
+                    "product.productSpecification.@referredType": "ProductSpecification",
+                    "product.productOffering.id": "76098ac5-8b26-4954-b88a-9a7d2e386101",
+                    "product.productOffering.name": "Firewall Platinum",
+                    "product.productOffering.@referredType": "ProductOffering",
+                    "product.@referredType": "Product",
+                    "parentQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "rootQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+                    "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+                    "activeFrom": "2024-06-03T13:03:58.989Z",
+                    "approvalLevel": 0,
+                    "extendedParameters": {},
+                    "creationTime": "2024-06-06T06:31:09.08382574Z",
+                    "cpiVersion": 2,
+                    "cpiState": "ACTIVE",
+                    "overrideMode": "NET",
+                    "isOneTimeOffering": false,
+                    "@type": "QuoteItem"
+                }, {
+                    "id": "6375e1d3-dd04-52fe-f91a-a4253776678c",
+                    "state": "QUALIFIED",
+                    "quantity.amount": 1,
+                    "action": "DASH",
+                    "relatedParty": [{
+                            "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "role": "Customer",
+                            "@referredType": "Customer"
+                        }
+                    ],
+                    "productOffering.id": "86b9c3c3-ed89-4b83-a895-060c90f8ab61",
+                    "productOffering.name": "uCPE Medium",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/86b9c3c3-ed89-4b83-a895-060c90f8ab61",
+                    "productOffering.@referredType": "ProductOffering",
+                    "quoteItemPrice": [{
+                            "priceType": "RC",
+                            "recurringChargePeriod": "MONTH",
+                            "name": "Monthly Fee",
+                            "price.taxIncludedAmount.value": 420.0,
+                            "price.taxIncludedAmount.unit": "AED",
+                            "price.dutyFreeAmount.value": 400.0,
+                            "price.dutyFreeAmount.unit": "AED",
+                            "price.taxRate": 5.0,
+                            "price.overridden": false,
+                            "price.priceValueRef": "dbfc43e5-4cd5-4bdc-8eb2-3e9dc3c8edcc",
+                            "price.prodOfferingPriceTaxAlterationId": "116b3dd1-4dab-4530-b2ec-bef8cf6b17f8",
+                            "price.valueBasePriceExcludingTax": "400",
+                            "price.valueBasePriceExcludingTaxRounded": "400.00",
+                            "price.valueBasePriceIncludingTax": "420.000000",
+                            "price.valueBasePriceIncludingTaxRounded": "420.00",
+                            "price.valueExcludingTax": "400",
+                            "price.valueExcludingTaxRounded": "400.00",
+                            "price.valueIncludingTax": "420.000000",
+                            "price.valueIncludingTaxRounded": "420.00",
+                            "price.valueSubTotalPriceExcludingTax": "400",
+                            "price.valueSubTotalPriceExcludingTaxRounded": "400.00",
+                            "price.valueSubTotalPriceIncludingTax": "420.000000",
+                            "price.valueSubTotalPriceIncludingTaxRounded": "420.00",
+                            "price.pricePlanId": "dbfc43e5-4cd5-4bdc-8eb2-3e9dc3c8edcc",
+                            "price.@type": "Price",
+                            "priceComponentSpecificationRef": "fe7a979f-40b6-410f-89a9-6bd3fb351e3a",
+                            "priceSpecificationType": "Monthly Fee",
+                            "priceCurrency": "AED",
+                            "@type": "QuotePrice"
+                        }
+                    ],
+                    "product.id": "6375e1d3-dd04-52fe-f91a-a4253776678c",
+                    "product.name": "uCPE Medium #1",
+                    "product.href": "https://some-service-address/install-base-tmf-service/productInventory/product/6375e1d3-dd04-52fe-f91a-a4253776678c",
+                    "product.productCharacteristic": [{
+                            "id": "bb05c6b1-d9e3-46bd-a195-16c5cc3449a0",
+                            "name": "Replaced",
+                            "value": ["Yes"],
+                            "rawValue": ["Yes"],
+                            "visible": true,
+                            "technical": false,
+                            "@type": "ProductOfferingCharacteristic"
+                        }, {
+                            "id": "092f5142-cd23-4993-b897-5837f7934730",
+                            "name": "Sale Type",
+                            "value": ["Rent"],
+                            "rawValue": ["Rent"],
+                            "visible": true,
+                            "technical": false,
+                            "businessType": "SALE_TYPE",
+                            "@type": "ProductOfferingCharacteristic"
+                        }
+                    ],
+                    "product.productSpecification.id": "6cb33bc6-fa54-4ab6-b256-8c2406d6729e",
+                    "product.productSpecification.name": "uCPE",
+                    "product.productSpecification.href": "https://some-service-address/productCatalogManagement/productOffering/86b9c3c3-ed89-4b83-a895-060c90f8ab61",
+                    "product.productSpecification.version": "0.18",
+                    "product.productSpecification.@referredType": "ProductSpecification",
+                    "product.productOffering.id": "86b9c3c3-ed89-4b83-a895-060c90f8ab61",
+                    "product.productOffering.name": "uCPE Medium",
+                    "product.productOffering.@referredType": "ProductOffering",
+                    "product.@referredType": "Product",
+                    "parentQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "rootQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+                    "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+                    "activeFrom": "2024-06-03T13:03:58.989Z",
+                    "approvalLevel": 0,
+                    "extendedParameters.aa092ceb-b519-4109-8505-5a78a97c0276": ["Medium"],
+                    "creationTime": "2024-06-06T06:31:09.084238154Z",
+                    "cpiVersion": 2,
+                    "cpiState": "ACTIVE",
+                    "overrideMode": "NET",
+                    "isOneTimeOffering": false,
+                    "@type": "QuoteItem"
+                }, {
+                    "id": "b682d7c0-a805-b6ec-d45b-a266f130000a",
+                    "state": "QUALIFIED",
+                    "quantity.amount": 1,
+                    "action": "DASH",
+                    "relatedParty": [{
+                            "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "role": "Customer",
+                            "@referredType": "Customer"
+                        }
+                    ],
+                    "productOffering.id": "f9b11340-da72-4c7c-bf7e-b5fbfad0620d",
+                    "productOffering.name": "GPON Connectivity",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/f9b11340-da72-4c7c-bf7e-b5fbfad0620d",
+                    "productOffering.@referredType": "ProductOffering",
+                    "quoteItemPrice": [{
+                            "priceType": "RC",
+                            "recurringChargePeriod": "MONTH",
+                            "name": "Monthly Fee",
+                            "price.taxIncludedAmount.value": 0.0,
+                            "price.taxIncludedAmount.unit": "AED",
+                            "price.dutyFreeAmount.value": 0.0,
+                            "price.dutyFreeAmount.unit": "AED",
+                            "price.taxRate": 5.0,
+                            "price.overridden": false,
+                            "price.priceValueRef": "21dbb107-3701-4c9f-8475-784f787134fe",
+                            "price.prodOfferingPriceTaxAlterationId": "5ad4ef6f-975d-405a-8ec7-cb0c28530ef4",
+                            "price.valueBasePriceExcludingTax": "0",
+                            "price.valueBasePriceExcludingTaxRounded": "0.00",
+                            "price.valueBasePriceIncludingTax": "0.000000",
+                            "price.valueBasePriceIncludingTaxRounded": "0.00",
+                            "price.valueExcludingTax": "0",
+                            "price.valueExcludingTaxRounded": "0.00",
+                            "price.valueIncludingTax": "0.000000",
+                            "price.valueIncludingTaxRounded": "0.00",
+                            "price.valueSubTotalPriceExcludingTax": "0",
+                            "price.valueSubTotalPriceExcludingTaxRounded": "0.00",
+                            "price.valueSubTotalPriceIncludingTax": "0.000000",
+                            "price.valueSubTotalPriceIncludingTaxRounded": "0.00",
+                            "price.pricePlanId": "21dbb107-3701-4c9f-8475-784f787134fe",
+                            "price.@type": "Price",
+                            "priceComponentSpecificationRef": "fe7a979f-40b6-410f-89a9-6bd3fb351e3a",
+                            "priceSpecificationType": "Monthly Fee",
+                            "priceCurrency": "AED",
+                            "@type": "QuotePrice"
+                        }
+                    ],
+                    "product.id": "b682d7c0-a805-b6ec-d45b-a266f130000a",
+                    "product.name": "GPON Connectivity #1",
+                    "product.href": "https://some-service-address/install-base-tmf-service/productInventory/product/b682d7c0-a805-b6ec-d45b-a266f130000a",
+                    "product.productCharacteristic": [{
+                            "id": "7a552f7f-180c-40a3-a0c9-ef678e66174c",
+                            "name": "Downstream Bandwidth, Mbps",
+                            "value": ["500"],
+                            "rawValue": ["500"],
+                            "visible": false,
+                            "technical": false,
+                            "businessType": "DOWNSTREAM_BANDWIDTH",
+                            "@type": "ProductOfferingCharacteristic"
+                        }, {
+                            "id": "5e9d487e-21db-4292-b9e9-468e5792e688",
+                            "name": "Account ID",
+                            "value": ["7000000183"],
+                            "rawValue": ["7000000183"],
+                            "visible": false,
+                            "technical": false,
+                            "businessType": "ACCOUNT_ID",
+                            "@type": "ProductOfferingCharacteristic"
+                        }, {
+                            "id": "ee64389c-d87b-4c6a-86e4-0c698e054c57",
+                            "name": "Upstream Bandwidth, Mbps",
+                            "value": ["75"],
+                            "rawValue": ["75"],
+                            "visible": false,
+                            "technical": false,
+                            "@type": "ProductOfferingCharacteristic"
+                        }, {
+                            "id": "169c6c66-2e69-4b8e-b2fd-0d7c6542e1ae",
+                            "name": "Account Number",
+                            "value": ["900900000183"],
+                            "rawValue": ["900900000183"],
+                            "visible": false,
+                            "technical": false,
+                            "businessType": "ACCOUNT_NUMBER",
+                            "@type": "ProductOfferingCharacteristic"
+                        }
+                    ],
+                    "product.productSpecification.id": "c527d53a-d37c-47a9-bc8e-6fda5eed0e03",
+                    "product.productSpecification.name": "GPON Access",
+                    "product.productSpecification.href": "https://some-service-address/productCatalogManagement/productOffering/f9b11340-da72-4c7c-bf7e-b5fbfad0620d",
+                    "product.productSpecification.version": "0.17",
+                    "product.productSpecification.@referredType": "ProductSpecification",
+                    "product.productOffering.id": "f9b11340-da72-4c7c-bf7e-b5fbfad0620d",
+                    "product.productOffering.name": "GPON Connectivity",
+                    "product.productOffering.@referredType": "ProductOffering",
+                    "product.@referredType": "Product",
+                    "parentQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "rootQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+                    "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+                    "activeFrom": "2024-06-03T13:03:58.989Z",
+                    "approvalLevel": 0,
+                    "extendedParameters": {},
+                    "creationTime": "2024-06-06T06:31:09.084125034Z",
+                    "cpiVersion": 2,
+                    "cpiState": "ACTIVE",
+                    "overrideMode": "NET",
+                    "isOneTimeOffering": false,
+                    "@type": "QuoteItem"
+                }, {
+                    "id": "b7acf0a0-3126-124e-8d5e-8b0402e05d73",
+                    "state": "QUALIFIED",
+                    "quantity.amount": 1,
+                    "action": "DASH",
+                    "relatedParty": [{
+                            "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+                            "role": "Customer",
+                            "@referredType": "Customer"
+                        }
+                    ],
+                    "productOffering.id": "936f923f-d60e-4ee2-b478-ba329a365cca",
+                    "productOffering.name": "5G Backup",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/936f923f-d60e-4ee2-b478-ba329a365cca",
+                    "productOffering.@referredType": "ProductOffering",
+                    "quoteItemPrice": [{
+                            "priceType": "RC",
+                            "recurringChargePeriod": "MONTH",
+                            "name": "Monthly Fee",
+                            "price.taxIncludedAmount.value": 150.0,
+                            "price.taxIncludedAmount.unit": "AED",
+                            "price.dutyFreeAmount.value": 150.0,
+                            "price.dutyFreeAmount.unit": "AED",
+                            "price.overridden": false,
+                            "price.priceValueRef": "7f327136-3c5f-471b-ace4-e93ac5d54e02",
+                            "price.valueBasePriceExcludingTax": "150",
+                            "price.valueBasePriceExcludingTaxRounded": "150.00",
+                            "price.valueBasePriceIncludingTax": "150",
+                            "price.valueBasePriceIncludingTaxRounded": "150.00",
+                            "price.valueExcludingTax": "150",
+                            "price.valueExcludingTaxRounded": "150.00",
+                            "price.valueIncludingTax": "150",
+                            "price.valueIncludingTaxRounded": "150.00",
+                            "price.valueSubTotalPriceExcludingTax": "150",
+                            "price.valueSubTotalPriceExcludingTaxRounded": "150.00",
+                            "price.valueSubTotalPriceIncludingTax": "150",
+                            "price.valueSubTotalPriceIncludingTaxRounded": "150.00",
+                            "price.pricePlanId": "7f327136-3c5f-471b-ace4-e93ac5d54e02",
+                            "price.@type": "Price",
+                            "priceComponentSpecificationRef": "fe7a979f-40b6-410f-89a9-6bd3fb351e3a",
+                            "priceSpecificationType": "Monthly Fee",
+                            "priceCurrency": "AED",
+                            "@type": "QuotePrice"
+                        }
+                    ],
+                    "product.id": "b7acf0a0-3126-124e-8d5e-8b0402e05d73",
+                    "product.name": "5G Backup #1",
+                    "product.href": "https://some-service-address/install-base-tmf-service/productInventory/product/b7acf0a0-3126-124e-8d5e-8b0402e05d73",
+                    "product.productCharacteristic": [{
+                            "id": "944ef67c-7507-4587-b37e-32379cb97423",
+                            "name": "IN TOS Offer ID",
+                            "value": ["854"],
+                            "rawValue": ["854"],
+                            "visible": false,
+                            "technical": false,
+                            "@type": "ProductOfferingCharacteristic"
+                        }, {
+                            "id": "d6722408-9a96-444c-850d-0ff6d7331603",
+                            "name": "5G Connectivity Type",
+                            "value": ["5G Backup and OBN"],
+                            "rawValue": ["5G Backup and OBN"],
+                            "visible": false,
+                            "technical": false,
+                            "@type": "ProductOfferingCharacteristic"
+                        }, {
+                            "id": "5679b441-0c51-4964-a69c-7bc26c7d25ca",
+                            "name": "IN OBN Offer ID",
+                            "value": ["6980"],
+                            "rawValue": ["6980"],
+                            "visible": false,
+                            "technical": false,
+                            "@type": "ProductOfferingCharacteristic"
+                        }, {
+                            "id": "ba641803-ea58-498d-a46e-6fc21824f1dd",
+                            "name": "IN Data Offer ID",
+                            "value": ["868"],
+                            "rawValue": ["868"],
+                            "visible": false,
+                            "technical": false,
+                            "@type": "ProductOfferingCharacteristic"
+                        }
+                    ],
+                    "product.productSpecification.id": "ca1a3533-3efd-443a-bff5-634d2b4e05bc",
+                    "product.productSpecification.name": "5G Access",
+                    "product.productSpecification.href": "https://some-service-address/productCatalogManagement/productOffering/936f923f-d60e-4ee2-b478-ba329a365cca",
+                    "product.productSpecification.version": "0.25",
+                    "product.productSpecification.@referredType": "ProductSpecification",
+                    "product.productOffering.id": "936f923f-d60e-4ee2-b478-ba329a365cca",
+                    "product.productOffering.name": "5G Backup",
+                    "product.productOffering.@referredType": "ProductOffering",
+                    "product.@referredType": "Product",
+                    "parentQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "rootQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+                    "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+                    "activeFrom": "2024-06-03T13:03:58.989Z",
+                    "approvalLevel": 0,
+                    "extendedParameters": {},
+                    "creationTime": "2024-06-06T06:31:09.08297506Z",
+                    "cpiVersion": 2,
+                    "cpiState": "ACTIVE",
+                    "overrideMode": "NET",
+                    "isOneTimeOffering": false,
+                    "quoteItem": [{
+                            "id": "123b9e25-066d-f34d-d2d6-f780c99fc117",
+                            "state": "QUALIFIED",
+                            "quantity.amount": 1,
+                            "action": "DASH",
+                            "relatedParty": [{
+                                    "id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+                                    "href": "https://some-service-address/cim-tmf-service/customerManagement/customer/018fde26-27e3-7a71-91ef-4565f47aa933",
+                                    "role": "Customer",
+                                    "@referredType": "Customer"
+                                }
+                            ],
+                            "productOffering.id": "c96827c4-a93e-4747-9aa4-c2e4e636343e",
+                            "productOffering.name": "5G Router",
+                            "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/c96827c4-a93e-4747-9aa4-c2e4e636343e",
+                            "productOffering.@referredType": "ProductOffering",
+                            "quoteItemPrice": [],
+                            "product.id": "123b9e25-066d-f34d-d2d6-f780c99fc117",
+                            "product.name": "5G Router #1",
+                            "product.href": "https://some-service-address/install-base-tmf-service/productInventory/product/123b9e25-066d-f34d-d2d6-f780c99fc117",
+                            "product.productCharacteristic": [{
+                                    "id": "bb05c6b1-d9e3-46bd-a195-16c5cc3449a0",
+                                    "name": "Replaced",
+                                    "value": ["Yes"],
+                                    "rawValue": ["Yes"],
+                                    "visible": false,
+                                    "technical": false,
+                                    "@type": "ProductOfferingCharacteristic"
+                                }
+                            ],
+                            "product.productSpecification.id": "59a91f17-9dfe-4463-81a5-7f664834392b",
+                            "product.productSpecification.name": "5G Data Modem",
+                            "product.productSpecification.href": "https://some-service-address/productCatalogManagement/productOffering/c96827c4-a93e-4747-9aa4-c2e4e636343e",
+                            "product.productSpecification.version": "0.9",
+                            "product.productSpecification.@referredType": "ProductSpecification",
+                            "product.productOffering.id": "c96827c4-a93e-4747-9aa4-c2e4e636343e",
+                            "product.productOffering.name": "5G Router",
+                            "product.productOffering.@referredType": "ProductOffering",
+                            "product.@referredType": "Product",
+                            "parentQuoteItemId": "b7acf0a0-3126-124e-8d5e-8b0402e05d73",
+                            "rootQuoteItemId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                            "marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+                            "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+                            "activeFrom": "2024-06-03T13:03:58.989Z",
+                            "approvalLevel": 0,
+                            "extendedParameters": {},
+                            "creationTime": "2024-06-06T06:31:09.083186624Z",
+                            "cpiVersion": 2,
+                            "cpiState": "ACTIVE",
+                            "overrideMode": "NET",
+                            "isOneTimeOffering": false,
+                            "@type": "QuoteItem"
+                        }
+                    ],
+                    "@type": "QuoteItem"
+                }
+            ],
+            "cpiBillingAccountId": "c288d5df-0785-4588-9984-2da34b597d67",
+            "@type": "QuoteItem"
+        }
+    ],
+    "get_product_offering.data.getProductOffering.name": "Digital Internet/ 500 Mbps",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_5.businessType": "ACCOUNT_ID",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_3.visible": "true",
+    "DATASET_METADATA.PartyRole.PartyRole_2.DATASET_LIST_NAME": "PartyRole",
+    "PartyRole.PartyRole_3.name": "AT_PREmployee#84029534827",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_2.value": "12",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_1.id": "bb05c6b1-d9e3-46bd-a195-16c5cc3449a0",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.characteristicList.Item_1.DATASET_NAME": "SIM Card Type pSIM",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_4.id": "5e9d487e-21db-4292-b9e9-468e5792e688",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.characteristicList.Item_1.name": "SIM Type",
+    "get_product_offering.data.getProductOffering.childOffering": [{
+            "productOffering.childOffering": [{
+                    "name": "pSIM",
+                    "id": "48dda4dd-cd70-4de8-8edd-3c86046270a4"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }, {
+                    "name": "5G Router",
+                    "id": "c96827c4-a93e-4747-9aa4-c2e4e636343e"
+                }
+            ],
+            "name": "5G OBN",
+            "id": "a7d8201c-6c58-4dbb-87c9-2b9417f4968b"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "DDoS Platinum",
+            "id": "c0eb7d4c-563d-4164-b88e-98088b48d10b"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "pSIM",
+                    "id": "48dda4dd-cd70-4de8-8edd-3c86046270a4"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }, {
+                    "name": "5G Router",
+                    "id": "c96827c4-a93e-4747-9aa4-c2e4e636343e"
+                }
+            ],
+            "name": "5G Backup",
+            "id": "936f923f-d60e-4ee2-b478-ba329a365cca"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Retail DDoS Platinum",
+            "id": "1f07abee-33ab-459c-9b72-e5c301442d53"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Fortinet UTM",
+            "id": "71057b9e-1669-484f-a1b2-5b622cf01a10"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Light - Laner",
+            "id": "51a919bb-c8a2-4b7a-96a8-b988221f210e"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Heavy",
+            "id": "06c4a53e-c4b6-4e55-9552-dd3a683faf61"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "DDoS Gold",
+            "id": "a8324860-b1af-4bb2-af19-773e6132bb9e"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Cisco Advantage",
+            "id": "d225fa42-1d5f-4a54-837b-60ebc16fce55"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Retail DDoS Silver",
+            "id": "b90a1ca4-64e7-4918-8c47-c09f9931c282"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "DDoS Silver",
+            "id": "6cc78c12-4978-44f8-877b-b7c6ef3c326d"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "Refund Charge",
+            "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Medium - Laner",
+            "id": "833b4f38-0322-4de2-bf58-d3974007308f"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "Downgrade Charge",
+            "id": "44363142-81fc-4260-aedb-da289b47d5b3"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Cisco Essential",
+            "id": "5cfe00e3-c89d-4430-bd0a-f7bae4e82a1d"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Co-managed Firewall",
+                    "id": "78ef0501-578a-45bb-9df2-249ae83a8794"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Firewall Silver",
+            "id": "d61b67f1-1b07-4b4b-abbe-473670d00714"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "8 Static IP's",
+            "id": "15dccf6d-4e6f-469c-84f9-5ebf7142d157"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "GPON Connectivity",
+            "id": "f9b11340-da72-4c7c-bf7e-b5fbfad0620d"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Light",
+            "id": "21762d43-8c0d-4af3-b65a-40e6e8e7066f"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "uCPE Medium",
+            "id": "86b9c3c3-ed89-4b83-a895-060c90f8ab61"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "4 Static IP's",
+            "id": "ad3dc1ef-f813-4139-9d0e-e5079c256fad"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "B1 Legacy Product",
+            "id": "15abeee0-416c-4d72-a584-097730f5060f"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "Exit Charge",
+            "id": "f5cc0912-bfad-45ed-92b4-9a024a5767d9"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Co-managed Firewall",
+                    "id": "78ef0501-578a-45bb-9df2-249ae83a8794"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Firewall Gold",
+            "id": "64c202e9-0661-4860-83be-85be9ecead5c"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Fortinet Basic",
+            "id": "a9d863ee-50e4-4858-9ec6-20e616946f4a"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Retail DDoS Gold",
+            "id": "94b0374c-b759-4c6b-a229-338919b3e7af"
+        }, {
+            "productOffering.childOffering": null,
+            "name": "SD-WAN Fortinet ATP",
+            "id": "ab4ccff8-9772-4bcd-bf63-e242c0522017"
+        }, {
+            "productOffering.childOffering": [{
+                    "name": "Co-managed Firewall",
+                    "id": "78ef0501-578a-45bb-9df2-249ae83a8794"
+                }, {
+                    "name": "Refund Charge",
+                    "id": "8eb900a2-0ec0-4057-a1e2-d65f5a58ea68"
+                }
+            ],
+            "name": "Firewall Platinum",
+            "id": "76098ac5-8b26-4954-b88a-9a7d2e386101"
+        }
+    ],
+    "distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_1.name": "Replaced",
+    "DATASET_METADATA.PartyRole.PartyRole_2.DATASET_NAME": "Customer Representative",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_2.visible": "false",
+    "Quote.TLO.TLO_1.product.productSpecification.name": "Digital Internet Product",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.characteristicList.Item_1.type": "ProductOfferingCharacteristic",
+    "currentSection.contextVariablesPresent": false,
+    "currentSection.isBrowserConsoleLogsPresent": false,
+    "currentSection.compaund": false,
+    "saved.customer_id": "018fde26-27e3-7a71-91ef-4565f47aa933",
+    "DATASET_METADATA.Quote.TLO.TLO_1.product.characteristicList.Item_2.DATASET_NAME": "Contract Term 12",
+    "quote_response.distributionChannelId": "ecc38a70-cc0c-4ab7-bf5c-14d97dac3a63",
+    "Quote.TLO.TLO_1.SLO.SLO_2.action": "ADD",
+    "DATASET_METADATA.Dates.DATASET_NAME": "E2E Baseline",
+    "testSuiteName": "[SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]][10[10",
+    "Quote.TLO.TLO_1.SLO.SLO_4.product.name": "DDoS Silver #1",
+    "Quote.CustomerCategory.customerCategoryName": "Small & Medium Business",
+    "saved.customer_products_hierarchical": [{
+            "productOffering.@referredType": "Product offering",
+            "product": [{
+                    "productOffering.@referredType": "Product offering",
+                    "productOffering.id": "f9b11340-da72-4c7c-bf7e-b5fbfad0620d",
+                    "parentProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/f9b11340-da72-4c7c-bf7e-b5fbfad0620d",
+                    "productOffering.name": "GPON Connectivity",
+                    "name": "GPON Connectivity #1",
+                    "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/b682d7c0-a805-b6ec-d45b-a266f130000a?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "id": "b682d7c0-a805-b6ec-d45b-a266f130000a",
+                    "productOffering.isTangible": false
+                }, {
+                    "productOffering.@referredType": "Product offering",
+                    "productOffering.id": "936f923f-d60e-4ee2-b478-ba329a365cca",
+                    "parentProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/936f923f-d60e-4ee2-b478-ba329a365cca",
+                    "productOffering.name": "5G Backup",
+                    "name": "5G Backup #1",
+                    "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/b7acf0a0-3126-124e-8d5e-8b0402e05d73?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "id": "b7acf0a0-3126-124e-8d5e-8b0402e05d73",
+                    "productOffering.isTangible": false
+                }, {
+                    "productOffering.@referredType": "Product offering",
+                    "productOffering.id": "48dda4dd-cd70-4de8-8edd-3c86046270a4",
+                    "parentProductId": "b7acf0a0-3126-124e-8d5e-8b0402e05d73",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/48dda4dd-cd70-4de8-8edd-3c86046270a4",
+                    "productOffering.name": "pSIM",
+                    "name": "pSIM #1",
+                    "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/e833f3af-9741-4518-be95-c8380053cfb9?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "id": "e833f3af-9741-4518-be95-c8380053cfb9",
+                    "productOffering.isTangible": true
+                }, {
+                    "productOffering.@referredType": "Product offering",
+                    "productOffering.id": "c0eb7d4c-563d-4164-b88e-98088b48d10b",
+                    "parentProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/c0eb7d4c-563d-4164-b88e-98088b48d10b",
+                    "productOffering.name": "DDoS Platinum",
+                    "name": "DDoS Platinum #1",
+                    "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/0bc6b0b7-c961-3c2b-34b1-7771fc1d3696?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "id": "0bc6b0b7-c961-3c2b-34b1-7771fc1d3696",
+                    "productOffering.isTangible": false
+                }, {
+                    "productOffering.@referredType": "Product offering",
+                    "productOffering.id": "c96827c4-a93e-4747-9aa4-c2e4e636343e",
+                    "parentProductId": "b7acf0a0-3126-124e-8d5e-8b0402e05d73",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/c96827c4-a93e-4747-9aa4-c2e4e636343e",
+                    "productOffering.name": "5G Router",
+                    "name": "5G Router #1",
+                    "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/123b9e25-066d-f34d-d2d6-f780c99fc117?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "id": "123b9e25-066d-f34d-d2d6-f780c99fc117",
+                    "productOffering.isTangible": true
+                }, {
+                    "productOffering.@referredType": "Product offering",
+                    "productOffering.id": "76098ac5-8b26-4954-b88a-9a7d2e386101",
+                    "parentProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/76098ac5-8b26-4954-b88a-9a7d2e386101",
+                    "productOffering.name": "Firewall Platinum",
+                    "name": "Firewall Platinum #1",
+                    "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/133a14c4-0b77-6e1d-a1e2-24373db05c18?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "id": "133a14c4-0b77-6e1d-a1e2-24373db05c18",
+                    "productOffering.isTangible": false
+                }, {
+                    "productOffering.@referredType": "Product offering",
+                    "productOffering.id": "ad3dc1ef-f813-4139-9d0e-e5079c256fad",
+                    "parentProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/ad3dc1ef-f813-4139-9d0e-e5079c256fad",
+                    "productOffering.name": "4 Static IP's",
+                    "name": "4 Static IP's #1",
+                    "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "productOffering.externalId": "TEST_EXTERNAL_ID_IP_4",
+                    "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/412810b8-c0cb-a3cb-4153-755ed38f0744?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "id": "412810b8-c0cb-a3cb-4153-755ed38f0744",
+                    "productOffering.isTangible": false
+                }, {
+                    "productOffering.@referredType": "Product offering",
+                    "productOffering.id": "86b9c3c3-ed89-4b83-a895-060c90f8ab61",
+                    "parentProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/86b9c3c3-ed89-4b83-a895-060c90f8ab61",
+                    "productOffering.name": "uCPE Medium",
+                    "name": "uCPE Medium #1",
+                    "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+                    "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/6375e1d3-dd04-52fe-f91a-a4253776678c?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+                    "id": "6375e1d3-dd04-52fe-f91a-a4253776678c",
+                    "productOffering.isTangible": true
+                }
+            ],
+            "productOffering.id": "2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+            "productOffering.href": "https://some-service-address/productCatalogManagement/productOffering/2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+            "productOffering.name": "Digital Internet/ 500 Mbps",
+            "name": "Digital Internet/ 500 Mbps #1",
+            "rootProductId": "915dcb84-d222-ce01-759f-efccf6d57965",
+            "href": "https://some-service-address/install-base-tmf-service/productInventory/v6/product/915dcb84-d222-ce01-759f-efccf6d57965?Business-id=018fde26-27e3-7a71-91ef-4565f47aa933",
+            "id": "915dcb84-d222-ce01-759f-efccf6d57965",
+            "productOffering.isTangible": false
+        }
+    ],
+    "PartyRole.PartyRole_1.name": "AT_PROrganization#84179915288",
+    "attach_pdf_name": "",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.productOfferingName": "pSIM",
+    "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_2.visible": "false",
+    "Customer.firstName": "AT_First_Name_06062024062848",
+    "DATASET_METADATA.Quote.DATASET_NAME": " [TD4] SMB Customer with Digital Internet 5G - 60 Mbps",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_1.value": "5G",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_6.name": "Account Number",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_2.DATASET_NAME": "Replaced_Yes",
+    "Quote.TLO.TLO_1.parentQuoteItemId": "no",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_2.id": "3522f886-33d6-42ff-b255-0efb04da29dd",
+    "Quote.TLO.TLO_1.product.characteristicList.Item_4.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.productOfferingID": "48dda4dd-cd70-4de8-8edd-3c86046270a4",
+    "productFamily": "",
+    "finalTestRun": false,
+    "Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_2.product.characteristicList.Item_1.type": "ProductOfferingCharacteristic",
+    "environmentInfoId": null,
+    "quote_response.extendedParameters.dealId": ["EAND-20240606-00003"],
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_4.product.productSpecification.DATASET_NAME": "DDoS Protection",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_5.product.productSpecification.DATASET_NAME": "Additional IP Address",
+    "atpCompaund": null,
+    "Quote.TLO.TLO_1.SLO.SLO_2.distributionChannelId": "ecfb4078-4542-43db-994a-27f70eda1184",
+    "saved.customer_category": "71fb4fcb-e64e-4b51-9789-c1f248c5f4f1",
+    "quote_response.state": "IN_PROGRESS",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.SLOlvl2.SLOlvl2_1.product.DATASET_LIST_NAME": "Product",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_5.product.DATASET_NAME": "4 Static IP's #1",
+    "DATASET_METADATA.PartyRole.PartyRole_1.DATASET_LIST_NAME": "PartyRole",
+    "Quote.TLO.TLO_1.SLO.SLO_5.marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "Quote.TLO.TLO_1.SLO.SLO_3.product.name": "Firewall Silver #1",
+    "quote_response.expirationDate": "2024-09-04T06:31:08.544021525Z",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.characteristicList.Item_5.type": "ProductOfferingCharacteristic",
+    "Quote.TLO.TLO_1.SLO.SLO_2.productOfferingName": "uCPE Medium",
+    "saved.created_organization_id": "018fde26-1bf7-7a04-97cc-68ad876dc775",
+    "Quote.TLO.TLO_1.SLO.SLO_1.product.productSpecification.name": "5G Access",
+    "threads": 1,
+    "Quote.TLO.TLO_1.product.characteristicList.Item_6.businessType": "ACCOUNT_NUMBER",
+    "Quote.TLO.TLO_1.SLO.SLO_2.parentQuoteItemId": "yes",
+    "Quote.TLO.TLO_1.SLO.SLO_2.marketId": "71a213db-340b-48d3-9e44-5bb9b542e72c",
+    "saved.top_product_offering_id": "2cbacf6c-a929-4646-b1bd-df0f06dd0b21",
+    "DATASET_METADATA.Interaction.DATASET_LIST_NAME": "Interaction",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_1.product.productSpecification.DATASET_NAME": "5G Access",
+    "LOGIN_EMAIL": "csrd@some-domain",
+    "DATASET_METADATA.Customer.DATASET_LIST_NAME": "Customer",
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_3.product.productSpecification.DATASET_NAME": "vFirewall",
+    "DATASET_METADATA.Quote_Modify.Quote_Modify_1.TLOs.TLO_1.product.DATASET_NAME": "[E2E_Ph1_R2C_O2A_MODIFY_07]",
+    "qaExternalHost": null,
+    "DATASET_METADATA.Quote.TLO.TLO_1.SLO.SLO_2.product.productSpecification.DATASET_NAME": "uCPE",
+    "currentSection.metaInfo.scenarioId": "abd73c10-5c37-40de-a36f-9330af08b272",
+    "DATASET_METADATA.PartyRole.PartyRole_3.DATASET_NAME": "Employee",
+    "ENV_ID": "8c4f1b67-8b11-4745-bdde-fee049158337",
+    "currentSection": {
+        "uuid": "3ea1695e-59e8-4e79-9494-d91fe85f3ba5",
+        "name": "Run and validate \"[TMF648]Patch quote (upgrade/downgrade) SVKLTEST\" call chain with atp dataset",
+        "createdDate": 1717655330186,
+        "createdDateStamp": 36899843123596876,
+        "message": "",
+        "testRunId": "1eb41fae-78c9-4e6a-9266-2be621298715",
+        "testingStatus": "NOT_STARTED",
+        "executionStatus": "NOT_STARTED",
+        "duration": 0,
+        "configInfoId": [],
+        "type": "ITF",
+        "duplicateId": [],
+        "metaInfo": {
+            "scenarioId": "9413f393-fbe1-40ec-ba27-aee8e6479b20",
+            "line": 13,
+            "scenarioHashSum": "ae3ed8b1198f55d87a5ed1906db3bbde",
+            "definitionId": "4a8e38ed-c03d-4a66-bf4c-ebe4b8635498",
+            "hidden": false,
+            "editorMetaInfo": null
+        },
+        "section": true,
+        "contextVariablesPresent": false,
+        "compaund": false,
+        "isBrowserConsoleLogsPresent": false,
+        "isPreScriptPresent": false,
+        "isPostScriptPresent": false,
+        "isMessageParametersPresent": false
+    }
+}

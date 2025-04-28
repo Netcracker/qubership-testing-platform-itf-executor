@@ -1,0 +1,32 @@
+<CCR Description="CCR-I" Retransmit="true" Service="To_DiameterPeer_User_dp_user2">
+    <Session-Id>320742049458</Session-Id>
+    <Origin-Host>some-origin-host</Origin-Host>
+    <Origin-Realm>some-origin-realm</Origin-Realm>
+    <Destination-Realm>some-destination-realm</Destination-Realm>
+    <Destination-Host>some-destination-host</Destination-Host>
+    <Auth-Application-Id>4</Auth-Application-Id>
+    <Service-Context-Id>32251@3gpp.org</Service-Context-Id>
+    <Event-Timestamp>2017-09-07 01:14:13</Event-Timestamp>
+    <CC-Request-Type>1</CC-Request-Type>
+    <CC-Request-Number>0</CC-Request-Number>
+    <Subscription-Id>
+        <Subscription-Id-Type>0</Subscription-Id-Type>
+        <Subscription-Id-Data>12001115979</Subscription-Id-Data>
+    </Subscription-Id>
+    <Multiple-Services-Indicator>1</Multiple-Services-Indicator>
+    <Multiple-Services-Credit-Control>
+        <Rating-Group>1</Rating-Group>
+        <Service-Identifier>1</Service-Identifier>
+    </Multiple-Services-Credit-Control>
+    <Service-Information>
+        <PS-Information>
+            <_3GPP-GGSN-MCC-MNC>26002</_3GPP-GGSN-MCC-MNC>
+            <_3GPP-SGSN-MCC-MNC>26002</_3GPP-SGSN-MCC-MNC>
+            <_3GPP-Selection-Mode>1</_3GPP-Selection-Mode>
+            <_3GPP-Charging-Characteristics>F100</_3GPP-Charging-Characteristics>
+            <_3GPP-Charging-Id>167772170</_3GPP-Charging-Id>
+            <_3GPP-PDP-Type>0</_3GPP-PDP-Type>
+            <Called-Station-Id>erainternet.csg</Called-Station-Id>
+        </PS-Information>
+    </Service-Information>
+</CCR>

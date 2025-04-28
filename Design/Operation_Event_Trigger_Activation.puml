@@ -1,0 +1,71 @@
+@startuml
+title Operation Event Trigger activation/deactivation
+
+actor User
+participant Configurator
+participant Executor
+
+group Single activation/deactivation
+    User -> Configurator: click activation/deactivation button on Situation
+    note over Configurator
+        Request {
+            BigInteger id; - id of Situation Event Trigger;
+        }
+    end note
+    Configurator -> Executor: send Request via PATCH-request to "/trigger/switch"
+    note over Executor
+        class org.qubership.automation.itf.ui.controls.entities.EventTriggerController
+
+        @Transactional
+        @RequestMapping(value = "/trigger/switch", method = RequestMethod.PATCH)
+        @ApiOperation(value = "Switch Operation Event Trigger", notes = "Switch operation event trigger state by id", tags = {SwaggerConstants.TRIGGER_COMMAND_API})
+        public OperationEventTriggerStateResult switchTrigger(
+            @RequestBody EventTriggerStateRequest request
+        )
+    end note
+    Executor -> Executor: activate/deactivate Operation Event Trigger
+
+    note over Executor
+        class EventTriggerStateResponse {
+            private String state; - state of Situation Event Trigger;
+            private String result; - result message;
+            private String errorMessage; - error message;
+        }
+    end note
+    Executor -> Configurator: send the EventTriggerStateResponse to Configurator
+
+    Configurator -> User: update UI model
+end
+
+group Bulk activation/deactivation
+    User -> Configurator: click "Turn On"/"Turn Off" button on Situations accordeon
+    note over Configurator
+        Request {
+            List<BigInteger> ids; - ids of Situations under Operation;
+            boolean turnOn; - if "Turn On" then true else false;
+        }
+    end note
+    Configurator -> Executor: send Request via PATCH-request to "/trigger/switch/all"
+
+    note over Executor
+        @Transactional
+        @RequestMapping(value = "/trigger/switch/{ids}/{turnOn}", method = RequestMethod.PATCH)
+        @ApiOperation(value = "Switch all operation event triggers for situations", tags = {SwaggerConstants.TRIGGER_COMMAND_API})
+        public Map<String, Object> switchAllTriggersUnderSituation(
+            @RequestBody EventTriggerStatesRequest request
+        )
+    end note
+    Executor -> Executor: activate/deactivate Operation Event Triggers
+
+    note over Executor
+        class EventTriggerStatesResponse {
+            private List<String> states; - list of Situation Event Triggers states
+            private List<BigInteger> triggerIds; - list of Situation Event Triggers ids
+            private String errorMessage; - error message
+        }
+    end note
+    Executor -> Configurator: send the EventTriggerStatesResponse to Configurator
+
+    Configurator -> User: update UI model
+end
+@enduml

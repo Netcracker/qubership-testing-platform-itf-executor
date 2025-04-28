@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.qubership.mockingbird</groupId>
+        <artifactId>mockingbird-interceptors</artifactId>
+        <version>${atp.service.version}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>test-interceptor</artifactId>
+    <build>
+        <finalName>test-interceptor</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!--Should be added to the interceptor's pom in case when third-party libs are used in implementation.
+                This plugin will create target/classes/lib directory with all dependencies for interceptor-->
+            <!--plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin-->
+        </plugins>
+    </build>
+    <packaging>jar</packaging>
+</project>

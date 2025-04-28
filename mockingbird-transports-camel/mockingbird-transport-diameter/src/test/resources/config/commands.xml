@@ -1,0 +1,446 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<diameter-protocol name='unknown'>
+    <properties name="Port" value="3872"/>
+    <properties name="authApplicationId" value="0"/>
+    <properties>
+        <prop name="soTimeOut" value="300"/>
+        <!-- time out mlseconds after then check reciver thread for new message; default = 50 -->
+        <prop name="originHost" value="ITF.diameter.service"/>
+        <prop name="watchTimeMLS" value="500"/>
+        <!-- time out mlseconds after then start reciver thread; default = 50 -->
+        <prop name="countTimeOut" value="35000"/>
+        <!-- count time mlseconds after then send device watch dog request; default = 30000  -->
+    </properties>
+
+    <command id='272' application='4'>
+        <request name='Credit-Control-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <fixed>
+                    <avp-ref name='Session-Id'/>
+                </fixed>
+                <required>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Destination-Realm'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='CC-Request-Type'/>
+                    <avp-ref name='CC-Request-Number'/>
+                </required>
+                <optional>
+                    <avp-ref name='Feature-List'/>
+                    <avp-ref name='Feature-List-ID'/>
+                    <avp-ref name='Default-EPS-Bearer-QoS'/>
+                    <avp-ref name='Subscription-Id-Type'/>
+                    <avp-ref name='Framed-IP-Address'/>
+                    <avp-ref name='Destination-Host'/>
+                    <avp-ref name='QoS-Class-Identifier'/>
+                    <avp-ref name='Origin-State-Id'/>
+                    <avp-ref name='IP-CAN-Type'/>
+                    <avp-ref name='Network-Request-Support'/>
+                    <avp-ref name='APN-Aggregate-Max-Bitrate-UL'/>
+                    <avp-ref name='APN-Aggregate-Max-Bitrate-DL'/>
+                    <avp-ref name='QoS-Information'/>
+                    <avp-ref name='Allocation-Retention-Priority'/>
+                    <avp-ref name='Max-Requested-Bandwidth-UL'/>
+                    <avp-ref name='Max-Requested-Bandwidth-DL'/>
+                    <avp-ref name='Called-Station-Id'/>
+                    <avp-ref name='_3GPP-SGSN-Address'/>
+                    <avp-ref name='Bearer-Operation'/>
+                    <avp-ref name='Subscription-Id' max='*'/>
+                    <avp-ref name='Subscription-Id-Data' max='*'/>
+                    <avp-ref name='Supported-Features'/>
+                    <avp-ref name='Guaranteed-Bitrate-UL'/>
+                    <avp-ref name='Guaranteed-Bitrate-DL'/>
+                    <avp-ref name='Bearer-Identifier'/>
+                    <any-avp/>
+                </optional>
+            </layout>
+        </request>
+    </command>
+    <command id='272' application='4'>
+        <answer name='Credit-Control-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <fixed>
+                    <avp-ref name='Session-Id'/>
+                </fixed>
+                <required>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='CC-Request-Type'/>
+                    <avp-ref name='CC-Request-Number'/>
+                </required>
+                <optional>
+                    <avp-ref name='QoS-Class-Identifier'/>
+                    <avp-ref name='Charging-Rule-Install'/>
+                    <avp-ref name='Vendor-Id'/>
+                    <avp-ref name='QoS-Information'/>
+                    <avp-ref name='APN-Aggregate-Max-Bitrate-UL'/>
+                    <avp-ref name='APN-Aggregate-Max-Bitrate-DL'/>
+                    <avp-ref name='Bearer-Control-Mode'/>
+                    <avp-ref name='Event-Trigger'/>
+                    <any-avp/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+
+    <command id='257' application='0'>
+        <request name='Capabilities-Exchange-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <fixed>
+                    <avp-ref name='Origin-State-Id'/>
+                </fixed>
+                <required>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <!--<avp-ref name='Vendor-Id'/>-->
+                    <avp-ref name='Auth-Application-Id'/>
+                </required>
+                <optional>
+                    <avp-ref name='Product-Name'/>
+                    <avp-ref name='Host-IP-Address'/>
+                    <avp-ref name='Supported-Vendor-Id'/>
+                    <avp-ref name='Vendor-Specific-Application-Id'/>
+                    <any-avp/>
+                </optional>
+            </layout>
+        </request>
+    </command>
+    <command id='257' application='0'>
+        <answer name='Capabilities-Exchange-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Host-IP-Address'/>
+                    <avp-ref name='Vendor-Id'/>
+                    <avp-ref name='Product-Name'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='Firmware-Revision'/>
+                </required>
+                <optional>
+                    <avp-ref name='Vendor-Specific-Application-Id'/>
+                    <any-avp/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+    <command id='282' application='4'>
+        <request name='Disconnect-Peer-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Disconnect-Cause'/>
+                </required>
+            </layout>
+        </request>
+    </command>
+    <command id='282' application='4'>
+        <answer name='Disconnect-Peer-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                </required>
+                <optional>
+                    <avp-ref name='Error-Message'/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+    <command id='275' application='0'>
+        <request name='Session-Termination-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Destination-Realm'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='Termination-Cause'/>
+                    <avp-ref name='User-Name'/>
+                </required>
+            </layout>
+        </request>
+    </command>
+    <command id='275' application='0'>
+        <answer name='Session-Termination-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='User-Name'/>
+                </required>
+                <optional>
+                    <avp-ref name='Error-Message'/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+    <command id='271' application='0'>
+        <request name='Accounting-C-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Destination-Realm'/>
+                    <avp-ref name='Accounting-Record-Type'/>
+                    <avp-ref name='Accounting-Record-Number'/>
+                    <avp-ref name='Acct-Application-Id'/>
+                    <avp-ref name='User-Name'/>
+                </required>
+            </layout>
+        </request>
+    </command>
+    <command id='271' application='0'>
+        <answer name='Accounting-C-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Accounting-Record-Type'/>
+                    <avp-ref name='Accounting-Record-Number'/>
+                    <avp-ref name='Acct-Application-Id'/>
+                    <avp-ref name='User-Name'/>
+                </required>
+                <optional>
+                    <avp-ref name='Error-Message'/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+    <command id='265' application='0'>
+        <request name='A-A-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='Auth-Request-Type'/>
+                    <avp-ref name='Destination-Realm'/>
+                    <avp-ref name='Authorization-Lifetime'/>
+                    <avp-ref name='Auth-Session-State'/>
+                    <avp-ref name='User-Name'/>
+                </required>
+            </layout>
+        </request>
+    </command>
+    <command id='265' application='0'>
+        <answer name='A-A-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='Auth-Request-Type'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='User-Name'/>
+                    <avp-ref name='Idle-Timeout'/>
+                    <avp-ref name='Authorization-Lifetime'/>
+                    <avp-ref name='Auth-Session-State'/>
+                    <avp-ref name='Re-Auth-Request-Type'/>
+                    <avp-ref name='Session-Timeout'/>
+                    <avp-ref name='Reply-Message'/>
+                    <avp-ref name='Origin-State-Id'/>
+                    <avp-ref name='Framed-IP-Address'/>
+                </required>
+                <optional>
+                    <avp-ref name='Error-Message'/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+    <command id='274' application='0'>
+        <request name='Abort-Session-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Destination-Realm'/>
+                    <avp-ref name='Destination-Host'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='User-Name'/>
+                </required>
+            </layout>
+        </request>
+    </command>
+    <command id='274' application='0'>
+        <answer name='Abort-Session-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='User-Name'/>
+                </required>
+                <optional>
+                    <avp-ref name='Error-Message'/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+    <command id='258' application='0'>
+        <request name='Re-Auth-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                    <avp-ref name='Destination-Realm'/>
+                    <avp-ref name='Destination-Host'/>
+                    <avp-ref name='Auth-Application-Id'/>
+                    <avp-ref name='Re-Auth-Request-Type'/>
+                </required>
+            </layout>
+        </request>
+    </command>
+    <command id='258' application='0'>
+        <answer name='Re-Auth-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Session-Id'/>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                </required>
+                <optional>
+                    <avp-ref name='Error-Message'/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+    <command id='280' application='0'>
+        <answer name='Device-Watchdog-Answer'>
+            <header-bits>
+                <header-bit name='request' value='0'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Result-Code'/>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                </required>
+                <optional>
+                    <avp-ref name='Error-Message'/>
+                    <avp-ref name='Failed-AVP'/>
+                    <avp-ref name='Original-State-Id'/>
+                </optional>
+            </layout>
+        </answer>
+    </command>
+    <command id='280' application='0'>
+        <request name='Device-Watchdog-Request'>
+            <header-bits>
+                <header-bit name='request' value='1'/>
+                <header-bit name='proxiable' value='0'/>
+                <header-bit name='error' value='0'/>
+            </header-bits>
+            <layout>
+                <required>
+                    <avp-ref name='Origin-Host'/>
+                    <avp-ref name='Origin-Realm'/>
+                </required>
+                <optional>
+                    <avp-ref name='Original-State-Id'/>
+                </optional>
+            </layout>
+        </request>
+    </command>
+</diameter-protocol>

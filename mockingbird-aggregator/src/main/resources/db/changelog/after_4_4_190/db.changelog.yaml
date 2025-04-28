@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_project_property_enable_itf_reporting
+      author: itf
+      comment: Add project property 'enable.itf.reporting' in table mb_project_settings to all projects.
+      changes:
+        - sqlFile:
+            path: add_project_property_enable_itf_reporting.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: add_indexes_ATPII-44659
+      author: Aleksandr Kapustin
+      validCheckSum:
+        - 8:4b7a6451097a906d8f01932632d06340
+      comment: Add indexes for some expensive queries.
+      changes:
+        - sqlFile:
+            path: add_indexes_atpii_44659.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: add_indexes_ATPII-44895
+      author: Aleksandr Kapustin
+      validCheckSum:
+        - 8:2ba42140c11d90266b23da46a393465f
+      comment: Add indexes for some expensive queries.(#2)
+      changes:
+        - sqlFile:
+            path: add_indexes_atpii_44895.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: refactor_conditions_atpii_45045
+      author: Aleksandr Kapustin
+      validCheckSum:
+        - 8:69595eeabe3a059577e7b8d531bba5b8
+      preConditions:
+        - onError: WARN
+        - onErrorMessage: Conditions Refactoring Script was skipped because mb_steps.condition_parameters column exists.
+        - not:
+            - columnExists:
+                tableName: mb_steps
+                columnName: condition_parameters
+      comment: Conditions Model Refactoring to avoid very frequent and so expensive queries.
+      changes:
+        - sqlFile:
+            path: refactor_conditions_atpii_45045.sql
+            relativeToChangelogFile: true
+            splitStatements: false

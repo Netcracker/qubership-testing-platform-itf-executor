@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_constraint_to_mb_servers
+      author: itf
+      validCheckSum:
+        - 8:847c08250b23f02e0e401ad3f39b92fe
+      comment: Add a 'NOT NULL' constraint for column project_id in table mb_servers.
+      changes:
+        - sqlFile:
+            path: add_constraint_to_mb_servers.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: add_sequence
+      author: itf
+      validCheckSum:
+        - 8:29d643db104a00139cfae749f970ca96
+      comment: Add a sequence to generate reporting objects ids.
+      changes:
+        - sqlFile:
+            path: add_sequence.sql
+            relativeToChangelogFile: true
+            splitStatements: false

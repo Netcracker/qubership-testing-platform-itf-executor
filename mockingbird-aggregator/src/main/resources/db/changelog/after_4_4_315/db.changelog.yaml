@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_project_property_for_itf_history
+      author: itf
+      comment: Add project property 'enable.history.versioning' in table mb_project_settings to all projects.
+      changes:
+        - sqlFile:
+            path: add_project_property_for_itf_history.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: create_javers_tables
+      author: itf
+      comment: Initial creation javers tables (script required for multitenancy clusters).
+      preConditions:
+        - onError: WARN
+        - onErrorMessage: Javers tables creation skipped because tables already exist.
+        - onFail: MARK_RAN
+        - not:
+          - tableExists:
+              tableName: jv_snapshot
+      changes:
+        - sqlFile:
+            path: create_javers_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: false

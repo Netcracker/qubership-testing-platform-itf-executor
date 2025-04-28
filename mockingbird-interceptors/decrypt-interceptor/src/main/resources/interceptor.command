@@ -1,0 +1,1 @@
+gpg --batch --no-tty --yes --passphrase args0 -o args1 -d args2
