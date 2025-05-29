@@ -23,11 +23,11 @@ import org.qubership.automation.itf.environments.object.ECEntity;
 public interface Parser<T extends ECEntity<? extends EciConfigurable>, V> {
 
     /**
-     * Parse the object into the appropriate internal class
+     * Parse the object into the appropriate internal class.
      *
      * @param object - configuration accepted from EnvironmentConfigurator
-     * @return <T extends ECEntity> class instance
-     * @throws Exception
+     * @return T (extends ECEntity) class instance
+     * @throws Exception in case parsing errors
      * @see ECEntity
      */
     T parse(V object) throws Exception;
