@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird-transports-camel</artifactId>
-        <version>${atp.service.version}</version>
+        <version>4.4.352-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -55,10 +55,10 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-camel</artifactId>
         </dependency>
-        <dependency>
-            <groupId>oracle</groupId>
+        <!--<dependency>
+            <groupId>com.oracle.weblogic</groupId>
             <artifactId>wlthint3client</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-broker</artifactId>
@@ -80,11 +80,4 @@
             <artifactId>commons-logging</artifactId>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
 </project>

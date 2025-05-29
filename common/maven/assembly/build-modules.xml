@@ -163,6 +163,7 @@
             <source>../mockingbird-transports-camel/mockingbird-transport-smpp/target/mockingbird-transport-smpp.jar</source>
             <outputDirectory>/transports/</outputDirectory>
         </file>
+        <!--
         <file>
             <source>../deployments/jmx_exporter/config.yaml</source>
             <outputDirectory>/jmx_exporter/</outputDirectory>
@@ -171,6 +172,7 @@
             <source>../deployments/jmx_exporter/jmx_prometheus_javaagent-0.16.1.jar</source>
             <outputDirectory>/jmx_exporter/</outputDirectory>
         </file>
+        -->
     </files>
     <fileSets>
         <fileSet>

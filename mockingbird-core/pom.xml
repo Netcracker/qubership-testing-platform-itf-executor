@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>parent-java</artifactId>
-        <version>${atp.service.version}</version>
+        <version>4.4.352-SNAPSHOT</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
 
@@ -172,7 +172,6 @@
         </plugins>
     </build>
 
-
     <artifactId>mockingbird-core</artifactId>
     <packaging>jar</packaging>
 
@@ -320,13 +319,5 @@
             <artifactId>atp-multitenancy-hibernate</artifactId>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
 
 </project>

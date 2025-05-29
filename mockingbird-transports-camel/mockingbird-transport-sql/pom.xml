@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mockingbird-transports-camel</artifactId>
         <groupId>org.qubership.mockingbird</groupId>
-        <version>${atp.service.version}</version>
+        <version>4.4.352-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -73,10 +73,10 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jdbc</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>oracle</groupId>
             <artifactId>ojdbc7</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-cassandraql</artifactId>

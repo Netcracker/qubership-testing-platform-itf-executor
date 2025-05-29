@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>parent-java</artifactId>
-        <version>${atp.service.version}</version>
+        <version>4.4.352-SNAPSHOT</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
 
@@ -128,9 +128,6 @@
                                             dir="../mockingbird-transports-camel/mockingbird-transport-ss7/target/lib"/>
                                 </copy>
                                 <mkdir dir="../transports/lib/mockingbird-transport-jms" />
-                                <copy todir="../transports/lib/mockingbird-transport-jms">
-                                    <fileset dir="../common/transport-jms-lib"/>
-                                </copy>
                             </target>
                         </configuration>
                         <goals>
@@ -297,14 +294,4 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>pd.sandbox.mvn.staging</id>
-            <url>${repo.prefix}/pd.sandbox.mvn.staging/</url>
-        </repository>
-        <snapshotRepository>
-            <id>pd.sandbox.mvn.snapshots</id>
-            <url>${repo.prefix}/pd.sandbox.mvn.snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>

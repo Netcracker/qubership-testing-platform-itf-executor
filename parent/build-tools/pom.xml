@@ -6,18 +6,11 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird</artifactId>
-        <version>${atp.service.version}</version>
+        <version>4.4.352-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>build-tools</artifactId>
     <properties>
     </properties>
 
-    <distributionManagement>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </distributionManagement>
 </project>

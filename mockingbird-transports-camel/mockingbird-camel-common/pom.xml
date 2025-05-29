@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird-transports-camel</artifactId>
-        <version>${atp.service.version}</version>
+        <version>4.4.352-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mockingbird-camel-common</artifactId>

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>parent-java</artifactId>
         <groupId>org.qubership.mockingbird</groupId>
-        <version>${atp.service.version}</version>
+        <version>4.4.352-SNAPSHOT</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -51,11 +51,4 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
 </project>

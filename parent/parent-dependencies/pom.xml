@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird</artifactId>
-        <version>${atp.service.version}</version>
+        <version>4.4.352-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>parent-dependencies</artifactId>
@@ -424,16 +424,26 @@
                 <artifactId>reactor-netty</artifactId>
                 <version>0.9.8.RELEASE</version>
             </dependency>
+            <!-- Commented, because became absent suddenly
             <dependency>
                 <groupId>oracle</groupId>
                 <artifactId>wlthint3client</artifactId>
                 <version>12.1.3</version>
             </dependency>
+            -->
+            <!-- Instead of above dependency -->
+            <!--<dependency>
+                <groupId>com.oracle.weblogic</groupId>
+                <artifactId>wlthint3client</artifactId>
+                <version>10.3.6.0</version>
+            </dependency>-->
+            <!--
             <dependency>
                 <groupId>oracle</groupId>
                 <artifactId>ojdbc7</artifactId>
                 <version>12.1.0.2.0</version>
             </dependency>
+            -->
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
@@ -757,7 +767,7 @@
             <dependency>
                 <groupId>org.qubership.atp</groupId>
                 <artifactId>configuration-dataset-excel</artifactId>
-                <version>3.5</version>
+                <version>3.5-SNAPSHOT</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -1174,18 +1184,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
-    <distributionManagement>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </distributionManagement>
 </project>
