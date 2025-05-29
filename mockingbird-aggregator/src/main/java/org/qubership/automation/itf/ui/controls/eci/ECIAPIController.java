@@ -74,7 +74,6 @@ public class ECIAPIController {
      *
      * @param ecProjectId environment configurator project id
      * @return project model {@link ProjectFullVer1ViewDto}.
-     * @throws IOException may occur when receiving data
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
@@ -123,7 +122,6 @@ public class ECIAPIController {
      *
      * @param ecEnvId environment object id
      * @return object {@link EnvironmentFullVer1ViewDto}.
-     * @throws IOException may occur when receiving data
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
@@ -172,7 +170,6 @@ public class ECIAPIController {
      *
      * @param ecSystemId system object id
      * @return object {@link SystemFullVer1ViewDto}.
-     * @throws IOException may occur when receiving data
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
