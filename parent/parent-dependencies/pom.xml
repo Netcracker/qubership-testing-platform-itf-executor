@@ -477,7 +477,7 @@
             <dependency>
                 <groupId>org.qubership.automation</groupId>
                 <artifactId>ss7-lib</artifactId>
-                <version>1.0.6</version>
+                <version>1.0.6-SNAPSHOT</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
