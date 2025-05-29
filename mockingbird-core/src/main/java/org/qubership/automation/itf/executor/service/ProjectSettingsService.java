@@ -135,10 +135,10 @@ public class ProjectSettingsService extends AbstractProjectSettingsService {
      * This method using at startup of atp-itf-executor to init ProjectSettings Hazelcast cache.
      * It gets all project settings from database and fills them to
      * REMOTE Hazelcast ATP_ITF_PROJECT_SETTINGS map.
-     * <p/>
+     * <p>
      * <b>Warning:</b>
      * SAVING TO DATABASE DOESN'T OCCUR!
-     * <p/>
+     * <p>
      * <b>PLEASE NOTE:</b>
      * Hazelcast Near Cache will be filled by Hazelcast engine after the first 'get(key)' call and if it exists in
      * remote Hazelcast map.
