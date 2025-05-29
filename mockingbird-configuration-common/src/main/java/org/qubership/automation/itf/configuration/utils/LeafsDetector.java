@@ -32,9 +32,9 @@ import com.google.common.util.concurrent.Runnables;
 
 /**
  * Adds leafs detector functionality to {@link AllRefsIterator}.
- * <br/>Designed to be used in aggregation:
- * <br/>{@link AllRefsIterator#getChildren(Object)} becomes {@link LeafsDetector#childrenSup}
- * <br/>and {@link AllRefsIterator#backToParents()} becomes {@link LeafsDetector#backToParentsCb}.
+ * <br>Designed to be used in aggregation:
+ * <br>{@link AllRefsIterator#getChildren(Object)} becomes {@link LeafsDetector#childrenSup}
+ * <br>and {@link AllRefsIterator#backToParents()} becomes {@link LeafsDetector#backToParentsCb}.
  */
 public class LeafsDetector<T> extends AllRefsIterator<T> {
     private final LinkedList<T> path = new LinkedList<>();
@@ -43,12 +43,12 @@ public class LeafsDetector<T> extends AllRefsIterator<T> {
     private final Runnable backToParentsCb;
 
     /**
-     * <br/>Iterates over a tree hierarchy.
-     * <br/>The {@link Iterator#next()} invocation returns item of current iteration, same as {@link AllRefsIterator}.
-     * <br/>Reports about vertical level changes using childrenSup and backToParentsCb.
-     * <br/>Does not resolve recursion by default. You can do that in childrenSup or itemsFilter.
-     * <br/>Reports about leafs found using leafsConsumer.
-     * <br/>One iteration may result in invocation of leafsConsumer no more then one time.
+     * <br>Iterates over a tree hierarchy.
+     * <br>The {@link Iterator#next()} invocation returns item of current iteration, same as {@link AllRefsIterator}.
+     * <br>Reports about vertical level changes using childrenSup and backToParentsCb.
+     * <br>Does not resolve recursion by default. You can do that in childrenSup or itemsFilter.
+     * <br>Reports about leafs found using leafsConsumer.
+     * <br>One iteration may result in invocation of leafsConsumer no more then one time.
      *
      * @param parents         to iterate over. Inclusive.
      * @param childrenSup     explains how to get children from parent. May return null.
@@ -56,7 +56,7 @@ public class LeafsDetector<T> extends AllRefsIterator<T> {
      * @param leafsConsumer   consumes path to leaf inclusive.
      *                        Leafs are detected based on result provided by childrenSup.
      * @param backToParentsCb Invoked when iteration goes upper to parents in a tree hierarchy.
-     * @param itemsFilter     filters objects to iterate over. Delegates to {@link AllRefsIterator#itemsFilter}
+     * @param itemsFilter     filters objects to iterate over. Delegates to {@link AllRefsIterator} itemsFilter.
      */
     public LeafsDetector(@Nonnull Iterator<? extends T> parents,
                          @Nonnull Function<T, Iterator<? extends T>> childrenSup,
