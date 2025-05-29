@@ -767,7 +767,7 @@
             <dependency>
                 <groupId>org.qubership.atp</groupId>
                 <artifactId>configuration-dataset-excel</artifactId>
-                <version>3.5-SNAPSHOT</version>
+                <version>3.5.0-SNAPSHOT</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
