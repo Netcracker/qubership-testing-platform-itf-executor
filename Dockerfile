@@ -30,7 +30,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/" >/etc/apk/repo
         tcpdump=4.99.5-r0 \
         wget=1.25.0-r0 \
         zip=3.0-r13 && \
-      rm -rf /var/cache/apk/* \
+      rm -rf /var/cache/apk/*
 
 COPY deployments/install deployments/install
 COPY deployments/atp-common-scripts deployments/atp-common-scripts
