@@ -7,7 +7,7 @@ on:
         type: string
         description: "JDK version (e.g. '21')"
         required: false
-        default: "21"
+        default: "8"
       maven-version:
         type: string
         description: maven version
@@ -40,21 +40,6 @@ on:
 jobs:
   mvn-deploy:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: centos/postgresql-96-centos7:9.6
-        ports:
-          - 5432:5432
-        env:
-          POSTGRESQL_USER: envconf
-          POSTGRESQL_PASSWORD: envconf
-          POSTGRESQL_DATABASE: envconf
-          POSTGRESQL_ADMIN_PASSWORD: envconf
-        options: >-
-          --health-cmd="pg_isready -U envconf -d envconf"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
 
     steps:
       - name: "Checkout code"
@@ -117,22 +102,6 @@ jobs:
           fi
           echo "ADDITIONAL_MVN_ARGS=${ADDITIONAL_MVN_ARGS}" >> $GITHUB_ENV
 
-      - name: Wait for Postgres to be ready
-        run: |
-          for i in {1..30}; do
-            if pg_isready -h localhost -U envconf -d envconf; then
-              echo "Postgres is ready"
-              break
-            fi
-            echo "Waiting for Postgres..."
-            sleep 5
-          done
-
-      - name: Create uuid-ossp extension
-        run: |
-          sudo apt-get update && sudo apt-get install -y postgresql-client
-          PGPASSWORD=envconf psql -h localhost -U postgres -d envconf -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
-
       - name: Cache local Maven repository
         uses: actions/cache@v4
         with:
@@ -173,5 +142,5 @@ jobs:
         if: ${{ inputs.target-store == 'maven-central' }}
         uses: actions/upload-artifact@v4
         with:
-          name: qubership-testing-platform-environments
+          name: qubership-testing-platform-itf-stubs
           path: '**/target'

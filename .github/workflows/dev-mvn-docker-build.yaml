@@ -32,8 +32,8 @@ jobs:
   mvn-snapshot-deploy:
     uses: ./.github/workflows/re-maven-snapshot-deploy.yaml
     with:
-      java-version: "21"
-      additional-mvn-args: "-Dstage=release -Dstage=test -Denable-analyzers=true -Dpg.jdbc.Url=jdbc:postgresql://localhost:5432/envconf -Dpg.jdbc.User=envconf -Dpg.jdbc.Password=envconf"
+      java-version: "8"
+      additional-mvn-args: ""
       target-store: "maven-central"
     secrets:
       maven-username: ${{ secrets.MAVEN_USER }}
@@ -62,9 +62,9 @@ jobs:
           dry-run: false
           tags: ${{steps.metadata.outputs.result}}
           download-artifact: true
-          custom-image-name: qubership-testing-platform-environments
+          custom-image-name: qubership-testing-platform-itf-executor
           download-artifact-path: build-context
-          component: '[{"name": "qubership-testing-platform-environments", "file": "./Dockerfile", "context": "."}]'
+          component: '[{"name": "qubership-testing-platform-itf-stubs", "file": "./Dockerfile", "context": "."}]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -75,7 +75,7 @@ jobs:
           dry-run: false
           tags: ${{steps.metadata.outputs.result}}
           download-artifact: false
-          custom-image-name: qubership-testing-platform-environments-transfer
-          component: '[{"name": "qubership-testing-platform-environments-transfer", "file": "docker-transfer/Dockerfile", "context": "."}]'
+          custom-image-name: qubership-testing-platform-itf-executor-transfer
+          component: '[{"name": "qubership-testing-platform-itf-executor-transfer", "file": "docker-transfer/Dockerfile", "context": "."}]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
