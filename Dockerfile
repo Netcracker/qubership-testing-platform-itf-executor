@@ -38,7 +38,7 @@ COPY build-context/common/target/ /tmp/
 
 RUN mkdir -p dist/atp deployments/update && \
     cp -r deployments/install/* deployments/update/ && \
-    find deployments -maxdepth 1 -regex '.*/\(install\|update\|atp-common-scripts\)$' -exec mv -t dist/atp {} + \
+    find deployments -maxdepth 1 -regex '.*/\(install\|update\|atp-common-scripts\)$' -exec mv -t dist/atp {} +
 
 RUN adduser -D -H -h /atp -s /bin/bash -u 1007 atp && \
     mkdir -p /etc/env /etc/alternatives /tmp/log/diagnostic /tmp/cert && \
