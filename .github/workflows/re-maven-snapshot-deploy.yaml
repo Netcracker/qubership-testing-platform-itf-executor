@@ -142,5 +142,5 @@ jobs:
         if: ${{ inputs.target-store == 'maven-central' }}
         uses: actions/upload-artifact@v4
         with:
-          name: qubership-testing-platform-itf-stubs
+          name: qubership-testing-platform-itf-executor
           path: '**/target'
