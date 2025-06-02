@@ -40,7 +40,7 @@ RUN adduser -D -H -h /atp -s /bin/bash -u 1007 atp && \
     mkdir -p /etc/env /etc/alternatives /tmp/log/diagnostic /tmp/cert && \
     ln -s ${JAVA_HOME}/bin/java /etc/alternatives/java && \
     echo "${JAVA_HOME}/bin/java \$@" >/usr/bin/java && \
-    chmod a+x /usr/bin/java \
+    chmod a+x /usr/bin/java
 
 RUN unzip /tmp/*.zip -d $HOME_EX/ && \
     cp -r dist/atp /atp/ && chmod -R 775 /atp/ && \
