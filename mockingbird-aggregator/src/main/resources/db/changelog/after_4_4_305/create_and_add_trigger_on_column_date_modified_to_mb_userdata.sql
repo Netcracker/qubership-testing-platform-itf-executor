@@ -8,6 +8,6 @@ END;
 $$;
 commit;
 
-CREATE TRIGGER compute_date_modified_before_userdata_update BEFORE UPDATE ON mb_userdata
+CREATE OR REPLACE TRIGGER compute_date_modified_before_userdata_update BEFORE UPDATE ON mb_userdata
     FOR EACH ROW EXECUTE PROCEDURE compute_date_modified_before_userdata_update();
 commit;
