@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>parent-java</artifactId>
-        <version>4.4.352</version>
+        <version>4.4.353-SNAPSHOT</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
 

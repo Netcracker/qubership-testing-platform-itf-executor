@@ -3,7 +3,7 @@
     <parent>
         <artifactId>parent-java</artifactId>
         <groupId>org.qubership.mockingbird</groupId>
-        <version>4.4.352</version>
+        <version>4.4.353-SNAPSHOT</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
