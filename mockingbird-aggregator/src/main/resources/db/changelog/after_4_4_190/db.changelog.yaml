@@ -38,6 +38,8 @@ databaseChangeLog:
       preConditions:
         - onError: WARN
         - onErrorMessage: Conditions Refactoring Script was skipped because mb_steps.condition_parameters column exists.
+        - onFail: WARN
+        - onFailMessage: Conditions Refactoring Script is skipped because preconditions was failed.
         - not:
             - columnExists:
                 tableName: mb_steps

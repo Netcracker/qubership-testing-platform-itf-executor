@@ -2,7 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: initial_db_structure
       author: itf
-      validCheckSum: 8:86cee11588426de9382455eb9342930a
+      validCheckSum: 8:717aeff64dcd3d1898ea507ca6a45f38
       preConditions:
         - onError: WARN
         - onErrorMessage: Init script was skipped because db is exist and it has not empty schema. (mb_project table is exist)
