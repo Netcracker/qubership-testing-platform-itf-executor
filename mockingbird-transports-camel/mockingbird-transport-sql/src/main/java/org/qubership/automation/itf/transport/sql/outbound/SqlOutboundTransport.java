@@ -77,6 +77,7 @@ import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.util.annotation.Options;
 import org.qubership.automation.itf.core.util.annotation.Parameter;
 import org.qubership.automation.itf.core.util.annotation.UserName;
+import org.qubership.automation.itf.core.util.config.Config;
 import org.qubership.automation.itf.core.util.constants.Mep;
 import org.qubership.automation.itf.core.util.transport.base.AbstractOutboundTransportImpl;
 import org.qubership.automation.itf.transport.sql.CassandraSessionsHolder;
@@ -105,6 +106,8 @@ import com.google.common.cache.RemovalListener;
 public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlOutboundTransport.class);
     private static final ObjectMapper MAPPER;
+    private static final Integer defaultQueryTimeout
+            = Config.getConfig().getIntOrDefault("sql.transport.default.query.timeout", 600);
     private static final LoadingCache<ConnectionProperties, SqlConfig> configCache = CacheBuilder.newBuilder()
             .expireAfterAccess(1L, TimeUnit.HOURS)
             .removalListener((RemovalListener<ConnectionProperties, SqlConfig>) removalNotification -> {
@@ -130,6 +133,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                     dataSource.setMaxIdle(10);
                     dataSource.setMinEvictableIdleTimeMillis(600000L);
                     dataSource.setInitialSize(2);
+                    dataSource.setDefaultQueryTimeout(defaultQueryTimeout);
                     return new SqlConfig(dataSource);
                 }
             });
@@ -168,6 +172,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         dataSource.setUsername(getAndCheckRequiredProperty(connectionProperties, USER, USER_DESCRIPTION));
         dataSource.setPassword(getAndCheckRequiredProperty(connectionProperties, PASSWORD, PASSWORD_DESCRIPTION));
         dataSource.setUrl(getAndCheckRequiredProperty(connectionProperties, JDBC_URL, JDBC_URL_STRING));
+        dataSource.setDefaultQueryTimeout(defaultQueryTimeout);
         return dataSource;
     }
 
@@ -443,23 +448,23 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 return row.getString(i);
             case BIGINT:
             case COUNTER:
-                return Long.valueOf(row.getLong(i));
+                return row.getLong(i);
             case BOOLEAN:
-                return Boolean.valueOf(row.getBool(i));
+                return row.getBool(i);
             case DECIMAL:
                 return row.getDecimal(i);
             case DOUBLE:
-                return Double.valueOf(row.getDouble(i));
+                return row.getDouble(i);
             case FLOAT:
-                return Float.valueOf(row.getFloat(i));
+                return row.getFloat(i);
             case INET:
                 return row.getInet(i);
             case INT:
-                return Integer.valueOf(row.getInt(i));
+                return row.getInt(i);
             case SMALLINT:
-                return Integer.valueOf(row.getShort(i));
+                return (int) row.getShort(i);
             case TINYINT:
-                return Integer.valueOf(row.getByte(i));
+                return (int) row.getByte(i);
             case UDT:
                 return udtValue2Object(row.getUDTValue(i));
             case LIST:
@@ -541,23 +546,23 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 return udtValue.getString(fieldName);
             case BIGINT:
             case COUNTER:
-                return Long.valueOf(udtValue.getLong(fieldName));
+                return udtValue.getLong(fieldName);
             case BOOLEAN:
-                return Boolean.valueOf(udtValue.getBool(fieldName));
+                return udtValue.getBool(fieldName);
             case DECIMAL:
                 return udtValue.getDecimal(fieldName);
             case DOUBLE:
-                return Double.valueOf(udtValue.getDouble(fieldName));
+                return udtValue.getDouble(fieldName);
             case FLOAT:
-                return Float.valueOf(udtValue.getFloat(fieldName));
+                return udtValue.getFloat(fieldName);
             case INET:
                 return udtValue.getInet(fieldName);
             case INT:
-                return Integer.valueOf(udtValue.getInt(fieldName));
+                return udtValue.getInt(fieldName);
             case SMALLINT:
-                return Integer.valueOf(udtValue.getShort(fieldName));
+                return (int) udtValue.getShort(fieldName);
             case TINYINT:
-                return Integer.valueOf(udtValue.getByte(fieldName));
+                return (int) udtValue.getByte(fieldName);
             case UDT:
                 return udtValue2Object(udtValue.getUDTValue(fieldName));
             case LIST:

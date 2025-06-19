@@ -22,9 +22,9 @@
         <aspectj.version>1.8.10</aspectj.version>
 
         <atp.multitenancy.version>0.0.11</atp.multitenancy.version>
-        <atp.ei.lib.version>0.2.38</atp.ei.lib.version>
+        <atp.ei.lib.version>0.2.40</atp.ei.lib.version>
         <atp.crypt.version>0.0.20</atp.crypt.version>
-        <atp.adapter.common.version>4.5.71-SNAPSHOT</atp.adapter.common.version>
+        <atp.adapter.common.version>4.5.71</atp.adapter.common.version>
 
         <commons.lang.version>2.6</commons.lang.version>
         <org.ow2.asm.asm.version>5.2</org.ow2.asm.asm.version>

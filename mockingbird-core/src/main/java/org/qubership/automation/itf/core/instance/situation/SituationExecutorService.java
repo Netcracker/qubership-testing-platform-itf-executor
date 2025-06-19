@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.LazyInitializationException;
 import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
 import org.qubership.atp.integration.configuration.annotation.AtpSpanTag;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
@@ -316,7 +317,14 @@ public class SituationExecutorService {
                                      Operation parentOperation) throws Exception {
         TcContext tcContext = instance.getContext().tc();
         log.debug("regenerateKeys - started");
-        KeysRegenerator.getInstance().regenerateKeys(instance.getContext(), situation.getKeysToRegenerate());
+        try {
+            KeysRegenerator.getInstance().regenerateKeys(instance.getContext(), situation.getKeysToRegenerate());
+        } catch (LazyInitializationException e) {
+            log.error("regenerateKeys - error", e);
+            situation = CoreObjectManager.getInstance().getManager(Situation.class)
+                    .getById(situation.getID());
+            KeysRegenerator.getInstance().regenerateKeys(instance.getContext(), situation.getKeysToRegenerate());
+        }
         log.debug("regenerateKeys - finished");
         StepInstance lastExecutedStepInstance = null;
         boolean needRunPreScript = firstRun;
