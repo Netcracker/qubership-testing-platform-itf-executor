@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>parent-java</artifactId>
-        <version>4.4.352-SNAPSHOT</version>
+        <version>4.4.352</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
 
@@ -67,65 +67,38 @@
                         <phase>package</phase>
                         <configuration>
                             <target name="generate-transport-jars">
-                                <mkdir dir="../transports"/>
+                                <mkdir dir="../transports" />
                                 <copy todir="../transports">
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-cli/target"
-                                             includes="mockingbird-transport-cli.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-file/target"
-                                             includes="mockingbird-transport-file.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-diameter/target"
-                                             includes="mockingbird-transport-diameter.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-http2/target"
-                                             includes="mockingbird-transport-http2.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-jms/target"
-                                             includes="mockingbird-transport-jms.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-kafka/target"
-                                             includes="mockingbird-transport-kafka.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-ldap/target"
-                                             includes="mockingbird-transport-ldap.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-rest/target"
-                                             includes="mockingbird-transport-rest.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-snmp/target"
-                                             includes="mockingbird-transport-snmp.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-smpp/target"
-                                             includes="mockingbird-transport-smpp.jar"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-soap-http/target"
-                                            includes="mockingbird-transport-soap-http.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-sql/target"
-                                             includes="mockingbird-transport-sql.jar"/>
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-ss7/target"
-                                             includes="mockingbird-transport-ss7.jar"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-cli/target" includes="mockingbird-transport-cli.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-file/target" includes="mockingbird-transport-file.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-diameter/target" includes="mockingbird-transport-diameter.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-http2/target" includes="mockingbird-transport-http2.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-jms/target" includes="mockingbird-transport-jms.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-kafka/target" includes="mockingbird-transport-kafka.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-ldap/target" includes="mockingbird-transport-ldap.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-rest/target" includes="mockingbird-transport-rest.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-snmp/target" includes="mockingbird-transport-snmp.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-smpp/target" includes="mockingbird-transport-smpp.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-soap-http/target" includes="mockingbird-transport-soap-http.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-sql/target" includes="mockingbird-transport-sql.jar" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-ss7/target" includes="mockingbird-transport-ss7.jar" />
                                 </copy>
-                                <mkdir dir="../transports/lib"/>
+                                <mkdir dir="../transports/lib" />
                                 <copy todir="../transports/lib">
-                                    <fileset dir="../mockingbird-transports-camel/mockingbird-camel-common/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-cli/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-diameter/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-file/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-http2/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-jms/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-kafka/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-ldap/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-rest/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-snmp/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-smpp/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-soap-http/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-sql/target/lib"/>
-                                    <fileset
-                                            dir="../mockingbird-transports-camel/mockingbird-transport-ss7/target/lib"/>
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-camel-common/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-cli/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-diameter/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-file/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-http2/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-jms/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-kafka/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-ldap/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-rest/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-snmp/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-smpp/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-soap-http/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-sql/target/lib" />
+                                    <fileset dir="../mockingbird-transports-camel/mockingbird-transport-ss7/target/lib" />
                                 </copy>
                                 <mkdir dir="../transports/lib/mockingbird-transport-jms" />
                             </target>
@@ -139,65 +112,47 @@
                         <phase>package</phase>
                         <configuration>
                             <target name="generate-interceptor-jars">
-                                <mkdir dir="../interceptors/"/>
+                                <mkdir dir="../interceptors/" />
                                 <copy todir="../interceptors/">
-                                    <fileset dir="../mockingbird-interceptors/interceptor-utils/target"
-                                             includes="interceptor-utils.jar"/>
+                                    <fileset dir="../mockingbird-interceptors/interceptor-utils/target" includes="interceptor-utils.jar" />
                                 </copy>
-                                <mkdir dir="../interceptors/compress-interceptor/"/>
+                                <mkdir dir="../interceptors/compress-interceptor/" />
                                 <copy todir="../interceptors/compress-interceptor/">
-                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target"
-                                             includes="compress-interceptor.jar"/>
-                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/"
-                                             includes="gzip.interceptor.command"/>
-                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/"
-                                             includes="rar.interceptor.command"/>
-                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/"
-                                             includes="tar.interceptor.command"/>
-                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/"
-                                             includes="zip.interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target" includes="compress-interceptor.jar" />
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/" includes="gzip.interceptor.command" />
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/" includes="rar.interceptor.command" />
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/" includes="tar.interceptor.command" />
+                                    <fileset dir="../mockingbird-interceptors/compress-interceptor/target/classes/" includes="zip.interceptor.command" />
                                 </copy>
-                                <mkdir dir="../interceptors/decompress-interceptor/"/>
+                                <mkdir dir="../interceptors/decompress-interceptor/" />
                                 <copy todir="../interceptors/decompress-interceptor/">
-                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target"
-                                             includes="decompress-interceptor.jar"/>
-                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/"
-                                             includes="gzip.interceptor.command"/>
-                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/"
-                                             includes="tar.interceptor.command"/>
-                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/"
-                                             includes="unrar.interceptor.command"/>
-                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/"
-                                             includes="unzip.interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target" includes="decompress-interceptor.jar" />
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/" includes="gzip.interceptor.command" />
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/" includes="tar.interceptor.command" />
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/" includes="unrar.interceptor.command" />
+                                    <fileset dir="../mockingbird-interceptors/decompress-interceptor/target/classes/" includes="unzip.interceptor.command" />
                                 </copy>
-                                <mkdir dir="../interceptors/decrypt-interceptor/"/>
+                                <mkdir dir="../interceptors/decrypt-interceptor/" />
                                 <copy todir="../interceptors/decrypt-interceptor/">
-                                    <fileset dir="../mockingbird-interceptors/decrypt-interceptor/target"
-                                             includes="decrypt-interceptor.jar"/>
-                                    <fileset dir="../mockingbird-interceptors/decrypt-interceptor/target/classes/"
-                                             includes="interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/decrypt-interceptor/target" includes="decrypt-interceptor.jar" />
+                                    <fileset dir="../mockingbird-interceptors/decrypt-interceptor/target/classes/" includes="interceptor.command" />
                                 </copy>
-                                <mkdir dir="../interceptors/encrypt-interceptor/"/>
+                                <mkdir dir="../interceptors/encrypt-interceptor/" />
                                 <copy todir="../interceptors/encrypt-interceptor/">
-                                    <fileset dir="../mockingbird-interceptors/encrypt-interceptor/target"
-                                             includes="encrypt-interceptor.jar"/>
-                                    <fileset dir="../mockingbird-interceptors/encrypt-interceptor/target/classes/"
-                                             includes="interceptor.command"/>
+                                    <fileset dir="../mockingbird-interceptors/encrypt-interceptor/target" includes="encrypt-interceptor.jar" />
+                                    <fileset dir="../mockingbird-interceptors/encrypt-interceptor/target/classes/" includes="interceptor.command" />
                                 </copy>
-                                <mkdir dir="../interceptors/decrypt-xml-interceptor/"/>
+                                <mkdir dir="../interceptors/decrypt-xml-interceptor/" />
                                 <copy todir="../interceptors/decrypt-xml-interceptor/">
-                                    <fileset dir="../mockingbird-interceptors/decrypt-xml-interceptor/target"
-                                             includes="decrypt-xml-interceptor.jar"/>
+                                    <fileset dir="../mockingbird-interceptors/decrypt-xml-interceptor/target" includes="decrypt-xml-interceptor.jar" />
                                 </copy>
-                                <mkdir dir="../interceptors/encrypt-xml-interceptor/"/>
+                                <mkdir dir="../interceptors/encrypt-xml-interceptor/" />
                                 <copy todir="../interceptors/encrypt-xml-interceptor/">
-                                    <fileset dir="../mockingbird-interceptors/encrypt-xml-interceptor/target"
-                                             includes="encrypt-xml-interceptor.jar"/>
+                                    <fileset dir="../mockingbird-interceptors/encrypt-xml-interceptor/target" includes="encrypt-xml-interceptor.jar" />
                                 </copy>
-                                <mkdir dir="../interceptors/redefine-transport-params-interceptor/"/>
+                                <mkdir dir="../interceptors/redefine-transport-params-interceptor/" />
                                 <copy todir="../interceptors/redefine-transport-params-interceptor/">
-                                    <fileset dir="../mockingbird-interceptors/redefine-transport-params-interceptor/target"
-                                             includes="redefine-transport-params-interceptor.jar"/>
+                                    <fileset dir="../mockingbird-interceptors/redefine-transport-params-interceptor/target" includes="redefine-transport-params-interceptor.jar" />
                                 </copy>
                             </target>
                         </configuration>
@@ -210,8 +165,8 @@
                         <phase>clean</phase>
                         <configuration>
                             <target>
-                                <available file="../transports" property="transportsDirExists"/>
-                                <available file="../interceptors" property="interceptorsDirExists"/>
+                                <available file="../transports" property="transportsDirExists" />
+                                <available file="../interceptors" property="interceptorsDirExists" />
                             </target>
                             <exportAntProperties>true</exportAntProperties>
                         </configuration>
@@ -226,9 +181,9 @@
                             <!--suppress UnresolvedMavenProperty -->
                             <target if="${transportsDirExists}">
                                 <delete>
-                                    <fileset dir="../transports"/>
+                                    <fileset dir="../transports" />
                                 </delete>
-                                <echo message="Folder [../transports] with transport files *.jar has been cleared."/>
+                                <echo message="Folder [../transports] with transport files *.jar has been cleared." />
                             </target>
                         </configuration>
                         <goals>
@@ -242,9 +197,9 @@
                             <!--suppress UnresolvedMavenProperty -->
                             <target if="${interceptorsDirExists}">
                                 <delete>
-                                    <fileset dir="../interceptors"/>
+                                    <fileset dir="../interceptors" />
                                 </delete>
-                                <echo message="Folder [../interceptors] with interceptor files *.jar has been cleared."/>
+                                <echo message="Folder [../interceptors] with interceptor files *.jar has been cleared." />
                             </target>
                         </configuration>
                         <goals>
