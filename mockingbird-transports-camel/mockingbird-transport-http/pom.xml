@@ -3,13 +3,15 @@
     <parent>
         <artifactId>mockingbird-transports-camel</artifactId>
         <groupId>org.qubership.mockingbird</groupId>
-        <version>4.4.353-SNAPSHOT</version>
+        <version>4.4.352-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <build>
         <finalName>mockingbird-transport-http</finalName>
     </build>
     <artifactId>mockingbird-transport-http</artifactId>
+    <name>mockingbird-transport-http</name>
+
     <dependencies>
         <dependency>
             <groupId>org.qubership.mockingbird</groupId>

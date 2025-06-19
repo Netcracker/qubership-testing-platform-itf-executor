@@ -4,10 +4,12 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird</artifactId>
-        <version>4.4.353-SNAPSHOT</version>
+        <version>4.4.352-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>build-tools</artifactId>
+    <name>build-tools</name>
+
     <properties>
     </properties>
 

@@ -4,9 +4,19 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>parent-java</artifactId>
-        <version>4.4.353-SNAPSHOT</version>
+        <version>4.4.352-SNAPSHOT</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
+
+    <artifactId>mockingbird-core</artifactId>
+    <name>mockingbird-core</name>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.deploy.skip>false</maven.deploy.skip>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
 
     <build>
         <resources>
@@ -170,15 +180,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <artifactId>mockingbird-core</artifactId>
-    <packaging>jar</packaging>
-
-    <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
 
     <dependencies>
         <dependency>

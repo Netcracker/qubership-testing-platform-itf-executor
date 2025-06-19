@@ -4,10 +4,12 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>parent-java</artifactId>
-        <version>4.4.353-SNAPSHOT</version>
+        <version>4.4.352-SNAPSHOT</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
     <artifactId>mockingbird-integration-bv</artifactId>
+    <name>mockingbird-integration-bv</name>
+
     <build>
         <plugins>
             <plugin>

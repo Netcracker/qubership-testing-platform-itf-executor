@@ -3,11 +3,12 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird-transports-camel</artifactId>
-        <version>4.4.353-SNAPSHOT</version>
+        <version>4.4.352-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mockingbird-transport-jms</artifactId>
+    <name>mockingbird-transport-jms</name>
     <packaging>jar</packaging>
 
     <build>

@@ -2,12 +2,14 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird-interceptors</artifactId>
-        <version>4.4.353-SNAPSHOT</version>
+        <version>4.4.352-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>encrypt-interceptor</artifactId>
+    <name>encrypt-interceptor</name>
     <packaging>jar</packaging>
+
     <build>
         <finalName>encrypt-interceptor</finalName>
         <plugins>

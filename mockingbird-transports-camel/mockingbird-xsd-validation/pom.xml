@@ -3,9 +3,10 @@
     <parent>
         <artifactId>mockingbird-transports-camel</artifactId>
         <groupId>org.qubership.mockingbird</groupId>
-        <version>4.4.353-SNAPSHOT</version>
+        <version>4.4.352-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mockingbird-xsd-validation</artifactId>
+    <name>mockingbird-xsd-validation</name>
 </project>

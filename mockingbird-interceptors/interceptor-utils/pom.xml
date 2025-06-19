@@ -3,12 +3,14 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird-interceptors</artifactId>
-        <version>4.4.353-SNAPSHOT</version>
+        <version>4.4.352-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>interceptor-utils</artifactId>
+    <name>interceptor-utils</name>
     <packaging>jar</packaging>
+
     <build>
         <finalName>interceptor-utils</finalName>
         <plugins>
