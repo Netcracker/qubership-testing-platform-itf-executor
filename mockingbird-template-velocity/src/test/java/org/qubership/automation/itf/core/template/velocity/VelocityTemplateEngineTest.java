@@ -66,12 +66,12 @@ public class VelocityTemplateEngineTest {
     private VelocityTemplateEngine engine;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         engine = new VelocityTemplateEngine();
     }
 
     @Test
-    public void testTools() throws Exception {
+    public void testTools() {
         String sourceString = "$date";
         Server owner = mock(Server.class);
         String process = engine.process(owner, sourceString, InstanceContext.from(null, null));
@@ -79,7 +79,7 @@ public class VelocityTemplateEngineTest {
     }
 
     @Test
-    public void process() throws Exception {
+    public void process() {
         String sourceString = "test $tc.aaa $tc.ccc.ddd $tc.fff[0]";
         TcContext context = new TcContext();
         context.put("aaa", "bbb");
@@ -117,12 +117,12 @@ public class VelocityTemplateEngineTest {
     public void testGenerateId() {
         String sourceString = "#generateUUID()";
         String process = engine.process(mock(Server.class), sourceString, InstanceContext.from(null, null));
-        Assert.assertNotEquals("#generateUUID()", process);
+        Assert.assertNotEquals(process, sourceString);
         System.out.println(process);
     }
 
     @Test
-    public void testLoadPartThrowsExceptionIfTemplateNotFound() throws Exception {
+    public void testLoadPartThrowsExceptionIfTemplateNotFound() {
         expectedException.expect(VelocityException.class);
         expectedException.expectMessage(StringContains.containsString("template not found"));
         ObjectManager<SystemTemplate> manager = configureObjectManager().getManager(SystemTemplate.class);
@@ -137,7 +137,7 @@ public class VelocityTemplateEngineTest {
     }
 
     @Test
-    public void testLoadPartInChildReturnsValue() throws Exception {
+    public void testLoadPartInChildReturnsValue() {
         String source = "source #load_part(\"firstTemplate\")";
         String firstTemplateSource = "first #load_part(\"secondTemplate\")";
         String secondTemplateSource = "second";
@@ -186,7 +186,7 @@ public class VelocityTemplateEngineTest {
     }
 
     @Test
-    public void testAddDate() throws Exception {
+    public void testAddDate() {
         String sourceString = "#add_date($tc.date, \"1d\", \"2h\", \"5m\", \"2d\")";
         TcContext context = new TcContext();
         context.put("date", "2018-08-28T04:53:46");
@@ -195,15 +195,34 @@ public class VelocityTemplateEngineTest {
         System.out.println(process);
     }
 
+    @Test
+    public void testMathTool() {
+        String sourceString = "$math.random(100,999)";
+        TcContext context = new TcContext();
+        Map<String, Storable> map = Maps.newHashMap();
+        String process = engine.process(map, sourceString, InstanceContext.from(context, null));
+        Assert.assertNotEquals(process, sourceString);
+        System.out.println(process);
+    }
+
+    @Test
+    public void testDateTool() {
+        String sourceString = "#set($startDate = $date.format('yyyy-MM-dd''T''HH:mm:ss', $date))\n$startDate";
+        TcContext context = new TcContext();
+        Map<String, Storable> map = Maps.newHashMap();
+        String process = engine.process(map, sourceString, InstanceContext.from(context, null));
+        Assert.assertFalse(process.contains("$date"));
+        System.out.println(process);
+    }
+
     private String prepareIndex(int i) {
-        Integer index = i;
-        switch (index.toString().length()) {
+        switch (Integer.toString(i).length()) {
             case 1:
-                return "00" + index.toString();
+                return "00" + i;
             case 2:
-                return "0" + index.toString();
+                return "0" + i;
             default:
-                return index.toString();
+                return Integer.toString(i);
         }
     }
 
@@ -216,7 +235,6 @@ public class VelocityTemplateEngineTest {
         when(managerFactory.getManager(Counter.class)).thenReturn(counterOM);
         when(managerFactory.getManager(CounterImpl.class)).thenReturn(counterImOM);
         CoreObjectManager.getInstance().setManagerFactory(managerFactory);
-//        CoreObjectManager.getInstance().init(); //TODO: will be fixed after ATPII-28069
         return managerFactory;
     }
 
