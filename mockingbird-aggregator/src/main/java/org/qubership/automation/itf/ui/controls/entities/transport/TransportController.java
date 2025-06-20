@@ -33,15 +33,19 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.exceptions.common.NotValidValueException;
+import org.qubership.automation.itf.core.hibernate.spring.managers.executor.InboundTransportConfigurationObjectManager;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.communication.message.delete.DeleteEntityResultMessage;
 import org.qubership.automation.itf.core.model.interceptor.Interceptor;
+import org.qubership.automation.itf.core.model.jpa.environment.InboundTransportConfiguration;
+import org.qubership.automation.itf.core.model.jpa.server.Server;
 import org.qubership.automation.itf.core.model.jpa.system.System;
 import org.qubership.automation.itf.core.model.jpa.transport.TransportConfiguration;
 import org.qubership.automation.itf.core.model.usage.UsageInfo;
 import org.qubership.automation.itf.core.util.descriptor.PropertyDescriptor;
 import org.qubership.automation.itf.core.util.exception.TransportException;
 import org.qubership.automation.itf.core.util.helper.Comparators;
+import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.core.util.transport.base.AbstractTransportImpl;
 import org.qubership.automation.itf.core.util.transport.manager.TransportRegistryManager;
 import org.qubership.automation.itf.ui.controls.common.AbstractController;
@@ -191,6 +195,17 @@ public class TransportController extends AbstractController<UITransport, Transpo
                 }
             } else {
                 transportsWithoutTriggers.add(transportConfiguration);
+            }
+            if (transportConfiguration.getMep().isInbound()) {
+                Collection<InboundTransportConfiguration> configurations = CoreObjectManager.getInstance()
+                        .getSpecialManager(InboundTransportConfiguration.class, InboundTransportConfigurationObjectManager.class)
+                        .getConfigurationsByTransportId((BigInteger) transportConfiguration.getID());
+                for (InboundTransportConfiguration configuration : configurations) {
+                    Server server = getManager(Server.class).getById(configuration.getParent().getID());
+                    Collection<InboundTransportConfiguration> inboundTransportConfigurations = server.getInbounds();
+                    inboundTransportConfigurations.remove(configuration);
+                    server.store();
+                }
             }
         }
         Iterator<TransportConfiguration> iter = transportsWithoutTriggers.iterator();
