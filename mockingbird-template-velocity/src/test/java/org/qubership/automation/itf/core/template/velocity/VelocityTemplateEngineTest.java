@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.velocity.exception.VelocityException;
 import org.hamcrest.core.StringContains;
 import org.junit.Before;
@@ -190,9 +191,9 @@ public class VelocityTemplateEngineTest {
         String sourceString = "#add_date($tc.date, \"1d\", \"2h\", \"5m\", \"2d\")";
         TcContext context = new TcContext();
         context.put("date", "2018-08-28T04:53:46");
-        String process = engine.process(mock(Server.class), sourceString, InstanceContext.from(context, null));
-        Assert.assertEquals(process, "2018-08-31T06:58:46");
-        System.out.println(process);
+        String processed = engine.process(mock(Server.class), sourceString, InstanceContext.from(context, null));
+        Assert.assertEquals(processed, "2018-08-31T06:58:46");
+        System.out.println(processed);
     }
 
     @Test
@@ -200,9 +201,8 @@ public class VelocityTemplateEngineTest {
         String sourceString = "$math.random(100,999)";
         TcContext context = new TcContext();
         Map<String, Storable> map = Maps.newHashMap();
-        String process = engine.process(map, sourceString, InstanceContext.from(context, null));
-        Assert.assertNotEquals(process, sourceString);
-        System.out.println(process);
+        String processed = engine.process(map, sourceString, InstanceContext.from(context, null));
+        Assert.assertNotEquals(processed, sourceString);
     }
 
     @Test
@@ -210,9 +210,28 @@ public class VelocityTemplateEngineTest {
         String sourceString = "#set($startDate = $date.format('yyyy-MM-dd''T''HH:mm:ss', $date))\n$startDate";
         TcContext context = new TcContext();
         Map<String, Storable> map = Maps.newHashMap();
-        String process = engine.process(map, sourceString, InstanceContext.from(context, null));
-        Assert.assertFalse(process.contains("$date"));
-        System.out.println(process);
+        String processed = engine.process(map, sourceString, InstanceContext.from(context, null));
+        Assert.assertFalse(processed.contains("$date"));
+        System.out.println(processed);
+    }
+
+    @Test
+    public void testEscTool() {
+        String htmlString = "Some String with html/xml tags: <customer><name>Alex</name><id>54321</id></customer>";
+        String velocityString = "$esc.html(\"" + htmlString + "\")";
+        TcContext context = new TcContext();
+        Map<String, Storable> map = Maps.newHashMap();
+        String processed = engine.process(map, velocityString, InstanceContext.from(context, null));
+        Assert.assertEquals(processed, StringEscapeUtils.escapeHtml(htmlString));
+    }
+
+    @Test
+    public void testNumberTool() {
+        String velocityString = "#set($num = 55.666)\n$number.format(\"#0000\", $num)";
+        TcContext context = new TcContext();
+        Map<String, Storable> map = Maps.newHashMap();
+        String processed = engine.process(map, velocityString, InstanceContext.from(context, null));
+        Assert.assertEquals(processed, "0056");
     }
 
     private String prepareIndex(int i) {
