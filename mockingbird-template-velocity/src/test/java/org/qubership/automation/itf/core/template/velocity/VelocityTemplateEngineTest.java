@@ -234,6 +234,19 @@ public class VelocityTemplateEngineTest {
         Assert.assertEquals(processed, "0056");
     }
 
+    @Test
+    public void testXmlTool() {
+        String velocityString = "#set($myXML = $xml.parse($tc.response))\n"
+                + "#foreach($eventFragment in $myXML.children().iterator())\n"
+                + "$eventFragment\n"
+                + "#end";
+        TcContext context = new TcContext();
+        context.put("response", "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>");
+        Map<String, Storable> map = Maps.newHashMap();
+        String processed = engine.process(map, velocityString, InstanceContext.from(context, null));
+        Assert.assertEquals(processed, "<to>Tove</to>\n<from>Jani</from>\n<heading>Reminder</heading>\n<body>Don't forget me this weekend!</body>\n");
+    }
+
     private String prepareIndex(int i) {
         switch (Integer.toString(i).length()) {
             case 1:

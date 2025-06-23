@@ -87,9 +87,7 @@ public class VelocityTemplateEngine implements TemplateEngine {
         factoryConfiguration.addConfiguration(makeViewFactoryConfig());
 
         toolManager = new ToolManager();
-
         toolManager.getToolboxFactory().configure(factoryConfiguration);
-
         toolManager.setVelocityEngine(engine);
     }
 
@@ -129,7 +127,8 @@ public class VelocityTemplateEngine implements TemplateEngine {
                 "org.apache.velocity.tools.generic.MathTool",
                 "org.apache.velocity.tools.generic.NumberTool",
                 "org.apache.velocity.tools.generic.ResourceTool",
-                "org.apache.velocity.tools.generic.SortTool"));
+                "org.apache.velocity.tools.generic.SortTool",
+                "org.apache.velocity.tools.generic.XmlTool"));
         factoryConfiguration.addToolbox(applicationToolboxConfiguration);
 
         ToolboxConfiguration requestToolboxConfiguration = new ToolboxConfiguration();
