@@ -82,6 +82,11 @@ public class VelocityTemplateEngine implements TemplateEngine {
             engine.loadDirective(directiveClass.getName());
         }
 
+        /*
+            Explicit init of Velocity Tools 2.0 is implemented,
+            instead of bundled tools.xml files parsing
+            (after commons-beanutils upgrade to 1.9.4).
+         */
         FactoryConfiguration factoryConfiguration = makeGenericFactoryConfig();
         factoryConfiguration.addConfiguration(makeStrutsFactoryConfig());
         factoryConfiguration.addConfiguration(makeViewFactoryConfig());
