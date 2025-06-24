@@ -63,7 +63,7 @@ jobs:
           tags: ${{steps.metadata.outputs.result}}
           download-artifact: true
           custom-image-name: qubership-testing-platform-itf-executor
-          download-artifact-path: build-context/qubership-testing-platform-itf-executor
+          download-artifact-path: build-context/qubership-testing-platform-itf-executor/qubership-testing-platform-itf-executor
           component: '[{"name": "qubership-testing-platform-itf-executor", "file": "./Dockerfile", "context": "."}]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
