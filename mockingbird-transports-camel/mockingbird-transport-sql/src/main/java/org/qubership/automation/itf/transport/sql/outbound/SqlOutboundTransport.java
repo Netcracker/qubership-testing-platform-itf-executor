@@ -47,6 +47,7 @@ import static org.qubership.automation.itf.transport.sql.SqlTransportConstants.U
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -109,7 +110,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private static final Integer defaultQueryTimeout
             = Config.getConfig().getIntOrDefault("sql.transport.default.query.timeout", 600);
     private static final LoadingCache<ConnectionProperties, SqlConfig> configCache = CacheBuilder.newBuilder()
-            .expireAfterAccess(1L, TimeUnit.HOURS)
+            .expireAfterAccess(2L, TimeUnit.DAYS)
             .removalListener((RemovalListener<ConnectionProperties, SqlConfig>) removalNotification -> {
                 if (removalNotification.getCause().equals(RemovalCause.EXPIRED)) {
                     SqlConfig sqlConfig = removalNotification.getValue();
@@ -131,9 +132,15 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                     BasicDataSource dataSource = (BasicDataSource) setupDataSource(id);
                     dataSource.setMaxTotal(100);
                     dataSource.setMaxIdle(10);
-                    dataSource.setMinEvictableIdleTimeMillis(600000L);
+                    dataSource.setMinEvictableIdle(Duration.ofSeconds(900));
                     dataSource.setInitialSize(2);
-                    dataSource.setDefaultQueryTimeout(defaultQueryTimeout);
+
+                    dataSource.setMinIdle(0);
+                    dataSource.setMaxWait(Duration.ofSeconds(10));
+                    dataSource.setDurationBetweenEvictionRuns(Duration.ofSeconds(300));
+                    dataSource.setTestWhileIdle(true);
+                    dataSource.setMaxConn(Duration.ofSeconds(1800));
+                    dataSource.setFastFailValidation(true);
                     return new SqlConfig(dataSource);
                 }
             });
@@ -172,7 +179,8 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         dataSource.setUsername(getAndCheckRequiredProperty(connectionProperties, USER, USER_DESCRIPTION));
         dataSource.setPassword(getAndCheckRequiredProperty(connectionProperties, PASSWORD, PASSWORD_DESCRIPTION));
         dataSource.setUrl(getAndCheckRequiredProperty(connectionProperties, JDBC_URL, JDBC_URL_STRING));
-        dataSource.setDefaultQueryTimeout(defaultQueryTimeout);
+
+        dataSource.setDefaultQueryTimeout(Duration.ofSeconds(defaultQueryTimeout));
         return dataSource;
     }
 
