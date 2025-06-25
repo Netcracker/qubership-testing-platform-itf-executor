@@ -207,6 +207,7 @@ EI_CLEAN_JOB_FILE_DELETE_AFTER_MS: "{{ .Values.EI_CLEAN_JOB_FILE_DELETE_AFTER_MS
 ZIPKIN_ENABLE: "{{ .Values.ZIPKIN_ENABLE }}"
 ZIPKIN_PROBABILITY: "{{ .Values.ZIPKIN_PROBABILITY }}"
 ZIPKIN_URL: "{{ .Values.ZIPKIN_URL }}"
+EXCLUDE_REGISTRY_METRICS_TAGS: "{{ .Values.EXCLUDE_REGISTRY_METRICS_TAGS }}"
 {{- end }}
 
 {{/* Sensitive data to be converted into secrets whenever possible */}}
