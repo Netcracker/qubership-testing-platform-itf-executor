@@ -17,7 +17,11 @@
 
 package org.qubership.automation.itf.core.metric;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
+
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -39,7 +43,10 @@ import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.config.MeterFilter;
 import lombok.NonNull;
 
 @Service
@@ -48,6 +55,8 @@ public class MetricsAggregateService {
     private final MeterRegistry meterRegistry;
     private Counter.Builder executorCallChainCounter;
     private Counter.Builder executorContextSizeCounter;
+    @Value("#{${exclude.registry.metrics.tags}}")
+    private Map<String, List<String>> excludeRegistryMetricsTags;
     @Value("${message-broker.stubs-executor-incoming-request.queue}")
     private String destinationQueueName;
     private ApplicationContext applicationContext;
@@ -69,6 +78,19 @@ public class MetricsAggregateService {
                 .builder(Metric.ATP_ITF_EXECUTOR_CONTEXT_SIZE_BY_PROJECT.getValue())
                 .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CALLCHAIN_NAME.getValue(), "")
                 .description("total size of testcase contexts");
+        meterRegistry.config().meterFilter(new MeterFilter() {
+            @Override
+            public Meter.Id map(Meter.Id id) {
+                if (excludeRegistryMetricsTags.containsKey(id.getName())) {
+                    List<String> excludeTags = excludeRegistryMetricsTags.get(id.getName());
+                    List<Tag> tags = stream(id.getTagsAsIterable().spliterator(), false)
+                            .filter(t -> !excludeTags.contains(t.getKey()))
+                            .collect(toList());
+                    return id.replaceTags(tags);
+                }
+                return id;
+            }
+        });
     }
 
     @EventListener
