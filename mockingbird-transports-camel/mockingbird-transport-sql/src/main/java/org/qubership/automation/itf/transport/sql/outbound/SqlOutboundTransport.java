@@ -107,8 +107,19 @@ import com.google.common.cache.RemovalListener;
 public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlOutboundTransport.class);
     private static final ObjectMapper MAPPER;
-    private static final Integer defaultQueryTimeout
-            = Config.getConfig().getIntOrDefault("sql.transport.default.query.timeout", 600);
+
+    private static final Integer defaultQueryTimeout;
+    private static final Integer initialSize;
+    private static final Integer maxTotal;
+    private static final Integer maxIdle;
+    private static final Integer minIdle;
+    private static final boolean testWhileIdle;
+    private static final boolean fastFailValidation;
+    private static final Duration maxWaitMillis;
+    private static final Duration minEvictableIdleTimeMillis;
+    private static final Duration timeBetweenEvictionRunsMillis;
+    private static final Duration maxConnLifetimeMillis;
+
     private static final LoadingCache<ConnectionProperties, SqlConfig> configCache = CacheBuilder.newBuilder()
             .expireAfterAccess(2L, TimeUnit.DAYS)
             .removalListener((RemovalListener<ConnectionProperties, SqlConfig>) removalNotification -> {
@@ -130,17 +141,6 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 @Override
                 public SqlConfig load(@Nonnull ConnectionProperties id) {
                     BasicDataSource dataSource = (BasicDataSource) setupDataSource(id);
-                    dataSource.setMaxTotal(100);
-                    dataSource.setMaxIdle(10);
-                    dataSource.setMinEvictableIdle(Duration.ofSeconds(900));
-                    dataSource.setInitialSize(2);
-
-                    dataSource.setMinIdle(0);
-                    dataSource.setMaxWait(Duration.ofSeconds(10));
-                    dataSource.setDurationBetweenEvictionRuns(Duration.ofSeconds(300));
-                    dataSource.setTestWhileIdle(true);
-                    dataSource.setMaxConn(Duration.ofSeconds(1800));
-                    dataSource.setFastFailValidation(true);
                     return new SqlConfig(dataSource);
                 }
             });
@@ -152,6 +152,29 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         MAPPER = new ObjectMapper();
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
+
+        defaultQueryTimeout = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.defaultQueryTimeout", 600);
+        initialSize = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.initialSize", 2);
+        maxTotal = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.maxTotal", 100);
+        maxIdle = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.maxIdle", 10);
+        minIdle = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.minIdle", 0);
+        testWhileIdle = Boolean.parseBoolean(Config.getConfig()
+                .getStringOrDefault("sql.transport.dataSource.testWhileIdle", "false"));
+        fastFailValidation = Boolean.parseBoolean(Config.getConfig()
+                .getStringOrDefault("sql.transport.dataSource.fastFailValidation", "false"));
+        maxWaitMillis = Duration.ofMillis(Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.maxWaitMillis", 10000));
+        minEvictableIdleTimeMillis = Duration.ofMillis(Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.minEvictableIdleTimeMillis", 900000));
+        timeBetweenEvictionRunsMillis = Duration.ofMillis(Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.timeBetweenEvictionRunsMillis", 600000));
+        maxConnLifetimeMillis = Duration.ofMillis(Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.maxConnLifetimeMillis", 1800000));
     }
 
     @Parameter(shortName = TYPE_DB, longName = TYPE_DB_DESCRIPTION,
@@ -181,6 +204,17 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         dataSource.setUrl(getAndCheckRequiredProperty(connectionProperties, JDBC_URL, JDBC_URL_STRING));
 
         dataSource.setDefaultQueryTimeout(Duration.ofSeconds(defaultQueryTimeout));
+        dataSource.setInitialSize(initialSize);
+        dataSource.setMaxTotal(maxTotal);
+        dataSource.setMaxIdle(maxIdle);
+        dataSource.setMinIdle(minIdle);
+        dataSource.setMaxWait(maxWaitMillis);
+
+        dataSource.setTestWhileIdle(testWhileIdle);
+        dataSource.setMinEvictableIdle(minEvictableIdleTimeMillis);
+        dataSource.setDurationBetweenEvictionRuns(timeBetweenEvictionRunsMillis);
+        dataSource.setMaxConn(maxConnLifetimeMillis);
+        dataSource.setFastFailValidation(fastFailValidation);
         return dataSource;
     }
 
