@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_project_property_for_itf_import_process
+      author: Dmitry Churbanov
+      comment: Add project property 'enable.event.triggers.activation.after.import' into table mb_project_settings for all projects.
+      changes:
+        - sqlFile:
+            path: add_project_property_for_itf_import_process.sql
+            relativeToChangelogFile: true
+            splitStatements: false

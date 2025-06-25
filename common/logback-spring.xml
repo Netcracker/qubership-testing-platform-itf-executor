@@ -70,6 +70,12 @@
             <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="OFF" additivity="false">
                 <appender-ref ref="ASYNC_GELF"/>
             </logger>
+            <logger name="org.hibernate.cache.spi.support" level="WARN" additivity="false">
+                <appender-ref ref="ASYNC_GELF"/>
+            </logger>
+            <logger name="com.hazelcast.hibernate" level="WARN" additivity="false">
+                <appender-ref ref="ASYNC_GELF"/>
+            </logger>
             <logger name="org.qubership.automation.itf.core.template.velocity.log.Slf4jLogChute" level="ERROR" additivity="false">
                 <appender-ref ref="ASYNC_GELF"/>
             </logger>
@@ -498,6 +504,14 @@
                 <appender-ref ref="ConsoleAppender"/>
             </logger>
             <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="OFF" additivity="false">
+                <appender-ref ref="ConsoleAppender"/>
+                <appender-ref ref="ITFAppender"/>
+            </logger>
+            <logger name="org.hibernate.cache.spi.support" level="WARN" additivity="false">
+                <appender-ref ref="ConsoleAppender"/>
+                <appender-ref ref="ITFAppender"/>
+            </logger>
+            <logger name="com.hazelcast.hibernate" level="WARN" additivity="false">
                 <appender-ref ref="ConsoleAppender"/>
                 <appender-ref ref="ITFAppender"/>
             </logger>

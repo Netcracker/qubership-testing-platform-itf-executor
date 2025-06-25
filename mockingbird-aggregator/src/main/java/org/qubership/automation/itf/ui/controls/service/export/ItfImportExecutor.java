@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -78,6 +82,7 @@ import org.qubership.automation.itf.core.model.jpa.transport.TransportConfigurat
 import org.qubership.automation.itf.core.model.project.ProjectSettings;
 import org.qubership.automation.itf.core.util.Pair;
 import org.qubership.automation.itf.core.util.constants.EiConstants;
+import org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants;
 import org.qubership.automation.itf.core.util.db.TxExecutor;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManagerService;
@@ -103,6 +108,8 @@ public class ItfImportExecutor implements ImportExecutor {
     private final ObjectLoaderFromDiskService objectLoaderFromDiskService;
     private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
     private final ProjectSettingsService projectSettingsService;
+    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
+
     @PersistenceContext
     protected EntityManager entityManager;
     Map<String, Class> map = Maps.newLinkedHashMapWithExpectedSize(7);
@@ -163,7 +170,7 @@ public class ItfImportExecutor implements ImportExecutor {
         List<Pair<Path, String>> foldersForImport = prepareListOfFoldersForImport(path);
         Map<BigInteger, BigInteger> replacementMap = Maps.newHashMap();
         Map<String, Boolean> postImportActions = new HashMap<>();
-        List<BigInteger> systemIds = new ArrayList<>();
+        Set<BigInteger> systemIds = new HashSet<>();
         TxExecutor.executeVoid(() -> {
             try {
                 manager.setReplicationRole("replica");
@@ -204,11 +211,25 @@ public class ItfImportExecutor implements ImportExecutor {
                 getTimestampDifference(timestampMainImportStart, timestampMainImportFinish));
 
         if (postImportActions.getOrDefault("shouldActivateEventTriggers", false)) {
-            prepareAndSendSyncEventTriggersRequest(systemIds, resultProjectUuid);
+            boolean isEventTriggersActivationEnabled =
+                    projectSettingsService.getBoolean(projectId,
+                            ProjectSettingsConstants.ENABLE_EVENT_TRIGGERS_ACTIVATION_AFTER_IMPORT);
+            if (isEventTriggersActivationEnabled) {
+                executorService.schedule(() -> {
+                    try {
+                        prepareAndSendSyncEventTriggersRequest(systemIds, resultProjectUuid);
+                    } catch (Throwable t) {
+                        log.error("Error while preparing of event triggers activation requests", t);
+                    }
+                }, 240, TimeUnit.SECONDS);
+            } else {
+                log.info("Event triggers activation is skipped due to '{}' project setting is false.",
+                        ProjectSettingsConstants.ENABLE_EVENT_TRIGGERS_ACTIVATION_AFTER_IMPORT);
+            }
         }
     }
 
-    private void prepareAndSendSyncEventTriggersRequest(List<BigInteger> systemIds, UUID projectUuid) {
+    private void prepareAndSendSyncEventTriggersRequest(Set<BigInteger> systemIds, UUID projectUuid) {
         log.info("Activate Event Triggers (make and send SyncActivationRequest)...");
         TxExecutor.executeVoid(() -> {
             try {
@@ -257,7 +278,7 @@ public class ItfImportExecutor implements ImportExecutor {
     }
 
     /**
-     * Import object.
+     * Import objects.
      *
      * @param entityType       - ITF entity for import.
      * @param exportImportData import data from catalogue.
@@ -267,7 +288,7 @@ public class ItfImportExecutor implements ImportExecutor {
      */
     public void importObjects(String entityType, ExportImportData exportImportData, Path path,
                               StubProject project, Map<BigInteger, BigInteger> replacementMap,
-                              List<BigInteger> systemIds)
+                              Set<BigInteger> systemIds)
             throws Exception {
         Timestamp timestampImportObjectsStart = new Timestamp(java.lang.System.currentTimeMillis());
         log.info("Start import process for: {}. Start time: {}", entityType, timestampImportObjectsStart);
