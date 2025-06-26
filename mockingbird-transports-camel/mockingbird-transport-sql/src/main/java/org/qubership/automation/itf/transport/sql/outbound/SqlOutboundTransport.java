@@ -99,51 +99,40 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalCause;
 import com.google.common.cache.RemovalListener;
+import lombok.Getter;
 
 @UserName("Outbound SQL Synchronous")
 public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlOutboundTransport.class);
     private static final ObjectMapper MAPPER;
 
-    private static final Integer defaultQueryTimeout;
+    private static final Duration defaultQueryTimeout;
     private static final Integer initialSize;
     private static final Integer maxTotal;
     private static final Integer maxIdle;
     private static final Integer minIdle;
     private static final boolean testWhileIdle;
     private static final boolean fastFailValidation;
+    private static final boolean removeAbandonedOnMaintenance;
+    private static final boolean removeAbandonedOnBorrow;
     private static final Duration maxWaitMillis;
     private static final Duration minEvictableIdleTimeMillis;
     private static final Duration timeBetweenEvictionRunsMillis;
     private static final Duration maxConnLifetimeMillis;
 
-    private static final LoadingCache<ConnectionProperties, SqlConfig> configCache = CacheBuilder.newBuilder()
-            .expireAfterAccess(2L, TimeUnit.DAYS)
-            .removalListener((RemovalListener<ConnectionProperties, SqlConfig>) removalNotification -> {
-                if (removalNotification.getCause().equals(RemovalCause.EXPIRED)) {
-                    SqlConfig sqlConfig = removalNotification.getValue();
-                    if (sqlConfig != null) {
-                        BasicDataSource ds = sqlConfig.getDataSource();
-                        if (ds != null && !ds.isClosed()) {
-                            try {
-                                ds.close();
-                            } catch (SQLException e) {
-                                // Silently do nothing
-                            }
-                        }
-                    }
-                }
-            })
-            .build(new CacheLoader<ConnectionProperties, SqlConfig>() {
-                @Override
-                public SqlConfig load(@Nonnull ConnectionProperties id) {
-                    BasicDataSource dataSource = (BasicDataSource) setupDataSource(id);
-                    return new SqlConfig(dataSource);
-                }
-            });
+    private static final Integer ojdbcReadTimeout;
+    private static final Integer ojdbcConnectTimeout;
+    private static final Integer ojdbcOutboundConnectTimeout;
+
+    private static final boolean dataSourcesCacheEnable;
+    private static final int dataSourcesCacheExpireMinutes;
+    private static final boolean dataSourcesCacheRecordStats;
+
+    private static final LoadingCache<ConnectionProperties, SqlConfig> configCache;
     private static final ScheduledExecutorService configCacheMaintenanceService =
             Executors.newSingleThreadScheduledExecutor();
     private static boolean isCacheCleanupScheduled = false;
@@ -153,8 +142,8 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
 
-        defaultQueryTimeout = Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.defaultQueryTimeout", 600);
+        defaultQueryTimeout = Duration.ofSeconds(Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.defaultQueryTimeout", 360));
         initialSize = Config.getConfig()
                 .getIntOrDefault("sql.transport.dataSource.initialSize", 2);
         maxTotal = Config.getConfig()
@@ -163,10 +152,16 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 .getIntOrDefault("sql.transport.dataSource.maxIdle", 10);
         minIdle = Config.getConfig()
                 .getIntOrDefault("sql.transport.dataSource.minIdle", 0);
+
         testWhileIdle = Boolean.parseBoolean(Config.getConfig()
                 .getStringOrDefault("sql.transport.dataSource.testWhileIdle", "false"));
         fastFailValidation = Boolean.parseBoolean(Config.getConfig()
                 .getStringOrDefault("sql.transport.dataSource.fastFailValidation", "false"));
+        removeAbandonedOnMaintenance = Boolean.parseBoolean(Config.getConfig()
+                .getStringOrDefault("sql.transport.dataSource.removeAbandonedOnMaintenance", "false"));
+        removeAbandonedOnBorrow = Boolean.parseBoolean(Config.getConfig()
+                .getStringOrDefault("sql.transport.dataSource.removeAbandonedOnBorrow", "false"));
+
         maxWaitMillis = Duration.ofMillis(Config.getConfig()
                 .getIntOrDefault("sql.transport.dataSource.maxWaitMillis", 10000));
         minEvictableIdleTimeMillis = Duration.ofMillis(Config.getConfig()
@@ -175,6 +170,55 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 .getIntOrDefault("sql.transport.dataSource.timeBetweenEvictionRunsMillis", 600000));
         maxConnLifetimeMillis = Duration.ofMillis(Config.getConfig()
                 .getIntOrDefault("sql.transport.dataSource.maxConnLifetimeMillis", 1800000));
+
+        ojdbcReadTimeout = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.ReadTimeout", 600);
+        ojdbcConnectTimeout = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.ConnectTimeout", 5);
+        ojdbcOutboundConnectTimeout = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.OutboundConnectTimeout", 10);
+
+        dataSourcesCacheEnable = Boolean.parseBoolean(Config.getConfig()
+                .getStringOrDefault("sql.transport.dataSourcesCache.enable", "true"));
+        dataSourcesCacheExpireMinutes = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSourcesCache.expireMinutes", 1380);
+        dataSourcesCacheRecordStats = Boolean.parseBoolean(Config.getConfig()
+                .getStringOrDefault("sql.transport.dataSourcesCache.recordStats", "false"));
+
+        if (dataSourcesCacheEnable) {
+            CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
+            if (dataSourcesCacheExpireMinutes != -1) {
+                builder.expireAfterAccess(dataSourcesCacheExpireMinutes, TimeUnit.MINUTES);
+            }
+            if (dataSourcesCacheRecordStats) {
+                builder.recordStats();
+            }
+            configCache = builder
+                    .removalListener((RemovalListener<ConnectionProperties, SqlConfig>) removalNotification -> {
+                        if (removalNotification.getCause().equals(RemovalCause.EXPIRED)) {
+                            SqlConfig sqlConfig = removalNotification.getValue();
+                            if (sqlConfig != null) {
+                                BasicDataSource ds = sqlConfig.getDataSource();
+                                if (ds != null && !ds.isClosed()) {
+                                    try {
+                                        ds.close();
+                                    } catch (SQLException e) {
+                                        // Silently do nothing
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .build(new CacheLoader<ConnectionProperties, SqlConfig>() {
+                        @Override
+                        public SqlConfig load(@Nonnull ConnectionProperties id) {
+                            BasicDataSource dataSource = (BasicDataSource) setupDataSource(id);
+                            return new SqlConfig(dataSource);
+                        }
+                    });
+        } else {
+            configCache = null;
+        }
     }
 
     @Parameter(shortName = TYPE_DB, longName = TYPE_DB_DESCRIPTION,
@@ -203,7 +247,21 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         dataSource.setPassword(getAndCheckRequiredProperty(connectionProperties, PASSWORD, PASSWORD_DESCRIPTION));
         dataSource.setUrl(getAndCheckRequiredProperty(connectionProperties, JDBC_URL, JDBC_URL_STRING));
 
-        dataSource.setDefaultQueryTimeout(Duration.ofSeconds(defaultQueryTimeout));
+        if (ORACLE.equals(typeDataBase)) {
+            if (ojdbcReadTimeout != -1) {
+                dataSource.addConnectionProperty("oracle.net.READ_TIMEOUT", ojdbcReadTimeout.toString());
+                dataSource.addConnectionProperty("oracle.jdbc.ReadTimeout", ojdbcReadTimeout.toString());
+            }
+            if (ojdbcConnectTimeout != -1) {
+                dataSource.addConnectionProperty("oracle.net.CONNECT_TIMEOUT", ojdbcConnectTimeout.toString());
+            }
+            if (ojdbcOutboundConnectTimeout != -1) {
+                dataSource.addConnectionProperty("oracle.net.OUTBOUND_CONNECT_TIMEOUT",
+                        ojdbcOutboundConnectTimeout.toString());
+            }
+        }
+
+        dataSource.setDefaultQueryTimeout(defaultQueryTimeout);
         dataSource.setInitialSize(initialSize);
         dataSource.setMaxTotal(maxTotal);
         dataSource.setMaxIdle(maxIdle);
@@ -215,6 +273,8 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         dataSource.setDurationBetweenEvictionRuns(timeBetweenEvictionRunsMillis);
         dataSource.setMaxConn(maxConnLifetimeMillis);
         dataSource.setFastFailValidation(fastFailValidation);
+        dataSource.setRemoveAbandonedOnMaintenance(removeAbandonedOnMaintenance);
+        dataSource.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
         return dataSource;
     }
 
@@ -279,14 +339,14 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         }
 
         /* If we are able to simply determine sql command type,
-            we use fix for VFHU SVT (speed up SQL performance via datasources and connections reusing).
-
-            Otherwise - we use camel-based implementation, which should be rewritten soon
+            we use fix for SVT (speed up SQL performance via dataSources and connections reusing).
+            Otherwise - we use legacy Camel-based implementation.
+            Since 2025-06-30: explicit enabling/disabling of dataSources Cache is added.
+            So, we use legacy Camel-based implementation also if dataSources Cache is disabled.
          */
         String sqlCommand = message.getText().trim();
         int sqlCommandType = determineType(sqlCommand);
-        if (sqlCommandType == -1) {
-            // Simple algorithm could not determine sql command type. So, we use legacy camel-based sending
+        if (sqlCommandType == -1 || !dataSourcesCacheEnable) {
             return sendReceiveSyncLegacy(message, connectionProperties);
         }
         // ~ Camel-less implementation for SVT
@@ -316,11 +376,18 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         return response;
     }
 
-    private synchronized void scheduleCacheCleanupIfNeeded() {
+    private static synchronized void scheduleCacheCleanupIfNeeded() {
+        if (!dataSourcesCacheEnable) {
+            return;
+        }
         if (!isCacheCleanupScheduled) {
             if (configCache.size() > 0) {
                 configCacheMaintenanceService.scheduleWithFixedDelay(() -> {
                     try {
+                        if (dataSourcesCacheRecordStats) {
+                            CacheStats cacheStats = configCache.stats();
+                            LOGGER.info("DataSources Cache Statistics: {}", cacheStats);
+                        }
                         configCache.cleanUp();
                     } catch (Throwable t) {
                         LOGGER.error("Error while SqlOutboundTransport cache cleanUp: {}", t.toString());
@@ -331,7 +398,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         }
     }
 
-    private int determineType(String sqlCommand) {
+    private static int determineType(String sqlCommand) {
         String startString = sqlCommand.substring(0, 6).toLowerCase();
         return ((startString.equals("select")) ? 1
                 : (startString.equals("insert") || startString.equals("update") || startString.equals("delete")) ? 2
@@ -686,6 +753,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         }
     }
 
+    @Getter
     private static class SqlConfig {
         BasicDataSource dataSource;
         JdbcTemplate jdbcTemplate;
@@ -695,17 +763,5 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
             this.jdbcTemplate = new JdbcTemplate(dataSource);
         }
 
-        public BasicDataSource getDataSource() {
-            return dataSource;
-        }
-
-        public void setDataSource(BasicDataSource dataSource) {
-            this.dataSource = dataSource;
-            this.jdbcTemplate = new JdbcTemplate(dataSource);
-        }
-
-        public JdbcTemplate getJdbcTemplate() {
-            return jdbcTemplate;
-        }
     }
 }
