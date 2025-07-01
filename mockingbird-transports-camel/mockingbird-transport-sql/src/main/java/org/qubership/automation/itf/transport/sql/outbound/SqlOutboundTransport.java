@@ -47,7 +47,6 @@ import static org.qubership.automation.itf.transport.sql.SqlTransportConstants.U
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -110,7 +109,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlOutboundTransport.class);
     private static final ObjectMapper MAPPER;
 
-    private static final Duration defaultQueryTimeout;
+    private static final Integer defaultQueryTimeout;
     private static final Integer initialSize;
     private static final Integer maxTotal;
     private static final Integer maxIdle;
@@ -119,10 +118,10 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private static final boolean fastFailValidation;
     private static final boolean removeAbandonedOnMaintenance;
     private static final boolean removeAbandonedOnBorrow;
-    private static final Duration maxWaitMillis;
-    private static final Duration minEvictableIdleTimeMillis;
-    private static final Duration timeBetweenEvictionRunsMillis;
-    private static final Duration maxConnLifetimeMillis;
+    private static final Integer maxWaitMillis;
+    private static final Integer minEvictableIdleTimeMillis;
+    private static final Integer timeBetweenEvictionRunsMillis;
+    private static final Integer maxConnLifetimeMillis;
 
     private static final Integer ojdbcReadTimeout;
     private static final Integer ojdbcConnectTimeout;
@@ -142,8 +141,8 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
 
-        defaultQueryTimeout = Duration.ofSeconds(Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.defaultQueryTimeout", 360));
+        defaultQueryTimeout = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.defaultQueryTimeout", 360);
         initialSize = Config.getConfig()
                 .getIntOrDefault("sql.transport.dataSource.initialSize", 2);
         maxTotal = Config.getConfig()
@@ -162,14 +161,14 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         removeAbandonedOnBorrow = Boolean.parseBoolean(Config.getConfig()
                 .getStringOrDefault("sql.transport.dataSource.removeAbandonedOnBorrow", "false"));
 
-        maxWaitMillis = Duration.ofMillis(Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.maxWaitMillis", 10000));
-        minEvictableIdleTimeMillis = Duration.ofMillis(Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.minEvictableIdleTimeMillis", 900000));
-        timeBetweenEvictionRunsMillis = Duration.ofMillis(Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.timeBetweenEvictionRunsMillis", 600000));
-        maxConnLifetimeMillis = Duration.ofMillis(Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.maxConnLifetimeMillis", 1800000));
+        maxWaitMillis = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.maxWaitMillis", 10000);
+        minEvictableIdleTimeMillis = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.minEvictableIdleTimeMillis", 900000);
+        timeBetweenEvictionRunsMillis = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.timeBetweenEvictionRunsMillis", 600000);
+        maxConnLifetimeMillis = Config.getConfig()
+                .getIntOrDefault("sql.transport.dataSource.maxConnLifetimeMillis", 1800000);
 
         ojdbcReadTimeout = Config.getConfig()
                 .getIntOrDefault("sql.transport.dataSource.ojdbc.ReadTimeout", 600);
@@ -266,12 +265,12 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         dataSource.setMaxTotal(maxTotal);
         dataSource.setMaxIdle(maxIdle);
         dataSource.setMinIdle(minIdle);
-        dataSource.setMaxWait(maxWaitMillis);
+        dataSource.setMaxWaitMillis(maxWaitMillis);
 
         dataSource.setTestWhileIdle(testWhileIdle);
-        dataSource.setMinEvictableIdle(minEvictableIdleTimeMillis);
-        dataSource.setDurationBetweenEvictionRuns(timeBetweenEvictionRunsMillis);
-        dataSource.setMaxConn(maxConnLifetimeMillis);
+        dataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        dataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        dataSource.setMaxConnLifetimeMillis(maxConnLifetimeMillis);
         dataSource.setFastFailValidation(fastFailValidation);
         dataSource.setRemoveAbandonedOnMaintenance(removeAbandonedOnMaintenance);
         dataSource.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
