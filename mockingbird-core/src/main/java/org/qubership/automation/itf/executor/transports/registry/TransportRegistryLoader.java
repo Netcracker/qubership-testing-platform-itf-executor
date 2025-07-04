@@ -71,7 +71,6 @@ public class TransportRegistryLoader extends AbstractTransportRegistry {
                 ApplicationConfig.env.getProperty(TRANSPORT_LIB));
     }
 
-    //TODO ANKU0610 - Why do we need these methods
     @Override
     protected void protectedRegister(AccessTransport accessTransport) {
     }

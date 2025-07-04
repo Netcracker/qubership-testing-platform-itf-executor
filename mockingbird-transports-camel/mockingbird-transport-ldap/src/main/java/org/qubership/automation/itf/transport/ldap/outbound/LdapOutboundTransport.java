@@ -146,7 +146,7 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
         if (connectionProperties.get(ADDITIONAL_JNDI_PROPERTIES) != null) {
             props.putAll((Map<?, ?>) connectionProperties.get(ADDITIONAL_JNDI_PROPERTIES));
         }
-        // May be these two properties must be set by default?
+        // May be, these two properties must be set by default?
         /*
         props.setProperty(Context.URL_PKG_PREFIXES, "com.sun.jndi.url");
         props.setProperty(Context.REFERRAL, "ignore");
@@ -192,7 +192,7 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
         registry.put(LDAP_DATASOURCE, new InitialLdapContext(props, null));
         CamelContext context = new DefaultCamelContext(registry);
         context.addRoutes(new RouteBuilder() {
-            public void configure() throws Exception {
+            public void configure() {
                 from("direct:start").to("ldap:" + LDAP_DATASOURCE + "?base=" + base); // The base DN for searches.
                 // Default: ou=system
             }
@@ -283,13 +283,13 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
                 }
             } else {
                 // javax.naming.NameAlreadyBoundException: [LDAP: error code 68 - Entry Already Exists]; remaining
-                // name 'uid=ssd2,ou=fixedline,ou=profiles,ou=vodafone,c=hu,o=vodafone'
+                // name 'uid=ssd2,ou=fixedline,ou=profiles,ou=exampleMobileProvider,c=org,o=exampleMobileProvider'
                 /*
                  .replace('\n',' ') - is added because for some errors the explanation contains line-breaks what can
                  change .matches(allowStatus) result to false
                     For example: "javax.naming.directory.SchemaViolationException: [LDAP: error code 65 -
                     single-valued attribute "uid" has multiple values\n]; remaining name 'uid=ssd2,ou=fixedline,
-                    ou=profiles,ou=vodafone,c=hu,o=vodafone'"
+                    ou=profiles,ou=exampleMobileProvider,c=org,o=exampleMobileProvider'"
                  .replace('\n',' ') - is removed. A user should (and definitely can) configure regexp properly
                 */
                 if (ex.getExplanation().matches(allowStatus)) {
@@ -347,16 +347,16 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
         ctx.rename(oldLdapName, newLdapName);
     }
 
-    /*  Example json for "modify" request (see TASUP-8035):
+    /*  Example json for "modify" request:
         {
-            "dn": "uid=ssd2, ou=fixedline,ou=profiles,ou=vodafone,c=hu,o=vodafone",
+            "dn": "uid=ssd2, ou=fixedline,ou=profiles,ou=exampleMobileProvider,c=org,o=exampleMobileProvider",
             "changetype": "modify",
             "uid": "ssd2",
             "add":
             [
                 "fqdn", "inet-subscriptionid"
             ],
-            "fqdn": "0123456@fix.vodafone.hu",
+            "fqdn": "0123456@fix.exampleMobileProvider.org",
             "inet-subscriptionid": "0123456_inetsubscription",
             "replace":
             [
