@@ -171,11 +171,11 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 .getIntOrDefault("sql.transport.dataSource.maxConnLifetimeMillis", 1800000);
 
         ojdbcReadTimeout = Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.ojdbc.ReadTimeout", 600);
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.ReadTimeout", 600000);
         ojdbcConnectTimeout = Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.ojdbc.ConnectTimeout", 5);
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.ConnectTimeout", 10);
         ojdbcOutboundConnectTimeout = Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.ojdbc.OutboundConnectTimeout", 10);
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.OutboundConnectTimeout", 15);
 
         dataSourcesCacheEnable = Boolean.parseBoolean(Config.getConfig()
                 .getStringOrDefault("sql.transport.dataSourcesCache.enable", "true"));
@@ -248,7 +248,6 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
 
         if (ORACLE.equals(typeDataBase)) {
             if (ojdbcReadTimeout != -1) {
-                dataSource.addConnectionProperty("oracle.net.READ_TIMEOUT", ojdbcReadTimeout.toString());
                 dataSource.addConnectionProperty("oracle.jdbc.ReadTimeout", ojdbcReadTimeout.toString());
             }
             if (ojdbcConnectTimeout != -1) {
