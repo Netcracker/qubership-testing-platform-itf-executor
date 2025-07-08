@@ -272,7 +272,7 @@ public class TCContextService {
                 throw exception;
             }
             tcContext.setStatus(Status.PAUSED);
-            CacheServices.getTcBindingCacheService().bind(tcContext);//todo ATPII-42922 check - do we need?
+            CacheServices.getTcBindingCacheService().bind(tcContext); // TODO check - do we really need it?
             CacheServices.getTcContextCacheService().set(tcContext, true);
             eventBusProvider.post(new TcContextEvent.Pause(tcContext));
             NextCallChainEvent pauseEvent = new NextCallChainEvent.Pause(subscriberData.getParentSubscriberId(),

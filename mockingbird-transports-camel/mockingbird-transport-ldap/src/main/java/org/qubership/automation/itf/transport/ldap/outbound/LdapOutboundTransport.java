@@ -156,7 +156,7 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
                 1. Ldif change request (requests?) in JSON format
                 2. Otherwise - search condition e.g. "(uid=ssd)"
             So, we try to parse message.getText() as Json.
-            If it's JsonObject AND there is changetype property
+            If it's JsonObject AND there is changeType property
                 with the possible values ["add", "delete", "modify", "modrdn", "moddn"],
                 then we invoke specific processing instead of Camel standard magic.
             Otherwise - we send search request via Camel.
@@ -356,7 +356,7 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
             [
                 "fqdn", "inet-subscriptionid"
             ],
-            "fqdn": "0123456@fix.exampleMobileProvider.org",
+            "fqdn": "example@example.com",
             "inet-subscriptionid": "0123456_inetsubscription",
             "replace":
             [

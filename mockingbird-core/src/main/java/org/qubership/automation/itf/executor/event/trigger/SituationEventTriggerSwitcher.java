@@ -42,7 +42,7 @@ public class SituationEventTriggerSwitcher extends EventTriggerSwitcher {
     private static final String RUNNING_HOSTNAME = Config.getConfig().getRunningHostname();
 
     private transient Listener listener;
-    private EventBusProvider eventBusProvider;
+    private final EventBusProvider eventBusProvider;
 
     @Autowired
     public SituationEventTriggerSwitcher(EventBusProvider eventBusProvider) {
@@ -91,7 +91,7 @@ public class SituationEventTriggerSwitcher extends EventTriggerSwitcher {
                 /*
                     Only EndListeners are registered in the bus.
                     StartListeners are processed directly in the SituationExecutor,
-                    due to unstable behavior of bus in case of chains of on-start events (ATPII-32404).
+                    due to unstable behavior of bus in case of chains of on-start events.
                  */
                 /*
                     Check if Holder already contains listener for the trigger. Unregister it if needed.

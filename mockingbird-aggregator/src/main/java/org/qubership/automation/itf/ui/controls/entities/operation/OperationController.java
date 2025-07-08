@@ -108,8 +108,8 @@ public class OperationController extends AbstractController<UIOperation, Operati
     }
 
     /*
-    ATPII-30543: this request was added because the page formation on the monitoring tab goes through feign client
-    row - 508, MonitoringController.class
+        This request was added because the page formation on the monitoring tab goes
+        through feign client (see MonitoringController)
      */
     @Transactional(readOnly = true)
     @RequestMapping(value = "/operation/{id}", method = RequestMethod.GET)

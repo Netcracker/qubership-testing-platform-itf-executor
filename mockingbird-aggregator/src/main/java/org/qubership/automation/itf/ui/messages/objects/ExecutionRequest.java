@@ -51,16 +51,13 @@ public class ExecutionRequest {
 
     private String projectId;
 
-    // Copy changes from ATPII-7325 - temporary, must be revised!!! - start
     private Map<String, String> dataSetMap;
     @JsonProperty("ram.log.async")
     private Boolean logAsync = false;
-    // 1st implementation; must be revised ASAP
     @JsonProperty("validateAtEnd")
     private Boolean validateAtEnd = false;
     @JsonProperty("validateOnSituation")
     private Boolean validateOnSituation = false;
-    // Copy changes from ATPII-7325 - temporary, must be revised!!! - end
     // Merge dataset with dataSetMap/dataSetList from JSON
     @JsonProperty("mergeDatasetWithContext")
     private Boolean mergeDatasetWithContext = false;

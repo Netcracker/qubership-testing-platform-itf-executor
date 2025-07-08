@@ -303,7 +303,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
 
     private List findTemplateUsagesOnTransportConfigurations(Template<? extends TemplateProvider> template) {
         List<Object> transports = new ArrayList<>();
-        // After ATPII-44299, only SystemTemplates (from parent System) can be used inside diameter transport config
+        // Currently, only SystemTemplates (from the parent System) can be used inside diameter transport config.
         if (template instanceof SystemTemplate) {
             Collection<TransportConfiguration> transportConfigurations = CoreObjectManager.getInstance()
                     .getSpecialManager(TransportConfiguration.class, TransportConfigurationObjectManager.class)
@@ -318,7 +318,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
 
     private List findTemplateUsagesOnOutboundConfigurations(Template<? extends TemplateProvider> template) {
         List<Object> environments = new ArrayList<>();
-        // After ATPII-44299, only SystemTemplates (from parent System) can be used inside diameter transport config
+        // Currently, only SystemTemplates (from the parent System) can be used inside diameter transport config.
         if (template instanceof SystemTemplate) {
             List<Map<String, Object>> findUsagesOnConfigurationDiameterOutbound =
                     CoreObjectManager.getInstance()
