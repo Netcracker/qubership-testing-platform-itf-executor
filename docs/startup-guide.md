@@ -7,7 +7,7 @@
 
 
 2. Build the project
-   `mvn clean install`
+   `mvn -P github clean install`
 
 
 3. Changed default configuration [`.run/backend.run.xml`](../.run/backend.run.xml)
