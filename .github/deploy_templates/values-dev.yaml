@@ -21,3 +21,5 @@ HELPER_IMAGE: "ghcr.io/netcracker/qubership-testing-platform-helm-hook-helper:ma
 CONTENT_SECURITY_POLICY: "*"
 pg_pass: "postgrestest"
 pg_user: "postgres"
+MONGO_DB_ADDR: ""
+GRIDFS_DB_ADDR: ""
