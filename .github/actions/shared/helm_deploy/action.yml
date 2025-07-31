@@ -152,6 +152,7 @@ runs:
       if: always()
       env:
         NAMESPACE: ${{ inputs.namespace }}
+        JOB_PREFIX: predeploy-install
       run: |
         echo "📥 Searching for pre-install hook pods in namespace: $NAMESPACE"
         PODS=$(kubectl get pods -n "$NAMESPACE" -l "helm.sh/hook=pre-install" --no-headers -o custom-columns=":metadata.name")
@@ -169,6 +170,28 @@ runs:
         echo "Get pods"
         kubectl get pods -n ${{ inputs.namespace }}
         kubectl get jobs -n ${{ inputs.namespace }}
+        
+        echo "Get jobs starting with $JOB_PREFIX"
+        JOBS=$(kubectl get jobs -n $NAMESPACE -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | grep "^$JOB_PREFIX")
+        
+        if [ -z "$JOBS" ]; then
+          echo "No jobs found with prefix $JOB_PREFIX"
+          exit 1
+        fi
+        
+        for JOB_NAME in $JOBS; do
+          echo "==== Logs for job: $JOB_NAME ===="
+          PODS=$(kubectl get pods -n $NAMESPACE -l job-name=$JOB_NAME -o jsonpath='{.items[*].metadata.name}')
+          if [ -z "$PODS" ]; then
+            echo "No pods found for job $JOB_NAME"
+            continue
+          fi
+          for POD in $PODS; do
+            echo "Pod found: $POD"
+            kubectl logs $POD -n $NAMESPACE --previous || echo "No previous logs for $POD"
+            kubectl describe pod $POD -n $NAMESPACE
+          done
+        done
 
     - name: Get docker images
       shell: bash
