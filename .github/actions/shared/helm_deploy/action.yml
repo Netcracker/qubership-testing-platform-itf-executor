@@ -167,8 +167,8 @@ runs:
         fi
         
         echo "Get pods"
-        kubectl get events -n ${{ inputs.namespace }} | grep pre-install
-        kubectl get events -n ${{ inputs.namespace }}
+        kubectl get pods -n ${{ inputs.namespace }}
+        kubectl get jobs -n ${{ inputs.namespace }}
 
     - name: Get docker images
       shell: bash
