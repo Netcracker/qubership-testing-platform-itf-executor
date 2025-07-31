@@ -147,15 +147,24 @@ runs:
          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --timeout 10m
         fi
 
-    - name: Get logs from Helm pre-install hooks
+    - name: Debug
       shell: bash
+      if: always()
+      env:
+        NAMESPACE: ${{ inputs.namespace }}
       run: |
-        for pod in $(kubectl get pods -A -l "helm.sh/hook=pre-install" -o jsonpath='{range .items[*]}{.metadata.namespace}{"|"}{.metadata.name}{"\n"}{end}'); do
-          ns=$(echo $pod | cut -d'|' -f1)
-          name=$(echo $pod | cut -d'|' -f2)
-          echo "Logs from $name in namespace ${{inputs.namespace}}:"
-          kubectl logs -n "${{inputs.namespace}}" "$name" || true
-        done
+        echo "📥 Searching for pre-install hook pods in namespace: $NAMESPACE"
+        PODS=$(kubectl get pods -n "$NAMESPACE" -l "helm.sh/hook=pre-install" --no-headers -o custom-columns=":metadata.name")
+    
+        if [ -z "$PODS" ]; then
+          echo "❌ No pre-install hook pods found in $NAMESPACE"
+        else
+          for pod in $PODS; do
+            echo "📦 Logs from pod: $pod"
+            kubectl logs "$pod" -n "$NAMESPACE" || echo "⚠️ Could not fetch logs for $pod"
+            echo -e "\n---\n"
+          done
+        fi
 
     - name: Get docker images
       shell: bash
