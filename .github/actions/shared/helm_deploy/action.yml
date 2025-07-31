@@ -147,6 +147,16 @@ runs:
          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --timeout 10m
         fi
 
+    - name: Get logs from Helm pre-install hooks
+      shell: bash
+      run: |
+        for pod in $(kubectl get pods -A -l "helm.sh/hook=pre-install" -o jsonpath='{range .items[*]}{.metadata.namespace}{"|"}{.metadata.name}{"\n"}{end}'); do
+          ns=$(echo $pod | cut -d'|' -f1)
+          name=$(echo $pod | cut -d'|' -f2)
+          echo "Logs from $name in namespace ${{inputs.namespace}}:"
+          kubectl logs -n "${{inputs.namespace}}" "$name" || true
+        done
+
     - name: Get docker images
       shell: bash
       # language=bash
