@@ -129,33 +129,6 @@ runs:
       # language=bash
       run: echo "ERROR_FLAG=false" >> $GITHUB_ENV
 
-    - name: Install Postgres
-      shell: bash
-      run: |
-        helm repo add bitnami https://charts.bitnami.com/bitnami
-        
-        helm install my-postgres bitnami/postgresql -n ${{inputs.namespace}} \
-          --set image.tag=14.2.0 \
-          --set auth.username=postgres \
-          --set auth.password=postgrestest \
-          --set auth.database=postgres
-        
-        for i in {1..10}; do
-          echo attempt $i
-          status=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.phase}")
-          echo "$status"
-          ready=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.containerStatuses[*].ready}")
-          echo "$ready"
-          if [[ "$status" == "Running" && "$ready" == "true" ]]; then
-            break
-          fi
-          sleep 20
-        done
-        if [[ "$status" == "Running" && "$ready" != "true" ]]; then
-            kubectl get pods -n ${{inputs.namespace}}
-            ERROR_FLAG=true
-          fi
-
     - name: Install/update service with helm
       shell: bash
       run: |
@@ -164,6 +137,8 @@ runs:
         echo $template_name
         cd ${{inputs.repository_name}}/${{inputs.path_to_chart}}
         
+        helm template ${{inputs.service_name}} . -f $template_name --set-string DOCKER_TAG=${{ inputs.docker_tag }} --debug
+
         if [ -n "${{ inputs.docker_tag }}" ]; then
           echo "Using docker_tag: ${{ inputs.docker_tag }}"
           helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }} --timeout 10m
