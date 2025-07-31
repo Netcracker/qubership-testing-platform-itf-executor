@@ -1,5 +1,5 @@
 # Which docker image should be used to deploy
-DOCKER_TAG: "ghcr.io/netcracker/qubership-testing-platform-itf-executor:latest"
+DOCKER_TAG: "ghcr.io/netcracker/qubership-testing-platform-itf-executor:test_pipeline-20250731120026"
 # Switching-on of Eureka client
 EI_CLEAN_JOB_ENABLED: "false"
 # This option turns on or off logging in graylog
