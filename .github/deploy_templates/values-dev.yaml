@@ -7,7 +7,6 @@ GRAYLOG_ON: "false"
 # This option turns on or off kafka enable
 KAFKA_ENABLE: "false"
 # URL of kafka service
-KAFKA_SERVERS: ""
 SERVICE_ENTITIES_MIGRATION_ENABLED: "false"
 KAFKA_REPORTING_SERVERS: ""
 # Keycloak enabled
