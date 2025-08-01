@@ -202,9 +202,6 @@ runs:
         echo "Get pods"
         kubectl get pods -n ${{ inputs.namespace }}
         
-        echo "=== Showing installed Helm values ==="
-        helm list -n ${{ inputs.namespace }}
-        helm get values atp-itf-executor -n ${{ inputs.namespace }} -a
 
     - name: Get docker images
       shell: bash
