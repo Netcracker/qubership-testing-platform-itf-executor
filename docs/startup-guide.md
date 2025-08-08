@@ -2,19 +2,18 @@
 
 ## How to start backend locally
 
-1. Clone repository
+### Clone repository
    `git clone <atp-itf-executor repository url>`
 
-
-2. Build the project
+### Build the project
    `mvn -P github clean install`
 
-
-3. Changed default configuration [`.run/backend.run.xml`](../.run/backend.run.xml)
+### Create or change default configuration [`.run/backend.run.xml`](../.run/backend.run.xml)
 
    * Go to Run menu and click Edit Configuration
    * Set parameters
-   * Add the following parameters in VM options - click Modify Options and select "Add VM Options":
+   * Add the following parameters in VM options 
+     * click "Modify Options" and select "Add VM Options":
 
 **NOTE:** Configuration files [`application.properties`](../common/application.properties) and [`bootstrap.properties`](../common/bootstrap.properties)
 
