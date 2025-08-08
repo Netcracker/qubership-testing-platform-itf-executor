@@ -100,6 +100,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.qubership.atp.ram</groupId>
+            <artifactId>qubership-atp-ram-model</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
