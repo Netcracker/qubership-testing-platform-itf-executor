@@ -12,7 +12,7 @@
 
 * Go to Run menu and click Edit Configuration
 * Set parameters
-* Add the following parameters in VM options 
+* Add the following parameters in VM options
   * click "Modify Options" and select "Add VM Options":
 
 **NOTE:** Configuration files [`application.properties`](../common/application.properties) and [`bootstrap.properties`](../common/bootstrap.properties)
