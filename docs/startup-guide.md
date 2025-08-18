@@ -8,12 +8,12 @@
 ### Build the project
    `mvn -P github clean install`
 
-### Create or change default configuration [`.run/backend.run.xml`](../.run/backend.run.xml)
+### Create or change default configuration (supposed file name backend.run.xml in .run folder)
 
-   * Go to Run menu and click Edit Configuration
-   * Set parameters
-   * Add the following parameters in VM options 
-     * click "Modify Options" and select "Add VM Options":
+* Go to Run menu and click Edit Configuration
+* Set parameters
+* Add the following parameters in VM options 
+  * click "Modify Options" and select "Add VM Options":
 
 **NOTE:** Configuration files [`application.properties`](../common/application.properties) and [`bootstrap.properties`](../common/bootstrap.properties)
 
