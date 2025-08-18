@@ -26,3 +26,6 @@ databaseChangeLog:
   - include:
       file: after_4_4_350/db.changelog.yaml
       relativeToChangelogFile: true
+  - include:
+      file: os_after_4_4_354/db.changelog.yaml
+      relativeToChangelogFile: true

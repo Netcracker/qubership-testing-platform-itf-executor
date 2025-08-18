@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: fix_dictionary_type
+      author: Aleksandr Kapustin
+      comment: Change "dictionary type" property of DiameterOutbound transport configurations to one of declared by diameter-transport-library values.
+      changes:
+        - sqlFile:
+            path: fix_dictionary_type.sql
+            relativeToChangelogFile: true
+            splitStatements: false
