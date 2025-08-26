@@ -100,7 +100,12 @@ spec:
               exec:
                 command: [ "/itf/pre-stop.sh" ]
           env:
-          {{- include "env.cloud" . | indent 12 }}
+            {{- include "env.cloud" . | indent 12 }}
+            - name: CLOUD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
           {{- if .Values.extraEnvs }}
           {{- toYaml .Values.extraEnvs | nindent 12 }}
           {{- end }}
