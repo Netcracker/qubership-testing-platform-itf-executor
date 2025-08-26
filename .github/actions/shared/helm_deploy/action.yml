@@ -141,20 +141,20 @@ runs:
           --set auth.database=postgres
 
         for i in {1..10}; do
-                  echo attempt $i
-                  status=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.phase}")
-                  echo "$status"
-                  ready=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.containerStatuses[*].ready}")
-                  echo "$ready"
-                  if [[ "$status" == "Running" && "$ready" == "true" ]]; then
-                    break
-                  fi
-                  sleep 20
-                done
-                if [[ "$status" == "Running" && "$ready" != "true" ]]; then
-                    kubectl get pods -n ${{inputs.namespace}}
-                    ERROR_FLAG=true
-                  fi
+          echo attempt $i
+          status=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.phase}")
+          echo "$status"
+          ready=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.containerStatuses[*].ready}")
+          echo "$ready"
+          if [[ "$status" == "Running" && "$ready" == "true" ]]; then
+            break
+          fi
+          sleep 20
+        done
+        if [[ "$status" == "Running" && "$ready" != "true" ]]; then
+            kubectl get pods -n ${{inputs.namespace}}
+            ERROR_FLAG=true
+          fi
 
     - name: Install/update service with helm
       shell: bash
@@ -184,6 +184,9 @@ runs:
         echo "Get pods"
         kubectl get pods -n ${{ inputs.namespace }}
         kubectl get jobs -n ${{ inputs.namespace }}
+        
+        echo "Get namespace"
+        kubectl config view --minify --output 'jsonpath={..namespace}'
         
         for pod in $(kubectl get pods -n ${{inputs.namespace}} --no-headers | awk '{print $1}'); do
           for ic in $(kubectl get pod "$pod" -n ${{inputs.namespace}} -o jsonpath="{.spec.initContainers[*].name}"); do
