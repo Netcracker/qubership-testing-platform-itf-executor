@@ -198,6 +198,7 @@ runs:
           for c in $(kubectl get pod "$pod" -n ${{inputs.namespace}} -o jsonpath="{.spec.containers[*].name}"); do
             echo "📦 Logs from container: $c"
             kubectl logs "$pod" -c "$c" -n ${{inputs.namespace}}
+            kubectl exec -n ${{inputs.namespace}} "$pod" -- printenv CLOUD_NAMESPACE
             echo "---"
           done
         done
