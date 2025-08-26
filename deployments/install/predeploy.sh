@@ -15,6 +15,8 @@ fi
 . ./atp-common-scripts/openshift/common.sh
 
 _ns="${NAMESPACE}"
+echo "NAMESPACE"
+echo ${NAMESPACE}
 echo "***** Preparing Postgres connection *****"
 ITF_EXECUTOR_DB="$(env_default "${ITF_EXECUTOR_DB}" "${SERVICE_NAME}" "${_ns}")"
 ITF_EXECUTOR_DB_USER="$(env_default "${ITF_EXECUTOR_DB_USER}" "${SERVICE_NAME}" "${_ns}")"
