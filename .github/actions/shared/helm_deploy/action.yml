@@ -186,7 +186,9 @@ runs:
         kubectl get jobs -n ${{ inputs.namespace }}
         
         echo "Get namespace"
-        kubectl config view --minify --output 'jsonpath={..namespace}'
+        kubectl config view --minify -o jsonpath='{.contexts[0].context.namespace}'
+        echo "Get list"
+        helm list --all-namespaces
         
         for pod in $(kubectl get pods -n ${{inputs.namespace}} --no-headers | awk '{print $1}'); do
           for ic in $(kubectl get pod "$pod" -n ${{inputs.namespace}} -o jsonpath="{.spec.initContainers[*].name}"); do
