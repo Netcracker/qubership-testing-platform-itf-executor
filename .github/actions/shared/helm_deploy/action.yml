@@ -170,12 +170,6 @@ runs:
           --create-namespace \
           --wait --timeout 5m
 
-    - name: Verify Hazelcast deployment
-      shell: bash
-      run: |
-        kubectl get pods -n executor
-        kubectl get svc -n executor
-
     - name: Install/update service with helm
       shell: bash
       run: |
