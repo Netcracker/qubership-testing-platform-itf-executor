@@ -168,7 +168,7 @@ runs:
         helm install hazelcast hazelcast/hazelcast \
           --namespace executor \
           --create-namespace \
-          --wait --timeout 5m
+          --wait --timeout 10m
 
     - name: Install/update service with helm
       shell: bash
