@@ -156,6 +156,26 @@ runs:
             ERROR_FLAG=true
           fi
 
+    - name: Add Hazelcast Helm repo
+      shell: bash
+      run: |
+        helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
+        helm repo update
+
+    - name: Install Hazelcast in namespace
+      shell: bash
+      run: |
+        helm install hazelcast hazelcast/hazelcast \
+          --namespace executor \
+          --create-namespace \
+          --wait --timeout 5m
+
+    - name: Verify Hazelcast deployment
+      shell: bash
+      run: |
+        kubectl get pods -n executor
+        kubectl get svc -n executor
+
     - name: Install/update service with helm
       shell: bash
       run: |
