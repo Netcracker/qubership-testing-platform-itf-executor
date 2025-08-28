@@ -169,6 +169,9 @@ runs:
           --namespace executor \
           --create-namespace \
           --wait --timeout 10m
+        
+        echo "Get events"
+        kubectl get events -n ${{inputs.namespace}} --sort-by=.metadata.creationTimestamp
 
     - name: Install/update service with helm
       shell: bash
