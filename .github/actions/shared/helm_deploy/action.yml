@@ -168,12 +168,12 @@ runs:
       run: |
         echo "Waiting for Hazelcast pods to be created..."
         for i in {1..30}; do
-          kubectl get pods -l app.kubernetes.io/name=hazelcast --no-headers | grep hazelcast && break
+          kubectl get pods -n ${{inputs.namespace}} -l app.kubernetes.io/name=hazelcast --no-headers | grep hazelcast && break
           sleep 5
         done
 
         echo "Waiting for Hazelcast pods to become Ready..."
-        kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=hazelcast --timeout=300s
+        kubectl wait --for=condition=Ready pod -n ${{inputs.namespace}} -l app.kubernetes.io/name=hazelcast --timeout=300s
         
         echo "Get events"
         kubectl get events -n ${{inputs.namespace}} --sort-by=.metadata.creationTimestamp
