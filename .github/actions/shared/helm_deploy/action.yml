@@ -156,28 +156,6 @@ runs:
             ERROR_FLAG=true
           fi
 
-    - name: Add and Install Hazelcast
-      shell: bash
-      run: |
-        helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
-        helm repo update
-        helm install hazelcast hazelcast/hazelcast --namespace ${{inputs.namespace}} --set clusterName=local-itf-hazelcast-cluster
-
-    - name: Wait for Hazelcast pods
-      shell: bash
-      run: |
-        echo "Waiting for Hazelcast pods to be created..."
-        for i in {1..30}; do
-          kubectl get pods -n ${{inputs.namespace}} -l app.kubernetes.io/name=hazelcast --no-headers | grep hazelcast && break
-          sleep 5
-        done
-
-        echo "Waiting for Hazelcast pods to become Ready..."
-        kubectl wait --for=condition=Ready pod -n ${{inputs.namespace}} -l app.kubernetes.io/name=hazelcast --timeout=300s
-        
-        echo "Get events"
-        kubectl get events -n ${{inputs.namespace}} --sort-by=.metadata.creationTimestamp
-
     - name: Install/update service with helm
       shell: bash
       run: |
