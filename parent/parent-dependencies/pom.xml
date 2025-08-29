@@ -155,7 +155,7 @@
             <dependency>
                 <groupId>org.qubership.atp.auth</groupId>
                 <artifactId>atp-auth-impl</artifactId>
-                <version>1.2.72-SNAPSHOT</version>
+                <version>1.2.75-SNAPSHOT</version>
             </dependency>
             <!--Spring Configuration - Start-->
 
