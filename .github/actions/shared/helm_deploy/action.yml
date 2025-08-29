@@ -156,6 +156,35 @@ runs:
             ERROR_FLAG=true
           fi
 
+    - name: Install ActiveMQ
+      shell: bash
+      run: |
+        helm repo add alfresco https://alfresco.github.io/alfresco-helm-charts/
+        helm repo update
+        
+        helm install activemq alfresco/activemq \
+          --namespace reporting \
+          --create-namespace
+        
+        for i in {1..10}; do
+          echo attempt $i
+          status=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.phase}")
+          echo "$status"
+          ready=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.containerStatuses[*].ready}")
+          echo "$ready"
+          if [[ "$status" == "Running" && "$ready" == "true" ]]; then
+            break
+          fi
+          sleep 30
+        done
+        if [[ "$status" == "Running" && "$ready" != "true" ]]; then
+            kubectl get pods -n ${{inputs.namespace}}
+            ERROR_FLAG=true
+          fi
+        
+        echo "Get pods"
+        kubectl get pods -n ${{ inputs.namespace }}
+
     - name: Install/update service with helm
       shell: bash
       run: |
