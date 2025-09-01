@@ -150,12 +150,12 @@
             <dependency>
                 <groupId>org.qubership.atp.auth</groupId>
                 <artifactId>atp-auth-models</artifactId>
-                <version>1.2.75-SNAPSHOT</version>
+                <version>1.2.76-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.qubership.atp.auth</groupId>
                 <artifactId>atp-auth-impl</artifactId>
-                <version>1.2.75-SNAPSHOT</version>
+                <version>1.2.76-SNAPSHOT</version>
             </dependency>
             <!--Spring Configuration - Start-->
 
