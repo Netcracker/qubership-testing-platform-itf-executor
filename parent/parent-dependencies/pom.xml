@@ -133,29 +133,7 @@
                         <groupId>org.apache.tomcat.embed</groupId>
                         <artifactId>tomcat-embed-websocket</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>org.qubership.atp.auth</groupId>
-                        <artifactId>atp-auth-spring-boot-starter</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.qubership.atp.auth</groupId>
-                        <artifactId>atp-auth-models</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.qubership.atp.auth</groupId>
-                        <artifactId>atp-auth-impl</artifactId>
-                    </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.qubership.atp.auth</groupId>
-                <artifactId>atp-auth-models</artifactId>
-                <version>1.2.75-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.qubership.atp.auth</groupId>
-                <artifactId>atp-auth-impl</artifactId>
-                <version>1.2.75-SNAPSHOT</version>
             </dependency>
             <!--Spring Configuration - Start-->
 
@@ -981,30 +959,10 @@
                 <groupId>org.qubership.atp.ei</groupId>
                 <artifactId>qubership-atp-export-import-lib-node</artifactId>
                 <version>${atp.ei.lib.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.qubership.atp.auth</groupId>
-                        <artifactId>atp-auth-spring-boot-starter</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.qubership.atp.auth</groupId>
-                        <artifactId>atp-auth-models</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.qubership.atp.auth</groupId>
-                        <artifactId>atp-auth-impl</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.qubership.atp.ram</groupId>
                 <artifactId>qubership-atp-ram-model</artifactId>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.qubership.atp.auth</groupId>
-                        <artifactId>atp-auth-spring-boot-starter</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.vavr</groupId>
