@@ -224,7 +224,7 @@ runs:
         
         for c in $(kubectl get pod "$pod" -n ${{inputs.namespace}} -o jsonpath="{.spec.containers[*].name}"); do
           echo "=== Logs for container: $c ==="
-          kubectl logs "$pod" -n ${{inputs.namespace}} -c "$c" --previous || echo "No previous logs for container: $c"
+          kubectl logs "$pod" -n ${{inputs.namespace}} -c "$c" || echo "No previous logs for container: $c"
         done
         
         echo "Get pods"
