@@ -14,12 +14,12 @@
         <org.springframework.version>5.3.21</org.springframework.version>
         <spring.cloud.version>2021.0.8</spring.cloud.version>
         <keycloak.version>22.0.1</keycloak.version>
-        <atp.itf.core.version>4.4.108</atp.itf.core.version>
-        <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <camel.version>2.20.4</camel.version>
         <activemq.version>5.12.2</activemq.version>
         <aspectj.version>1.8.10</aspectj.version>
 
+        <atp.itf.core.version>4.4.108</atp.itf.core.version>
+        <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <atp.multitenancy.version>0.0.11</atp.multitenancy.version>
         <atp.ei.lib.version>0.2.40</atp.ei.lib.version>
         <atp.crypt.version>0.0.20</atp.crypt.version>
