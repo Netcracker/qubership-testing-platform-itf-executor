@@ -140,21 +140,14 @@ runs:
           --set auth.password=postgrestest \
           --set auth.database=postgres
 
-        for i in {1..10}; do
-          echo attempt $i
-          status=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.phase}")
-          echo "$status"
-          ready=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.containerStatuses[*].ready}")
-          echo "$ready"
-          if [[ "$status" == "Running" && "$ready" == "true" ]]; then
-            break
-          fi
-          sleep 20
-        done
-        if [[ "$status" == "Running" && "$ready" != "true" ]]; then
-            kubectl get pods -n ${{inputs.namespace}}
-            ERROR_FLAG=true
-          fi
+        pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
+          --for=condition=Ready \
+          --timeout=120s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
+        }
 
     - name: Install ActiveMQ
       shell: bash
@@ -166,21 +159,14 @@ runs:
           --namespace executor \
           --create-namespace
         
-        for i in {1..10}; do
-          echo attempt $i
-          status=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.phase}")
-          echo "$status"
-          ready=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.containerStatuses[*].ready}")
-          echo "$ready"
-          if [[ "$status" == "Running" && "$ready" == "true" ]]; then
-            break
-          fi
-          sleep 30
-        done
-        if [[ "$status" == "Running" && "$ready" != "true" ]]; then
-            kubectl get pods -n ${{inputs.namespace}}
-            ERROR_FLAG=true
-          fi
+        pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | grep -vE 'postgres' | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
+          --for=condition=Ready \
+          --timeout=120s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
+        }
         
         echo "Get pods"
         kubectl get pods -n ${{ inputs.namespace }}
@@ -193,49 +179,22 @@ runs:
         echo $template_name
         cd ${{inputs.repository_name}}/${{inputs.path_to_chart}}
         
-        helm template ${{inputs.service_name}} . -f $template_name --set-string DOCKER_TAG=${{ inputs.docker_tag }} --debug
-
         if [ -n "${{ inputs.docker_tag }}" ]; then
           echo "Using docker_tag: ${{ inputs.docker_tag }}"
-          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }} --debug --wait --timeout 30m
+          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }}
         else
          echo "No docker_tag provided. Using value from values-dev.yaml"
-         helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --debug --wait --timeout 30m
+         helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}}
         fi
-
-    - name: Debug
-      shell: bash
-      if: always()
-      env:
-        NAMESPACE: ${{ inputs.namespace }}
-        JOB_PREFIX: predeploy-install
-      run: |
-        echo "Get pods"
-        kubectl get pods -n ${{ inputs.namespace }}
-        kubectl get jobs -n ${{ inputs.namespace }}
-        
-        echo "Get namespace"
-        kubectl config view --minify -o jsonpath='{.contexts[0].context.namespace}'
-        echo "Get list"
-        helm list --all-namespaces
-        
         
         pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | grep -vE 'postgres|activemq' | head -n 1 | cut -d/ -f2)
-        
-        for c in $(kubectl get pod "$pod" -n ${{inputs.namespace}} -o jsonpath="{.spec.containers[*].name}"); do
-          echo "=== Logs for container: $c ==="
-          kubectl logs "$pod" -n ${{inputs.namespace}} -c "$c" || echo "No previous logs for container: $c"
-        done
-        
-        echo "Get pods"
-        kubectl get pods -n ${{ inputs.namespace }}
-        
-        echo "Get svc"
-        kubectl get svc -n ${{ inputs.namespace }}
-        
-        echo "Get events"
-        kubectl events -n ${{inputs.namespace}}
-        
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
+          --for=condition=Ready \
+          --timeout=300s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
+        }
 
     - name: Get docker images
       shell: bash
