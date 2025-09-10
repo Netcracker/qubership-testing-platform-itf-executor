@@ -221,7 +221,7 @@ SERVER_UNDERTOW_WORKER_THREADS: "960"
 SERVER_UNDERTOW_ACCESSLOG_ENABLED: "true"
 JBOSS_THREADS_EQE_STATISTICS: "true"
 # Setting to exclude some tags from metrics. Value should be valid map, example: "{atp_itf_executor_stub_request_processing_by_project: {'endpoint'}}"
-EXCLUDE_REGISTRY_METRICS_TAGS: {"defaultKey": {"defaultValue1","defaultValue2"}}
+EXCLUDE_REGISTRY_METRICS_TAGS: {"defaultKey": ["defaultValue1","defaultValue2"]}
 NEWRATIO: "1"
 # Set to ATP2 to enable Prometheus scrapping
 SERVICE_TYPE: "ATP2"
