@@ -5,16 +5,6 @@
       "key": "base_url",
       "value": "http://localhost:8080",
       "enabled": true
-    },
-    {
-      "key": "vaId",
-      "value": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-      "enabled": true
-    },
-    {
-      "key": "name",
-      "value": "DSL_Test",
-      "enabled": true
     }
   ],
   "timestamp": 0,
