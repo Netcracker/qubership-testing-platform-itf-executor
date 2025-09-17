@@ -27,6 +27,7 @@
             "type": "text/javascript",
             "exec": [
               "console.log('Status:', pm.response.code);",
+              "console.log(\"Status text:\", pm.response.status);",
               "console.log('Response body:', pm.response.text());",
               "pm.test(\"Status is 200 or 201\", function () {",
               "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
