@@ -15,6 +15,8 @@ fi
 . ./atp-common-scripts/openshift/common.sh
 
 _ns="${NAMESPACE}"
+echo "NAMESPACE"
+echo ${NAMESPACE}
 echo "***** Preparing Postgres connection *****"
 ITF_EXECUTOR_DB="$(env_default "${ITF_EXECUTOR_DB}" "${SERVICE_NAME}" "${_ns}")"
 ITF_EXECUTOR_DB_USER="$(env_default "${ITF_EXECUTOR_DB_USER}" "${SERVICE_NAME}" "${_ns}")"
@@ -50,19 +52,22 @@ else
   echo "Multi-tenancy-hibernate is disabled"
 fi
 
-echo "***** Preparing MongoDB connection *****"
-EDS_GRIDFS_DB="$(env_default "${EDS_GRIDFS_DB}" "itf_eds_gridfs" "${_ns}")"
-EDS_GRIDFS_USER="$(env_default "${EDS_GRIDFS_USER}" "itf_eds_gridfs" "${_ns}")"
-EDS_GRIDFS_PASSWORD="$(env_default "${EDS_GRIDFS_PASSWORD}" "itf_eds_gridfs" "${_ns}")"
+if [ "${EDS_GRIDFS_ENABLED:-true}" = "true" ]; then
+  echo "***** Preparing MongoDB connection *****"
+  EDS_GRIDFS_DB="$(env_default "${EDS_GRIDFS_DB}" "itf_eds_gridfs" "${_ns}")"
+  EDS_GRIDFS_USER="$(env_default "${EDS_GRIDFS_USER}" "itf_eds_gridfs" "${_ns}")"
+  EDS_GRIDFS_PASSWORD="$(env_default "${EDS_GRIDFS_PASSWORD}" "itf_eds_gridfs" "${_ns}")"
 
-# shellcheck disable=SC2154
-init_mongo "${MONGO_DB_ADDR}" "${EDS_GRIDFS_DB}" "${EDS_GRIDFS_USER}" "${EDS_GRIDFS_PASSWORD}" "${MONGO_DB_PORT}"  "${mongo_user}" "${mongo_pass}"
+  # shellcheck disable=SC2154
+  init_mongo "${MONGO_DB_ADDR}" "${EDS_GRIDFS_DB}" "${EDS_GRIDFS_USER}" "${EDS_GRIDFS_PASSWORD}" "${MONGO_DB_PORT}"  "${mongo_user}" "${mongo_pass}"
+fi
 
-echo "***** Preparing Gridfs connection *****"
-EI_GRIDFS_DB="$(env_default "${EI_GRIDFS_DB}" "atp-ei-gridfs" "${_ns}")"
-EI_GRIDFS_USER="$(env_default "${EI_GRIDFS_USER}" "atp-ei-gridfs" "${_ns}")"
-EI_GRIDFS_PASSWORD="$(env_default "${EI_GRIDFS_PASSWORD}" "atp-ei-gridfs" "${_ns}")"
+if [ "${EI_GRIDFS_ENABLED:-true}" = "true" ]; then
+  echo "***** Preparing Gridfs connection *****"
+  EI_GRIDFS_DB="$(env_default "${EI_GRIDFS_DB}" "atp-ei-gridfs" "${_ns}")"
+  EI_GRIDFS_USER="$(env_default "${EI_GRIDFS_USER}" "atp-ei-gridfs" "${_ns}")"
+  EI_GRIDFS_PASSWORD="$(env_default "${EI_GRIDFS_PASSWORD}" "atp-ei-gridfs" "${_ns}")"
 
-# shellcheck disable=SC2154
-init_mongo "${EI_GRIDFS_DB_ADDR:-$GRIDFS_DB_ADDR}" "${EI_GRIDFS_DB}" "${EI_GRIDFS_USER}" "${EI_GRIDFS_PASSWORD}" "${EI_GRIDFS_DB_PORT:-$GRIDFS_DB_PORT}" "${ei_gridfs_user}" "${ei_gridfs_pass}"
-
+  # shellcheck disable=SC2154
+  init_mongo "${EI_GRIDFS_DB_ADDR:-$GRIDFS_DB_ADDR}" "${EI_GRIDFS_DB}" "${EI_GRIDFS_USER}" "${EI_GRIDFS_PASSWORD}" "${EI_GRIDFS_DB_PORT:-$GRIDFS_DB_PORT}" "${ei_gridfs_user}" "${ei_gridfs_pass}"
+fi

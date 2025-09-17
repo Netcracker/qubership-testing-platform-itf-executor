@@ -1,5 +1,5 @@
 # Which docker image should be used to deploy
-DOCKER_TAG: "ghcr.io/netcracker/qubership-testing-platform-itf-executor:latest"
+DOCKER_TAG: "ghcr.io/netcracker/qubership-testing-platform-itf-executor:4.4.356"
 # Switching-on of Eureka client
 EI_CLEAN_JOB_ENABLED: "false"
 # This option turns on or off logging in graylog
@@ -7,7 +7,6 @@ GRAYLOG_ON: "false"
 # This option turns on or off kafka enable
 KAFKA_ENABLE: "false"
 # URL of kafka service
-KAFKA_SERVERS: ""
 SERVICE_ENTITIES_MIGRATION_ENABLED: "false"
 KAFKA_REPORTING_SERVERS: ""
 # Keycloak enabled
@@ -21,3 +20,19 @@ HELPER_IMAGE: "ghcr.io/netcracker/qubership-testing-platform-helm-hook-helper:ma
 CONTENT_SECURITY_POLICY: "*"
 pg_pass: "postgrestest"
 pg_user: "postgres"
+MONGO_DB_ADDR: ""
+GRIDFS_DB_ADDR: ""
+EDS_GRIDFS_ENABLED: "false"
+EI_GRIDFS_ENABLED: "false"
+HAZELCAST_CACHE_ENABLED: "false"
+EUREKA_CLIENT_ENABLED: "false"
+ATP_INTEGRATION_ENABLED: "false"
+ATP_SERVICE_PUBLIC: "false"
+ATP_SERVICE_INTERNAL: "false"
+TLS_ENABLED: "false"
+HAZELCAST_ADDRESS: "hazelcast.executor.svc.cluster.local:5701"
+ITF_EXECUTOR_DB_USER: "executor_itf_executor"
+ITF_EXECUTOR_DB_PASSWORD: "executor_itf_executor"
+ATP_ITF_EXECUTOR_URL: "http://atp-itf-executor.executor.svc.cluster.local"
+ATP_ITF_BROKER_URL_TCP: "tcp://activemq-broker:61616"
+ACTIVEMQ_PORT_PARAM: "61616"

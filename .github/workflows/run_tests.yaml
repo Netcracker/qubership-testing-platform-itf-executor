@@ -18,6 +18,9 @@ on:
         required: true
         default: 'main'
 
+env:
+  RUN_TESTS: enable
+
 jobs:
   Clean_Install_Executor:
     runs-on: ubuntu-latest
@@ -47,19 +50,20 @@ jobs:
         with:
           path_to_template: './qubership-testing-platform-itf-executor/.github/deploy_templates/values-dev.yaml'
           service_branch: ${{ inputs.pipeline_branch }}
-          service_name: 'atp-environments'
+          service_name: 'atp-itf-executor'
           repository_name: 'qubership-testing-platform-itf-executor'
           path_to_chart: 'deployments/charts/atp-itf-executor'
-          namespace: 'env'
+          namespace: 'executor'
           docker_tag: ${{ inputs.docker_tag }}
 
-      - name: Verify Environments installation
+      - name: Verify ITF Executor installation
         uses: ./qubership-testing-platform-itf-executor/.github/actions/shared/verify_installation
         with:
-          namespace: 'env'
+          namespace: 'executor'
           max_attempts: 40
           timeout: '45s'
           service_branch: ${{ inputs.pipeline_branch }}
 
       - name: Run tests
+        if: env.RUN_TESTS == 'enable'
         uses: ./qubership-testing-platform-itf-executor/.github/actions/shared/running_tests

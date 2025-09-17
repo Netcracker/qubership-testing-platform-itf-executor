@@ -139,22 +139,37 @@ runs:
           --set auth.username=postgres \
           --set auth.password=postgrestest \
           --set auth.database=postgres
+
+        pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
+          --for=condition=Ready \
+          --timeout=120s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
+        }
+
+    - name: Install ActiveMQ
+      shell: bash
+      run: |
+        helm repo add alfresco https://alfresco.github.io/alfresco-helm-charts/
+        helm repo update
         
-        for i in {1..10}; do
-          echo attempt $i
-          status=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.phase}")
-          echo "$status"
-          ready=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.containerStatuses[*].ready}")
-          echo "$ready"
-          if [[ "$status" == "Running" && "$ready" == "true" ]]; then
-            break
-          fi
-          sleep 20
-        done
-        if [[ "$status" == "Running" && "$ready" != "true" ]]; then
-            kubectl get pods -n ${{inputs.namespace}}
-            ERROR_FLAG=true
-          fi
+        helm install activemq alfresco/activemq \
+          --namespace executor \
+          --create-namespace
+        
+        pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | grep -vE 'postgres' | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
+          --for=condition=Ready \
+          --timeout=120s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
+        }
+        
+        echo "Get pods"
+        kubectl get pods -n ${{ inputs.namespace }}
 
     - name: Install/update service with helm
       shell: bash
@@ -166,11 +181,20 @@ runs:
         
         if [ -n "${{ inputs.docker_tag }}" ]; then
           echo "Using docker_tag: ${{ inputs.docker_tag }}"
-          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }} --timeout 10m
+          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }}
         else
          echo "No docker_tag provided. Using value from values-dev.yaml"
-         helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --timeout 10m
+         helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}}
         fi
+        
+        pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | grep -vE 'postgres|activemq' | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
+          --for=condition=Ready \
+          --timeout=600s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
+        }
 
     - name: Get docker images
       shell: bash
