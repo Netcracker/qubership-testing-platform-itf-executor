@@ -17,7 +17,7 @@
         "url": {
           "raw": "{{base_url}}/rest/deployment/liveness",
           "host": ["{{base_url}}"],
-          "path": ["rest", "deployment", "liveness"],
+          "path": ["rest", "deployment", "liveness"]
         }
       },
       "event": [
