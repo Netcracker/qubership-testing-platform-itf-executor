@@ -30,7 +30,6 @@ import org.qubership.automation.itf.ui.controls.util.ControllerHelper;
 public class ExecutorControllerHelper extends ControllerHelper {
 
     public static final String BULK_VALIDATOR_INTEGRATION = "Bulk Validator Integration";
-    public static final String DATASET_SERVICE_INTEGRATION = "Remote Dataset Integration";
     static final String EXECUTED_STATUS = "EXECUTED";
     static final String CATALOGUE_LINK_PATTERN_FOR_DS_TOOL = "project/%s/data-sets/dsl/%s";
     private static final String BASE_FORMAT = "Call Chain '%s'";
@@ -50,10 +49,11 @@ public class ExecutorControllerHelper extends ControllerHelper {
 
     /*  To support executor actions like
      *        Run and validate starters chain "[Regression][Iter6][Core] Check UUID for all entities"
-     *           with dataset "Telefonica Germany|CIM Customer Personal Data|Personal Data"
+     *           with dataset "ProjectName|CIM Customer Personal Data|Personal Data"
      *    Must be revised, it's definitely not so good decision because:
      *     - 3 ids are received from executor: (VA id, DSL id, DS id) or (Excel file name, Sheet name, DS name),
-     *     - but callChain.findDataSetByName searches DS in ALL DSLs compatible with the callchain
+     *     - but callChain.findDataSetByName searches DS in ALL DSLs compatible with the callchain,
+     *     - so, prior to use a DSL in such action, one should configure the DSL as compatible with the callchain.
      */
     public static IDataSet findDataSetByName(String datasetName, CallChain callChain, BigInteger projectId) {
         String[] names = datasetName.split("\\|");
