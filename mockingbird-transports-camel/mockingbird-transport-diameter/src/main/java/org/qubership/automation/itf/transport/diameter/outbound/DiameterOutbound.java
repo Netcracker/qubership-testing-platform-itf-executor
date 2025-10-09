@@ -165,7 +165,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
     @Parameter(shortName = PropertyConstants.DiameterTransportConstants.DICTIONARY_TYPE,
             longName = PropertyConstants.DiameterTransportConstants.DICTIONARY_TYPE_DESCRIPTION,
             description = PropertyConstants.DiameterTransportConstants.DICTIONARY_TYPE_DESCRIPTION)
-    @Options({"Qubership Diameter", "Marben"})
+    @Options({DiameterParserType.STANDARD, DiameterParserType.MARBEN})
     private String dictionaryType;
     private long currentTimeout;
 

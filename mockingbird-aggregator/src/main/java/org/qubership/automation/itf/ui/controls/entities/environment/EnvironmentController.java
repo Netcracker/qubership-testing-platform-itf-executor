@@ -72,7 +72,7 @@ import com.google.common.collect.Lists;
 @RestController
 public class EnvironmentController extends AbstractController<UIEnvironment, Environment> {
 
-    private ReportLinkCollector reportLinkCollector;
+    private final ReportLinkCollector reportLinkCollector;
 
     @Autowired
     public EnvironmentController(ReportLinkCollector reportLinkCollector) {
@@ -115,8 +115,8 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
     }
 
     /*
-    ATPII-30543: this request was added because the page formation on the monitoring tab goes through feign client
-    row - 505, MonitoringController.class
+        This request was added because the page formation on the monitoring tab goes
+        through feign client (see MonitoringController)
      */
     @Transactional(readOnly = true)
     @RequestMapping(value = "/environment/{id}", method = RequestMethod.GET)
@@ -181,7 +181,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
                     }
                 }
             }
-            if (activeTriggers.size() > 0) {
+            if (!activeTriggers.isEmpty()) {
                 envsWithActiveTriggers.put(envToDelete.getID().toString(), activeTriggers);
             } else {
                 Collection<UsageInfo> usageInfo = envToDelete.remove();

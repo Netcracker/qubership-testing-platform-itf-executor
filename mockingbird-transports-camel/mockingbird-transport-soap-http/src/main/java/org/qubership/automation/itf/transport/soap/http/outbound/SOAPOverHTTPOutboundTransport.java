@@ -149,7 +149,7 @@ public class SOAPOverHTTPOutboundTransport extends HTTPOutboundTransport {
             cxfEndpoint = cxfConfig.getCxfEndpoint();
             cxfEndpoint.setCamelContext(template.getCamelContext());
             cxfProducer = cxfConfig.getCxfProducer();
-            dirtyFixNPE_clientNull(template, cxfEndpoint, cxfProducer);
+            fixNPE_clientNull(template, cxfEndpoint, cxfProducer);
         } catch (MalformedURLException | FileNotFoundException e) {
             throw new IllegalArgumentException("Path/URL to WSDL file is invalid (" + wsdlPathString + ")", e);
         } catch (Exception e) {
@@ -188,10 +188,11 @@ public class SOAPOverHTTPOutboundTransport extends HTTPOutboundTransport {
      *   The exception was reported as fixed in the Camel 2.9.2,
      * but...
      *
-     *   The fix is dirty, because getProducerCache() is private method, and producers is private field,
+     *   The fix is to be rewritten if possible, because getProducerCache() is private method,
+     *   and producers is private field,
      *   so there are no legal ways to manage them.
      */
-    private void dirtyFixNPE_clientNull(ProducerTemplate template, CxfEndpoint cxfEndpoint, CxfProducer cxfProducer)
+    private void fixNPE_clientNull(ProducerTemplate template, CxfEndpoint cxfEndpoint, CxfProducer cxfProducer)
             throws Exception {
         Method method = template.getClass().getDeclaredMethod("getProducerCache");
         method.setAccessible(true);

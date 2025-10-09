@@ -251,7 +251,7 @@ public class ExtraObjectsCollector {
             checkedObjectsMap.get(ServerHB.class.getSimpleName()).add(server.getID());
             extraObjects.put(server.getID(), server);
             // Next 2 rows (collectObjectsFromInboundTransportConfig, collectObjectsFromOutboundTransportConfig)
-            // are commented (ATPII-45485); to be deleted soon.
+            // are commented; to be deleted soon.
             /*
             collectObjectsFromInboundTransportConfig(extraObjects, server.getInbounds(), checkedObjectsMap);
             collectObjectsFromOutboundTransportConfig(extraObjects, server.getOutbounds(), checkedObjectsMap);

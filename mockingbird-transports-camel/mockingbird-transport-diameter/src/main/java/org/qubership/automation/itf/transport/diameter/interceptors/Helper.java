@@ -26,7 +26,7 @@ public class Helper {
         if (Objects.isNull(sessionID)) {
             return checkTag(message, startingTag);
         }
-        // After ATPII-29490: tags can contain avpCode attribute, so SessionID checking become more complicated
+        // Tags can contain avpCode attribute, so SessionID checking become more complicated.
         return message != null
                 && StringUtils.startsWithIgnoreCase(message, startingTag)
                 && message.contains("<Session-Id")

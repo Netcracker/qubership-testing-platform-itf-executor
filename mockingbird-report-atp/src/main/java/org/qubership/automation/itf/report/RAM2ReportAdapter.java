@@ -102,8 +102,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
     private static final String DOTS = "...";
     private static final int ATP_NAME_TRIM_SIZE = ATP_NAME_MAX_LENGTH - DOTS.length() + 1;
     private String logName;
-    private ConcurrentHashMap<Object, AtpRamAdapter> adapters = new ConcurrentHashMap<>();
-    private Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private final ConcurrentHashMap<Object, AtpRamAdapter> adapters = new ConcurrentHashMap<>();
+    private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static String getShortTransportName(AbstractInstance instance) {
         if (instance instanceof StepInstance) {
@@ -124,7 +124,7 @@ public class RAM2ReportAdapter implements ReportAdapter {
     @Override
     public void openSection(AbstractInstance instance, String title) {
         if (instance instanceof SituationInstance) {
-            return; // No open-close sections for situations to RAM2 (ATPII-22618)
+            return; // Sections for situations are reported after the situation is finished.
         }
         if (!prepareTestRunContext(instance, false)) {
             return;
@@ -244,7 +244,7 @@ public class RAM2ReportAdapter implements ReportAdapter {
                         situationInstance.getContext().tc().getProjectUuid().toString(),
                         situationInstance);
                 JSONObject bvResult = JSONObject.fromObject(getBvResult(situationInstance, "bvResultForRam2"));
-                if (bvResult.size() != 0) {
+                if (!bvResult.isEmpty()) {
                     adapter.restMessage(msg, bvResult);
                 } else {
                     adapter.restMessage(msg);
@@ -456,7 +456,7 @@ public class RAM2ReportAdapter implements ReportAdapter {
                     break;
                 }
                 default: {
-                    LOGGER.warn("A logged MEP does not exist");
+                    LOGGER.warn("Logged MEP value doesn't exist");
                 }
             }
         }
@@ -479,9 +479,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
 
     @Override
     public void info(AbstractInstance containerInstance, String title, SpContext spContext) {
-        /*  ATPII-22618:
-                StepInstances are reported together with parent (SituationInstance),
-                when SituationInstance is closed
+        /*  StepInstances are reported together with parent (SituationInstance),
+            when SituationInstance is closed.
          */
         if (containerInstance instanceof StepInstance) {
             return;
@@ -503,9 +502,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
 
     @Override
     public void error(AbstractInstance containerInstance, String title, SpContext spContext, Throwable exception) {
-        /*  ATPII-22618:
-                StepInstances are reported together with parent (SituationInstance),
-                when SituationInstance is closed
+        /*  StepInstances are reported together with parent (SituationInstance),
+            when SituationInstance is closed.
          */
         if (containerInstance instanceof StepInstance) {
             return;
@@ -581,7 +579,7 @@ public class RAM2ReportAdapter implements ReportAdapter {
                 getAdapter(sessionId).message(logRecord);
             } else {
                 JSONObject bvResult = JSONObject.fromObject(getBvResult(containerInstance, "bvResultForRam2"));
-                if (bvResult.size() != 0) {
+                if (!bvResult.isEmpty()) {
                     getAdapter(sessionId).restMessage(updateBVStatus(containerInstance,
                             createMessage(title, containerInstance, status, "",
                                     testRunContext.getCurrentSectionId(),
@@ -768,7 +766,6 @@ public class RAM2ReportAdapter implements ReportAdapter {
 
     @Override
     public void stopRun(InstanceContext context, Status status) {
-        // Q : what happens in case run from ITF without reporting to RAM2? May be some checking is needed?
         AtpRamAdapter adapter = getAdapter(context.getTC().getID());
         TestRunContext testRunContext = adapter.getContext();
         while (!StringUtils.isBlank(testRunContext.getCurrentSectionId())) {

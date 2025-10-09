@@ -58,7 +58,7 @@
 | `SPRING_DATASOURCE_HIKARI_MAX_LIFETIME`                | No        | 7200000                                                                                                        | Spring hikari max-lifetime value                                |
 | `HTTP_PORT`                                            | Yes       | 8080                                                                                                           | Server port number                                              |
 | `EMBEDDED_HTTPS_ENABLED`                               | No        | true                                                                                                           | Enable or disable support https                                 |
-| `EMBEDDED_TLS_SERVER_PORT`                             | No        | 9443                                                                                                           | List tls server port number                                     | 
+| `EMBEDDED_TLS_SERVER_PORT`                             | No        | 9443                                                                                                           | List tls server port number                                     |
 | `EMBEDDED_SSL_SERVER_PORT`                             | No        | 8443                                                                                                           | List ssl server port numbers                                    |
 | `KEYSTORE_PASSWORD`                                    | Yes       | changeit                                                                                                       | Keystore password value                                         |
 | `UNDERTOW_SESSION_TIMEOUT`                             | No        | 58m                                                                                                            | Server servlet session timeout value                            |
@@ -76,7 +76,7 @@
 | `GRAYLOG_PORT`                                         | No        | 12201                                                                                                          | Graylog port value                                              |
 | `SERVICE_NAME`                                         | No        | atp-itf-reporting                                                                                              | Service system name                                             |
 | `EUREKA_CLIENT_ENABLED`                                | No        | false                                                                                                          | Enable or disable eureka integration                            |
-| `SERVICE_REGISTRY_URL`                                 | No        | http://atp-registry-service:8761/eureka                                                                        | Eureka serviceUrl defaultZone value                             |
+| `SERVICE_REGISTRY_URL`                                 | No        | [URL](http://atp-registry-service:8761/eureka)                                                                 | Eureka serviceUrl defaultZone value                             |
 | `ATP_SERVICE_PUBLIC`                                   | No        | true                                                                                                           | Enable or disable public integration with ATP                   |
 | `ATP_SERVICE_INTERNAL`                                 | No        | true                                                                                                           | Enable or disable internal integration with ATP                 |
 | `ATP_SERVICE_PATH`                                     | No        | /api/atp-itf-stubs/v1/**                                                                                       | Service path                                                    |
@@ -88,8 +88,8 @@
 | `KEYCLOAK_AUTH_URL`                                    | Yes       | localhost                                                                                                      | Keycloak auth URL                                               |
 | `PROJECT_INFO_ENDPOINT`                                | No        | /api/v1/users/projects                                                                                         | Project metadata API endpoint                                   |
 | `CONTENT_SECURITY_POLICY`                              | No        | default-src 'self' 'unsafe-inline' *                                                                           | Security policy settings for frontend                           |
-| `ATP_PUBLIC_GATEWAY_URL`                               | No        | http://atp-public-gateway-service-address                                                                      | Public gateway url                                              |
-| `ATP_INTERNAL_GATEWAY_URL`                             | No        | http://atp-internal-gateway:8080                                                                               | Internal gateway url                                            |
+| `ATP_PUBLIC_GATEWAY_URL`                               | No        | [URL](http://atp-public-gateway-service-address)                                                               | Public gateway url                                              |
+| `ATP_INTERNAL_GATEWAY_URL`                             | No        | [URL](http://atp-internal-gateway:8080)                                                                        | Internal gateway url                                            |
 | `ATP_INTERNAL_GATEWAY_ENABLED`                         | No        | false                                                                                                          | Enable or disable Internal gateway                              |
 | `ATP_INTERNAL_GATEWAY_NAME`                            | No        | atp-internal-gateway                                                                                           | Internal gateway name                                           |
 | `FEIGN_HTTPCLIENT_DISABLE_SSL`                         | No        | true                                                                                                           | Feign enable or disable ssl validation                          |
@@ -140,7 +140,7 @@
 | `KAFKA_GROUP_ID`                                       | No        | atp-itf-executor                                                                                               | Kafka consumer group-id name                                    |
 | `ZIPKIN_ENABLE`                                        | No        | false                                                                                                          | Enable or disable Zipkin distributed tracing                    |
 | `ZIPKIN_PROBABILITY`                                   | No        | 1.0                                                                                                            | Zipkin probability level                                        |
-| `ZIPKIN_URL`                                           | No        | http://jaeger-app-collector.jaeger.svc:9411                                                                    | Zipkin host address                                             |
+| `ZIPKIN_URL`                                           | No        | [URL](http://jaeger-app-collector.jaeger.svc:9411)                                                             | Zipkin host address                                             |
 | `ATP_ITF_BROKER_URL_TCP`                               | Yes       | tcp://atp-activemq:61616?wireFormat.maxInactivityDuration=0&wireFormat.maxFrameSize=104857600                  | Broker url                                                      |
 | `ATP_ITF_BROKER_URL_WS`                                | Yes       | ws://atp-activemq:61614                                                                                        | Broker url ws                                                   |
 | `CONFIGURATOR_EXECUTOR_EVENT_TRIGGERS_TOPIC`           | Yes       | configurator_executor_event_triggers                                                                           | Configurator executor event triggers topic name                 |
@@ -165,12 +165,12 @@
 | `REPORT_MAX_THREAD_POOL_SIZE`                          | No        | 1200                                                                                                           | Reports max thread pool size value                              |
 | `STUBS_EXECUTOR_CONCURRENCY`                           | No        | 120-900                                                                                                        | Stubs executor listener container factory concurrency           |
 | `STUBS_EXECUTOR_MAX_MESSAGES_PER_TASK`                 | No        | -1                                                                                                             | Stubs executor listener container factory max messages per task |
-| `DATASET_SERVICE_URL`                                  | No        | https://atp-dataset-service-address                                                         | Dataset service url                                             |
-| `ENVIRONMENTS_SERVICE_URL`                             | No        | http://atp-environments-service-address                                                     | Environment configurator service url                            |
-| `CATALOGUE_URL`                                        | No        | http://atp-catalogue-service-address                                                        | Catalogue url                                                   |
-| `ATP_ITF_CONFIGURATOR_URL`                             | No        | http://atp-itf-configurator-service-address                                                 | ITF configurator url                                            |
-| `BV_SERVICE_URL`                                       | No        | http://atp-bv-service-address                                                               | Bulk validator service url                                      |
-| `EI_SERVICE_URL`                                       | No        | http://atp-ei-service-address                                                               | Export import service url}                                      |
+| `DATASET_SERVICE_URL`                                  | No        | [URL](https://atp-dataset-service-address)                                                                     | Dataset service url                                             |
+| `ENVIRONMENTS_SERVICE_URL`                             | No        | [URL](http://atp-environments-service-address)                                                                 | Environment configurator service url                            |
+| `CATALOGUE_URL`                                        | No        | [URL](http://atp-catalogue-service-address)                                                                    | Catalogue url                                                   |
+| `ATP_ITF_CONFIGURATOR_URL`                             | No        | [URL](http://atp-itf-configurator-service-address)                                                             | ITF configurator url                                            |
+| `BV_SERVICE_URL`                                       | No        | [URL](http://atp-bv-service-address)                                                                           | Bulk validator service url                                      |
+| `EI_SERVICE_URL`                                       | No        | [URL](http://atp-ei-service-address)                                                                           | Export import service url}                                      |
 | `HAZELCAST_CACHE_ENABLED`                              | No        | true                                                                                                           | Enable or disable hazelcast cache                               |
 | `HAZELCAST_ADDRESS`                                    | No        | 127.0.0.1:5701                                                                                                 | Hazelcast address                                               |
 | `HAZELCAST_EXPIRATION_TASK_PERIOD_SECONDS`             | No        | 5                                                                                                              | Hazelcast internal map expiration task period seconds           |
@@ -200,7 +200,7 @@
 | `SWAGGER_ENABLED`                                      | No        | true                                                                                                           | Enable or disable Swagger integration                           |
 | `USERDATA_CLEAN_LEAVE_DAYS`                            | No        | 7                                                                                                              | Userdata clean leave_days                                       |
 | `USERDATA_CLEAN_LEAVE_DAYS_TIMEUNIT`                   | No        | days                                                                                                           | Userdata clean leave_days timeunit                              |
-| `USERDATA_CLEAN_JOB_EXPRESSION`                        | No        | 0 0 3 1/3 * ?                                                                                                  | CRON userdata clean job expression                              |
+| `USERDATA_CLEAN_JOB_EXPRESSION`                        | No        | `0 0 3 1/3 * ?`                                                                                                  | CRON userdata clean job expression                              |
 | `AUDIT_LOGGING_ENABLE`                                 | No        | false                                                                                                          | Enable or Disable audit logging                                 |
 | `AUDIT_LOGGING_TOPIC_NAME`                             | No        | audit_logging_topic                                                                                            | Audit logging Kafka topic name                                  |
 | `AUDIT_LOGGING_TOPIC_PARTITIONS`                       | No        | 1                                                                                                              | Audit logging Kafka topic partitions number                     |
@@ -208,7 +208,7 @@
 | `KAFKA_REPORTING_SERVERS`                              | No        | kafka.reporting.svc:9092                                                                                       | Reporting kafka producer bootstrap server url                   |
 | `JAVERS_ENABLED`                                       | No        | false                                                                                                          | Enable or disable javers                                        |
 | `JAVERS_HISTORY_ENABLED`                               | No        | true                                                                                                           | Enable or disable javers history                                |
-| `HISTORY_CLEAN_JOB_EXPRESSION`                         | No        | 0 10 0 * * ?                                                                                                   | CRON itf history clean job expression                           |
+| `HISTORY_CLEAN_JOB_EXPRESSION`                         | No        | `0 10 0 * * ?`                                                                                                  | CRON itf history clean job expression                           |
 | `HISTORY_CLEAN_JOB_REVISION_MAX_COUNT`                 | No        | 100                                                                                                            | Itf history clean job revision max count                        |
 | `HISTORY_CLEAN_JOB_PAGE_SIZE`                          | No        | 100                                                                                                            | Itf history clean job page-size                                 |
 | `CONSUL_URL`                                           | No        | localhost                                                                                                      | Consul host number                                              |
@@ -219,9 +219,18 @@
 | `CONSUL_CONFIG_DATA_KEY`                               | No        | data                                                                                                           | Consul config data-key value                                    |
 | `CONSUL_CONFIG_FORMAT`                                 | No        | properties                                                                                                     | Consul config format value                                      |
 
-# Helm
+## Helm
 
-## Prerequisites
+### Prerequisites
 
 1. Install k8s locally
 2. Install Helm
+
+### How to deploy tool
+
+1. Build snapshot (artifacts and docker image) of [ITF-Executor Repository](https://github.com/Netcracker/qubership-testing-platform-itf-executor) in GitHub
+2. Clone repository to a place, available from your openshift/kubernetes where you need to deploy the tool to
+3. Navigate to <repository-root>/deployments/charts/atp-itf-executor folder
+4. Check/change configuration parameters in the ./values.yaml file according to your services installed
+5. Execute the command: `helm install atp-itf-executor`
+6. After installation is completed, check deployment health

@@ -1,0 +1,23 @@
+# Which docker image should be used to deploy
+DOCKER_TAG: "ghcr.io/netcracker/qubership-testing-platform-itf-executor:latest"
+# Switching-on of Eureka client
+EI_CLEAN_JOB_ENABLED: "false"
+# This option turns on or off logging in graylog
+GRAYLOG_ON: "false"
+# This option turns on or off kafka enable
+KAFKA_ENABLE: "false"
+# URL of kafka service
+KAFKA_SERVERS: ""
+SERVICE_ENTITIES_MIGRATION_ENABLED: "false"
+KAFKA_REPORTING_SERVERS: ""
+# Keycloak enabled
+KEYCLOAK_ENABLED: "false"
+# IP of db
+PG_DB_ADDR: "my-postgres-postgresql"
+# Spring profile for security
+SPRING_PROFILES: "disable-security"
+keepHookLogs: true
+HELPER_IMAGE: "ghcr.io/netcracker/qubership-testing-platform-helm-hook-helper:main-20250714085543"
+CONTENT_SECURITY_POLICY: "*"
+pg_pass: "postgrestest"
+pg_user: "postgres"

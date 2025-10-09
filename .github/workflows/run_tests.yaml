@@ -1,0 +1,65 @@
+name: Run Executor Pipeline
+
+#on:
+#  pull_request:
+#    types: [opened, synchronize, reopened]
+#    branches: [main]
+
+on:
+  workflow_dispatch:
+    inputs:
+      docker_tag:
+        required: false
+        type: string
+        description: 'Docker Image for rollout'
+      pipeline_branch:
+        description: 'Test pipeline branch name'
+        type: string
+        required: true
+        default: 'main'
+
+jobs:
+  Clean_Install_Executor:
+    runs-on: ubuntu-latest
+    name: Clean Install
+    steps:
+      - name: Get current workflow branch
+        id: get_branch
+        run: |
+      - name: Checkout pipeline
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+          repository: 'Netcracker/qubership-test-pipelines'
+          path: 'qubership-test-pipelines'
+      - name: Create cluster
+        uses: ./qubership-test-pipelines/actions/shared/create_cluster
+
+      - name: Checkout pipeline
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.pipeline_branch }}
+          repository: 'Netcracker/qubership-testing-platform-itf-executor'
+          path: 'qubership-testing-platform-itf-executor'
+
+      - name: Clean Install ITF Executor
+        uses: ./qubership-testing-platform-itf-executor/.github/actions/shared/helm_deploy
+        with:
+          path_to_template: './qubership-testing-platform-itf-executor/.github/deploy_templates/values-dev.yaml'
+          service_branch: ${{ inputs.pipeline_branch }}
+          service_name: 'atp-environments'
+          repository_name: 'qubership-testing-platform-itf-executor'
+          path_to_chart: 'deployments/charts/atp-itf-executor'
+          namespace: 'env'
+          docker_tag: ${{ inputs.docker_tag }}
+
+      - name: Verify Environments installation
+        uses: ./qubership-testing-platform-itf-executor/.github/actions/shared/verify_installation
+        with:
+          namespace: 'env'
+          max_attempts: 40
+          timeout: '45s'
+          service_branch: ${{ inputs.pipeline_branch }}
+
+      - name: Run tests
+        uses: ./qubership-testing-platform-itf-executor/.github/actions/shared/running_tests

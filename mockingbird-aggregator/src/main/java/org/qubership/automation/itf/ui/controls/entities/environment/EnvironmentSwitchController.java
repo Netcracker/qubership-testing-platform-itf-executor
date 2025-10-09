@@ -87,7 +87,7 @@ public class EnvironmentSwitchController extends ControllerHelper {
      *
      * @param id          environment object
      * @param projectUuid ATP project UUID
-     * @return a list of UIObject objects.
+     * @return a map of UIObject objects grouped by types.
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
@@ -132,11 +132,10 @@ public class EnvironmentSwitchController extends ControllerHelper {
     }
 
     /**
-     * Update Environment state by calculated state retrieved from database, then store the Environment
-     * This method subject to change after the transition of the service "atp-itf-stubs" to a separate DB,
-     * see - ATPII-35615
+     * Update Environment state by calculated state retrieved from database, then store the Environment.
+     * This method subject to change after the transition of the service "atp-itf-stubs" to a separate DB.
      *
-     * @return Environment object
+     * @return Environment object.
      */
     private Environment updateEnvStateFromDb(@Nonnull String objectId) {
         CoreObjectManagerService objectManagerService = CoreObjectManager.getInstance();
