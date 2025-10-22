@@ -171,11 +171,11 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 .getIntOrDefault("sql.transport.dataSource.maxConnLifetimeMillis", 1800000);
 
         ojdbcReadTimeout = Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.ojdbc.ReadTimeout", 600000);
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.ReadTimeout", -1);
         ojdbcConnectTimeout = Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.ojdbc.ConnectTimeout", 10);
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.ConnectTimeout", -1);
         ojdbcOutboundConnectTimeout = Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSource.ojdbc.OutboundConnectTimeout", 15);
+                .getIntOrDefault("sql.transport.dataSource.ojdbc.OutboundConnectTimeout", -1);
 
         dataSourcesCacheEnable = Boolean.parseBoolean(Config.getConfig()
                 .getStringOrDefault("sql.transport.dataSourcesCache.enable", "true"));
