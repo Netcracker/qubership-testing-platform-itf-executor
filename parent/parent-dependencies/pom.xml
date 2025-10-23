@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird</artifactId>
-        <version>4.4.357-SNAPSHOT</version>
+        <version>4.4.358-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>parent-dependencies</artifactId>
@@ -14,7 +14,7 @@
         <org.springframework.version>5.3.21</org.springframework.version>
         <spring.cloud.version>2021.0.8</spring.cloud.version>
         <keycloak.version>22.0.1</keycloak.version>
-        <atp.itf.core.version>4.4.108</atp.itf.core.version>
+        <atp.itf.core.version>4.4.114-SNAPSHOT</atp.itf.core.version>
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <camel.version>2.20.4</camel.version>
         <activemq.version>5.12.2</activemq.version>
