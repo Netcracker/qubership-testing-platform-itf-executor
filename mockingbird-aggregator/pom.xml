@@ -53,6 +53,19 @@
                             <goal>parse-version</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>regex-property</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>application.version</name>
+                            <value>${application.version}</value>
+                            <regex>\/</regex>
+                            <replacement>_</replacement>
+                            <failIfNoMatch>false</failIfNoMatch>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
