@@ -14,12 +14,13 @@
         <org.springframework.version>5.3.21</org.springframework.version>
         <spring.cloud.version>2021.0.8</spring.cloud.version>
         <keycloak.version>22.0.1</keycloak.version>
-        <atp.itf.core.version>4.4.113</atp.itf.core.version>
-        <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <camel.version>2.20.4</camel.version>
         <activemq.version>5.12.2</activemq.version>
         <aspectj.version>1.8.10</aspectj.version>
 
+        <atp.itf.core.version>4.4.113</atp.itf.core.version>
+        <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
+        <atp.auth.version>1.2.75</atp.auth.version>
         <atp.multitenancy.version>0.0.13</atp.multitenancy.version>
         <atp.ei.lib.version>0.2.45</atp.ei.lib.version>
         <atp.crypt.version>0.0.21</atp.crypt.version>
@@ -42,59 +43,9 @@
         <org.modelmapper.modelmapper.version>3.1.1</org.modelmapper.modelmapper.version>
         <org.jetbrains.kotlin.kotlin-stdlib.version>1.6.21</org.jetbrains.kotlin.kotlin-stdlib.version>
         <com.squareup.okio.okio.version>2.8.0</com.squareup.okio.okio.version>
-
-<!--        <org.apache.tomcat.embed.version>9.0.99</org.apache.tomcat.embed.version>-->
         <org.apache.cxf.version>3.2.1</org.apache.cxf.version>
         <org.eclipse.jetty.version>9.4.57.v20241219</org.eclipse.jetty.version>
     </properties>
-
-    <dependencies>
-        <!-- org.springframework.data configuration - start -->
-        <!-- To be deleted after functionality testing
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
-        </dependency>
-        -->
-        <!-- org.springframework.data configuration - end -->
-
-        <!-- org.springframework configuration - start -->
-        <!-- To be deleted after functionality testing
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jms</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-        -->
-        <!-- org.springframework configuration - end -->
-    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -104,6 +55,11 @@
                 <version>2.2.1.Final</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.qubership.atp.auth</groupId>
+                <artifactId>atp-auth-impl</artifactId>
+                <version>${atp.auth.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.qubership.atp</groupId>
                 <artifactId>atp-itf-core</artifactId>
@@ -834,8 +790,12 @@
                         <artifactId>commons-lang</artifactId>
                     </exclusion>
                     <exclusion>
-                        <artifactId>javers-spring-boot-starter-mongo</artifactId>
                         <groupId>org.javers</groupId>
+                        <artifactId>javers-spring-boot-starter-mongo</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.qubership.atp.auth</groupId>
+                        <artifactId>atp-auth-spring-boot-starter</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
