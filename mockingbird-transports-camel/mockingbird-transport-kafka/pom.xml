@@ -2,7 +2,7 @@
     <parent>
         <artifactId>mockingbird-transports-camel</artifactId>
         <groupId>org.qubership.mockingbird</groupId>
-        <version>4.4.359</version>
+        <version>4.4.360-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
