@@ -17,10 +17,13 @@
 
 package org.qubership.automation.itf.executor.cache.hazelcast.listener;
 
+import java.util.Objects;
+
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
+import org.qubership.automation.itf.core.metric.MetricsAggregateService;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.core.model.jpa.instance.SituationInstance;
 import org.qubership.automation.itf.core.util.config.ApplicationConfig;
@@ -31,13 +34,22 @@ import org.qubership.automation.itf.executor.service.ExecutionServices;
 import org.slf4j.MDC;
 
 import com.hazelcast.core.EntryEvent;
+import com.hazelcast.internal.serialization.Data;
+import com.hazelcast.map.impl.DataAwareEntryEvent;
+import com.hazelcast.map.listener.EntryAddedListener;
+import com.hazelcast.map.listener.EntryEvictedListener;
 import com.hazelcast.map.listener.EntryExpiredListener;
+import com.hazelcast.map.listener.EntryUpdatedListener;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TCContextEntryExpiredListener implements EntryExpiredListener<Object, TcContext> {
+public class TCContextEntryListener implements EntryAddedListener<Object, TcContext>,
+        EntryUpdatedListener<Object, TcContext>, EntryExpiredListener<Object, TcContext>,
+        EntryEvictedListener<Object, TcContext> {
 
     private Boolean multiTenancyEnabled;
+    private static final int MAX_SIZE = Config.getConfig()
+            .getIntOrDefault("hazelcast.context.maxSize.metrics", 6000000);
 
     /**
      * This method calls only when expire event comes from Hazelcast service for tc context to all
@@ -47,6 +59,7 @@ public class TCContextEntryExpiredListener implements EntryExpiredListener<Objec
      */
     @Override
     public void entryExpired(EntryEvent entryEvent) {
+        collectContextSizeMetric(entryEvent);
         try {
             if (multiTenancyEnabled == null) {
                 multiTenancyEnabled = ApplicationConfig.env.getProperty("atp.multi-tenancy.enabled", Boolean.class);
@@ -79,6 +92,39 @@ public class TCContextEntryExpiredListener implements EntryExpiredListener<Objec
         }
     }
 
+    /**
+     * This method calls only when added event comes from Hazelcast service for tc context to all
+     * atp-itf-executor pods.
+     *
+     * @param entryEvent that contains added tcContext.
+     */
+    @Override
+    public void entryAdded(EntryEvent entryEvent) {
+        collectContextSizeMetric(entryEvent);
+    }
+
+    /**
+     * This method calls only when updated event comes from Hazelcast service for tc context to all
+     * atp-itf-executor pods.
+     *
+     * @param entryEvent that contains updated tcContext.
+     */
+    @Override
+    public void entryUpdated(EntryEvent entryEvent) {
+        collectContextSizeMetric(entryEvent);
+    }
+
+    /**
+     * This method calls only when evicted event comes from Hazelcast service for tc context to all
+     * atp-itf-executor pods.
+     *
+     * @param entryEvent that contains evicted tcContext.
+     */
+    @Override
+    public void entryEvicted(EntryEvent entryEvent) {
+        collectContextSizeMetric(entryEvent);
+    }
+
     private boolean isContextCreatedOnThisPod(@NotNull TcContext tcContext) {
         return Strings.isNotEmpty(tcContext.getPodName())
                 && tcContext.getPodName().equals(Config.getConfig().getRunningHostname());
@@ -87,5 +133,27 @@ public class TCContextEntryExpiredListener implements EntryExpiredListener<Objec
     private boolean isContextUpdatedByDifferentPods(TcContext tcContext) {
         long expirationTime = CacheServices.getTcContextCacheService().getExpirationTime(tcContext);
         return expirationTime != 0 && expirationTime >= System.currentTimeMillis();
+    }
+
+    private void collectContextSizeMetric(EntryEvent entryEvent) {
+        try {
+            Data newValueData = ((DataAwareEntryEvent) entryEvent).getNewValueData();
+            if (Objects.nonNull(newValueData) && newValueData.totalSize() > MAX_SIZE) {
+                TcContext tcContext = (TcContext) entryEvent.getValue();
+                switch (entryEvent.getEventType()) {
+                    case ADDED:
+                    case UPDATED:
+                        MetricsAggregateService.incrementHazelcastContextSizeCountToProject(
+                                tcContext.getProjectUuid(), entryEvent.getKey(), newValueData.totalSize());
+                    case EXPIRED:
+                    case EVICTED:
+                        MetricsAggregateService.incrementHazelcastContextSizeCountToProject(
+                                tcContext.getProjectUuid(), entryEvent.getKey(), 0);
+                    default:
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error while trying to collect context size metric", e);
+        }
     }
 }

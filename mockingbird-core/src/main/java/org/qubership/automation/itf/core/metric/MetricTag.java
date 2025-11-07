@@ -26,7 +26,8 @@ public enum MetricTag {
 
     PROJECT("project_id"),
     ENDPOINT("endpoint"),
-    CALLCHAIN_NAME("callchain_name");
+    CALLCHAIN_NAME("callchain_name"),
+    CONTEXT_ID("context_id");
     private final String value;
 
 }

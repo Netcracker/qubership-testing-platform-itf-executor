@@ -52,9 +52,10 @@ import lombok.NonNull;
 @Service
 public class MetricsAggregateService {
 
-    private final MeterRegistry meterRegistry;
+    private static MeterRegistry meterRegistry;
     private Counter.Builder executorCallChainCounter;
     private Counter.Builder executorContextSizeCounter;
+    private static Counter.Builder executorContextSizeInHazelcastCounter;
     @Value("#{${exclude.registry.metrics.tags}}")
     private Map<String, List<String>> excludeRegistryMetricsTags;
     @Value("${message-broker.stubs-executor-incoming-request.queue}")
@@ -78,6 +79,10 @@ public class MetricsAggregateService {
                 .builder(Metric.ATP_ITF_EXECUTOR_CONTEXT_SIZE_BY_PROJECT.getValue())
                 .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CALLCHAIN_NAME.getValue(), "")
                 .description("total size of testcase contexts");
+        this.executorContextSizeInHazelcastCounter = Counter
+                .builder(Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue())
+                .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CONTEXT_ID.getValue(), "")
+                .description("total size of testcase contexts in Hazelcast");
         meterRegistry.config().meterFilter(new MeterFilter() {
             @Override
             public Meter.Id map(Meter.Id id) {
@@ -118,6 +123,15 @@ public class MetricsAggregateService {
                     .register(meterRegistry)
                     .increment(size);
         }
+    }
+
+    public static void incrementHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId,
+                                                                   int size) {
+        executorContextSizeInHazelcastCounter
+                    .tags(MetricTag.PROJECT.getValue(), projectUuid.toString(), MetricTag.CONTEXT_ID.getValue(),
+                            contextId.toString())
+                    .register(meterRegistry)
+                    .increment(size);
     }
 
     public void recordExecuteCallchainDuration(@NonNull UUID projectUuid, @NonNull String callChainName,
