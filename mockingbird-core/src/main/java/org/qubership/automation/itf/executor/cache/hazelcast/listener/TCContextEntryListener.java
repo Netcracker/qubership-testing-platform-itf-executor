@@ -151,6 +151,7 @@ public class TCContextEntryListener implements EntryAddedListener<Object, TcCont
                         MetricsAggregateService.summaryHazelcastContextSizeCountToProject(
                                 newTcContext.getProjectUuid(), entryEvent.getKey(), newValueData.totalSize());
                     }
+                    break;
                 case EXPIRED:
                 case EVICTED:
                     TcContext oldTcContext = (TcContext) entryEvent.getOldValue();
@@ -159,6 +160,7 @@ public class TCContextEntryListener implements EntryAddedListener<Object, TcCont
                     }
 //                    MetricsAggregateService.summaryHazelcastContextSizeCountToProject(
 //                            oldTcContext.getProjectUuid(), entryEvent.getKey(), 0);
+                    break;
                 default:
             }
         } catch (Exception e) {
