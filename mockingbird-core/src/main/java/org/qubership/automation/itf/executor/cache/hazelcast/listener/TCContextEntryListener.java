@@ -158,8 +158,8 @@ public class TCContextEntryListener implements EntryAddedListener<Object, TcCont
                     if (!isContextCreatedOnThisPod(oldTcContext)) {
                         return;
                     }
-//                    MetricsAggregateService.summaryHazelcastContextSizeCountToProject(
-//                            oldTcContext.getProjectUuid(), entryEvent.getKey(), 0);
+                    MetricsAggregateService.removeHazelcastContextSizeCountToProject(
+                            oldTcContext.getProjectUuid(), entryEvent.getKey());
                     break;
                 default:
             }
