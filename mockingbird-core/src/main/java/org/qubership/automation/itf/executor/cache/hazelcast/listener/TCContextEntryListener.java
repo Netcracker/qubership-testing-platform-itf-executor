@@ -48,8 +48,7 @@ public class TCContextEntryListener implements EntryAddedListener<Object, TcCont
         EntryEvictedListener<Object, TcContext> {
 
     private Boolean multiTenancyEnabled;
-    private static final int MAX_SIZE = Config.getConfig()
-            .getIntOrDefault("hazelcast.context.maxSize.metrics", 6000000);
+    private Integer MAX_SIZE;
 
     /**
      * This method calls only when expire event comes from Hazelcast service for tc context to all
@@ -136,6 +135,9 @@ public class TCContextEntryListener implements EntryAddedListener<Object, TcCont
     }
 
     private void collectContextSizeMetric(EntryEvent entryEvent) {
+        if (MAX_SIZE == null) {
+            MAX_SIZE = ApplicationConfig.env.getProperty("hazelcast.context.maxSize.metrics", Integer.class);
+        }
         TcContext tcContext = (TcContext) entryEvent.getValue();
         if (!isContextCreatedOnThisPod(tcContext)) {
             return;
