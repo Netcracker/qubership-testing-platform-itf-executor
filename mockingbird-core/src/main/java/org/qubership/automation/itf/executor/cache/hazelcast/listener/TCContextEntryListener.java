@@ -148,11 +148,11 @@ public class TCContextEntryListener implements EntryAddedListener<Object, TcCont
                 switch (entryEvent.getEventType()) {
                     case ADDED:
                     case UPDATED:
-                        MetricsAggregateService.incrementHazelcastContextSizeCountToProject(
+                        MetricsAggregateService.summaryHazelcastContextSizeCountToProject(
                                 tcContext.getProjectUuid(), entryEvent.getKey(), newValueData.totalSize());
                     case EXPIRED:
                     case EVICTED:
-                        MetricsAggregateService.incrementHazelcastContextSizeCountToProject(
+                        MetricsAggregateService.summaryHazelcastContextSizeCountToProject(
                                 tcContext.getProjectUuid(), entryEvent.getKey(), 0);
                     default:
                 }

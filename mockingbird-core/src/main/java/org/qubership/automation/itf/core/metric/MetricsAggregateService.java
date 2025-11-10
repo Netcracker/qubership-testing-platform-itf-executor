@@ -42,6 +42,7 @@ import org.springframework.jms.listener.MessageListenerContainer;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -125,13 +126,16 @@ public class MetricsAggregateService {
         }
     }
 
-    public static void incrementHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId,
+    public static void summaryHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId,
                                                                    int size) {
-        executorContextSizeInHazelcastCounter
-                    .tags(MetricTag.PROJECT.getValue(), projectUuid.toString(), MetricTag.CONTEXT_ID.getValue(),
-                            contextId.toString())
-                    .register(meterRegistry)
-                    .increment(size);
+        DistributionSummary summary = DistributionSummary
+                .builder(Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue())
+                .description("total size of testcase contexts in Hazelcast")
+                .baseUnit("bytes")
+                .tags(MetricTag.PROJECT.getValue(), projectUuid.toString(), MetricTag.CONTEXT_ID.getValue(),
+                        contextId.toString())
+                .register(meterRegistry);
+        summary.record(size);
     }
 
     public void recordExecuteCallchainDuration(@NonNull UUID projectUuid, @NonNull String callChainName,
