@@ -142,8 +142,8 @@ public class MetricsAggregateService {
         meterRegistry.getMeters().stream()
                 .filter(meter -> meter.getId().getName().equals(
                         Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue()))
-                .filter(m -> m.getId().getTag(MetricTag.PROJECT.getValue()).equals(projectUuid)
-                        && m.getId().getTag(MetricTag.CONTEXT_ID.getValue()).equals(contextId))
+                .filter(m -> projectUuid.toString().equals(m.getId().getTag(MetricTag.PROJECT.getValue()))
+                        && contextId.equals(m.getId().getTag(MetricTag.CONTEXT_ID.getValue())))
                 .forEach(meterRegistry::remove);
     }
 
