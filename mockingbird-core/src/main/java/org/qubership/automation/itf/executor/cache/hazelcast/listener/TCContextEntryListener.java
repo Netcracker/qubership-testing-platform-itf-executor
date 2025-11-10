@@ -136,10 +136,13 @@ public class TCContextEntryListener implements EntryAddedListener<Object, TcCont
     }
 
     private void collectContextSizeMetric(EntryEvent entryEvent) {
+        TcContext tcContext = (TcContext) entryEvent.getValue();
+        if (!isContextCreatedOnThisPod(tcContext)) {
+            return;
+        }
         try {
             Data newValueData = ((DataAwareEntryEvent) entryEvent).getNewValueData();
             if (Objects.nonNull(newValueData) && newValueData.totalSize() > MAX_SIZE) {
-                TcContext tcContext = (TcContext) entryEvent.getValue();
                 switch (entryEvent.getEventType()) {
                     case ADDED:
                     case UPDATED:
