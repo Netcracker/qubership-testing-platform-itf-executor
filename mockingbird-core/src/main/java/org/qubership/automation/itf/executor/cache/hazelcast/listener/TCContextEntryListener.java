@@ -138,24 +138,28 @@ public class TCContextEntryListener implements EntryAddedListener<Object, TcCont
         if (MAX_SIZE == null) {
             MAX_SIZE = ApplicationConfig.env.getProperty("hazelcast.context.maxSize.metrics", Integer.class);
         }
-        TcContext tcContext = (TcContext) entryEvent.getValue();
-        if (!isContextCreatedOnThisPod(tcContext)) {
-            return;
-        }
         try {
-            Data newValueData = ((DataAwareEntryEvent) entryEvent).getNewValueData();
-            if (Objects.nonNull(newValueData) && newValueData.totalSize() > MAX_SIZE) {
-                switch (entryEvent.getEventType()) {
-                    case ADDED:
-                    case UPDATED:
+            switch (entryEvent.getEventType()) {
+                case ADDED:
+                case UPDATED:
+                    TcContext newTcContext = (TcContext) entryEvent.getValue();
+                    if (!isContextCreatedOnThisPod(newTcContext)) {
+                        return;
+                    }
+                    Data newValueData = ((DataAwareEntryEvent) entryEvent).getNewValueData();
+                    if (Objects.nonNull(newValueData) && newValueData.totalSize() > MAX_SIZE) {
                         MetricsAggregateService.summaryHazelcastContextSizeCountToProject(
-                                tcContext.getProjectUuid(), entryEvent.getKey(), newValueData.totalSize());
-                    case EXPIRED:
-                    case EVICTED:
-                        MetricsAggregateService.summaryHazelcastContextSizeCountToProject(
-                                tcContext.getProjectUuid(), entryEvent.getKey(), 0);
-                    default:
-                }
+                                newTcContext.getProjectUuid(), entryEvent.getKey(), newValueData.totalSize());
+                    }
+                case EXPIRED:
+                case EVICTED:
+                    TcContext oldTcContext = (TcContext) entryEvent.getOldValue();
+                    if (!isContextCreatedOnThisPod(oldTcContext)) {
+                        return;
+                    }
+                    MetricsAggregateService.summaryHazelcastContextSizeCountToProject(
+                            oldTcContext.getProjectUuid(), entryEvent.getKey(), 0);
+                default:
             }
         } catch (Exception e) {
             log.error("Error while trying to collect context size metric", e);
