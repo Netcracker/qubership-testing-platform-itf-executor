@@ -138,15 +138,6 @@ public class MetricsAggregateService {
         summary.record(size);
     }
 
-    public static void removeHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId) {
-        meterRegistry.getMeters().stream()
-                .filter(meter -> meter.getId().getName().equals(
-                        Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue()))
-                .filter(m -> projectUuid.toString().equals(m.getId().getTag(MetricTag.PROJECT.getValue())))
-                .filter(m -> contextId.toString().equals(m.getId().getTag(MetricTag.CONTEXT_ID.getValue())))
-                .forEach(meterRegistry::remove);
-    }
-
     public void recordExecuteCallchainDuration(@NonNull UUID projectUuid, @NonNull String callChainName,
                                                @NonNull Duration duration) {
         meterRegistry.timer(Metric.ATP_ITF_EXECUTOR_CALLCHAIN_SECONDS_BY_PROJECT.getValue(),
