@@ -55,6 +55,7 @@ public class MetricsAggregateService {
 
     private static MeterRegistry meterRegistry;
     private Counter.Builder executorCallChainCounter;
+    private static DistributionSummary.Builder hazelcastContextSize;
     private Counter.Builder executorContextSizeCounter;
     @Value("#{${exclude.registry.metrics.tags}}")
     private Map<String, List<String>> excludeRegistryMetricsTags;
@@ -75,6 +76,11 @@ public class MetricsAggregateService {
                 .builder(Metric.ATP_ITF_EXECUTOR_CALLCHAIN_COUNT_BY_PROJECT.getValue())
                 .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CALLCHAIN_NAME.getValue(), "")
                 .description("total number of running call chains");
+        this.hazelcastContextSize = DistributionSummary
+                .builder(Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue())
+                .description("total size of testcase contexts in Hazelcast")
+                .baseUnit("bytes")
+                .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CONTEXT_ID.getValue(), "");
         this.executorContextSizeCounter = Counter
                 .builder(Metric.ATP_ITF_EXECUTOR_CONTEXT_SIZE_BY_PROJECT.getValue())
                 .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CALLCHAIN_NAME.getValue(), "")
@@ -123,14 +129,9 @@ public class MetricsAggregateService {
 
     public static void summaryHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId,
                                                                    int size) {
-        DistributionSummary summary = DistributionSummary
-                .builder(Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue())
-                .description("total size of testcase contexts in Hazelcast")
-                .baseUnit("bytes")
-                .tags(MetricTag.PROJECT.getValue(), projectUuid.toString(), MetricTag.CONTEXT_ID.getValue(),
-                        contextId.toString())
-                .register(meterRegistry);
-        summary.record(size);
+        hazelcastContextSize
+                .tags(MetricTag.PROJECT.getValue(), projectUuid.toString(), MetricTag.CONTEXT_ID.getValue(), contextId.toString())
+                .register(meterRegistry).record(size);
     }
 
     public static void removeHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId) {
