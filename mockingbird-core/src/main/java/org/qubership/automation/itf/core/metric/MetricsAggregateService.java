@@ -56,7 +56,6 @@ public class MetricsAggregateService {
     private static MeterRegistry meterRegistry;
     private Counter.Builder executorCallChainCounter;
     private Counter.Builder executorContextSizeCounter;
-    private static Counter.Builder executorContextSizeInHazelcastCounter;
     @Value("#{${exclude.registry.metrics.tags}}")
     private Map<String, List<String>> excludeRegistryMetricsTags;
     @Value("${message-broker.stubs-executor-incoming-request.queue}")
@@ -80,10 +79,6 @@ public class MetricsAggregateService {
                 .builder(Metric.ATP_ITF_EXECUTOR_CONTEXT_SIZE_BY_PROJECT.getValue())
                 .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CALLCHAIN_NAME.getValue(), "")
                 .description("total size of testcase contexts");
-        this.executorContextSizeInHazelcastCounter = Counter
-                .builder(Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue())
-                .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CONTEXT_ID.getValue(), "")
-                .description("total size of testcase contexts in Hazelcast");
         meterRegistry.config().meterFilter(new MeterFilter() {
             @Override
             public Meter.Id map(Meter.Id id) {
@@ -136,6 +131,15 @@ public class MetricsAggregateService {
                         contextId.toString())
                 .register(meterRegistry);
         summary.record(size);
+    }
+
+    public static void removeHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId) {
+        meterRegistry.getMeters().stream()
+                .filter(meter -> meter.getId().getName().equals(
+                        Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue()))
+                .filter(m -> projectUuid.toString().equals(m.getId().getTag(MetricTag.PROJECT.getValue())))
+                .filter(m -> contextId.toString().equals(m.getId().getTag(MetricTag.CONTEXT_ID.getValue())))
+                .forEach(meterRegistry::remove);
     }
 
     public void recordExecuteCallchainDuration(@NonNull UUID projectUuid, @NonNull String callChainName,
