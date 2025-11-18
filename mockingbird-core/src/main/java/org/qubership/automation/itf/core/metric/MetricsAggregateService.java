@@ -42,6 +42,7 @@ import org.springframework.jms.listener.MessageListenerContainer;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -52,16 +53,17 @@ import lombok.NonNull;
 @Service
 public class MetricsAggregateService {
 
-    private final MeterRegistry meterRegistry;
-    private Counter.Builder executorCallChainCounter;
-    private Counter.Builder executorContextSizeCounter;
+    private static MeterRegistry itfMeterRegistry;
+    private final Counter.Builder executorCallChainCounter;
+    private static DistributionSummary.Builder hazelcastContextSize;
+    private final Counter.Builder executorContextSizeCounter;
     @Value("#{${exclude.registry.metrics.tags}}")
     private Map<String, List<String>> excludeRegistryMetricsTags;
     @Value("${message-broker.stubs-executor-incoming-request.queue}")
     private String destinationQueueName;
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
     private DefaultMessageListenerContainer defaultMessageListenerContainer;
-    private JmsListenerEndpointRegistry jmsListenerEndpointRegistry;
+    private final JmsListenerEndpointRegistry jmsListenerEndpointRegistry;
 
     @Autowired
     public MetricsAggregateService(ApplicationContext applicationContext,
@@ -69,11 +71,16 @@ public class MetricsAggregateService {
                                    MeterRegistry meterRegistry) {
         this.applicationContext = applicationContext;
         this.jmsListenerEndpointRegistry = jmsListenerEndpointRegistry;
-        this.meterRegistry = meterRegistry;
+        itfMeterRegistry = meterRegistry;
         this.executorCallChainCounter = Counter
                 .builder(Metric.ATP_ITF_EXECUTOR_CALLCHAIN_COUNT_BY_PROJECT.getValue())
                 .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CALLCHAIN_NAME.getValue(), "")
                 .description("total number of running call chains");
+        hazelcastContextSize = DistributionSummary
+                .builder(Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue())
+                .description("total size of testcase contexts in Hazelcast")
+                .baseUnit("bytes")
+                .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CONTEXT_ID.getValue(), "");
         this.executorContextSizeCounter = Counter
                 .builder(Metric.ATP_ITF_EXECUTOR_CONTEXT_SIZE_BY_PROJECT.getValue())
                 .tags(MetricTag.PROJECT.getValue(), "", MetricTag.CALLCHAIN_NAME.getValue(), "")
@@ -106,7 +113,7 @@ public class MetricsAggregateService {
         executorCallChainCounter
                 .tags(MetricTag.PROJECT.getValue(), projectUuid.toString(), MetricTag.CALLCHAIN_NAME.getValue(),
                         callChainName)
-                .register(meterRegistry)
+                .register(itfMeterRegistry)
                 .increment();
     }
 
@@ -115,14 +122,42 @@ public class MetricsAggregateService {
             executorContextSizeCounter
                     .tags(MetricTag.PROJECT.getValue(), projectUuid.toString(), MetricTag.CALLCHAIN_NAME.getValue(),
                             callChainName)
-                    .register(meterRegistry)
+                    .register(itfMeterRegistry)
                     .increment(size);
         }
     }
 
+    public static void summaryHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId,
+                                                                   int size) {
+        hazelcastContextSize
+                .tags(MetricTag.PROJECT.getValue(), projectUuid.toString(), MetricTag.CONTEXT_ID.getValue(), contextId.toString())
+                .register(itfMeterRegistry).record(size);
+    }
+
+    public static void removeHazelcastContextSizeCountToProject(@NonNull UUID projectUuid, @NonNull Object contextId) {
+        /*
+            1. Filtering on projectUuid works, but turned OFF,
+            because contextId is unique, so it's enough to filter by contextId
+                .filter(m -> projectUuid.toString().equals(m.getId().getTag(MetricTag.PROJECT.getValue())))
+
+            2. In case heavy load, it's probable to face some slowness here due to synchronization inside remove().
+                In that case, we would replace this synchronous removing of one element
+                with asynchronous removing of list of elements.
+                So, firstly, we will add elements to map.
+                Later, we will process map by some schedule and really remove elements.
+                But, we decided to postpone such improvement till we really face these problems under heavy load.
+         */
+        itfMeterRegistry.getMeters().stream().parallel()
+                .filter(meter -> meter instanceof DistributionSummary)
+                .filter(meter -> meter.getId().getName().equals(
+                        Metric.ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT.getValue()))
+                .filter(m -> contextId.toString().equals(m.getId().getTag(MetricTag.CONTEXT_ID.getValue())))
+                .forEach(itfMeterRegistry::remove);
+    }
+
     public void recordExecuteCallchainDuration(@NonNull UUID projectUuid, @NonNull String callChainName,
                                                @NonNull Duration duration) {
-        meterRegistry.timer(Metric.ATP_ITF_EXECUTOR_CALLCHAIN_SECONDS_BY_PROJECT.getValue(),
+        itfMeterRegistry.timer(Metric.ATP_ITF_EXECUTOR_CALLCHAIN_SECONDS_BY_PROJECT.getValue(),
                         MetricTag.PROJECT.getValue(), projectUuid.toString(),
                         MetricTag.CALLCHAIN_NAME.getValue(), callChainName)
                 .record(duration);
@@ -130,7 +165,7 @@ public class MetricsAggregateService {
 
     public void recordIncomingRequestDuration(@NonNull UUID projectUuid, @NonNull String endPoint,
                                               @NonNull Duration duration) {
-        meterRegistry.timer(Metric.ATP_ITF_EXECUTOR_STUB_REQUEST_SECONDS_BY_PROJECT.getValue(),
+        itfMeterRegistry.timer(Metric.ATP_ITF_EXECUTOR_STUB_REQUEST_SECONDS_BY_PROJECT.getValue(),
                         MetricTag.PROJECT.getValue(), projectUuid.toString(),
                         MetricTag.ENDPOINT.getValue(), endPoint)
                 .record(duration);
@@ -164,7 +199,7 @@ public class MetricsAggregateService {
     }
 
     private void initializeGauges(Metric metric, Supplier<Number> function) {
-        Gauge.builder(metric.getValue(), function).register(meterRegistry);
+        Gauge.builder(metric.getValue(), function).register(itfMeterRegistry);
     }
 
     private void initializeGauges(UUID projectUuid, Metric metric, Map<UUID, AtomicInteger> metricsMap) {
@@ -172,7 +207,7 @@ public class MetricsAggregateService {
             metricsMap.put(projectUuid, new AtomicInteger());
             Gauge.builder(metric.getValue(), () -> metricsMap.get(projectUuid).get())
                     .tag(MetricTag.PROJECT.getValue(), projectUuid.toString())
-                    .register(meterRegistry);
+                    .register(itfMeterRegistry);
         }
     }
 }

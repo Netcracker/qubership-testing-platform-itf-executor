@@ -28,6 +28,7 @@ public enum Metric {
     ATP_ITF_EXECUTOR_CALLCHAIN_SECONDS_BY_PROJECT("atp_itf_executor_callchain_seconds_by_project"),
     ATP_ITF_EXECUTOR_STUB_REQUEST_SECONDS_BY_PROJECT("atp_itf_executor_stub_request_processing_by_project"),
     ATP_ITF_EXECUTOR_CONTEXT_SIZE_BY_PROJECT("atp_itf_executor_context_size_by_project"),
+    ATP_ITF_EXECUTOR_HAZELCAST_CONTEXT_SIZE_BY_PROJECT("atp_itf_executor_hazelcast_context_size_by_project"),
     ATP_ITF_EXECUTOR_JMS_LISTENER_THREAD_POOL_MAX_SIZE("atp_itf_executor_jms_listener_thread_pool_max_size"),
     ATP_ITF_EXECUTOR_JMS_LISTENER_THREAD_POOL_ACTIVE_SIZE("atp_itf_executor_jms_listener_thread_pool_active_size"),
     ATP_ITF_EXECUTOR_REGULAR_POOL_MAX_SIZE("atp_itf_executor_regular_pool_max_size"),
