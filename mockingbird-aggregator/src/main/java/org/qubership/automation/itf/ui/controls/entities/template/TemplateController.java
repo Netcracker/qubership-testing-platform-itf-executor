@@ -101,7 +101,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
             + "#projectUuid, 'READ')")
     @RequestMapping(value = "/template/allIdAndName", method = RequestMethod.GET)
     @AuditAction(auditAction = "Get all Templates (briefly) in the project {{#projectId}}/{{#projectUuid}}")
-    public List<SystemTemplate> getIdAndName(
+    public List<IdNamePair> getIdAndName(
             @RequestParam(value = "projectUuid") UUID projectUuid,
             @RequestParam(value = "projectId") BigInteger projectId,
             @RequestParam(value = "systemId", required = false) BigInteger systemId,
