@@ -215,8 +215,8 @@ public class ReportWorker {
                 if ("jsonString".equals(writer.getName()) && Objects.nonNull(pojo)) {
                     String jsonString = ((TcContext)pojo).getJsonString();
                     if (jsonString.length() > SERIALIZATION_FIELD_MAX_SIZE) {
-                        String newJsonString = String.format("{\"skip\"" +
-                                        ":\"Skip SpContext body because big object, size - %s\"}",
+                        String newJsonString = String.format("{\"big_object\"" +
+                                        ":\"Skip TcContext because big object, size - %s\"}",
                                 jsonString.length());
                         jgen.writeStringField("jsonString", newJsonString);
                         return;
@@ -239,8 +239,8 @@ public class ReportWorker {
                 if ("jsonString".equals(writer.getName()) && Objects.nonNull(pojo)) {
                     String jsonString = ((SpContext)pojo).getJsonString();
                     if (jsonString.length() > SERIALIZATION_FIELD_MAX_SIZE) {
-                        String newJsonString = String.format("{\"skip\"" +
-                                        ":\"Skip SpContext body because big object, size - %s\"}",
+                        String newJsonString = String.format("{\"big_object\"" +
+                                        ":\"Skip SpContext because big object, size - %s\"}",
                                 jsonString.length());
                         jgen.writeStringField("jsonString", newJsonString);
                         return;
