@@ -216,7 +216,7 @@ public class ReportWorker {
                     String jsonString = ((TcContext)pojo).getJsonString();
                     if (jsonString.length() > SERIALIZATION_FIELD_MAX_SIZE) {
                         String newJsonString = String.format("{\"big_object\"" +
-                                        ":\"Skip TcContext because big object, size - %s\"}",
+                                        ":\"Skip test case context because big object, size - %s\"}",
                                 jsonString.length());
                         jgen.writeStringField("jsonString", newJsonString);
                         return;
@@ -240,7 +240,7 @@ public class ReportWorker {
                     String jsonString = ((SpContext)pojo).getJsonString();
                     if (jsonString.length() > SERIALIZATION_FIELD_MAX_SIZE) {
                         String newJsonString = String.format("{\"big_object\"" +
-                                        ":\"Skip SpContext because big object, size - %s\"}",
+                                        ":\"Skip step context because big object, size - %s\"}",
                                 jsonString.length());
                         jgen.writeStringField("jsonString", newJsonString);
                         return;
