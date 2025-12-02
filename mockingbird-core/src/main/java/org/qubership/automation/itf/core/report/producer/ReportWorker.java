@@ -80,9 +80,9 @@ public class ReportWorker {
     private static final int WARN_ABOUT_SIZE = Config.getConfig()
             .getIntOrDefault("report.producer.warnAboutSize", 5000000);
     private static final int MAX_SIZE = Config.getConfig()
-            .getIntOrDefault("report.producer.maxSize", 2000);
+            .getIntOrDefault("report.producer.maxSize", 6000000);
     private static final int SERIALIZATION_FIELD_MAX_SIZE = Config.getConfig()
-            .getIntOrDefault("serialization.field.maxSize", 2000);
+            .getIntOrDefault("serialization.field.maxSize", 5000000);
 
     @Value("${report.producer.useGroupingMessages}")
     private boolean useGroupingMessages;
