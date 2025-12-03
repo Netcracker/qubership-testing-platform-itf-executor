@@ -1,6 +1,6 @@
 # Qubership Testing Platform ITF-EXECUTOR Service
 
-**Qubership TP ITF-EXECUTOR** (QSTP-ITF-EXECUTOR) is a backend component `Integrations Testing Framework`
+**Qubership Testing Platform ITF-EXECUTOR** (QSTP-ITF-EXECUTOR) is a backend component of `Integrations Testing Framework`
 
 ## Problem statement
 When some complex application systems are integrated, they are on the different life cycle stages at the moment.
@@ -62,7 +62,7 @@ The 1st use case is when an interaction is initiated by an external system, not 
 
 So, ITF is used as a stub, serving requests instead of some (not implemented yet or not installed) external systems or parts of systems.
 
-![](./docs/images/use_case_1st.png)
+![](docs/images/use_case_1.png)
 
 The 2nd use case is when an interaction is initiated by ITF.
 
@@ -72,7 +72,7 @@ Variants, how ITF actions are invoked, include:
 2. Via ITF REST API (From Jenkins job or Postman)
 3. From ATP2 testcase via ITF action or executor-ITF action
 
-![](./docs/images/use_case_1st.png)
+![](docs/images/use_case_2.png)
 
 ## To configure tests
 1. ITF provides Web user interface:
