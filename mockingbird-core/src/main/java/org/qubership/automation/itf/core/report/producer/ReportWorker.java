@@ -17,6 +17,7 @@
 
 package org.qubership.automation.itf.core.report.producer;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
@@ -81,8 +82,12 @@ public class ReportWorker {
             .getIntOrDefault("report.producer.warnAboutSize", 5000000);
     private static final int MAX_SIZE = Config.getConfig()
             .getIntOrDefault("report.producer.maxSize", 6000000);
-    private static final int SERIALIZATION_FIELD_MAX_SIZE = Config.getConfig()
-            .getIntOrDefault("serialization.field.maxSize", 5000000);
+    private static final int SERIALIZATION_MESSAGE_TEXT_MAX_SIZE = Config.getConfig()
+            .getIntOrDefault("report.producer.serialization.field.message.text.maxSize", 1000000);
+    private static final int SERIALIZATION_CONTEXT_JSONSTRING_MAX_SIZE = Config.getConfig()
+            .getIntOrDefault("report.producer.serialization.field.context.jsonString.maxSize", 3000000);
+    private static final String MESSAGE_SKIPPED_TEMPLATE = "Skip reporting of %s due to big object size - %s. "
+            + "Please contact administrator for details.";
 
     @Value("${report.producer.useGroupingMessages}")
     private boolean useGroupingMessages;
@@ -182,77 +187,101 @@ public class ReportWorker {
                 "transportProperties", "failedMessage", "version", "storableProp", "extendsParameters",
                 "extensionsJson");
 
-        SimpleBeanPropertyFilter.SerializeExceptFilter filter
-                = new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
+        return new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
             @Override
             public void serializeAsField(Object pojo, JsonGenerator jgen, SerializerProvider provider,
                                          PropertyWriter writer) throws Exception {
                 if ("text".equals(writer.getName()) && Objects.nonNull(pojo)) {
                     String body = ((Message)pojo).getText();
-                    if (body.length() > SERIALIZATION_FIELD_MAX_SIZE) {
-                        String newBody = String.format("Skip reporting message body because big object, size - %s. " +
-                                        "Please contact administrator for details.",
-                                body.length());
-                        jgen.writeStringField("text", newBody);
+                    if (writeOriginalOrTruncatedField(body, body.length(),
+                            SERIALIZATION_MESSAGE_TEXT_MAX_SIZE,
+                            MESSAGE_SKIPPED_TEMPLATE,
+                            "message body", "text", jgen, false)) {
                         return;
                     }
-
                 }
                 super.serializeAsField(pojo, jgen, provider, writer);
             }
         };
-        return filter;
     }
 
     private static SimpleBeanPropertyFilter reportWorkerFilterTcContext() {
         Set<String> properties = Sets.asSet("version", "history", "collectHistory", "prefix", "description",
                 "empty", "lastAccess", "needToReportToAtp", "validationFailed", "extendsParameters",
                 "natural_id", "runStepByStep", "running", "finished", "runnable", "parent", "partNum");
-        SimpleBeanPropertyFilter.SerializeExceptFilter filter
-                = new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
+
+        return new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
             @Override
             public void serializeAsField(Object pojo, JsonGenerator jgen, SerializerProvider provider,
                                          PropertyWriter writer) throws Exception {
                 if ("jsonString".equals(writer.getName()) && Objects.nonNull(pojo)) {
                     String jsonString = ((TcContext)pojo).getJsonString();
-                    if (jsonString.length() > SERIALIZATION_FIELD_MAX_SIZE) {
-                        String newJsonString = String.format("{\"big_object\"" +
-                                        ":\"Skip reporting test case context because big object, size - %s. " +
-                                        "Please contact administrator for details.\"}",
-                                jsonString.length());
-                        jgen.writeStringField("jsonString", newJsonString);
+                    if (writeOriginalOrTruncatedField(jsonString, jsonString.length(),
+                            SERIALIZATION_CONTEXT_JSONSTRING_MAX_SIZE,
+                            "{\"big_object\":\"" + MESSAGE_SKIPPED_TEMPLATE + "\"}",
+                            "test case context", "jsonString", jgen, true)) {
                         return;
                     }
                 }
                 super.serializeAsField(pojo, jgen, provider, writer);
             }
         };
-        return filter;
     }
 
     private static SimpleBeanPropertyFilter reportWorkerFilterSpContext() {
         Set<String> properties = Sets.asSet("version", "history", "collectHistory", "prefix", "description",
                 "empty", "extendsParameters");
-        SimpleBeanPropertyFilter.SerializeExceptFilter filter
-                = new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
+
+        return new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
             @Override
             public void serializeAsField(Object pojo, JsonGenerator jgen, SerializerProvider provider,
                                          PropertyWriter writer) throws Exception {
                 if ("jsonString".equals(writer.getName()) && Objects.nonNull(pojo)) {
                     String jsonString = ((SpContext)pojo).getJsonString();
-                    if (jsonString.length() > SERIALIZATION_FIELD_MAX_SIZE) {
-                        String newJsonString = String.format("{\"big_object\"" +
-                                        ":\"Skip reporting step context because big object, size - %s. " +
-                                        "Please contact administrator for details.\"}",
-                                jsonString.length());
-                        jgen.writeStringField("jsonString", newJsonString);
+                    if (writeOriginalOrTruncatedField(jsonString, jsonString.length(),
+                            SERIALIZATION_CONTEXT_JSONSTRING_MAX_SIZE,
+                            "{\"big_object\":\"" + MESSAGE_SKIPPED_TEMPLATE + "\"}",
+                            "step context", "jsonString", jgen, true)) {
                         return;
                     }
                 }
                 super.serializeAsField(pojo, jgen, provider, writer);
             }
         };
-        return filter;
+    }
+
+    /**
+     * Service method to write serialized field. String length is checked against limit.
+     * Method returns true if truncated or original field value is written, otherwise returns false.
+     *
+     * @param originalString String value of a field
+     * @param originalStringLength Length of originalString
+     * @param maxSize Size limit in bytes
+     * @param messageTemplate Message template to format and write instead of original value, if its length > maxSize
+     * @param objectTypeName user-friendly name of object type, to use inside the message template
+     * @param fieldName Name of the field to write
+     * @param jgen JsonGenerator object
+     * @param writeOriginal Flag if originalString should be written (in case length <= maxSize) or not
+     * @return true if truncated or original field value is written, otherwise returns false.
+     */
+    private static boolean writeOriginalOrTruncatedField(String originalString,
+                                               int originalStringLength,
+                                               int maxSize,
+                                               String messageTemplate,
+                                               String objectTypeName,
+                                               String fieldName,
+                                               JsonGenerator jgen,
+                                               boolean writeOriginal) throws IOException {
+        if (originalStringLength > maxSize) {
+            String newString = String.format(messageTemplate, objectTypeName, originalStringLength);
+            jgen.writeStringField(fieldName, newString);
+            return true;
+        } else if (writeOriginal) {
+            jgen.writeStringField(fieldName, originalString);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void send(Storable object,
