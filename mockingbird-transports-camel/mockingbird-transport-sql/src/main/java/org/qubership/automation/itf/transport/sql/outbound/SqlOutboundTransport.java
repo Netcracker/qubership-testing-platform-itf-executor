@@ -130,6 +130,27 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private static final boolean dataSourcesCacheEnable;
     private static final int dataSourcesCacheExpireMinutes;
     private static final boolean dataSourcesCacheRecordStats;
+    private static final boolean dataSourcesCacheLogDetailedConnectionsInfo;
+
+    /**
+     * If getting from cache is longer than getFromCacheTooSlowThreshold (millis), log warn message.
+     */
+    private static final long getFromCacheTooSlowThreshold = 30000;
+
+    /**
+     * Log this message in case getting from cache was more durable than getFromCacheTooSlowThreshold.
+     */
+    private static final String getFromCacheTooSlowMessage = "Getting config from cache was too slow";
+
+    /**
+     * If query execution is longer than executeQueryTooSlowThreshold (millis), log warn message.
+     */
+    private static final long executeQueryTooSlowThreshold = 120000;
+
+    /**
+     * Log this message in case query execution was more durable than executeQueryTooSlowThreshold.
+     */
+    private static final String executeQueryTooSlowMessage = "Query execution was too slow";
 
     private static final LoadingCache<ConnectionProperties, SqlConfig> configCache;
     private static final ScheduledExecutorService configCacheMaintenanceService =
@@ -183,6 +204,8 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 .getIntOrDefault("sql.transport.dataSourcesCache.expireMinutes", 1380);
         dataSourcesCacheRecordStats = Boolean.parseBoolean(Config.getConfig()
                 .getStringOrDefault("sql.transport.dataSourcesCache.recordStats", "false"));
+        dataSourcesCacheLogDetailedConnectionsInfo = Boolean.parseBoolean(Config.getConfig()
+                .getStringOrDefault("sql.transport.dataSourcesCache.logDetailedConnectionsInfo", "false"));
 
         if (dataSourcesCacheEnable) {
             CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
@@ -350,8 +373,11 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         // ~ Camel-less implementation for SVT
         connectionProperties.remove("ContextId");
         connectionProperties.remove("transportId");
+        long startTime = System.currentTimeMillis();
         SqlConfig sqlConfig = configCache.get(connectionProperties);
+        warnIfTooSlow(startTime, getFromCacheTooSlowThreshold, getFromCacheTooSlowMessage);
         Message response;
+        startTime = System.currentTimeMillis();
         JdbcTemplate jdbcTemplate = sqlConfig.getJdbcTemplate();
         switch (sqlCommandType) {
             case 1:
@@ -370,6 +396,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
             default:
                 response = new Message("[{\"result\":\"Unknown sql command; rejected\"}]");
         }
+        warnIfTooSlow(startTime, executeQueryTooSlowThreshold, executeQueryTooSlowMessage);
         scheduleCacheCleanupIfNeeded();
         return response;
     }
@@ -386,6 +413,9 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                             CacheStats cacheStats = configCache.stats();
                             LOGGER.info("DataSources Cache Statistics: {}", cacheStats);
                         }
+                        if (dataSourcesCacheLogDetailedConnectionsInfo) {
+                            logDetailedConnectionsInfo();
+                        }
                         configCache.cleanUp();
                     } catch (Throwable t) {
                         LOGGER.error("Error while SqlOutboundTransport cache cleanUp: {}", t.toString());
@@ -394,6 +424,28 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 isCacheCleanupScheduled = true;
             }
         }
+    }
+
+    private static void warnIfTooSlow(long startTime, long threshold, String message) {
+        long duration = System.currentTimeMillis() - startTime;
+        if (duration > threshold) {
+            LOGGER.warn("{}: {} ms", message, duration);
+        }
+    }
+
+    private static void logDetailedConnectionsInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SqlOutboundTransport ConfigCache size: ").append(configCache.size()).append("\n");
+        configCache.asMap().forEach((key, value) -> {
+            if (key.containsKey(JDBC_URL)) {
+                sb.append(key.get(JDBC_URL)).append(" - ");
+            }
+            BasicDataSource ds = value.getDataSource();
+            sb.append("DataSource connections: Currently borrowed: ").append(ds.getNumActive())
+                    .append(", idle: ").append(ds.getNumIdle())
+                    .append("\n");
+        });
+        LOGGER.info(sb.toString());
     }
 
     private static int determineType(String sqlCommand) {
@@ -426,7 +478,9 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         Exchange out;
         context.start();
         try {
+            long startTime = System.currentTimeMillis();
             out = template.send(endpoint, exchange);
+            warnIfTooSlow(startTime, executeQueryTooSlowThreshold, executeQueryTooSlowMessage);
             if (out.isFailed()) {
                 throw out.getException();
             }
@@ -444,15 +498,13 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private Message sendReceiveSyncCassandra(Message message, ConnectionProperties connectionProperties) throws Exception {
         String username = getAndCheckRequiredProperty(connectionProperties, USER, USER_DESCRIPTION);
         String password = getAndCheckRequiredProperty(connectionProperties, PASSWORD, PASSWORD_DESCRIPTION);
-
         Session session = CassandraSessionsHolder.getInstance().getSession(
                 getAndCheckRequiredProperty(connectionProperties, JDBC_URL, JDBC_URL_STRING), username, password);
         CassandraComponent component = new CassandraComponent();
-        CassandraEndpoint endpoint = new CassandraEndpoint("",
-                component,
-                null, // Please be aware: if cluster parameter != null - a new session is created while endpoint
-                // .start()!!!
-                session, session.getLoggedKeyspace());
+        /*
+            Please be aware: if cluster parameter != null - a new session is created while endpoint.start()!!!
+         */
+        CassandraEndpoint endpoint = new CassandraEndpoint("", component, null, session, session.getLoggedKeyspace());
         endpoint.setUsername(username);
         endpoint.setPassword(password);
         endpoint.setCql(message.getText()); // SQL Query text is here
@@ -465,7 +517,9 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         Exchange out;
         context.start();
         try {
+            long startTime = System.currentTimeMillis();
             out = template.send(endpoint, exchange);
+            warnIfTooSlow(startTime, executeQueryTooSlowThreshold, executeQueryTooSlowMessage);
             if (out.isFailed()) {
                 throw out.getException();
             }
@@ -532,7 +586,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
 
     /**
      * Iterates through all columns in the {@code row}. For each column, returns its value as Java type
-     * that matches the CQL type in switch part. Otherwise returns the value as bytes composing the value.
+     * that matches the CQL type in switch part. Otherwise, returns the value as bytes composing the value.
      *
      * @param row the row returned by the ResultSet
      * @return list of values in {@code row}
