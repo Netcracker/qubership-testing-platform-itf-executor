@@ -17,11 +17,13 @@
 
 package org.qubership.automation.itf.core.report.producer;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
@@ -30,6 +32,7 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.commons.lang3.BooleanUtils;
+import org.javers.common.collections.Sets;
 import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
 import org.qubership.atp.integration.configuration.annotation.AtpSpanTag;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
@@ -46,6 +49,7 @@ import org.qubership.automation.itf.core.model.jpa.instance.AbstractInstance;
 import org.qubership.automation.itf.core.model.jpa.instance.SituationInstance;
 import org.qubership.automation.itf.core.model.jpa.instance.chain.CallChainInstance;
 import org.qubership.automation.itf.core.model.jpa.instance.step.StepInstance;
+import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.jpa.message.parser.MessageParameter;
 import org.qubership.automation.itf.core.util.config.Config;
 import org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants;
@@ -59,10 +63,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.PropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
@@ -75,6 +82,12 @@ public class ReportWorker {
             .getIntOrDefault("report.producer.warnAboutSize", 5000000);
     private static final int MAX_SIZE = Config.getConfig()
             .getIntOrDefault("report.producer.maxSize", 6000000);
+    private static final int SERIALIZATION_MESSAGE_TEXT_MAX_SIZE = Config.getConfig()
+            .getIntOrDefault("report.producer.serialization.field.message.text.maxSize", 1000000);
+    private static final int SERIALIZATION_CONTEXT_JSONSTRING_MAX_SIZE = Config.getConfig()
+            .getIntOrDefault("report.producer.serialization.field.context.jsonString.maxSize", 3000000);
+    private static final String MESSAGE_SKIPPED_TEMPLATE = "Skip reporting of %s due to big object size - %s. "
+            + "Please contact administrator for details.";
 
     @Value("${report.producer.useGroupingMessages}")
     private boolean useGroupingMessages;
@@ -147,14 +160,8 @@ public class ReportWorker {
                 SimpleBeanPropertyFilter.serializeAllExcept(
                         "transport", "version", "history", "collectHistory", "prefix", "description", "empty",
                         "messageBrokerSelectorValue", "extendsParameters", "extensionsJson"));
-        filterProvider.addFilter("reportWorkerFilter_TCContext",
-                SimpleBeanPropertyFilter.serializeAllExcept(
-                        "version", "history", "collectHistory", "prefix", "description", "empty",
-                        "lastAccess", "needToReportToAtp", "validationFailed", "extendsParameters",
-                        "natural_id", "runStepByStep", "running", "finished", "runnable", "parent", "partNum"));
-        filterProvider.addFilter("reportWorkerFilter_SPContext",
-                SimpleBeanPropertyFilter.serializeAllExcept(
-                        "version", "history", "collectHistory", "prefix", "description", "empty", "extendsParameters"));
+        filterProvider.addFilter("reportWorkerFilter_TCContext", reportWorkerFilterTcContext());
+        filterProvider.addFilter("reportWorkerFilter_SPContext", reportWorkerFilterSpContext());
         filterProvider.addFilter("reportWorkerFilter_MessageParameter",
                 SimpleBeanPropertyFilter.serializeAllExcept(
                         "prefix", "description", "name", "autosave", "version", "storableProp", "extendsParameters"));
@@ -171,12 +178,110 @@ public class ReportWorker {
                         "prefix", "description", "running", "finished", "version", "step", "storableProp",
                         "extendsParameters",
                         "extensionsJson"));
-        filterProvider.addFilter("reportWorkerFilter_Message",
-                SimpleBeanPropertyFilter.serializeAllExcept(
-                        "name", "parent", "prefix", "description", "file", "transportProperties", "failedMessage",
-                        "version",
-                        "storableProp", "extendsParameters", "extensionsJson"));
+        filterProvider.addFilter("reportWorkerFilter_Message", reportWorkerFilterMessage());
         return filterProvider;
+    }
+
+    private static SimpleBeanPropertyFilter reportWorkerFilterMessage() {
+        Set<String> properties = Sets.asSet("name", "parent", "prefix", "description", "file",
+                "transportProperties", "failedMessage", "version", "storableProp", "extendsParameters",
+                "extensionsJson");
+
+        return new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
+            @Override
+            public void serializeAsField(Object pojo, JsonGenerator jgen, SerializerProvider provider,
+                                         PropertyWriter writer) throws Exception {
+                if ("text".equals(writer.getName()) && Objects.nonNull(pojo)) {
+                    String body = ((Message)pojo).getText();
+                    if (writeOriginalOrTruncatedField(body, body.length(),
+                            SERIALIZATION_MESSAGE_TEXT_MAX_SIZE,
+                            MESSAGE_SKIPPED_TEMPLATE,
+                            "message body", "text", jgen, false)) {
+                        return;
+                    }
+                }
+                super.serializeAsField(pojo, jgen, provider, writer);
+            }
+        };
+    }
+
+    private static SimpleBeanPropertyFilter reportWorkerFilterTcContext() {
+        Set<String> properties = Sets.asSet("version", "history", "collectHistory", "prefix", "description",
+                "empty", "lastAccess", "needToReportToAtp", "validationFailed", "extendsParameters",
+                "natural_id", "runStepByStep", "running", "finished", "runnable", "parent", "partNum");
+
+        return new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
+            @Override
+            public void serializeAsField(Object pojo, JsonGenerator jgen, SerializerProvider provider,
+                                         PropertyWriter writer) throws Exception {
+                if ("jsonString".equals(writer.getName()) && Objects.nonNull(pojo)) {
+                    String jsonString = ((TcContext)pojo).getJsonString();
+                    if (writeOriginalOrTruncatedField(jsonString, jsonString.length(),
+                            SERIALIZATION_CONTEXT_JSONSTRING_MAX_SIZE,
+                            "{\"big_object\":\"" + MESSAGE_SKIPPED_TEMPLATE + "\"}",
+                            "test case context", "jsonString", jgen, true)) {
+                        return;
+                    }
+                }
+                super.serializeAsField(pojo, jgen, provider, writer);
+            }
+        };
+    }
+
+    private static SimpleBeanPropertyFilter reportWorkerFilterSpContext() {
+        Set<String> properties = Sets.asSet("version", "history", "collectHistory", "prefix", "description",
+                "empty", "extendsParameters");
+
+        return new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
+            @Override
+            public void serializeAsField(Object pojo, JsonGenerator jgen, SerializerProvider provider,
+                                         PropertyWriter writer) throws Exception {
+                if ("jsonString".equals(writer.getName()) && Objects.nonNull(pojo)) {
+                    String jsonString = ((SpContext)pojo).getJsonString();
+                    if (writeOriginalOrTruncatedField(jsonString, jsonString.length(),
+                            SERIALIZATION_CONTEXT_JSONSTRING_MAX_SIZE,
+                            "{\"big_object\":\"" + MESSAGE_SKIPPED_TEMPLATE + "\"}",
+                            "step context", "jsonString", jgen, true)) {
+                        return;
+                    }
+                }
+                super.serializeAsField(pojo, jgen, provider, writer);
+            }
+        };
+    }
+
+    /**
+     * Service method to write serialized field. String length is checked against limit.
+     * Method returns true if truncated or original field value is written, otherwise returns false.
+     *
+     * @param originalString String value of a field
+     * @param originalStringLength Length of originalString
+     * @param maxSize Size limit in bytes
+     * @param messageTemplate Message template to format and write instead of original value, if its length > maxSize
+     * @param objectTypeName user-friendly name of object type, to use inside the message template
+     * @param fieldName Name of the field to write
+     * @param jgen JsonGenerator object
+     * @param writeOriginal Flag if originalString should be written (in case length <= maxSize) or not
+     * @return true if truncated or original field value is written, otherwise returns false.
+     */
+    private static boolean writeOriginalOrTruncatedField(String originalString,
+                                               int originalStringLength,
+                                               int maxSize,
+                                               String messageTemplate,
+                                               String objectTypeName,
+                                               String fieldName,
+                                               JsonGenerator jgen,
+                                               boolean writeOriginal) throws IOException {
+        if (originalStringLength > maxSize) {
+            String newString = String.format(messageTemplate, objectTypeName, originalStringLength);
+            jgen.writeStringField(fieldName, newString);
+            return true;
+        } else if (writeOriginal) {
+            jgen.writeStringField(fieldName, originalString);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void send(Storable object,
