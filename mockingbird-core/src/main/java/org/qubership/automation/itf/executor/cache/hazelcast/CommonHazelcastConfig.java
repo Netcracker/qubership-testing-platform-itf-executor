@@ -25,7 +25,7 @@ import java.util.List;
 import org.qubership.automation.itf.core.util.constants.CacheNames;
 import org.qubership.automation.itf.executor.cache.hazelcast.listener.DiameterConnectionInfoEvictedListener;
 import org.qubership.automation.itf.executor.cache.hazelcast.listener.ResponseEntryExpiredListener;
-import org.qubership.automation.itf.executor.cache.hazelcast.listener.TCContextEntryExpiredListener;
+import org.qubership.automation.itf.executor.cache.hazelcast.listener.TCContextEntryListener;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -108,7 +108,7 @@ public class CommonHazelcastConfig {
     public CacheManager hazelcastCacheManager(@Qualifier("hazelcastClient") HazelcastInstance hazelcastClient) {
         List<Cache> caches = new ArrayList<>();
         IMap<Object, Object> tcContexts = hazelcastClient.getMap(CacheNames.ATP_ITF_TC_CONTEXTS);
-        tcContexts.addEntryListener(new TCContextEntryExpiredListener(), true);
+        tcContexts.addEntryListener(new TCContextEntryListener(), true);
         IMap<Object, Object> boundContexts = hazelcastClient.getMap(CacheNames.ATP_ITF_TC_CONTEXTS_IDS_BOUND_BY_KEY);
         IMap<Object, Object> pendingContextData = hazelcastClient.getMap(CacheNames.ATP_ITF_PENDING_DATA_CONTEXTS);
         IMap<Object, Object> runningScheduledTasksCacheMap = hazelcastClient.getMap(

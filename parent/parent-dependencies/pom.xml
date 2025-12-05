@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird</artifactId>
-        <version>4.4.360-SNAPSHOT</version>
+        <version>4.4.361-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>parent-dependencies</artifactId>
@@ -18,7 +18,7 @@
         <activemq.version>5.12.2</activemq.version>
         <aspectj.version>1.8.10</aspectj.version>
 
-        <atp.itf.core.version>4.4.113</atp.itf.core.version>
+        <atp.itf.core.version>4.4.114</atp.itf.core.version>
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <atp.auth.version>1.2.75</atp.auth.version>
         <atp.multitenancy.version>0.0.13</atp.multitenancy.version>
