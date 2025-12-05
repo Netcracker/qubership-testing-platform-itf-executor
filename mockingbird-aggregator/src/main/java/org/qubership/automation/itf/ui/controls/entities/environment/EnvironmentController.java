@@ -27,9 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
+import org.qubership.automation.itf.core.hibernate.spring.managers.base.ObjectManager;
+import org.qubership.automation.itf.core.hibernate.spring.managers.custom.EnvironmentManager;
 import org.qubership.automation.itf.core.hibernate.spring.managers.executor.EnvironmentObjectManager;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.communication.message.delete.DeleteEntityResultMessage;
@@ -59,6 +62,7 @@ import org.qubership.automation.itf.ui.messages.objects.transport.UITriggerConfi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -215,6 +219,33 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
         return new UIResult(true, "success");
     }
 
+    /**
+     * Find dublicate inbound configuration on environment.
+     *
+     * @param projectId ITF project id
+     * @param projectUuid ATP project UUID
+     * @return a list of objects.
+     */
+    @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
+    @GetMapping(value = "/environment/inbound/findDuplicate")
+    public List<Map<String, Object>> findDuplicateConfigurationBySystemServer(
+            @RequestParam(value = "projectId") BigInteger projectId,
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
+        List<Object[]> list = CoreObjectManager.getInstance()
+                .getSpecialManager(Environment.class, EnvironmentManager.class)
+                .findDuplicateConfigurationBySystemServer(projectId);
+        return list.stream().map(obj -> {
+            Map<String, Object> configuration = new HashMap<>();
+            configuration.put("environmentId", obj[0].toString());
+            configuration.put("environmentName", obj[1]);
+            configuration.put("systemId", obj[2].toString());
+            configuration.put("systemName", obj[3]);
+            configuration.put("serverId", obj[4].toString());
+            configuration.put("serverName", obj[5]);
+            return configuration;
+        }).collect(Collectors.toList());
+    }
+
     private void updateServerConfigurations(String oldServerIp,
                                             String newServerIp,
                                             Map<System, Server> configurations,
@@ -249,20 +280,19 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
 
     private String performReplace(String oldValue, String oldServerIp, String newServerIp) {
         int indexPosition = oldValue.indexOf(oldServerIp);
-        String firstPartSubString = oldValue.substring(0, indexPosition);
         String secondPartSubString = oldValue.substring(indexPosition + oldServerIp.length());
-        return firstPartSubString + newServerIp + secondPartSubString;
+        return oldValue.substring(0, indexPosition) + newServerIp + secondPartSubString;
     }
 
-    /*TODO refactoring the ...*/
     @Override
     protected Environment _beforeUpdate(UIEnvironment uiEnvironment, Environment environment) {
         updateEnvironment(uiEnvironment.getInbound(), environment.getInbound());
         updateEnvironment(uiEnvironment.getOutbound(), environment.getOutbound());
         if (uiEnvironment.getReportLinkCollectors() != null) {
+            ObjectManager<TransportConfiguration> transportConfigurationObjectManager = CoreObjectManager.getInstance()
+                    .getManager(TransportConfiguration.class);
             for (LinkCollectorConfiguration configuration : environment.getReportCollectors()) {
-                //TODO remove it in the future
-                CoreObjectManager.getInstance().getManager(TransportConfiguration.class).remove(configuration, true);
+                transportConfigurationObjectManager.remove(configuration, true);
             }
             environment.getReportCollectors().clear();
             for (UIConfiguration uiConfiguration : uiEnvironment.getReportLinkCollectors()) {
@@ -307,14 +337,11 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
         if (object.getEnvironmentState() == null) {
             object.setEnvironmentState(TriggerState.EMPTY);
         }
-
         UIEnvironment uiEnvironment = new UIEnvironment(object);
         List<UIConfiguration> configurations = Lists.newArrayList();
         for (LinkCollectorConfiguration configuration : object.getReportCollectors()) {
-            UIConfiguration uiConfiguration;
             try {
-                uiConfiguration = createLinkCollectorConfiguration(configuration);
-                configurations.add(uiConfiguration);
+                configurations.add(createLinkCollectorConfiguration(configuration));
             } catch (ClassNotFoundException e) {
                 LOGGER.error("Error creating collector view", e);
             }
