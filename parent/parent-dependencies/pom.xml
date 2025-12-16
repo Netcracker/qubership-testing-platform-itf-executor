@@ -20,7 +20,7 @@
 
         <atp.itf.core.version>4.4.114</atp.itf.core.version>
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
-        <atp.auth.version>1.2.75</atp.auth.version>
+        <atp.auth.version>1.2.68</atp.auth.version>
         <atp.multitenancy.version>0.0.13</atp.multitenancy.version>
         <atp.ei.lib.version>0.2.45</atp.ei.lib.version>
         <atp.crypt.version>0.0.21</atp.crypt.version>
@@ -57,7 +57,7 @@
 
             <dependency>
                 <groupId>org.qubership.atp.auth</groupId>
-                <artifactId>atp-auth-impl</artifactId>
+                <artifactId>atp-auth-spring-boot-starter</artifactId>
                 <version>${atp.auth.version}</version>
             </dependency>
             <dependency>
@@ -65,6 +65,10 @@
                 <artifactId>atp-itf-core</artifactId>
                 <version>${atp.itf.core.version}</version>
                 <exclusions>
+                    <exclusion>
+                        <groupId>org.qubership.atp.auth</groupId>
+                        <artifactId>atp-auth-models</artifactId>
+                    </exclusion>
                     <exclusion>
                         <artifactId>slf4j-api</artifactId>
                         <groupId>org.slf4j</groupId>
@@ -793,10 +797,6 @@
                         <groupId>org.javers</groupId>
                         <artifactId>javers-spring-boot-starter-mongo</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>org.qubership.atp.auth</groupId>
-                        <artifactId>atp-auth-spring-boot-starter</artifactId>
-                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -919,6 +919,12 @@
                 <groupId>org.qubership.atp.ei</groupId>
                 <artifactId>qubership-atp-export-import-lib-node</artifactId>
                 <version>${atp.ei.lib.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.qubership.atp.auth</groupId>
+                        <artifactId>atp-auth-models</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.vavr</groupId>
