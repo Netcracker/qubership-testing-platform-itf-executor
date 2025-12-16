@@ -111,9 +111,9 @@ public class CommonHazelcastConfig {
 
         IMap<Object, Object> tcContexts = hazelcastClient.getMap(CacheNames.ATP_ITF_TC_CONTEXTS);
         if (Boolean.parseBoolean(getConfig().getStringOrDefault("hazelcast.context.maxSize.metrics.enable", "false"))) {
-            tcContexts.addLocalEntryListener(new TCContextEntryListener(), (mapEntry -> true), true);
+            tcContexts.addEntryListener(new TCContextEntryListener(), true);
         }
-        tcContexts.addLocalEntryListener(new TCContextEntryExpiredListener(), (mapEntry -> true), true);
+        tcContexts.addEntryListener(new TCContextEntryExpiredListener(), true);
 
         IMap<Object, Object> boundContexts = hazelcastClient.getMap(CacheNames.ATP_ITF_TC_CONTEXTS_IDS_BOUND_BY_KEY);
         IMap<Object, Object> pendingContextData = hazelcastClient.getMap(CacheNames.ATP_ITF_PENDING_DATA_CONTEXTS);
