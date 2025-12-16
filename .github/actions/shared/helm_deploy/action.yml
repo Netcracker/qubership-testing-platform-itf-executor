@@ -130,7 +130,6 @@ runs:
       run: echo "ERROR_FLAG=false" >> $GITHUB_ENV
 
     - name: Install Postgres
-      if: ${{ inputs.postgres == 'enable' }}
       shell: bash
       run: |
         helm repo add bitnami https://charts.bitnami.com/bitnami
