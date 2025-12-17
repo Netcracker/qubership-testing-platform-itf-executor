@@ -166,6 +166,16 @@ runs:
          echo "No docker_tag provided. Using value from values-dev.yaml"
          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --timeout 10m
         fi
+        
+        pod=$(kubectl get pods -o name | grep -E 'predeploy' | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" \
+           --for=condition=Ready \
+           --timeout=120s || {
+           echo "❌ Pod $pod did not become ready in time"
+           kubectl describe pod "$pod"
+           kubectl logs "$pod" -c predeploy --previous || kubectl logs "$pod" -c predeploy
+           exit 1
+        }
 
     - name: Get docker images
       shell: bash
