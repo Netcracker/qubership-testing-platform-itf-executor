@@ -167,13 +167,9 @@ runs:
          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name
         fi
         
-        pod=$(kubectl get pods --selector=job-name=predeploy -o jsonpath='{.items[0].metadata.name}')
-        kubectl get jobs
-        echo "Pod name: $pod"
-        kubectl wait pod "$pod" \
-           --for=condition=Ready \
-           --timeout=120s || {
+        kubectl wait --for=condition=complete --timeout=120s || {
            echo "❌ Pod $pod did not become ready in time"
+           pod=$(kubectl get pods --selector=job-name=predeploy -o jsonpath='{.items[0].metadata.name}')
            kubectl describe pod "$pod"
            kubectl logs "$pod" -c predeploy --previous || kubectl logs "$pod" -c predeploy
            exit 1
