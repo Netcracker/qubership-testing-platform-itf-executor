@@ -168,6 +168,8 @@ runs:
         fi
         
         pod=$(kubectl get pods -o name | grep -E 'predeploy' | head -n 1 | cut -d/ -f2)
+        kubectl get pods
+        echo "Pod name: $pod"
         kubectl wait pod "$pod" \
            --for=condition=Ready \
            --timeout=120s || {
