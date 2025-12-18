@@ -26,6 +26,7 @@ import org.qubership.automation.itf.core.util.report.ReportLinkCollector;
 import org.qubership.automation.itf.core.util.transport.service.LockProvider;
 import org.qubership.automation.itf.core.util.transport.service.SessionHandler;
 import org.qubership.automation.itf.executor.cache.service.CacheServices;
+import org.qubership.automation.itf.executor.service.TCContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,10 @@ import org.springframework.stereotype.Service;
 public class CacheCleanerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheCleanerService.class);
     private final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-    private final long initialDelay = 120L;
-    private final long delay = 120L;
+    private final long initialDelay = 150L;
+    private final long delay = 150L;
     private boolean stopped = false;
-    private ReportLinkCollector reportLinkCollector;
+    private final ReportLinkCollector reportLinkCollector;
 
     @Autowired
     public CacheCleanerService(ReportLinkCollector reportLinkCollector) {
@@ -51,11 +52,12 @@ public class CacheCleanerService {
             try {
                 TCContextDiffCache.TC_CONTEXT_DIFF_CACHE.cleanUp();
                 CacheServices.getCallchainSubscriberCacheService().cleanUp();
+                TCContextService.localRunningContextsCacheCleanUp();
                 SessionHandler.INSTANCE.cleanupCache();
                 LockProvider.INSTANCE.cleanupCache();
                 reportLinkCollector.cacheCleanup();
             } catch (Throwable t) {
-                LOGGER.error("Error while TC Cache cleaning up", t);
+                LOGGER.error("Error while caches' cleaning up", t);
             }
         }, initialDelay, delay, TimeUnit.SECONDS);
     }
