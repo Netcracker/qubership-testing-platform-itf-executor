@@ -169,9 +169,11 @@ runs:
         
         kubectl wait --for=condition=complete --timeout=120s || {
            echo "❌ Pod $pod did not become ready in time"
-           pod=$(kubectl get pods --selector=job-name=predeploy -o jsonpath='{.items[0].metadata.name}')
-           kubectl describe pod "$pod"
-           kubectl logs "$pod" -c predeploy --previous || kubectl logs "$pod" -c predeploy
+           echo "Get logs for predeploy-install"
+           kubectl logs $(kubectl get pods -n ${{inputs.namespace}} \
+             --selector=job-name=${{inputs.service_name}}-predeploy-install \
+             -o jsonpath='{.items[0].metadata.name}') -n ${{inputs.namespace}}
+           echo "End logs"
            exit 1
         }
         
@@ -182,6 +184,19 @@ runs:
            echo "❌ Pod $pod did not become ready in time"
            exit 1
         }
+
+    - name: Debug
+      shell: bash
+      if: always()
+      run: |
+        echo "Get pods $pod"
+        kubectl get pods -n ${{inputs.namespace}}
+        
+        echo "Get logs for predeploy-install"
+        kubectl logs $(kubectl get pods -n ${{inputs.namespace}} \
+          --selector=job-name=${{inputs.service_name}}-predeploy-install \
+          -o jsonpath='{.items[0].metadata.name}') -n ${{inputs.namespace}}
+        echo "End logs"
 
     - name: Get docker images
       shell: bash
