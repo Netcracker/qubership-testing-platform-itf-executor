@@ -133,8 +133,8 @@ runs:
       shell: bash
       run: |
         helm repo add bitnami https://charts.bitnami.com/bitnami
-
-        helm install my-postgres bitnami/postgresql \
+        
+        helm install my-postgres bitnami/postgresql -n ${{inputs.namespace}} \
           --set image.registry=docker.io \
           --set image.repository=bitnamilegacy/postgresql \
           --set image.tag=14.2.0 \
@@ -142,8 +142,8 @@ runs:
           --set auth.password=postgrestest \
           --set auth.database=postgres
 
-        pod=$(kubectl get pods -o name | head -n 1 | cut -d/ -f2)
-        kubectl wait pod "$pod" \
+        pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
           --for=condition=Ready \
           --timeout=120s || {
           echo "❌ Pod $pod did not become ready in time"
@@ -151,20 +151,42 @@ runs:
           exit 1
         }
 
+    - name: Install ActiveMQ
+      shell: bash
+      run: |
+        helm repo add alfresco https://alfresco.github.io/alfresco-helm-charts/
+        helm repo update
+        
+        helm install activemq alfresco/activemq \
+          --namespace executor \
+          --create-namespace
+        
+        pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | grep -vE 'postgres' | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
+          --for=condition=Ready \
+          --timeout=120s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
+        }
+        
+        echo "Get pods"
+        kubectl get pods -n ${{ inputs.namespace }}
+
     - name: Install/update service with helm
       shell: bash
       run: |
-        # ▶️ ${{inputs.deploy_mode}} with Helm
+        # ▶️ ${{inputs.deploy_mode}} ${{inputs.service_name}} with Helm
         template_name=$(basename "${{inputs.path_to_template}}")
         echo $template_name
         cd ${{inputs.repository_name}}/${{inputs.path_to_chart}}
-
+        
         if [ -n "${{ inputs.docker_tag }}" ]; then
           echo "Using docker_tag: ${{ inputs.docker_tag }}"
-          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name --set-string DOCKER_TAG=${{ inputs.docker_tag }}
+          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }}
         else
          echo "No docker_tag provided. Using value from values-dev.yaml"
-         helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name
+         helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}}
         fi
         
         kubectl wait --for=condition=complete --timeout=120s || {
@@ -174,15 +196,17 @@ runs:
              --selector=job-name=${{inputs.service_name}}-predeploy-install \
              -o jsonpath='{.items[0].metadata.name}') -n ${{inputs.namespace}}
            echo "End logs"
+        
            exit 1
         }
         
-        pod=$(kubectl get pods -o name | grep -vE 'postgres|mongodb|kafka|predeploy' | head -n 1 | cut -d/ -f2)
-        kubectl wait pod "$pod" \
-           --for=condition=Ready \
-           --timeout=600s || {
-           echo "❌ Pod $pod did not become ready in time"
-           exit 1
+        pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | grep -vE 'postgres|activemq' | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" -n ${{inputs.namespace}} \
+          --for=condition=Ready \
+          --timeout=600s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
         }
 
     - name: Debug
