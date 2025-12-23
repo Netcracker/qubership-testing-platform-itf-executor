@@ -181,6 +181,7 @@ runs:
         echo $template_name
         cd ${{inputs.repository_name}}/${{inputs.path_to_chart}}
         
+        set +e
         if [ -n "${{ inputs.docker_tag }}" ]; then
           echo "Using docker_tag: ${{ inputs.docker_tag }}"
           helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }}
@@ -188,17 +189,21 @@ runs:
          echo "No docker_tag provided. Using value from values-dev.yaml"
          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}}
         fi
+        HELM_EXIT_CODE=$?
+        set -e
         
-        kubectl wait --for=condition=complete --timeout=120s || {
-           echo "❌ Pod $pod did not become ready in time"
-           echo "Get logs for predeploy-install"
-           kubectl logs $(kubectl get pods -n ${{inputs.namespace}} \
-             --selector=job-name=${{inputs.service_name}}-predeploy-install \
-             -o jsonpath='{.items[0].metadata.name}') -n ${{inputs.namespace}}
-           echo "End logs"
+        if [ $HELM_EXIT_CODE -ne 0 ]; then
+          echo "❌ Helm install failed"
+          echo "Waiting for predeploy pod..."
+          kubectl wait --for=condition=ready pod -l job-name=service_name-predeploy-install -n ${{inputs.namespace}} \
+            --timeout=60s || true
         
-           exit 1
-        }
+          echo "Get logs for predeploy-install"
+          kubectl logs -l job-name=service_name-predeploy-install -n ${{inputs.namespace}} --all-containers=true
+          echo "End logs"
+      
+          exit 1
+        fi
         
         pod=$(kubectl get pods -n ${{inputs.namespace}} -o name | grep -vE 'postgres|activemq' | head -n 1 | cut -d/ -f2)
         kubectl wait pod "$pod" -n ${{inputs.namespace}} \
