@@ -129,6 +129,15 @@ runs:
       # language=bash
       run: echo "ERROR_FLAG=false" >> $GITHUB_ENV
 
+    - name: Set DOCKER_TAG
+      shell: bash
+      run: |
+        if [[ "${{ github.ref_name }}" == "main" ]]; then
+          echo "DOCKER_TAG=ghcr.io/netcracker/${{inputs.repository_name}}:main_latest" >> $GITHUB_ENV
+        else
+          echo "DOCKER_TAG=ghcr.io/netcracker/${{inputs.repository_name}}:${{ github.ref_name }}_latest" >> $GITHUB_ENV
+        fi
+
     - name: Install Postgres
       shell: bash
       run: |
@@ -183,8 +192,8 @@ runs:
         
         set +e
         if [ -n "${{ inputs.docker_tag }}" ]; then
-          echo "Using docker_tag: ${{ inputs.docker_tag }}"
-          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }}
+          echo "Using docker_tag: ${{ env.docker_tag }}"
+          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ env.docker_tag }}
         else
          echo "No docker_tag provided. Using value from values-dev.yaml"
          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}}
