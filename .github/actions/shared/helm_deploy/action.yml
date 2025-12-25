@@ -191,11 +191,11 @@ runs:
         cd ${{inputs.repository_name}}/${{inputs.path_to_chart}}
         
         set +e
-        if [ -n "${{ inputs.docker_tag }}" ]; then
-          echo "Using docker_tag: ${{ env.docker_tag }}"
-          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ env.docker_tag }}
+        if [ -n "${{ env.DOCKER_TAG }}" ]; then
+          echo "Using docker_tag: ${{ env.DOCKER_TAG }}"
+          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ env.DOCKER_TAG }}
         else
-         echo "No docker_tag provided. Using value from values-dev.yaml ${{ env.docker_tag }}"
+         echo "No docker_tag provided. Using value from values-dev.yaml ${{ env.DOCKER_TAG }}"
          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}}
         fi
         HELM_EXIT_CODE=$?
