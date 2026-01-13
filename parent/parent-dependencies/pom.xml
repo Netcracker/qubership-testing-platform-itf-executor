@@ -22,8 +22,8 @@
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <atp.auth.version>1.2.75</atp.auth.version>
         <atp.multitenancy.version>0.0.13</atp.multitenancy.version>
-        <atp.ei.lib.version>0.2.45</atp.ei.lib.version>
-        <atp.crypt.version>0.0.21</atp.crypt.version>
+        <atp.ei.lib.version>0.2.46</atp.ei.lib.version>
+        <atp.crypt.version>0.0.24</atp.crypt.version>
         <atp.adapter.common.version>4.5.71</atp.adapter.common.version>
 
         <commons.lang.version>2.6</commons.lang.version>
