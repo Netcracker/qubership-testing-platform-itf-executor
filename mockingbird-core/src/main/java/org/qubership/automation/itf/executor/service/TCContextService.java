@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,7 @@ import org.qubership.automation.itf.core.util.generator.id.UniqueIdGenerator;
 import org.qubership.automation.itf.core.util.manager.ExtensionManager;
 import org.qubership.automation.itf.core.util.manager.MonitorManager;
 import org.qubership.automation.itf.core.util.pcap.PcapHelper;
+import org.qubership.automation.itf.executor.cache.hazelcast.HazelcastAsyncExecutor;
 import org.qubership.automation.itf.executor.cache.service.CacheServices;
 import org.qubership.automation.itf.executor.cache.service.impl.PendingDataContextsCacheService;
 import org.qubership.automation.itf.executor.cache.service.impl.TCContextCacheService;
@@ -57,6 +59,8 @@ import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.qubership.automation.itf.executor.provider.EventBusServiceProvider;
 import org.springframework.stereotype.Service;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,12 +71,24 @@ import lombok.extern.slf4j.Slf4j;
 public class TCContextService {
 
     public static final ConcurrentHashMap<String, Integer> currentPartitionNumbers = initPartitionNumbers();
+    private static final Cache<BigInteger, TcContext> localRunningContexts = CacheBuilder.newBuilder()
+            .expireAfterAccess(25, TimeUnit.MINUTES).build();
     private static final String savedKey = "saved";
     @Getter
     private final TCContextCacheService tcContextCacheService;
     private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
     private final EventBusProvider eventBusProvider;
     private final ProjectSettingsService projectSettingsService;
+    @Getter
+    private final HazelcastAsyncExecutor hazelcastAsyncExecutor;
+
+    public TcContext getLocalRunningContext(BigInteger id) {
+        return localRunningContexts.getIfPresent(id);
+    }
+
+    public static void localRunningContextsCacheCleanUp() {
+        localRunningContexts.cleanUp();
+    }
 
     private static ConcurrentHashMap<String, Integer> initPartitionNumbers() {
         ConcurrentHashMap<String, Integer> currentPartitionNumbers = new ConcurrentHashMap<>();
@@ -99,6 +115,7 @@ public class TCContextService {
         if (StringUtils.isNotEmpty(dumpfilePath)) {
             tcContext.getReportLinks().put("Download TCPDump", dumpfilePath);
         }
+        localRunningContexts.put((BigInteger) tcContext.getID(), tcContext);
         CacheServices.getTcContextCacheService().set(tcContext, true);
         long stTime = System.currentTimeMillis();
         eventBusProvider.post(new TcContextEvent.Start(tcContext));
@@ -130,6 +147,7 @@ public class TCContextService {
             tcContext.setEndTime(new Date());
             tcContext.setStatus(Status.STOPPED);
             performExtraFinishActions(tcContext);
+            localRunningContexts.invalidate((BigInteger) tcContext.getID());
             eventBusProvider.post(new TcContextEvent.Stop(tcContext));
         }
     }
@@ -150,6 +168,7 @@ public class TCContextService {
             log.error("Error occurred while resuming the {} context: ", tcContext.getName(), exception);
             throw exception;
         }
+        localRunningContexts.put((BigInteger) tcContext.getID(), tcContext);
         CacheServices.getTcBindingCacheService().bind(tcContext);
         updateInfo(tcContext);
         ExecutionServices.getExecutionProcessManagerService().resume(tcContext);
@@ -159,6 +178,7 @@ public class TCContextService {
         Status tcContextStatus = tcContext.getStatus();
         if (Status.FAILED.equals(tcContextStatus) || Status.STOPPED.equals(tcContextStatus)) {
             tcContext.setStatus(Status.IN_PROGRESS);
+            localRunningContexts.put((BigInteger) tcContext.getID(), tcContext);
             eventBusProvider.post(new TcContextEvent.Continue(tcContext));
         }
     }
@@ -167,6 +187,7 @@ public class TCContextService {
         if (Status.IN_PROGRESS.equals(tcContext.getStatus()) || Status.PAUSED.equals(tcContext.getStatus())) {
             finalizeContext(tcContext, (tcContext.isValidationFailed()) ? Status.FAILED : Status.PASSED);
             performExtraFinishActions(tcContext);
+            localRunningContexts.invalidate((BigInteger) tcContext.getID());
         }
         if (!tcContext.isFinishEventSent()) {
             synchronized (tcContext) {
@@ -190,6 +211,7 @@ public class TCContextService {
                     ? Status.FAILED_BY_TIMEOUT
                     : Status.FAILED);
             performExtraFinishActions(tcContext);
+            localRunningContexts.invalidate((BigInteger) tcContext.getID());
         }
         if (!tcContext.isFailEventSent()) {
             synchronized (tcContext) {

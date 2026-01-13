@@ -58,7 +58,7 @@ public class TCContextCacheService {
 
     public long getExpirationTime(TcContext tcContext) {
         if (Objects.isNull(tcContext)) {
-            log.error("Can't get valid expiration time for tc context.. Tc Context is null. Returned value is 0");
+            log.error("Can't get valid expiration time for tc context. Tc Context is null. Returned value is 0");
             return 0;
         }
         EntryView<Object, TcContext> entryView = getTCContextCache().getEntryView(tcContext.getID());

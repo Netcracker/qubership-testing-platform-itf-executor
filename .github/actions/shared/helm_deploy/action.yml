@@ -133,44 +133,55 @@ runs:
       shell: bash
       run: |
         helm repo add bitnami https://charts.bitnami.com/bitnami
-        
-        helm install my-postgres bitnami/postgresql -n ${{inputs.namespace}} \
+
+        helm install my-postgres bitnami/postgresql \
+          --set image.registry=docker.io \
+          --set image.repository=bitnamilegacy/postgresql \
           --set image.tag=14.2.0 \
           --set auth.username=postgres \
           --set auth.password=postgrestest \
           --set auth.database=postgres
-        
-        for i in {1..10}; do
-          echo attempt $i
-          status=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.phase}")
-          echo "$status"
-          ready=$(kubectl get pod -n ${{inputs.namespace}} -o jsonpath="{.status.containerStatuses[*].ready}")
-          echo "$ready"
-          if [[ "$status" == "Running" && "$ready" == "true" ]]; then
-            break
-          fi
-          sleep 20
-        done
-        if [[ "$status" == "Running" && "$ready" != "true" ]]; then
-            kubectl get pods -n ${{inputs.namespace}}
-            ERROR_FLAG=true
-          fi
+
+        pod=$(kubectl get pods -o name | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" \
+          --for=condition=Ready \
+          --timeout=120s || {
+          echo "❌ Pod $pod did not become ready in time"
+          ERROR_FLAG=true
+          exit 1
+        }
 
     - name: Install/update service with helm
       shell: bash
       run: |
-        # ▶️ ${{inputs.deploy_mode}} ${{inputs.service_name}} with Helm
+        # ▶️ ${{inputs.deploy_mode}} with Helm
         template_name=$(basename "${{inputs.path_to_template}}")
         echo $template_name
         cd ${{inputs.repository_name}}/${{inputs.path_to_chart}}
-        
+
         if [ -n "${{ inputs.docker_tag }}" ]; then
           echo "Using docker_tag: ${{ inputs.docker_tag }}"
-          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --set-string DOCKER_TAG=${{ inputs.docker_tag }} --timeout 10m
+          helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name --set-string DOCKER_TAG=${{ inputs.docker_tag }}
         else
          echo "No docker_tag provided. Using value from values-dev.yaml"
-         helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name -n ${{inputs.namespace}} --timeout 10m
+         helm ${{inputs.deploy_mode}} ${{inputs.service_name}} . -f $template_name
         fi
+        
+        kubectl wait --for=condition=complete --timeout=120s || {
+           echo "❌ Pod $pod did not become ready in time"
+           pod=$(kubectl get pods --selector=job-name=predeploy -o jsonpath='{.items[0].metadata.name}')
+           kubectl describe pod "$pod"
+           kubectl logs "$pod" -c predeploy --previous || kubectl logs "$pod" -c predeploy
+           exit 1
+        }
+        
+        pod=$(kubectl get pods -o name | grep -vE 'postgres|mongodb|kafka|predeploy' | head -n 1 | cut -d/ -f2)
+        kubectl wait pod "$pod" \
+           --for=condition=Ready \
+           --timeout=600s || {
+           echo "❌ Pod $pod did not become ready in time"
+           exit 1
+        }
 
     - name: Get docker images
       shell: bash
