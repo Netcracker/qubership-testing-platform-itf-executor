@@ -11,7 +11,7 @@
     <title>Mockingbird Revision</title>
 </head>
 <body>
-<span>Mockingbird version is: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}_${scmBranch}_${timestamp}_rev_${buildNumber}</span>
+<span>Mockingbird version is: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}_${timestamp}</span>
 <br/>
 <br/>
 <div style="margin-top:10%;margin-left:50%;left:-70px; position:absolute; display:block; height:30px;width:350px">

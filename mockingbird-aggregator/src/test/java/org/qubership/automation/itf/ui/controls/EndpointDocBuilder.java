@@ -23,23 +23,14 @@ import java.io.PrintStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.qubership.automation.itf.core.util.provider.MeansCommunication;
-import org.qubership.automation.itf.executor.transports.classloader.TransportClassLoader;
 import org.reflections.Reflections;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -103,53 +94,5 @@ public class EndpointDocBuilder {
             }
         }
         return Arrays.toString(set.toArray());
-    }
-
-    @Test
-    public void t() throws IllegalAccessException, InstantiationException {
-        TransportClassLoader.getInstance().load("d:\\mockingbird-app_4.2.20-SNAPSHOT_rev\\transports\\", null);
-        Class<? extends MeansCommunication> aClass;
-        try {
-            aClass = TransportClassLoader.getInstance()
-                    .getClass("org.qubership.automation.itf.transport.rest.http.outbound.RestOverHttpOutbound");
-            MeansCommunication meansCommunication = aClass.newInstance();
-            Assert.notNull(meansCommunication, "Class instance should not be null");
-        } catch (ClassNotFoundException e) {
-            System.out.println(e);
-        }
-    }
-
-    @Test
-    public void t2()
-            throws MalformedURLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        File jarFile = new File("d:\\mockingbird-app_4.2.20-SNAPSHOT_rev\\transports\\mockingbird-transport-rest.jar");
-        String className = "org.qubership.automation.itf.transport.rest.outbound.RESTOutboundTransport";
-        URL fileURL = jarFile.toURI().toURL();
-        String jarURL = "jar:" + fileURL + "!/";
-        URL[] urls = {new URL(jarURL)};
-        URLClassLoader ucl = new URLClassLoader(urls);
-        MeansCommunication m = (MeansCommunication) Class.forName(className, true, ucl).newInstance();
-        System.out.println(m);
-    }
-
-    @Test
-    public void testSomeloader() throws ClassNotFoundException, IOException {
-        String pathToJar = "d:/mockingbird-app_4.2.20-SNAPSHOT_rev/transports/mockingbird-transport-rest.jar";
-        File file = new File(pathToJar);
-        JarFile jarFile = new JarFile(file);
-        Enumeration<JarEntry> e = jarFile.entries();
-        URL[] urls = {new URL("jar:file:" + pathToJar + "!/")};
-        URLClassLoader cl = new URLClassLoader(urls);
-        while (e.hasMoreElements()) {
-            JarEntry je = e.nextElement();
-            if (je.isDirectory() || !je.getName().endsWith(".class")) {
-                continue;
-            }
-            // -6 because of .class
-            String className = je.getName().substring(0, je.getName().length() - 6);
-            className = className.replace('/', '.');
-            Class c = cl.loadClass(className);
-            Assert.notNull(c, "Class should not be null");
-        }
     }
 }
