@@ -145,7 +145,7 @@ jobs:
       repository_name: 'qubership-testing-platform-itf-executor'
       service_name: 'atp-itf-executor'
       namespace: 'executor'
-      pipeline_branch: 'test_workflow'
+      pipeline_branch: 'main'
       postgres: enable
       activemq: enable
       enable_test: enable
