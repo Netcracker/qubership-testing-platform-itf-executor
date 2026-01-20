@@ -278,3 +278,4 @@ EI_CLEAN_JOB_FILE_DELETE_AFTER_MS: "172800000"
 extraEnvs: []
 keepHookLogs: false
 HELPER_IMAGE: "artifactory-service-address/path-to-image"
+EI_GRIDFS_ENABLED: "true"
