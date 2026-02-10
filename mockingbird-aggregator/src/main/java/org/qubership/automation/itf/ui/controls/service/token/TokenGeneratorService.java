@@ -19,7 +19,7 @@ package org.qubership.automation.itf.ui.controls.service.token;
 
 import java.util.Base64;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.qubership.automation.itf.ui.swagger.SwaggerConstants;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +39,9 @@ public class TokenGeneratorService {
 
     @RequestMapping(value = "/service/token", method = RequestMethod.POST)
     @Operation(summary = "GenerateToken", description = "Generate token of chosen type based on username/password "
-            + "pair. "
-            + "Generated token can be used in further requests to authorize them by putting the token to the "
-            + "\"Authorization\" header in request. "
-            + "Supported token types: Basic.", tags = {SwaggerConstants.TOKEN_GENERATOR_COMMAND_API})
+            + "pair. Generated token can be used in further requests to authorize them by putting the token to the "
+            + "\"Authorization\" header in request. Supported token types: Basic.",
+            tags = {SwaggerConstants.TOKEN_GENERATOR_COMMAND_API})
     public String generateToken(@RequestBody TokenGeneratorRequest tokenGeneratorRequest) {
         return generateTokenFromRequest(tokenGeneratorRequest);
     }
@@ -61,6 +60,5 @@ public class TokenGeneratorService {
                 throw new IllegalArgumentException("Unknown token type exception");
         }
     }
-
 
 }

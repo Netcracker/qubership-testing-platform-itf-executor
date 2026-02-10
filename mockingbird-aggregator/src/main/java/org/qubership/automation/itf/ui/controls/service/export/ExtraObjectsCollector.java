@@ -32,7 +32,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.qubership.automation.itf.core.model.common.Storable;
@@ -250,12 +250,6 @@ public class ExtraObjectsCollector {
             log.info("List of checked servers ids doesn't contain id {}. Server is checked...", server.getID());
             checkedObjectsMap.get(ServerHB.class.getSimpleName()).add(server.getID());
             extraObjects.put(server.getID(), server);
-            // Next 2 rows (collectObjectsFromInboundTransportConfig, collectObjectsFromOutboundTransportConfig)
-            // are commented; to be deleted soon.
-            /*
-            collectObjectsFromInboundTransportConfig(extraObjects, server.getInbounds(), checkedObjectsMap);
-            collectObjectsFromOutboundTransportConfig(extraObjects, server.getOutbounds(), checkedObjectsMap);
-            */
         } else {
             log.info("List of checked servers ids already contains id {}. Server is skipped.", server.getID());
         }
