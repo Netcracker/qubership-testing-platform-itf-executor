@@ -31,8 +31,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.diameter.config.ConfigReader;
 import org.qubership.automation.diameter.config.DiameterParser;
 import org.qubership.automation.diameter.config.DiameterParserType;
@@ -208,10 +209,9 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
     }
 
     private Message prepareMessage(Message message, Map<String, String> properties) {
-        if (properties == null) {
-            return message;
+        if (properties != null) {
+            properties.forEach((key, value) -> message.setText(replacePlaceholder(key, value, message.getText())));
         }
-        properties.forEach((key, value) -> message.setText(replacePlaceholder(key, value, message.getText())));
         return message;
     }
 
@@ -228,14 +228,14 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
         return new Message(interceptor.getResponse());
     }
 
-    private void waitResponseAndExpireInterceptor(ConnectionProperties connectionProperties, Interceptor interceptor)
-            throws Exception {
+    private void waitResponseAndExpireInterceptor(ConnectionProperties connectionProperties,
+                                                  Interceptor interceptor) throws Exception {
         currentTimeout = Long.parseLong((String) getOrDefault(connectionProperties,
                 PropertyConstants.DiameterTransportConstants.WAIT_RESPONSE_TIMEOUT, "3000"));
         boolean isReceived = waitResponse(interceptor, currentTimeout);
         if (!isReceived) {
-            log.warn(String.format("timeout for request session: %s",
-                    connectionProperties.obtain(PropertyConstants.DiameterTransportConstants.SESSION_ID).toString()));
+            log.warn("timeout for request session: {}",
+                    connectionProperties.obtain(PropertyConstants.DiameterTransportConstants.SESSION_ID).toString());
         }
         interceptor.setExpired(true);
     }
@@ -314,11 +314,10 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
     }
 
     private <U> String replacePlaceholders(String text, Map<String, U> properties) {
-        if (properties == null) {
-            return text;
-        }
-        for (Map.Entry<String, U> entry : properties.entrySet()) {
-            text = replacePlaceholder(entry.getKey(), entry.getValue().toString(), text);
+        if (properties != null) {
+            for (Map.Entry<String, U> entry : properties.entrySet()) {
+                text = replacePlaceholder(entry.getKey(), entry.getValue().toString(), text);
+            }
         }
         return text;
     }
@@ -390,7 +389,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
         }
     }
 
-    @NotNull
+    @Nonnull
     private DiameterConnectionInfo createDiameterConnectionInfo(String cacheId, DiameterConnection connection,
                                                                 String podName, String dictionaryPath,
                                                                 BigInteger projectId) {

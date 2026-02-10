@@ -19,8 +19,9 @@ package org.qubership.automation.itf.executor.cache.hazelcast.listener;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 import org.apache.logging.log4j.util.Strings;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.metric.MetricsAggregateService;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.core.util.config.ApplicationConfig;
@@ -75,7 +76,7 @@ public class TCContextEntryListener implements
         collectContextSizeMetric(entryEvent);
     }
 
-    private boolean isContextCreatedOnThisPod(@NotNull TcContext tcContext) {
+    private boolean isContextCreatedOnThisPod(@Nonnull TcContext tcContext) {
         return Strings.isNotEmpty(tcContext.getPodName())
                 && tcContext.getPodName().equals(Config.getConfig().getRunningHostname());
     }

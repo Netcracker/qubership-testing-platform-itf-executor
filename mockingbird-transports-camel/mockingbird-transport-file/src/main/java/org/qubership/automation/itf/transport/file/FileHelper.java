@@ -25,9 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.util.constants.PropertyConstants;
 import org.qubership.automation.itf.transport.camel.Helper;
@@ -103,7 +104,7 @@ public class FileHelper {
                 : null;
     }
 
-    @NotNull
+    @Nonnull
     private static File createTempPemFile(String sshKey) throws IOException {
         File tmpfile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".pem");
         tmpfile.deleteOnExit();

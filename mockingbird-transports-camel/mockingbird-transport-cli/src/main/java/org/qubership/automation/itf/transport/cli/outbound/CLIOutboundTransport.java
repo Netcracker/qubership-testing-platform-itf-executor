@@ -32,6 +32,8 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import javax.annotation.Nonnull;
+
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
@@ -41,7 +43,6 @@ import org.apache.camel.component.netty4.NettyComponent;
 import org.apache.camel.component.netty4.NettyEndpoint;
 import org.apache.camel.component.ssh.SshComponent;
 import org.apache.logging.log4j.util.Strings;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.util.annotation.Async;
@@ -292,7 +293,7 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
                 .append((sshKeyIsBlank) ? "" : "?certResource=file:" + getTempPemFile(sshKey).getPath());
     }
 
-    @NotNull
+    @Nonnull
     private File getTempPemFile(String sshKey) throws IOException {
         File tmpfile = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".pem");
         tmpfile.deleteOnExit();
@@ -305,8 +306,10 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
     @Getter
     protected static class CLIConfig {
 
-        private Component component;
+        private final Component component;
+        @lombok.Setter
         private ProducerTemplate producer;
+        @lombok.Setter
         private Endpoint endpoint;
 
         public CLIConfig(Component component) {
@@ -324,19 +327,13 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
             this.endpoint = endpoint;
         }
 
-        public void setProducer(ProducerTemplate producer) {
-            this.producer = producer;
-        }
-
-        public void setEndpoint(Endpoint endpoint) {
-            this.endpoint = endpoint;
-        }
     }
 
     @Getter
     private class ConfiguredTransport {
 
         TreeMap<String, Object> properties;
+        @lombok.Setter
         private String transportId;
 
         public ConfiguredTransport() {
@@ -347,10 +344,6 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         public ConfiguredTransport(String transportId, ConnectionProperties properties) {
             this.transportId = transportId;
             this.properties = new TreeMap<>(properties);
-        }
-
-        public void setTransportId(String transportId) {
-            this.transportId = transportId;
         }
 
         public void setProperties(ConnectionProperties properties) {

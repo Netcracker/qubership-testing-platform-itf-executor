@@ -43,8 +43,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 import org.qubership.atp.catalogue.openapi.dto.ProjectDto;
 import org.qubership.atp.common.lock.LockManager;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
@@ -274,8 +275,7 @@ public class UiContextListener {
         ExecutorService threadPool = DaemonThreadPoolFactory.cachedThreadPool(10, "EventTriggersActivationThread - ");
         Queue<Future<Boolean>> queue = new ConcurrentLinkedQueue<>();
         if (multiTenancyEnabled) {
-            activateEventTriggers(allProjects.get(ADDITIONAL_CLUSTERS), false,
-                    threadPool, queue);
+            activateEventTriggers(allProjects.get(ADDITIONAL_CLUSTERS), false, threadPool, queue);
             TenantContext.setDefaultTenantInfo();
         }
         activateEventTriggers(allProjects.get(DEFAULT_CLUSTER), true, threadPool, queue);

@@ -19,7 +19,8 @@ package org.qubership.automation.itf.core.instance.testcase.execution.subscriber
 
 import java.util.Date;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.automation.itf.core.model.event.CallChainEvent;
 import org.qubership.automation.itf.core.model.event.NextCallChainEvent;
@@ -59,7 +60,7 @@ public class NextEmbeddedStepSubscriber extends AbstractChainSubscriber<NextEmbe
     }
 
     @Override
-    protected void onEvent(NextEmbeddedStepEvent event) throws Exception {
+    protected void onEvent(NextEmbeddedStepEvent event) {
         TenantContext.setTenantInfo(getTenantId(event));
         StepInstance instance = event.getInstance();
         EmbeddedStep step = (EmbeddedStep) instance.getStep();
@@ -86,7 +87,7 @@ public class NextEmbeddedStepSubscriber extends AbstractChainSubscriber<NextEmbe
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected String getTenantId(NextEmbeddedStepEvent event) {
         return event.getInstance().getContext().getProjectUuid().toString();

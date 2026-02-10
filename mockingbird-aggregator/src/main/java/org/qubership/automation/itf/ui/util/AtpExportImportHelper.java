@@ -20,7 +20,8 @@ package org.qubership.automation.itf.ui.util;
 import java.util.List;
 import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.folder.Folder;
 import org.qubership.automation.itf.executor.objects.ei.SimpleItfEntity;
@@ -48,7 +49,7 @@ public class AtpExportImportHelper {
      * @param storable ITF storable object (CallChain, System, Some type of Folder)
      * @return {@link SimpleItfEntity} object.
      */
-    @NotNull
+    @Nonnull
     public static SimpleItfEntity createSimpleItfEntity(Storable storable) {
         SimpleItfEntity data = new SimpleItfEntity();
         data.setId(String.valueOf(storable.getID()));

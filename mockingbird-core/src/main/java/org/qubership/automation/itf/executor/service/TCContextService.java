@@ -27,8 +27,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.instance.testcase.execution.holders.DefferedSituationInstanceHolder;
 import org.qubership.automation.itf.core.instance.testcase.execution.holders.NextCallChainEventSubscriberHolder;
 import org.qubership.automation.itf.core.instance.testcase.execution.holders.SubscriberData;
@@ -416,7 +417,7 @@ public class TCContextService {
         return createInMemory(UniqueIdGenerator.generate(), projectId, projectUuid);
     }
 
-    @NotNull
+    @Nonnull
     private TcContext createInMemory(Object id, BigInteger projectId, UUID projectUuid) {
         TcContext context = new TcContext();
         context.setID(id);
@@ -426,7 +427,7 @@ public class TCContextService {
         return context;
     }
 
-    @NotNull
+    @Nonnull
     private String getTenantId(TcContext tcContext) {
         try {
             return tcContext.getInitiator().getContext().getProjectUuid().toString();

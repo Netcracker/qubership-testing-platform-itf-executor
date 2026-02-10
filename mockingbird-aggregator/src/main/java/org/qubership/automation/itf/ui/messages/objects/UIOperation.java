@@ -19,9 +19,10 @@ package org.qubership.automation.itf.ui.messages.objects;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.message.parser.OperationParsingRule;
 import org.qubership.automation.itf.core.model.jpa.message.parser.ParsingRule;
@@ -37,7 +38,11 @@ import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
 import org.qubership.automation.itf.ui.util.UIHelper;
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class UIOperation extends UIObject {
 
     private UIWrapper<UITransport> transport;
@@ -66,7 +71,7 @@ public class UIOperation extends UIObject {
         wrapMep(operation.getMep());
     }
 
-    public void fillForQuickDisplay(@NotNull Operation operation) {
+    public void fillForQuickDisplay(@Nonnull Operation operation) {
         this.setId(operation.getID().toString());
         this.setName(operation.getName());
         this.setVersion(NumberUtils.toInt(String.valueOf(operation.getVersion()), -1));
@@ -105,32 +110,8 @@ public class UIOperation extends UIObject {
         }
     }
 
-    public UIWrapper<List<UISituation>> getSituations() {
-        return situations;
-    }
-
-    public void setSituations(UIWrapper<List<UISituation>> situations) {
-        this.situations = situations;
-    }
-
     private String getContextDefinitionValue(String keyDefinition) {
         return UIHelper.getDefinitionValue(keyDefinition);
-    }
-
-    public UIWrapper<UITransport> getTransport() {
-        return transport;
-    }
-
-    public void setTransport(UIWrapper<UITransport> transport) {
-        this.transport = transport;
-    }
-
-    public UIWrapper<UIDefinitionKey> getDefinitionKey() {
-        return definitionKey;
-    }
-
-    public void setDefinitionKey(UIWrapper<UIDefinitionKey> definitionKey) {
-        this.definitionKey = definitionKey;
     }
 
     public void wrapDefinitionKey(String operationDefinitionKey) {
@@ -139,49 +120,10 @@ public class UIOperation extends UIObject {
         }
     }
 
-    public UIWrapper<List<UIParsingRule>> getParsingRules() {
-        return parsingRules;
-    }
-
-    public void setParsingRules(UIWrapper<List<UIParsingRule>> parsingRules) {
-        this.parsingRules = parsingRules;
-    }
-
-    public String getMep() {
-        return mep;
-    }
-
-    public void setMep(String mep) {
-        this.mep = mep;
-    }
-
     public void wrapMep(Mep mep) {
         if (mep != null) {
             this.mep = mep.toString();
         }
     }
 
-    public UIWrapper<List<UITemplate>> getTemplates() {
-        return templates;
-    }
-
-    public void setTemplates(UIWrapper<List<UITemplate>> templates) {
-        this.templates = templates;
-    }
-
-    public UIWrapper<String> getIncoming() {
-        return incoming;
-    }
-
-    public void setIncoming(UIWrapper<String> incoming) {
-        this.incoming = incoming;
-    }
-
-    public UIWrapper<String> getOutgoing() {
-        return outgoing;
-    }
-
-    public void setOutgoing(UIWrapper<String> outgoing) {
-        this.outgoing = outgoing;
-    }
 }

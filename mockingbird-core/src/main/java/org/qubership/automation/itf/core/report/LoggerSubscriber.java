@@ -20,10 +20,10 @@ package org.qubership.automation.itf.core.report;
 import java.util.Date;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.jetbrains.annotations.NotNull;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.ContextManager;
 import org.qubership.automation.itf.core.model.event.CallChainEvent;
@@ -63,10 +63,10 @@ public class LoggerSubscriber {
     public static final String CLIENT_IP = "clientIP";
     @Value("${atp.multi-tenancy.enabled}")
     private Boolean multiTenancyEnabled;
-    private ReportWorker worker;
-    private RunSubscriberInterface runSubscriber;
-    private ReportLinkCollector reportLinkCollector;
-    private EventBusProvider eventBusProvider;
+    private final ReportWorker worker;
+    private final RunSubscriberInterface runSubscriber;
+    private final ReportLinkCollector reportLinkCollector;
+    private final EventBusProvider eventBusProvider;
 
     @Autowired
     public LoggerSubscriber(ReportWorker worker, RunSubscriberInterface runSubscriber,
@@ -355,8 +355,9 @@ public class LoggerSubscriber {
         }
     }
 
-    @NotNull
-    private CallChainInstance submitCallChainInstance(CallChainInstance callChainInstance, String logMessage,
+    @Nonnull
+    private CallChainInstance submitCallChainInstance(CallChainInstance callChainInstance,
+                                                      String logMessage,
                                                       Date eventDate) {
         String projectUuid = callChainInstance.getContext().getProjectUuid().toString();
         if (multiTenancyEnabled) {
@@ -370,7 +371,7 @@ public class LoggerSubscriber {
         return callChainInstance;
     }
 
-    @NotNull
+    @Nonnull
     private StepInstance submitStepInstance(StepInstance stepInstance, String logMessage, Date eventDate) {
         String projectUuid = stepInstance.getContext().getProjectUuid().toString();
         if (multiTenancyEnabled) {

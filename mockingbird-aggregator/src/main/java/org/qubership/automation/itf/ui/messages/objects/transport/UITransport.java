@@ -21,9 +21,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.message.template.Template;
 import org.qubership.automation.itf.core.model.jpa.transport.TransportConfiguration;
@@ -40,7 +41,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class UITransport extends UIECIConfiguration<TransportConfiguration> {
 
     private static final String INPUT_TYPE_REFERENCE = "reference";
@@ -73,11 +78,11 @@ public class UITransport extends UIECIConfiguration<TransportConfiguration> {
         }
     }
 
-    public void fillForQuickDisplay(@NotNull TransportConfiguration transport) {
+    public void fillForQuickDisplay(@Nonnull TransportConfiguration transport) {
         fillForQuickDisplay(transport, false);
     }
 
-    public void fillForQuickDisplay(@NotNull TransportConfiguration transport, boolean toTableDisplay) {
+    public void fillForQuickDisplay(@Nonnull TransportConfiguration transport, boolean toTableDisplay) {
         this.setId(transport.getID().toString());
         this.setClassName(transport.getClass().getName());
         this.setName(transport.getName());
@@ -138,43 +143,4 @@ public class UITransport extends UIECIConfiguration<TransportConfiguration> {
         return transportDeployed;
     }
 
-    public String getEndpoint() {
-        return endpoint;
-    }
-
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMep() {
-        return mep;
-    }
-
-    public void setMep(String mep) {
-        this.mep = mep;
-    }
-
-    public String getEndpointPrefix() {
-        return endpointPrefix;
-    }
-
-    public void setEndpointPrefix(String endpointPrefix) {
-        this.endpointPrefix = endpointPrefix;
-    }
-
-    public Collection<UIInterceptor> getTransportInterceptors() {
-        return transportInterceptors;
-    }
-
-    public void setTransportInterceptors(Collection<UIInterceptor> transportInterceptors) {
-        this.transportInterceptors = transportInterceptors;
-    }
 }

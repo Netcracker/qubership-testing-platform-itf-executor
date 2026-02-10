@@ -25,8 +25,9 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.executor.cache.service.CacheServices;
 import org.qubership.automation.itf.executor.service.ExecutionServices;
@@ -116,7 +117,7 @@ public class BoundContextsCacheService {
      * @return - TcContext object from ATP_ITF_TC_CONTEXTS cache or new created in memory that was set to
      *     ATP_ITF_TC_CONTEXTS_IDS_BOUND_BY_KEY and ATP_ITF_TC_CONTEXTS caches after creation.
      */
-    public TcContext findByKey(String key, boolean createIfNotFound, BigInteger projectId, @NotNull UUID projectUuid) {
+    public TcContext findByKey(String key, boolean createIfNotFound, BigInteger projectId, @Nonnull UUID projectUuid) {
         String keyPrefix = projectUuid.toString() + '/';
         Object tcContextId = boundContextsCacheService.getBoundContextsCache().get(keyPrefix + key);
         if (Objects.isNull(tcContextId)) {
@@ -204,7 +205,7 @@ public class BoundContextsCacheService {
         }
     }
 
-    private String getPrefix(@NotNull TcContext context, String action) {
+    private String getPrefix(@Nonnull TcContext context, String action) {
         UUID projectUuid = context.getProjectUuid();
         if (Objects.nonNull(projectUuid)) {
             return projectUuid.toString() + '/';

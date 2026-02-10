@@ -17,7 +17,8 @@
 
 package org.qubership.automation.itf.core.instance.testcase.execution.subscriber;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import org.qubership.automation.itf.core.model.event.NextCallChainEvent;
 import org.qubership.automation.itf.core.model.event.SituationEvent;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
@@ -31,7 +32,7 @@ import lombok.Setter;
 
 public abstract class AbstractSituationSubscriber {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(StepEndSituationSubscriber.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractSituationSubscriber.class);
 
     @Getter(lombok.AccessLevel.PROTECTED)
     private final TcContext context;
@@ -59,7 +60,7 @@ public abstract class AbstractSituationSubscriber {
 
     protected abstract NextCallChainEvent createEvent();
 
-    @NotNull
+    @Nonnull
     protected String getTenantId(SituationEvent.EndExceptionalSituationFinish event) {
         return event.getSituationInstance().getContext().getProjectUuid().toString();
     }

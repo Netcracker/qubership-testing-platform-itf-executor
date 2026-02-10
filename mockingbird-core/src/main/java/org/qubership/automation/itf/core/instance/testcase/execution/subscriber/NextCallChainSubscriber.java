@@ -25,8 +25,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.automation.itf.core.instance.step.StepExecutorFactory;
 import org.qubership.automation.itf.core.instance.testcase.execution.holders.DefferedSituationInstanceHolder;
@@ -496,7 +497,7 @@ public class NextCallChainSubscriber extends AbstractChainSubscriber<NextCallCha
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected String getTenantId(NextCallChainEvent event) {
         return event.getInstance().getContext().getProjectUuid().toString();

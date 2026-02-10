@@ -33,8 +33,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
 import org.qubership.atp.multitenancy.core.header.CustomHeader;
@@ -96,6 +97,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
+import lombok.Getter;
 
 @Transactional(readOnly = true)
 @RestController
@@ -134,7 +136,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
     private static List<UILink> buildUILinks(Map<String, String> links) {
         return Lists.newArrayList(Collections2.transform(
                 links.entrySet(), new Function<Map.Entry<String, String>, UIHyperLink>() {
-                    @NotNull
+                    @Nonnull
                     @Override
                     public UIHyperLink apply(Map.Entry<String, String> input) {
                         UIHyperLink uiLink = new UIHyperLink("Callchain link".equals(input.getKey()) ? "Call Chain" :
@@ -542,6 +544,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
         }
     }
 
+    @Getter
     public static class StartChainSubscriber extends AbstractSubscriber {
 
         private Map<String, String> reportLinks;
@@ -558,11 +561,9 @@ public class RunCallChainController extends ExecutorControllerHelper {
             }
         }
 
-        public Map<String, String> getReportLinks() {
-            return reportLinks;
-        }
     }
 
+    @Getter
     public static class FinishTCContextSubscriber extends AbstractSubscriber {
 
         private boolean isFinish;
@@ -579,8 +580,5 @@ public class RunCallChainController extends ExecutorControllerHelper {
             }
         }
 
-        public boolean isFinish() {
-            return isFinish;
-        }
     }
 }

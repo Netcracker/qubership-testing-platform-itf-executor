@@ -17,17 +17,21 @@
 
 package org.qubership.automation.itf.core.instance.testcase.execution.subscriber;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import org.qubership.automation.itf.core.model.event.AbstractEvent;
 import org.qubership.automation.itf.core.model.event.NextCallChainEvent;
 import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.qubership.automation.itf.executor.provider.EventBusServiceProvider;
 import org.slf4j.LoggerFactory;
 
+import lombok.Getter;
+
+@Getter
 public abstract class AbstractChainSubscriber<T extends AbstractEvent> {
 
     private final String id;
-    private String parentId;
+    private final String parentId;
 
     protected AbstractChainSubscriber(String id, String parentId) {
         this.id = id;
@@ -55,14 +59,6 @@ public abstract class AbstractChainSubscriber<T extends AbstractEvent> {
 
     protected abstract void onEvent(T event) throws Exception;
 
-    public String getId() {
-        return id;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
     protected void destroy() {
         EventBusServiceProvider.getStaticReference().unregister(this);
     }
@@ -73,6 +69,6 @@ public abstract class AbstractChainSubscriber<T extends AbstractEvent> {
         EventBusServiceProvider.getStaticReference().post(stepEvent);
     }
 
-    @NotNull
+    @Nonnull
     protected abstract String getTenantId(T event);
 }
