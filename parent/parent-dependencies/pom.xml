@@ -21,6 +21,7 @@
         <atp.itf.core.version>4.4.114</atp.itf.core.version>
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <atp.auth.version>1.2.75</atp.auth.version>
+        <atp.common.version>0.0.47</atp.common.version>
         <atp.multitenancy.version>0.0.13</atp.multitenancy.version>
         <atp.ei.lib.version>0.2.46</atp.ei.lib.version>
         <atp.crypt.version>0.0.24</atp.crypt.version>
@@ -34,7 +35,7 @@
         <com.squareup.okhttp3.okhttp.version>4.9.3</com.squareup.okhttp3.okhttp.version>
         <org.jboss.logging.jboss-logging.version>3.4.3.Final</org.jboss.logging.jboss-logging.version>
         <org.jboss.xnio.version>3.8.14.Final</org.jboss.xnio.version>
-        <io.undertow.undertow-core.version>2.2.38.Final</io.undertow.undertow-core.version>
+        <io.undertow.version>2.2.39.Final</io.undertow.version>
         <com.sun.xml.bind.jaxb.version>2.2.11</com.sun.xml.bind.jaxb.version>
         <com.fasterxml.woodstox.woodstox-core.version>5.0.3</com.fasterxml.woodstox.woodstox-core.version>
         <io.github.openfeign.feign-core.version>11.10</io.github.openfeign.feign-core.version>
@@ -45,6 +46,7 @@
         <com.squareup.okio.okio.version>2.8.0</com.squareup.okio.okio.version>
         <org.apache.cxf.version>3.2.1</org.apache.cxf.version>
         <org.eclipse.jetty.version>9.4.57.v20241219</org.eclipse.jetty.version>
+        <jackson.version>2.15.0</jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -583,6 +585,10 @@
                         <groupId>commons-lang</groupId>
                         <artifactId>commons-lang</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>commons-collections</groupId>
+                        <artifactId>commons-collections</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -681,27 +687,27 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.12.7.1</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.12.7</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.12.7</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-joda</artifactId>
-                <version>2.12.7</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>
                 <artifactId>jackson-module-jaxb-annotations</artifactId>
-                <version>2.12.7</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
@@ -840,7 +846,7 @@
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
-                <version>2.9.2</version>
+                <version>2.10.0</version>
             </dependency>
             <dependency>
                 <groupId>com.nimbusds</groupId>
@@ -1027,7 +1033,17 @@
             <dependency>
                 <groupId>io.undertow</groupId>
                 <artifactId>undertow-core</artifactId>
-                <version>${io.undertow.undertow-core.version}</version>
+                <version>${io.undertow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-servlet</artifactId>
+                <version>${io.undertow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-websockets-jsr</artifactId>
+                <version>${io.undertow.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
@@ -1132,7 +1148,18 @@
             <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
-                <version>3.7.2</version>
+                <version>3.9.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.lz4</groupId>
+                        <artifactId>lz4-java</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>at.yawk.lz4</groupId>
+                <artifactId>lz4-java</artifactId>
+                <version>1.10.1</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -1144,6 +1171,36 @@
                         <artifactId>checker-qual</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.qubership.atp.common</groupId>
+                <artifactId>qubership-atp-common-probes</artifactId>
+                <version>${atp.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.qubership.atp.common</groupId>
+                <artifactId>qubership-atp-common-monitoring-undertow</artifactId>
+                <version>${atp.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.qubership.atp.common</groupId>
+                <artifactId>qubership-atp-common-utils</artifactId>
+                <version>${atp.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.qubership.atp.common</groupId>
+                <artifactId>qubership-atp-common-logging</artifactId>
+                <version>${atp.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>3.27.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>2.9.11</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
