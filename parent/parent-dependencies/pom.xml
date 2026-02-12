@@ -15,13 +15,14 @@
         <spring.cloud.version>2021.0.8</spring.cloud.version>
         <keycloak.version>22.0.1</keycloak.version>
         <camel.version>2.20.4</camel.version>
-        <activemq.version>5.12.2</activemq.version>
+        <activemq.version>5.16.8</activemq.version>
         <aspectj.version>1.8.10</aspectj.version>
 
         <atp.itf.core.version>4.4.114</atp.itf.core.version>
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <atp.auth.version>1.2.75</atp.auth.version>
         <atp.common.version>0.0.47</atp.common.version>
+        <atp.integration.version>0.2.42</atp.integration.version>
         <atp.multitenancy.version>0.0.13</atp.multitenancy.version>
         <atp.ei.lib.version>0.2.46</atp.ei.lib.version>
         <atp.crypt.version>0.0.24</atp.crypt.version>
@@ -31,7 +32,7 @@
         <org.ow2.asm.asm.version>5.2</org.ow2.asm.asm.version>
         <log4j.log4j.version>1.2.17</log4j.log4j.version>
         <org.bouncycastle.bcp.version>1.69</org.bouncycastle.bcp.version>
-        <io.netty.netty.version>4.1.44.Final</io.netty.netty.version>
+        <io.netty.version>4.1.125.Final</io.netty.version>
         <com.squareup.okhttp3.okhttp.version>4.9.3</com.squareup.okhttp3.okhttp.version>
         <org.jboss.logging.jboss-logging.version>3.4.3.Final</org.jboss.logging.jboss-logging.version>
         <org.jboss.xnio.version>3.8.14.Final</org.jboss.xnio.version>
@@ -91,7 +92,20 @@
                         <groupId>org.apache.tomcat.embed</groupId>
                         <artifactId>tomcat-embed-websocket</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-el</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.qubership.atp</groupId>
+                        <artifactId>atp-integration-spring-boot-starter</artifactId>
+                    </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.qubership.atp</groupId>
+                <artifactId>atp-integration-spring-boot-starter</artifactId>
+                <version>${atp.integration.version}</version>
             </dependency>
             <!--Spring Configuration - Start-->
 
@@ -233,9 +247,29 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>io.projectreactor.netty</groupId>
+                <artifactId>reactor-netty</artifactId>
+                <version>1.0.39</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${io.netty.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-handler</artifactId>
-                <version>4.1.118.Final</version>
+                <version>${io.netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http</artifactId>
+                <version>${io.netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http2</artifactId>
+                <version>${io.netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.datastax.cassandra</groupId>
@@ -371,16 +405,6 @@
                 <artifactId>lombok</artifactId>
                 <version>1.14.8</version>
             </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-all</artifactId>
-                <version>${io.netty.netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor.netty</groupId>
-                <artifactId>reactor-netty</artifactId>
-                <version>0.9.8.RELEASE</version>
-            </dependency>
             <!-- Commented, because became absent suddenly
             <dependency>
                 <groupId>oracle</groupId>
@@ -484,7 +508,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>32.0.0-jre</version>
+                <version>32.0.1-jre</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
@@ -569,7 +593,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.9</version>
+                <version>1.21</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -739,7 +763,7 @@
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-broker</artifactId>
-                <version>5.15.16</version>
+                <version>${activemq.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>
@@ -753,8 +777,13 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-openwire-legacy</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-jms-pool</artifactId>
-                <version>5.15.14</version>
+                <version>${activemq.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>
@@ -851,7 +880,7 @@
             <dependency>
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
-                <version>8.20.1</version>
+                <version>9.37.2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>net.minidev</groupId>
@@ -1005,11 +1034,6 @@
                 <artifactId>bcprov-jdk15on</artifactId>
                 <version>${org.bouncycastle.bcp.version}</version>
             </dependency>
-            <!--<dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty</artifactId>
-                <version>${io.netty.netty.version}</version>
-            </dependency>-->
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
@@ -1201,6 +1225,11 @@
                 <groupId>org.springframework.kafka</groupId>
                 <artifactId>spring-kafka</artifactId>
                 <version>2.9.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
