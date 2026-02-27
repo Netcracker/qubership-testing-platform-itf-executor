@@ -35,8 +35,8 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib/${project.build.finalName}</outputDirectory>
-                            <!-- <excludeTransitive>true</excludeTransitive> org.jboss,io.netty, -->
-                            <excludeGroupIds>
+                            <excludeTransitive>true</excludeTransitive>
+                            <!-- <excludeGroupIds>
                                 org.springframework,org.apache.sshd,org.apache.httpcomponents,io.github.openfeign,io.zipkin.brave,io.zipkin.zipkin2,io.zipkin.reporter2,org.keycloak,io.undertow,
                                 com.netflix.archaius,org.aspectj,com.squareup.okhttp3,com.squareup.okio,jakarta.annotation,org.glassfish,
                                 jakarta.validation,io.reactivex,com.nimbusds,com.netflix.hystrix,org.qubership.atp.auth,
@@ -52,7 +52,7 @@
                                 error_prone_annotations,javax.annotation-api,antlr,dom4j,oss-parent,qubership-atp-common-logging,
                                 javax.persistence-api,clover-maven-plugin,
                                 jackson-annotations
-                            </excludeArtifactIds>
+                            </excludeArtifactIds> -->
                             <!--if you have NoClassFoundException for this transport then  include needed dependency here-->
                             <includeScope>runtime</includeScope>
                         </configuration>

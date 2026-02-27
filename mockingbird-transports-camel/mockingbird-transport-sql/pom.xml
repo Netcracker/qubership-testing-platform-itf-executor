@@ -30,8 +30,8 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib/${project.build.finalName}</outputDirectory>
-                            <!-- <excludeTransitive>true</excludeTransitive> -->
-                            <excludeGroupIds>
+                            <excludeTransitive>true</excludeTransitive>
+                            <!-- <excludeGroupIds>
                                 org.springframework,org.apache.sshd,org.apache.httpcomponents,io.github.openfeign,
                                 io.zipkin.brave,io.zipkin.zipkin2,io.zipkin.reporter2,org.keycloak,io.undertow,org.jboss,io.netty,
                                 com.netflix.archaius,org.aspectj,com.squareup.okhttp3,com.squareup.okio,jakarta.annotation,org.glassfish,
@@ -53,7 +53,7 @@
                                 error_prone_annotations,javax.annotation-api,antlr,dom4j,oss-parent,qubership-atp-common-logging,
                                 javax.persistence-api,clover-maven-plugin,atp-integration-spring-boot-starter,validation-api,atp-crypt,
                                 accessors-smart,classmate,aopalliance,cglib,commons-collections,commons-math,configuration-dataset-excel,jsr311-api
-                            </excludeArtifactIds>
+                            </excludeArtifactIds> -->
                             <!--if you have NoClassFoundException for this transport then include required dependency here-->
                             <includeScope>runtime</includeScope>
                         </configuration>
