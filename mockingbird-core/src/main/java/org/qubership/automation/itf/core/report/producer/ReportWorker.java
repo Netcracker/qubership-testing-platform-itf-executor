@@ -101,8 +101,8 @@ public class ReportWorker {
     @Value("${management.metrics.context.size.collect.threshold}")
     private int metricsContextSizeCollectThreshold;
 
-    private ExecutorToMessageBrokerSender executorToMessageBrokerSender;
-    private MetricsAggregateService metricsAggregateService;
+    private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
+    private final MetricsAggregateService metricsAggregateService;
 
     @Autowired
     public ReportWorker(ExecutorToMessageBrokerSender executorToMessageBrokerSender,
@@ -193,7 +193,7 @@ public class ReportWorker {
                                          PropertyWriter writer) throws Exception {
                 if ("text".equals(writer.getName()) && Objects.nonNull(pojo)) {
                     String body = ((Message)pojo).getText();
-                    if (writeOriginalOrTruncatedField(body, body.length(),
+                    if (body != null && writeOriginalOrTruncatedField(body, body.length(),
                             SERIALIZATION_MESSAGE_TEXT_MAX_SIZE,
                             MESSAGE_SKIPPED_TEMPLATE,
                             "message body", "text", jgen, false)) {
@@ -216,7 +216,7 @@ public class ReportWorker {
                                          PropertyWriter writer) throws Exception {
                 if ("jsonString".equals(writer.getName()) && Objects.nonNull(pojo)) {
                     String jsonString = ((TcContext)pojo).getJsonString();
-                    if (writeOriginalOrTruncatedField(jsonString, jsonString.length(),
+                    if (jsonString != null && writeOriginalOrTruncatedField(jsonString, jsonString.length(),
                             SERIALIZATION_CONTEXT_JSONSTRING_MAX_SIZE,
                             "{\"big_object\":\"" + MESSAGE_SKIPPED_TEMPLATE + "\"}",
                             "test case context", "jsonString", jgen, true)) {
@@ -499,7 +499,7 @@ public class ReportWorker {
         boolean reportExecutionEnabled = isReportExecutionEnabled(projectId);
         if (reportExecutionEnabled) {
             if (isReportInDifferentThread(projectId)) {
-                getExecutorService(projectId).submit(
+                Objects.requireNonNull(getExecutorService(projectId)).submit(
                         new Worker(object, date, reportExecutionEnabled, projectId, tenantId));
             } else {
                 send(object, date, reportExecutionEnabled, projectId, tenantId);
@@ -523,11 +523,11 @@ public class ReportWorker {
 
     private class Worker implements Runnable {
 
-        private Storable object;
-        private Date date;
-        private boolean reportExecutionEnabled;
-        private BigInteger projectId;
-        private String projectUuid;
+        private final Storable object;
+        private final Date date;
+        private final boolean reportExecutionEnabled;
+        private final BigInteger projectId;
+        private final String projectUuid;
 
         private Worker(Storable object, Date date, boolean reportExecutionEnabled,
                        BigInteger projectId, String projectUuid) {
