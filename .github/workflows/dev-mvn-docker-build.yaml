@@ -42,7 +42,7 @@ jobs:
 
       - name: Maven Docker build
         id: maven_build
-        uses: netcracker/qubership-workflow-hub/actions/maven-snapshot-deploy@8d542a426ce561c7dce745f6b9cee068d1d7e101 # v2.0.10
+        uses: netcracker/qubership-workflow-hub/actions/maven-snapshot-deploy@d11baa8a4b42d1a931808c0766ee23eb344c47dd # v2.2.0
         with:
           java-version: "8"
           additional-mvn-args: ${{ env.additional-mvn-args }}
@@ -102,7 +102,7 @@ jobs:
 
       - name: Metadata
         id: metadata
-        uses: netcracker/qubership-workflow-hub/actions/metadata-action@8d542a426ce561c7dce745f6b9cee068d1d7e101 #v2.0.10
+        uses: netcracker/qubership-workflow-hub/actions/metadata-action@d11baa8a4b42d1a931808c0766ee23eb344c47dd #v2.2.0
         with:
           default-template: '{{ref-name}}-{{timestamp}}'
 
@@ -120,7 +120,7 @@ jobs:
 
       - name: Build and Publish Docker Image
         id: docker_build
-        uses: netcracker/qubership-workflow-hub/actions/docker-action@8d542a426ce561c7dce745f6b9cee068d1d7e101 #v2.0.10
+        uses: netcracker/qubership-workflow-hub/actions/docker-action@d11baa8a4b42d1a931808c0766ee23eb344c47dd #v2.2.0
         with:
           ref: ${{ github.ref }}
           dry-run: false
@@ -135,11 +135,12 @@ jobs:
   run-tests:
     needs: [ build-and-push ]
     if: |
-      needs.build-and-push.result == 'success' &&
+      github.event_name == 'workflow_dispatch' ||
+      (needs.build-and-push.result == 'success' &&
       (
         github.event_name == 'pull_request' ||
         (github.event_name == 'push' && github.ref == 'refs/heads/main')
-      )
+      ))
     uses: netcracker/qubership-testing-platform-helm-hook-helper/.github/workflows/deploy-run-tests.yaml@main
     with:
       repository_name: 'qubership-testing-platform-itf-executor'
