@@ -17,11 +17,12 @@
 
 package org.qubership.automation.itf.executor.event.trigger.switcher;
 
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.system.stub.EventTrigger;
 import org.qubership.automation.itf.core.model.jpa.system.stub.Listener;
 import org.qubership.automation.itf.core.model.jpa.system.stub.OperationEventTrigger;
@@ -30,13 +31,18 @@ import org.qubership.automation.itf.core.model.jpa.system.stub.SituationEventTri
 import org.qubership.automation.itf.core.util.constants.TriggerState;
 import org.qubership.automation.itf.core.util.exception.TriggerException;
 import org.qubership.automation.itf.core.util.holder.EventTriggerHolder;
+import org.qubership.automation.itf.executor.cache.service.impl.CallchainSubscriberCacheService;
 import org.qubership.automation.itf.executor.event.trigger.EventTriggerSwitcherFactory;
 import org.qubership.automation.itf.executor.event.trigger.IEventTriggerSwitcher;
 import org.qubership.automation.itf.executor.event.trigger.OperationEventTriggerSwitcher;
 import org.qubership.automation.itf.executor.event.trigger.SituationEventTriggerSwitcher;
+import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@SpringJUnitConfig(classes = {EventTriggerSwitcherFactory.class, SituationEventTriggerSwitcher.class,
+@SpringJUnitConfig(classes = {CallchainSubscriberCacheService.class,
+        EventBusProvider.class,
+        EventTriggerSwitcherFactory.class,
+        SituationEventTriggerSwitcher.class,
         OperationEventTriggerSwitcher.class})
 public class EventTriggerSwitcherTest {
 
@@ -47,9 +53,9 @@ public class EventTriggerSwitcherTest {
                 EventTriggerSwitcherFactory.getSwitcherByEventTriggerType(trigger.getType());
         switcherByEventTriggerType.apply(trigger);
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
-        Assert.assertNotNull(listenerMap);
-        Assert.assertFalse(listenerMap.isEmpty());
-        Assert.assertEquals(TriggerState.ACTIVE, trigger.getState());
+        Assertions.assertNotNull(listenerMap);
+        Assertions.assertFalse(listenerMap.isEmpty());
+        Assertions.assertEquals(TriggerState.ACTIVE, trigger.getState());
     }
 
     @Test
@@ -59,9 +65,9 @@ public class EventTriggerSwitcherTest {
                 EventTriggerSwitcherFactory.getSwitcherByEventTriggerType(trigger.getType());
         switcherByEventTriggerType.activate(trigger);
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
-        Assert.assertNotNull(listenerMap);
-        Assert.assertFalse(listenerMap.isEmpty());
-        Assert.assertEquals(TriggerState.ACTIVE, trigger.getState());
+        Assertions.assertNotNull(listenerMap);
+        Assertions.assertFalse(listenerMap.isEmpty());
+        Assertions.assertEquals(TriggerState.ACTIVE, trigger.getState());
     }
 
     @Test
@@ -71,9 +77,9 @@ public class EventTriggerSwitcherTest {
                 EventTriggerSwitcherFactory.getSwitcherByEventTriggerType(trigger.getType());
         switcherByEventTriggerType.deactivate(trigger);
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
-        Assert.assertNotNull(listenerMap);
-        Assert.assertTrue(listenerMap.isEmpty());
-        Assert.assertEquals(TriggerState.INACTIVE, trigger.getState());
+        Assertions.assertNotNull(listenerMap);
+        Assertions.assertTrue(listenerMap.isEmpty());
+        Assertions.assertEquals(TriggerState.INACTIVE, trigger.getState());
     }
 
     @Test
@@ -84,13 +90,13 @@ public class EventTriggerSwitcherTest {
                 EventTriggerSwitcherFactory.getSwitcherByEventTriggerType(trigger.getType());
         try {
             switcherByEventTriggerType.activate(trigger);
-            Assert.fail();
+            Assertions.fail();
         } catch (TriggerException e) {
-            Assert.assertNotEquals("", e.getMessage());
+            Assertions.assertNotEquals("", e.getMessage());
         }
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
-        Assert.assertTrue(listenerMap.isEmpty());
-        Assert.assertEquals(TriggerState.ERROR, trigger.getState());
+        Assertions.assertTrue(listenerMap.isEmpty());
+        Assertions.assertEquals(TriggerState.ERROR, trigger.getState());
     }
 
     @Test
@@ -100,9 +106,9 @@ public class EventTriggerSwitcherTest {
                 EventTriggerSwitcherFactory.getSwitcherByEventTriggerType(trigger.getType());
         switcherByEventTriggerType.activate(trigger);
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
-        Assert.assertNotNull(listenerMap);
-        Assert.assertTrue(listenerMap.isEmpty());
-        Assert.assertEquals(TriggerState.ACTIVE, trigger.getState());
+        Assertions.assertNotNull(listenerMap);
+        Assertions.assertTrue(listenerMap.isEmpty());
+        Assertions.assertEquals(TriggerState.ACTIVE, trigger.getState());
     }
 
     @Test
@@ -111,11 +117,12 @@ public class EventTriggerSwitcherTest {
         IEventTriggerSwitcher switcherByEventTriggerType =
                 EventTriggerSwitcherFactory.getSwitcherByEventTriggerType(trigger.getType());
         switcherByEventTriggerType.deactivate(trigger);
-        Assert.assertEquals(TriggerState.INACTIVE, trigger.getState());
+        Assertions.assertEquals(TriggerState.INACTIVE, trigger.getState());
     }
 
     private EventTrigger createSituationEventTriggerUnderSituation() {
         SituationEventTrigger trigger = new SituationEventTrigger();
+        trigger.setID(BigInteger.valueOf(Math.round((Math.random() + 1) * 1000000)));
         Situation situation = new Situation();
         situation.fillSituationEventTriggers(Collections.singleton(trigger));
         trigger.setSituation(situation);
@@ -126,6 +133,7 @@ public class EventTriggerSwitcherTest {
 
     private EventTrigger createOperationEventTriggerUnderSituation() {
         OperationEventTrigger trigger = new OperationEventTrigger();
+        trigger.setID(BigInteger.valueOf(Math.round((Math.random() + 1) * 1000000)));
         Situation situation = new Situation();
         situation.fillOperationEventTriggers(Collections.singleton(trigger));
         trigger.setState(TriggerState.ACTIVE);
