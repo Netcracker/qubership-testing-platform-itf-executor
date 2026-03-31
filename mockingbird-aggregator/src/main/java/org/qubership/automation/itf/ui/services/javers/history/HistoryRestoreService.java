@@ -297,7 +297,7 @@ public class HistoryRestoreService {
         if (StringUtils.isNotBlank(id)) {
             reference = getStorable.apply(id);
             if (reference == null) {
-                throw new ObjectNotFoundException(id, clazz.getSimpleName());
+                throw new ObjectNotFoundException((Object)id, clazz.getSimpleName());
             }
         }
         return reference;
@@ -375,17 +375,11 @@ public class HistoryRestoreService {
         LinkedList<Runnable> runnableList = new LinkedList<>();
         runnableList.add(storable::store);
         if (storable instanceof SituationEventTrigger trigger) {
-            runnableList.add(() ->
-                    getMessageToSynchronizeSituationEventTriggers(trigger, projectUuid)
-            );
-        }
-        if (storable instanceof Situation situation) {
-            Optional<OperationEventTrigger> trigger =
-                    situation.getOperationEventTriggers().stream().findFirst();
+            runnableList.add(() -> getMessageToSynchronizeSituationEventTriggers(trigger, projectUuid));
+        } else if (storable instanceof Situation situation) {
+            Optional<OperationEventTrigger> trigger = situation.getOperationEventTriggers().stream().findFirst();
             if (trigger.isPresent() && trigger.get().getState().isOn()) {
-                runnableList.add(() ->
-                        getMessageToActivateOperationEventTrigger(trigger.get(), projectUuid)
-                );
+                runnableList.add(() -> getMessageToActivateOperationEventTrigger(trigger.get(), projectUuid));
             }
         }
         return runnableList;
@@ -420,7 +414,6 @@ public class HistoryRestoreService {
         );
         triggerActivationRequest.put("trigger", triggerBriefInfo);
         sendMessageForEventTriggersActivation(triggerActivationRequest, projectUuid, operationEventTrigger);
-
     }
 
     private void sendMessageForEventTriggersActivation(JSONObject triggerActivationRequest,
@@ -446,16 +439,13 @@ public class HistoryRestoreService {
         if (storable instanceof CallChain callChain) {
             HistoryCallChain historyCallChain = (HistoryCallChain) shadowObject;
             List<HistoryStep> historySteps = historyCallChain.getSteps();
-
             if (!historySteps.isEmpty()) {
                 List<Step> steps = callChain.getSteps();
                 if (historySteps.size() == steps.size()) {
-
                     List<BigInteger> historyStepIds =
                             historySteps.stream().map(historyStep -> historyStep.getId()).toList();
                     List<BigInteger> stepIds =
                             steps.stream().map(step -> (BigInteger) step.getID()).toList();
-
                     List<Step> restoreStepsByOrder = new ArrayList<>();
                     if (new HashSet<>(historyStepIds).containsAll(stepIds)) {
                         for (HistoryStep historyStep : historySteps) {
@@ -470,8 +460,7 @@ public class HistoryRestoreService {
                     callChain.fillSteps(restoreStepsByOrder);
                 }
             }
-        }
-        if (storable instanceof Operation operation) {
+        } else if (storable instanceof Operation operation) {
             if (operation.getMep().isInboundRequest()) {
                 HistoryOperation historyOperation = (HistoryOperation) shadowObject;
                 Set<Situation> situations = operation.getSituations();
@@ -500,8 +489,7 @@ public class HistoryRestoreService {
                                             situationIdAndPriority.get(String.valueOf(situation.getID())))));
                 }
             }
-        }
-        if (storable instanceof StubProject project) {
+        } else if (storable instanceof StubProject project) {
             projectSettingsService.fillCache(project, storable.getStorableProp());
         }
     }
