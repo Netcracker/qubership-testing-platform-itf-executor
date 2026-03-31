@@ -11,22 +11,27 @@
     <name>parent-dependencies</name>
     <properties>
         <spring.boot.version>3.3.13</spring.boot.version>
-        <org.springframework.version>5.3.21</org.springframework.version>
         <spring.cloud.version>2023.0.6</spring.cloud.version>
+
         <keycloak.version>22.0.1</keycloak.version>
         <camel.version>2.20.4</camel.version>
         <activemq.version>5.16.8</activemq.version>
         <aspectj.version>1.8.10</aspectj.version>
 
-        <atp.itf.core.version>4.4.114</atp.itf.core.version>
+        <atp.itf.core.version>5.0.2-SNAPSHOT</atp.itf.core.version>
+        <atp.auth.version>2.0.2-SNAPSHOT</atp.auth.version>
+        <atp.common.version>1.0.0-SNAPSHOT</atp.common.version>
+        <atp.integration.version>1.0.0-SNAPSHOT</atp.integration.version>
+        <atp.multitenancy.version>1.0.0-SNAPSHOT</atp.multitenancy.version>
+        <atp.ei.lib.version>1.0.0-SNAPSHOT</atp.ei.lib.version>
+        <atp.crypt.version>1.0.0-SNAPSHOT</atp.crypt.version>
+
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
-        <atp.auth.version>1.2.80</atp.auth.version>
-        <atp.common.version>0.0.47</atp.common.version>
-        <atp.integration.version>0.2.42</atp.integration.version>
-        <atp.multitenancy.version>0.0.13</atp.multitenancy.version>
-        <atp.ei.lib.version>0.2.46</atp.ei.lib.version>
-        <atp.crypt.version>0.0.24</atp.crypt.version>
         <atp.adapter.common.version>4.5.71</atp.adapter.common.version>
+
+        <io.undertow.version>2.3.21.Final</io.undertow.version>
+        <org.jetbrains.kotlin.kotlin-stdlib.version>1.9.25</org.jetbrains.kotlin.kotlin-stdlib.version>
+        <jackson.version>2.18.6</jackson.version>
 
         <commons.lang.version>3.20.0</commons.lang.version>
         <org.ow2.asm.asm.version>5.2</org.ow2.asm.asm.version>
@@ -36,18 +41,15 @@
         <com.squareup.okhttp3.okhttp.version>4.9.3</com.squareup.okhttp3.okhttp.version>
         <org.jboss.logging.jboss-logging.version>3.4.3.Final</org.jboss.logging.jboss-logging.version>
         <org.jboss.xnio.version>3.8.14.Final</org.jboss.xnio.version>
-        <io.undertow.version>2.2.39.Final</io.undertow.version>
         <com.sun.xml.bind.jaxb.version>2.3.9</com.sun.xml.bind.jaxb.version>
         <com.fasterxml.woodstox.woodstox-core.version>5.0.3</com.fasterxml.woodstox.woodstox-core.version>
         <io.github.openfeign.feign-core.version>11.10</io.github.openfeign.feign-core.version>
         <javax.ws.rs.javax.ws.rs-api.version>3.1.0</javax.ws.rs.javax.ws.rs-api.version>
         <org.jvnet.staxex.stax-ex.version>1.8.3</org.jvnet.staxex.stax-ex.version>
         <org.modelmapper.modelmapper.version>3.1.1</org.modelmapper.modelmapper.version>
-        <org.jetbrains.kotlin.kotlin-stdlib.version>1.6.21</org.jetbrains.kotlin.kotlin-stdlib.version>
         <com.squareup.okio.okio.version>2.8.0</com.squareup.okio.okio.version>
         <org.apache.cxf.version>3.2.1</org.apache.cxf.version>
         <org.eclipse.jetty.version>9.4.57.v20241219</org.eclipse.jetty.version>
-        <jackson.version>2.15.0</jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -494,9 +496,9 @@
                 <version>0.1.54</version>
             </dependency>
             <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>jms-api</artifactId>
-                <version>1.1-rev-1</version>
+                <groupId>jakarta.jms</groupId>
+                <artifactId>jakarta.jms-api</artifactId>
+                <version>3.1.0</version> <!-- Use 3.1.0 for Spring Boot 3.x -->
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -868,16 +870,6 @@
                 <version>3.25.5</version>
             </dependency>
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>2.9.2</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>2.10.0</version>
-            </dependency>
-            <dependency>
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>9.37.2</version>
@@ -1237,6 +1229,11 @@
                 <artifactId>jakarta.annotation-api</artifactId>
                 <version>3.0.0</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>2.8.16</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
