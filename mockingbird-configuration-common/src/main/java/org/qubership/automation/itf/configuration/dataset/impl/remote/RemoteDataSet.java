@@ -33,7 +33,7 @@ public class RemoteDataSet implements IDataSet {
     private static final String PREFIX = "[Modified Dataset]";
     private final Supplier<JsonContext> contextSup;
     private String name;
-    private String dsId;
+    private final String dsId;
     private List<String> labels;
 
     /**
@@ -70,9 +70,7 @@ public class RemoteDataSet implements IDataSet {
                 Object contextValue = context.get(key);
                 if (contextValue != null) {
                     if (value instanceof JSONObject && contextValue instanceof JSONObject object) {
-                        for (Map.Entry<String, String> entry : ((Map<String, String>) value).entrySet()) {
-                            object.put(entry.getKey(), entry.getValue());
-                        }
+                        object.putAll(((Map<String, String>) value));
                     } else {
                         context.put(key, value);
                     }

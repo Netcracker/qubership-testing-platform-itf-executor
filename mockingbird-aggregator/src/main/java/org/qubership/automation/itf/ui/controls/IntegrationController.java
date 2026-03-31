@@ -75,7 +75,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
     @AuditAction(auditAction = "Get Integration Configs in the project {{#projectId}}/{{#projectUuid}}")
     public Collection<UIIntegrationConfig> getConfigurations(
             @RequestParam(value = "projectId") BigInteger projectId,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         StubProject project = CoreObjectManager.getInstance().getManager(StubProject.class).getById(projectId);
         if (project == null) {
             throw new ObjectNotFoundException(
@@ -137,7 +137,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
             return StringUtils.EMPTY;
         } else {
             String uuid = getProjectUUID(projectId);
-            return result.iterator().next().get(property) + ENDPOINT_FOR_LINK_TO_TC.formatted(uuid);
+            return result.getFirst().get(property) + ENDPOINT_FOR_LINK_TO_TC.formatted(uuid);
         }
     }
 

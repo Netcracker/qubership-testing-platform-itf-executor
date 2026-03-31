@@ -38,7 +38,7 @@ public class DaemonThreadPoolFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(DaemonThreadPoolFactory.class);
     private static final Thread.UncaughtExceptionHandler HANDLER = (thread, exception) -> LOGGER.error("Uncaught "
             + "exception in thread {}", thread.getName(), exception);
-    private WeakHashMap<ExecutorService, Object> weakHashMap = new WeakHashMap<>();
+    private final WeakHashMap<ExecutorService, Object> weakHashMap = new WeakHashMap<>();
 
     private DaemonThreadPoolFactory() {
     }
@@ -79,8 +79,8 @@ public class DaemonThreadPoolFactory {
 
     private static class DaemonThreadFactory implements ThreadFactory {
 
-        private AtomicInteger threadCounter = new AtomicInteger(0);
-        private String namePrefix;
+        private final AtomicInteger threadCounter = new AtomicInteger(0);
+        private final String namePrefix;
 
         public DaemonThreadFactory(String namePrefix) {
             this.namePrefix = namePrefix;

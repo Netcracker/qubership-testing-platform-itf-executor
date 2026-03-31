@@ -36,7 +36,7 @@ import com.google.common.eventbus.EventBus;
 @RestController
 public class EventbusSubscribersController {
 
-    private EventBusProvider eventBusProvider;
+    private final EventBusProvider eventBusProvider;
 
     public EventbusSubscribersController(EventBusProvider eventBusProvider) {
         this.eventBusProvider = eventBusProvider;

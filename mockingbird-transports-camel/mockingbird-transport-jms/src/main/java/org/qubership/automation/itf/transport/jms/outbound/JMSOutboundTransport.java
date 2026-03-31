@@ -92,7 +92,7 @@ public class JMSOutboundTransport extends AbstractCamelOutboundTransport {
                     removeComponentById(removalNotification.getKey());
                 }
             })
-            .build(new CacheLoader<ConfiguredTransport, JMSConfig>() {
+            .build(new CacheLoader<>() {
                 @Override
                 public JMSConfig load(@Nonnull ConfiguredTransport id) throws Exception {
                     try {
@@ -350,7 +350,7 @@ public class JMSOutboundTransport extends AbstractCamelOutboundTransport {
     @Getter
     private class ConfiguredTransport {
 
-        private TreeMap<String, Object> properties;
+        private final TreeMap<String, Object> properties;
         private String componentId;
         @Setter
         private String transportId;

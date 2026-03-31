@@ -35,7 +35,7 @@ import org.springframework.web.context.support.StandardServletEnvironment;
 @RestController
 public class EnvPropertiesController {
 
-    private Environment environment;
+    private final Environment environment;
 
     public EnvPropertiesController(Environment environment) {
         this.environment = environment;

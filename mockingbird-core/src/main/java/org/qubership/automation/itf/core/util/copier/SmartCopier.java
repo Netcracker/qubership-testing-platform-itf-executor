@@ -113,7 +113,7 @@ public class SmartCopier {
                     setServerIfNeed(inboundServer, entry, systemMap, false, replacements);
                 }
             } else {
-                if (Boolean.valueOf(jsonObject.get(USE_STANDARD_TRIGGERS).toString())) {
+                if (Boolean.parseBoolean(jsonObject.get(USE_STANDARD_TRIGGERS).toString())) {
                     prepareTemplateTriggers(environment.getInbound().entrySet(), null,
                             new JSONObject((Map) jsonObject.get(TRIGGER_PROPERTIES)));
                 }
@@ -170,7 +170,7 @@ public class SmartCopier {
                                         ArrayList<LinkedHashMap<String, String>> replacements) {
         for (Map.Entry<String, String> systemStatus : systemMapStatus.entrySet()) {
             if (systemStatus.getKey().equals(entry.getKey().getID().toString())
-                    && Boolean.valueOf(systemStatus.getValue())) {
+                    && Boolean.parseBoolean(systemStatus.getValue())) {
                 if (isOutbound) {
                     Collection<OutboundTransportConfiguration> confs = entry.getValue().getOutbounds(entry.getKey());
                     Collection<OutboundTransportConfiguration> newConfs = new ArrayList<>();
@@ -293,7 +293,7 @@ public class SmartCopier {
 
                     // set parameters only for filtered triggers
                     for (Configuration in : newInboundTransportConfiguration.getTriggerConfigurations()) {
-                        if ((in.get(property) != null) && (in.get(property).toString().equals(propertyValue))) {
+                        if ((in.get(property) != null) && (in.get(property).equals(propertyValue))) {
                             fillParamsConfigIfTypeIsSame(in, triggerConfiguration);
                         }
                     }
@@ -356,7 +356,7 @@ public class SmartCopier {
                     key = option.getValue();
                 }
                 if (option.getKey().equals(nameValue)) {
-                    value = String.valueOf(option.getValue());
+                    value = option.getValue();
                 }
             }
         }
@@ -372,15 +372,12 @@ public class SmartCopier {
      * @return <tt>true</tt> if all fields exist for "smart copy" of Environment
      */
     private static boolean isJsonObjectValid(JSONObject jsonObject) {
-        if (jsonObject.containsKey(SYSTEMS)
+        return jsonObject.containsKey(SYSTEMS)
                 && jsonObject.containsKey(NEED_OTHER_SERVER)
                 && jsonObject.containsKey(USE_STANDARD_TRIGGERS)
                 && jsonObject.containsKey(STANDARD_TRIGGERS)
                 && jsonObject.containsKey(NEED_NEW_SERVER)
                 && jsonObject.containsKey(NAME)
-                && jsonObject.containsKey(SERVER)) {
-            return true;
-        }
-        return false;
+                && jsonObject.containsKey(SERVER);
     }
 }

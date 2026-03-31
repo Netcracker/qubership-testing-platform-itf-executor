@@ -67,8 +67,7 @@ public class VelocityController {
     @AuditAction(auditAction = "Parse velocity content, project {{#projectId}}/{{#projectUuid}}")
     public ResponseObject parseContent(@RequestBody UIVelocityRequestBody requestBody,
                                        @RequestParam(value = "projectId", required = false) BigInteger projectId,
-                                       @RequestParam(value = "projectUuid") UUID projectUuid)
-            throws ParseException, IllegalAccessException, InstantiationException {
+                                       @RequestParam(value = "projectUuid") UUID projectUuid) {
         if (projectId == null) {
             //noinspection unchecked
             projectId = CoreObjectManager.getInstance().getSpecialManager(StubProject.class, SearchManager.class)
@@ -95,7 +94,7 @@ public class VelocityController {
                         tcContext = new TcContext();
                     }
                 } else {
-                    tcContext = JsonContext.fromJson(contextProperties.get(0)[7].toString(), TcContext.class);
+                    tcContext = JsonContext.fromJson(contextProperties.getFirst()[7].toString(), TcContext.class);
                 }
             }
             if (tcContext.getProjectId() == null) {

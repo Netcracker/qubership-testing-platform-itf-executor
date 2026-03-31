@@ -18,7 +18,6 @@
 package org.qubership.automation.itf;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -290,7 +289,7 @@ public class DatasetsFeignClientPactUnitTest {
     }
 
     private List<VisibilityAreaFlatModelDto> getResponseBody7() {
-        return Arrays.asList(getVisibilityAreaFlatModelDto());
+        return List.of(getVisibilityAreaFlatModelDto());
     }
 
     private DataSetListCreatedModifiedViewDto getDataSetList() {
@@ -306,7 +305,7 @@ public class DatasetsFeignClientPactUnitTest {
     }
 
     private List<DataSetListCreatedModifiedViewDto> getResponseBody8() {
-        return Arrays.asList(getDataSetList());
+        return List.of(getDataSetList());
     }
 
     private DataSetDto getDataSet() {
@@ -317,7 +316,7 @@ public class DatasetsFeignClientPactUnitTest {
     }
 
     private List<DataSetDto> getResponseBody9() {
-        return Arrays.asList(getDataSet());
+        return List.of(getDataSet());
     }
 
     private List<String> getResponseBody10() {

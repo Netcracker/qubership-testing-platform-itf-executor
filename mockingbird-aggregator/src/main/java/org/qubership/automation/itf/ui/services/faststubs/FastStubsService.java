@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,10 +58,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class FastStubsService {
 
-    private ObjectMapper objectMapper;
-    private UserService userService;
-    private ExternalDataManagementService externalDataManagementService;
-    private ExecutorToMessageBrokerSender executorToMessageBrokerSender;
+    private final ObjectMapper objectMapper;
+    private final UserService userService;
+    private final ExternalDataManagementService externalDataManagementService;
+    private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
 //    private EventTriggerActivationService eventTriggerActivationService;
 
     public FastStubsService(ExternalDataManagementService externalDataManagementService,
@@ -104,12 +105,12 @@ public class FastStubsService {
 
                     TransportConfig trConfig = new TransportConfig();
                     trConfig.setTransportType(transportConfig.getTransportType());
-                    trConfig.setEndpoints(new ArrayList<StubEndpointConfig>() {
+                    trConfig.setEndpoints(new ArrayList<>() {
                         {
                             add(stubEndpointConfig);
                         }
                     });
-                    fastConfig.setTransportConfigs(new ArrayList<TransportConfig>() {
+                    fastConfig.setTransportConfigs(new ArrayList<>() {
                         {
                             add(trConfig);
                         }
@@ -118,7 +119,7 @@ public class FastStubsService {
                     String configAsString = objectMapper.writeValueAsString(fastConfig);
                     String fileName = "%s__%s__%s.json".formatted(
                             projectUuid, transportConfig.getTransportType().name(),
-                            URLEncoder.encode(stubEndpointConfig.getConfiguredEndpoint(), "UTF-8"));
+                            URLEncoder.encode(stubEndpointConfig.getConfiguredEndpoint(), StandardCharsets.UTF_8));
                     storeFileAndNotifyInstances(fileName, configAsString, userService.getCurrentUserInfo(),
                             projectUuid);
                     collectAppliedFastConfigs(stubEndpointConfig, fastInfoConfigs);

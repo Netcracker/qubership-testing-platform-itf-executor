@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
@@ -162,7 +161,7 @@ public class OperationController extends AbstractController<UIOperation, Operati
         ControllerHelper.throwExceptionIfNull(system, "", id, System.class, "delete operation");
         List<Operation> filteredOperations = system.getOperations().stream().filter(
                 operation -> Arrays.asList(deleteRequest.getIds()).contains(operation.getID().toString())
-        ).collect(Collectors.toList());
+        ).toList();
         Map<String, List<UIObject>> operationsWithTriggers = new HashMap<>();
         Map<String, String> usingOperations = new HashMap<>();
         List<Operation> operationsWithoutTriggers = new ArrayList<>();

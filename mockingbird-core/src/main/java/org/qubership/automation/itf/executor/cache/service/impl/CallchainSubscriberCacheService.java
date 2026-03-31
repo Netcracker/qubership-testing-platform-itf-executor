@@ -35,7 +35,7 @@ import jakarta.annotation.Nonnull;
 public class CallchainSubscriberCacheService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CallchainSubscriberCacheService.class);
     private static final LoadingCache<Object, List<NextCallChainSubscriber>> TC_CONTEXT_SUBSCRIBERS_CACHE
-            = CacheBuilder.newBuilder().build(new CacheLoader<Object, List<NextCallChainSubscriber>>() {
+            = CacheBuilder.newBuilder().build(new CacheLoader<>() {
         @Override
         public List<NextCallChainSubscriber> load(@Nonnull Object id) {
             return new ArrayList<>();
@@ -53,7 +53,7 @@ public class CallchainSubscriberCacheService {
                 try {
                     TC_CONTEXT_SUBSCRIBERS_CACHE.get(tcId).add(chainSubscriber);
                 } catch (ExecutionException e) {
-                    LOGGER.error("Exception adding {} for tcId {}", subscriber, tcId, e.getMessage());
+                    LOGGER.error("Exception adding {} for tcId {}: {}", subscriber, tcId, e.getMessage());
                 }
             }
         }

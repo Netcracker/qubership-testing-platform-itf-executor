@@ -39,8 +39,7 @@ public class SecurityHelper {
 
     private static Authentication deserialize(String authentication) {
         byte[] decoded = DatatypeConverter.parseBase64Binary(authentication);
-        Authentication auth = (Authentication) SerializationUtils.deserialize(decoded);
-        return auth;
+        return (Authentication) SerializationUtils.deserialize(decoded);
     }
 
     public static void addAuthContextToMessage(JSONObject message) {

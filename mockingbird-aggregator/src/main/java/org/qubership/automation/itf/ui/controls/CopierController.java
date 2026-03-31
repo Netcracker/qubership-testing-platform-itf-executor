@@ -221,7 +221,7 @@ public class CopierController extends ControllerHelper {
             destinationObject.flush();
             OriginalCopyMap.getInstance().clear(sessionId);
             return UIHelper.getUIPresentationByStorable(destinationObject,
-                    Class.forName(request.getSources().get(0).getClassName()), copiedMovedObjects);
+                    Class.forName(request.getSources().getFirst().getClassName()), copiedMovedObjects);
         } else {
             throw new IllegalArgumentException(error);
         }
@@ -342,7 +342,7 @@ public class CopierController extends ControllerHelper {
     }
 
     private void performPreValidationSteps(UICopyMove copyMoveRequest) throws ClassNotFoundException {
-        UIObject firstElement = copyMoveRequest.getSources().get(0);
+        UIObject firstElement = copyMoveRequest.getSources().getFirst();
         Storable firstSource = CoreObjectManager.getInstance()
                 .getManager(Class.forName(firstElement.getClassName()).asSubclass(Storable.class))
                 .getById(firstElement.getId());

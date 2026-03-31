@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
 public class ExcelDataSetListsSource extends AbstractStorable implements DataSetListsSource {
 
     private final transient ExcelDataSetListRepository repo;
-    private Object projectUuid;
+    private final Object projectUuid;
 
     public ExcelDataSetListsSource(
             @Nonnull ExcelDataSetListRepository repo,

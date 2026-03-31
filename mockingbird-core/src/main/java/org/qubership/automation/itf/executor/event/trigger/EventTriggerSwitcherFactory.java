@@ -30,7 +30,7 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class EventTriggerSwitcherFactory {
 
-    private static Map<String, EventTriggerSwitcher> eventTriggerSwitcher = new HashMap<>();
+    private static final Map<String, EventTriggerSwitcher> eventTriggerSwitcher = new HashMap<>();
     private SituationEventTriggerSwitcher situationEventTriggerSwitcher;
     private OperationEventTriggerSwitcher operationEventTriggerSwitcher;
 

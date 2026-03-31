@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.lang3.IllegalClassException;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.callchain.CallChain;
@@ -64,14 +63,13 @@ public class FolderController extends AbstractFolderController {
     @AuditAction(auditAction = "Check Folder contents before deleting it from project {{#projectUuid}}")
     public Map<String, Collection<UIObject>> getDataForDelete(
             @RequestBody Collection<UIObject> objectsToDelete,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws IllegalClassException {
+            @RequestParam(value = "projectUuid") UUID projectUuid) throws IllegalArgumentException {
         List<UIObject> nonEmptyFolders = new ArrayList<>();
         List<UIObject> emptyFolders = new ArrayList<>();
         List<UIObject> otherEntities = new ArrayList<>();
         for (UIObject object : objectsToDelete) {
             Class sourceClass = getSupportEntityClass(object.getClassName());
-            Storable obj =
-                    CoreObjectManager.getInstance().getManager(sourceClass).getById(object.getId());
+            Storable obj = CoreObjectManager.getInstance().getManager(sourceClass).getById(object.getId());
             UIObject uiObject = new UIObject(obj);
             if (obj instanceof Folder folder && folderIsNotEmpty(folder)) {
                 nonEmptyFolders.add(uiObject);
@@ -99,7 +97,7 @@ public class FolderController extends AbstractFolderController {
         } else if (Environment.class.getCanonicalName().equals(className)) {
             sourceClassName = Environment.class;
         } else {
-            throw new IllegalClassException("Unexpected class: " + className + ". Class is not supported for delete.");
+            throw new IllegalArgumentException("Unexpected class: " + className + ". Class is not supported for delete.");
         }
         return sourceClassName;
     }

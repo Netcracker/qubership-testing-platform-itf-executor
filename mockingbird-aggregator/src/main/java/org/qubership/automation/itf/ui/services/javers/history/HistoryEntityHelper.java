@@ -70,17 +70,17 @@ public class HistoryEntityHelper {
     public static final Map<String, Class<? extends HistoryIdentified<?>>> ENTITIES_MODEL_MAPPER = new HashMap<>();
     private static final ModelMapper modelMapper = new ModelMapper();
 
-    private static Converter<Storable, BigInteger> isIdConverter =
+    private static final Converter<Storable, BigInteger> isIdConverter =
             (src) -> Objects.nonNull(src.getSource()) ? (BigInteger) src.getSource().getID() : null;
 
-    private static Converter<Storable, String> storableIdConverterToString =
+    private static final Converter<Storable, String> storableIdConverterToString =
             (src) -> Objects.nonNull(src.getSource()) ? src.getSource().getID().toString() : StringUtils.EMPTY;
 
-    private static Converter<Set<? extends Storable>, Set<BigInteger>> listStorableToListIdConverter =
+    private static final Converter<Set<? extends Storable>, Set<BigInteger>> listStorableToListIdConverter =
             (src) -> src.getSource().stream()
                     .map((storable) -> (BigInteger) storable.getID()).collect(Collectors.toSet());
 
-    private static Converter<List<Step>, List<HistoryStep>> isListStepConverter =
+    private static final Converter<List<Step>, List<HistoryStep>> isListStepConverter =
             (src) -> src.getSource().stream()
                     .map(step -> modelMapper.map(step, HistoryStep.class))
                     .collect(Collectors.toList());

@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
 public class StartupErrorCollector {
 
     private static final StartupErrorCollector INSTANCE = new StartupErrorCollector();
-    private LinkedList<Error> errors = Lists.newLinkedList();
+    private final LinkedList<Error> errors = Lists.newLinkedList();
 
     public static StartupErrorCollector getInstance() {
         return INSTANCE;

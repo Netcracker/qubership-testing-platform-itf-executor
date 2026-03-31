@@ -414,7 +414,7 @@ public class UiContextListener {
         log.info("Loading files from external storage...");
         List<StubProject> projectsList = projects.values().stream()
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+                .toList();
         for (StubProject proj : projectsList) {
             try {
                 log.info("Project {} / {}, '{}' is processed...", proj.getID(), proj.getUuid(), proj.getName());

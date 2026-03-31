@@ -47,7 +47,7 @@ public class TestInterceptor extends ContentInterceptor {
     }
 
     @Override
-    public Message apply(Message data) throws Exception {
+    public Message apply(Message data) {
         InterceptorParams params = interceptor.getParameters();
         LOGGER.info("Message from interceptor: {}\nTest Interceptor has been successfully applied to the message: {}",
                 (params == null) ? null : params.get(LOG_MESSAGE),

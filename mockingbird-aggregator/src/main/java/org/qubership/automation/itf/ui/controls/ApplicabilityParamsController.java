@@ -90,7 +90,7 @@ public class ApplicabilityParamsController extends AbstractController<UIApplicab
         UIResult result = validate(uiApplicabilityParamsList);
         if (!uiApplicabilityParamsList.isEmpty()) {
             Interceptor interceptor
-                    = getInterceptorWithType(uiApplicabilityParamsList.get(0).getParent().getId(), type);
+                    = getInterceptorWithType(uiApplicabilityParamsList.getFirst().getParent().getId(), type);
             if (result.isSuccess()) {
                 if (interceptor != null) {
                     for (UIApplicabilityParams uiApplicabilityParams : uiApplicabilityParamsList) {

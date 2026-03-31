@@ -21,6 +21,7 @@ import static org.qubership.automation.itf.core.util.converter.IdConverter.toBig
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -308,9 +309,9 @@ public class HistoryRestoreService {
                 if (mappingContext.getSource().size() != mappingContext.getDestination().size()
                         || !mappingContext.getSource()
                         .stream()
-                        .map(s -> ((HistoryIdentified<?>) s).getId()).collect(Collectors.toList())
+                        .map(s -> ((HistoryIdentified<?>) s).getId()).toList()
                         .containsAll(mappingContext.getDestination().stream()
-                                .map(d -> d.getID()).collect(Collectors.toList()))) {
+                                .map(d -> d.getID()).toList())) {
                     throw new RuntimeException("Cannot restore object because it has different set of triggers.");
                 }
                 modelMapper.map(
@@ -451,12 +452,12 @@ public class HistoryRestoreService {
                 if (historySteps.size() == steps.size()) {
 
                     List<BigInteger> historyStepIds =
-                            historySteps.stream().map(historyStep -> historyStep.getId()).collect(Collectors.toList());
+                            historySteps.stream().map(historyStep -> historyStep.getId()).toList();
                     List<BigInteger> stepIds =
-                            steps.stream().map(step -> (BigInteger) step.getID()).collect(Collectors.toList());
+                            steps.stream().map(step -> (BigInteger) step.getID()).toList();
 
                     List<Step> restoreStepsByOrder = new ArrayList<>();
-                    if (historyStepIds.containsAll(stepIds)) {
+                    if (new HashSet<>(historyStepIds).containsAll(stepIds)) {
                         for (HistoryStep historyStep : historySteps) {
                             for (Step step : steps) {
                                 if (historyStep.getId().equals(step.getID())) {
@@ -478,7 +479,7 @@ public class HistoryRestoreService {
                         .stream()
                         .filter(historySituation -> historySituation.getOperationEventTriggers()
                                 .stream().findFirst().isPresent())
-                        .collect(Collectors.toList());
+                        .toList();
                 Map<String, Integer> situationIdAndPriority = historySituations
                         .stream()
                         .filter(historySituation -> historySituation.getOperationEventTriggers()
@@ -517,7 +518,7 @@ public class HistoryRestoreService {
         List<CdoSnapshot> snapshots = javers.findSnapshots(query);
         QueryBuilder queryBuilder = QueryBuilder.byInstanceId(objectId, clazz).withVersion(version).withScopeDeepPlus();
         if (Objects.nonNull(snapshots) && !snapshots.isEmpty()) {
-            queryBuilder.withCommitId(snapshots.get(0).getCommitId());
+            queryBuilder.withCommitId(snapshots.getFirst().getCommitId());
         }
         List<Shadow<Object>> shadows = javers.findShadows(queryBuilder.build());
         return shadows.stream().findFirst();

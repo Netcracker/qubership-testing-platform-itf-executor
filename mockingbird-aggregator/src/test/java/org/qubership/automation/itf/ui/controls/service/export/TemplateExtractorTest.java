@@ -35,7 +35,7 @@ public class TemplateExtractorTest {
 
     @Test
     public void findLoadPart() {
-        String input = "" + "#set($tc.saved.env=${___environment___.name})" + "#load_part(\"Rebase\")"
+        String input = "#set($tc.saved.env=${___environment___.name})" + "#load_part(\"Rebase\")"
                 + "#set($chechReg='(?s)(^(.*'+$tc.saved.env+'.*)$)')" + "#if($envCheck.matches($chechReg))"
                 + "#set($tc.saved.isRebase = 1)" + "#else" + "#set($tc.saved.isRebase = 0)" + "#end"
                 + "#set($accountNum = $tc.Account.AccountNum)" + "#load_part(\"Rebase2\")"
@@ -50,6 +50,6 @@ public class TemplateExtractorTest {
         Assertions.assertNotNull(loadPartTemplates);
         Assertions.assertFalse(loadPartTemplates.isEmpty());
         String s = loadPartTemplates.toString();
-        Assertions.assertEquals(s, "[Rebase3, 1235, Rebase2, Rebase4, Rebase]");
+        Assertions.assertEquals("[Rebase3, 1235, Rebase2, Rebase4, Rebase]", s);
     }
 }

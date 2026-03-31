@@ -89,7 +89,7 @@ public class TemplateDebugController extends ControllerHelper {
             @RequestParam(value = "id", defaultValue = "0") String id,
             @RequestParam(value = "projectId") BigInteger projectId,
             @RequestBody String editRequest,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         Template template = TemplateHelper.getById(id);
         throwExceptionIfNull(template, "", id, Template.class, "get Template parameters");
         String templateContent =
@@ -113,7 +113,7 @@ public class TemplateDebugController extends ControllerHelper {
             parsingRuleObjectManager = CoreObjectManager.getInstance().getManager(SystemParsingRule.class);
             parentsMap.put(parentSystem.getName(), "System");
             for (Operation operation : parentSystem.getOperations()) {
-                if (operation.returnParsingRules().size() > 0) {
+                if (!operation.returnParsingRules().isEmpty()) {
                     parentsMap.put(operation.getName(), "Operation");
                 }
             }

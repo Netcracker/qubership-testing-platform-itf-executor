@@ -148,7 +148,7 @@ public class ServerConfigurationController {
             @RequestParam(value = "systemId", defaultValue = "0") String systemId,
             @RequestBody UIServerOutbound serverOutbound,
             @RequestParam(value = "projectId") BigInteger projectId,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         String operation = "set outbound for system by server id, system id";
         Server server = (Server) getAndCheckObject(serverId, Server.class, operation);
         System system = (System) getAndCheckObject(systemId, System.class, operation);
@@ -181,7 +181,7 @@ public class ServerConfigurationController {
             @RequestParam(value = "systemId", defaultValue = "0") String systemId,
             @RequestParam(value = "quickSave", defaultValue = "false") boolean quickSave,
             @RequestBody UIServerInbound serverInbound,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         ServerTriggerSyncRequest serverTriggerSyncRequest = new ServerTriggerSyncRequest();
         String operation = "set inbound for system by server id, system id";
         Server server = (Server) getAndCheckObject(serverId, Server.class, operation);

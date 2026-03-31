@@ -46,7 +46,7 @@ public class TransportRegistryLoader extends AbstractTransportRegistry {
 
     private TransportClassLoader loader;
     private final LoadingCache<String, AccessTransport> transportCache = CacheBuilder.newBuilder()
-            .build(new CacheLoader<String, AccessTransport>() {
+            .build(new CacheLoader<>() {
                 @Override
                 public AccessTransport load(@Nonnull String transportType) throws Exception {
                     MeansCommunication instanceClass = loader.getInstanceClass(transportType);

@@ -70,7 +70,7 @@ public class CleanTmpFileScheduler {
      */
     private void removeFiles(Path tmpdir, Long expirationDate, List<String> deletedPaths) {
         try {
-            Files.walkFileTree(tmpdir, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(tmpdir, new SimpleFileVisitor<>() {
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {

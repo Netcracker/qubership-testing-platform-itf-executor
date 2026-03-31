@@ -165,7 +165,7 @@ public class TestRunInfoTest {
     public void atpContextContainsArraysSuccessfullyMerged() {
         String atpContextString1 = "{\"Params.reservation_id[0]\":\"0\"}";
         TestRunInfo testRunInfo1 = prepareTestRunInfo(atpContextString1);
-        Assert.isTrue(((JSONArray) testRunInfo1.getContextToMerge().get("Params.reservation_id")).get(0).equals("0"),
+        Assert.isTrue(((JSONArray) testRunInfo1.getContextToMerge().get("Params.reservation_id")).getFirst().equals("0"),
                 "Check #1 is failed: 'Params.reservation_id[0]' property value is not equal \"0\"!");
 
         String atpContextString2 = """

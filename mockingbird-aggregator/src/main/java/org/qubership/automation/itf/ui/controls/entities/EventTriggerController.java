@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
@@ -80,13 +79,13 @@ public class EventTriggerController extends AbstractController<UIEventTrigger, E
         List<EventTriggerBriefInfo> triggersToReactivate = new ArrayList<>();
         if (uiEventTriggers != null) {
             List<String> uiEventTriggersIds = uiEventTriggers.stream().map(UIEventTrigger::getId)
-                    .collect(Collectors.toList());
+                    .toList();
             //first - delete all missed triggers under parent
             Collection<EventTriggerBriefInfo> triggersToDelete = parent.getAllEventTriggers().stream()
                     .filter(eventTrigger -> !uiEventTriggersIds.contains(String.valueOf(eventTrigger.getID())))
                     .map(eventTrigger ->
                             new EventTriggerBriefInfo((BigInteger) eventTrigger.getID(), eventTrigger.getType()))
-                    .collect(Collectors.toList());
+                    .toList();
             triggersToDeactivate.addAll(triggersToDelete);
             //second - add triggers which have no ids in request
             Collection<UIEventTrigger> triggersToAdd = Collections2.filter(uiEventTriggers,

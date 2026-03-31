@@ -49,7 +49,7 @@ public class EventTriggerSwitcherTest {
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
         Assert.assertNotNull(listenerMap);
         Assert.assertFalse(listenerMap.isEmpty());
-        Assert.assertEquals(trigger.getState(), TriggerState.ACTIVE);
+        Assert.assertEquals(TriggerState.ACTIVE, trigger.getState());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class EventTriggerSwitcherTest {
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
         Assert.assertNotNull(listenerMap);
         Assert.assertFalse(listenerMap.isEmpty());
-        Assert.assertEquals(trigger.getState(), TriggerState.ACTIVE);
+        Assert.assertEquals(TriggerState.ACTIVE, trigger.getState());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class EventTriggerSwitcherTest {
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
         Assert.assertNotNull(listenerMap);
         Assert.assertTrue(listenerMap.isEmpty());
-        Assert.assertEquals(trigger.getState(), TriggerState.INACTIVE);
+        Assert.assertEquals(TriggerState.INACTIVE, trigger.getState());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class EventTriggerSwitcherTest {
         }
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
         Assert.assertTrue(listenerMap.isEmpty());
-        Assert.assertEquals(trigger.getState(), TriggerState.ERROR);
+        Assert.assertEquals(TriggerState.ERROR, trigger.getState());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class EventTriggerSwitcherTest {
         Map<Object, Listener> listenerMap = EventTriggerHolder.getInstance().getAll();
         Assert.assertNotNull(listenerMap);
         Assert.assertTrue(listenerMap.isEmpty());
-        Assert.assertEquals(trigger.getState(), TriggerState.ACTIVE);
+        Assert.assertEquals(TriggerState.ACTIVE, trigger.getState());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class EventTriggerSwitcherTest {
         IEventTriggerSwitcher switcherByEventTriggerType =
                 EventTriggerSwitcherFactory.getSwitcherByEventTriggerType(trigger.getType());
         switcherByEventTriggerType.deactivate(trigger);
-        Assert.assertEquals(trigger.getState(), TriggerState.INACTIVE);
+        Assert.assertEquals(TriggerState.INACTIVE, trigger.getState());
     }
 
     private EventTrigger createSituationEventTriggerUnderSituation() {

@@ -213,14 +213,14 @@ public class SystemConverter extends AbstractConverter<System, ECSystem> {
             } else if (connectionForEnvCount == 1 && !server.getOutbounds().isEmpty()
                     && server.getOutbound(system, connectionType).getEcId() != null
                     && !server.getOutbound(system, connectionType).getEcId()
-                    .equals(byTarget.get(ECIConstants.FOR_ENV).get(0).getEcId())) {
+                    .equals(byTarget.get(ECIConstants.FOR_ENV).getFirst().getEcId())) {
                 ECIErrorsCache.getInstance().put(eciSessionId,
                         "",
                         connectionType,
                         "Environment already has the %s transport configuration for %s/%s".formatted(
                                 connectionType, system.getName(), server.getName()), ValidationLevel.INFO);
             } else {
-                connectionForEnvironment = byTarget.get(ECIConstants.FOR_ENV).get(0);
+                connectionForEnvironment = byTarget.get(ECIConstants.FOR_ENV).getFirst();
                 connectionForEnvironment.setConnectionType(connectionType);
             }
         }

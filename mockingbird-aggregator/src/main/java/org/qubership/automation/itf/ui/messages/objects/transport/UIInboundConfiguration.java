@@ -41,19 +41,16 @@ public class UIInboundConfiguration extends UIConfiguration {
 
     private static final String DUMB_ID = "from " + UIInboundConfiguration.class.getSimpleName();
     private static final Function<TriggerConfiguration, UITriggerConfiguration> TO_UI_TRIGGER_CONF =
-            new Function<TriggerConfiguration, UITriggerConfiguration>() {
-                @Override
-                public UITriggerConfiguration apply(TriggerConfiguration input) {
-                    UITriggerConfiguration uiTriggerConfiguration = new UITriggerConfiguration(input);
-                    try {
-                        uiTriggerConfiguration.defineProperties(input);
-                    } catch (RemoteException | TransportException e) {
-                        throw new RuntimeException(e.getMessage(), e);
-                    }
-                    uiTriggerConfiguration.setState(input.getState().toString());
-                    uiTriggerConfiguration.setError(input.getActivationErrorMessage());
-                    return uiTriggerConfiguration;
+            input -> {
+                UITriggerConfiguration uiTriggerConfiguration = new UITriggerConfiguration(input);
+                try {
+                    uiTriggerConfiguration.defineProperties(input);
+                } catch (RemoteException | TransportException e) {
+                    throw new RuntimeException(e.getMessage(), e);
                 }
+                uiTriggerConfiguration.setState(input.getState().toString());
+                uiTriggerConfiguration.setError(input.getActivationErrorMessage());
+                return uiTriggerConfiguration;
             };
     private ImmutableList<UITriggerConfiguration> triggers;
     private UIObject transport;
@@ -76,7 +73,7 @@ public class UIInboundConfiguration extends UIConfiguration {
 
     @Nonnull
     static List<UIProperty> define(Collection<PropertyDescriptor> descriptors, Configuration parent,
-                                   Configuration configuration) throws RemoteException {
+                                   Configuration configuration) {
         List<UIProperty> uiProperties = Lists.newArrayListWithExpectedSize(descriptors.size());
         for (PropertyDescriptor descriptor : descriptors) {
             if (descriptor.isForServer()) {

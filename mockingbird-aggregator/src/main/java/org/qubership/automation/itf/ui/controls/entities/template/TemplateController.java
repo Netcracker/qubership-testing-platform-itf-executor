@@ -338,7 +338,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
                 server.setName(stringObjectMap.get("server_name").toString());
                 uiEnvironmentItem.setSystem(system);
                 uiEnvironmentItem.setServer(server);
-                uiEnvironment.setOutbound(new ArrayList<UIEnvironmentItem>() {
+                uiEnvironment.setOutbound(new ArrayList<>() {
                     {
                         add(uiEnvironmentItem);
                     }

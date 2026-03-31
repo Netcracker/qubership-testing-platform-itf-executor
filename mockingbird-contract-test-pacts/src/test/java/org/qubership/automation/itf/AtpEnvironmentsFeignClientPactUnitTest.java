@@ -83,10 +83,10 @@ public class AtpEnvironmentsFeignClientPactUnitTest {
     private AtpEnvironmentsProjectFeignClient atpEnvironmentsProjectFeignClient;
     @Autowired
     private AtpEnvironmentsConnectionFeignClient atpEnvironmentsConnectionFeignClient;
-    private UUID projectUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9701");
-    private UUID environmentUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9702");
-    private UUID connectionId = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9703");
-    private UUID systemUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9704");
+    private final UUID projectUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9701");
+    private final UUID environmentUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9702");
+    private final UUID connectionId = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9703");
+    private final UUID systemUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9704");
 
     @Test
     @PactVerification()

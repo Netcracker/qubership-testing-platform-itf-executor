@@ -360,7 +360,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         QuickCompareResponse compareResult = BvResponseProcessor.processQuickCompareResponse(response);
         boolean result = "IDENTICAL".equals(compareResult.getCompareResult());
         String hlTable = printHlResult(compareResult.getSteps(), "");
-        if (compareResult.getSteps() != null && compareResult.getSteps().size() > 0) {
+        if (compareResult.getSteps() != null && !compareResult.getSteps().isEmpty()) {
             hlTable = "<div class=\"highlighter-container\">" + hlTable + "</div>";
         }
         if (!result) {

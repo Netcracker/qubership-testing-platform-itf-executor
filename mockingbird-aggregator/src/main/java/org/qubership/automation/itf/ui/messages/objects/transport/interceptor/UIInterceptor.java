@@ -17,7 +17,6 @@
 
 package org.qubership.automation.itf.ui.messages.objects.transport.interceptor;
 
-import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +49,7 @@ public class UIInterceptor extends UIObject {
     private String interceptorGroup;
     private List<UIApplicabilityParams> applicabilityParams = new ArrayList<>();
 
-    public UIInterceptor(Storable interceptor) throws TransportException, InvocationTargetException,
-            IllegalAccessException, InstantiationException, NoSuchMethodException {
+    public UIInterceptor(Storable interceptor) throws TransportException {
         this((Interceptor) interceptor);
     }
 
@@ -61,7 +59,7 @@ public class UIInterceptor extends UIObject {
         setActive(interceptor.isActive());
         setTransportName(interceptor.getTransportName());
         setInterceptorGroup(interceptor.getInterceptorGroup());
-        TransportInterceptor transportInterceptor = null;
+        TransportInterceptor transportInterceptor;
         try {
             transportInterceptor = InterceptorClassLoader.getInstance().getInstanceClass(interceptor.getTypeName(),
                     interceptor);
@@ -117,7 +115,7 @@ public class UIInterceptor extends UIObject {
 
     public UIResult validate() {
         for (UIProperty parameter : parameters) {
-            if (!Boolean.valueOf(parameter.getOptional()) && StringUtils.isEmpty(parameter.getValue())) {
+            if (!Boolean.parseBoolean(parameter.getOptional()) && StringUtils.isEmpty(parameter.getValue())) {
                 return new UIResult(false,
                         "Parameter %s can not be empty. Please, fill the parameter.".formatted(
                                 parameter.getName()));

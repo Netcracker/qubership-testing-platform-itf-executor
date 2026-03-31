@@ -37,7 +37,7 @@ public class EventBusProvider {
             new EventBus(new LoggingSubscriberExceptionHandler("Normal priority bus"));
     private final EventBus highPriorityEventBus =
             new EventBus(new LoggingSubscriberExceptionHandler("High priority bus"));
-    private CallchainSubscriberCacheService callchainSubscriberCacheService;
+    private final CallchainSubscriberCacheService callchainSubscriberCacheService;
 
     public EventBusProvider(CallchainSubscriberCacheService callchainSubscriberCacheService) {
         this.callchainSubscriberCacheService = callchainSubscriberCacheService;
@@ -110,7 +110,7 @@ public class EventBusProvider {
     }
 
     private static final class LoggingSubscriberExceptionHandler implements SubscriberExceptionHandler {
-        private String name;
+        private final String name;
 
         LoggingSubscriberExceptionHandler(String name) {
             this.name = name;

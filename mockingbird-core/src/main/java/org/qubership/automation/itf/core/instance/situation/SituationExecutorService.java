@@ -152,7 +152,7 @@ public class SituationExecutorService {
                     failureOfSituationWithoutAtpReport(instance, e);
                 } else {
                     performPostCalculations(situation, instance,
-                            instance.getStepInstances().get(instance.getStepInstances().size() - 1).getContext(), true);
+                            instance.getStepInstances().getLast().getContext(), true);
                     computeContextDiff(leftFlatMap, instance.getContext().getTC(), instance.getID());
                     postStepEventFinishIfIsRetryStep(instance);
                     failureOfSituation(instance, e, "Failed message validation");
@@ -414,7 +414,7 @@ public class SituationExecutorService {
         // May be it could be done easier?
         // Block to be reviewed - start
         List<StepInstance> listStepInstance = instance.getStepInstances();
-        StepInstance stepInstance = listStepInstance.get(listStepInstance.size() - 1);
+        StepInstance stepInstance = listStepInstance.getLast();
         if (isRetryOnFailStep(stepInstance)) {
             stepInstance.setName(reportValidationAttemptsCount(stepInstance));
         }
@@ -513,9 +513,8 @@ public class SituationExecutorService {
 
     private boolean checkNeedRetryIntegrationStep(final SituationInstance instance) {
         List<StepInstance> listStepInstance = instance.getStepInstances();
-        StepInstance stepInstance = listStepInstance.get(listStepInstance.size() - 1);
-        if (stepInstance.getStep() instanceof IntegrationStep) {
-            IntegrationStep integrationStep = (IntegrationStep) stepInstance.getStep();
+        StepInstance stepInstance = listStepInstance.getLast();
+        if (stepInstance.getStep() instanceof IntegrationStep integrationStep) {
             if (integrationStep.isRetryOnFail()) {
                 stepInstance.setEndTime(new Date());
                 if (integrationStep.getValidationMaxTime() != 0) {
@@ -550,12 +549,12 @@ public class SituationExecutorService {
      */
     private void addCurrentValidStepAttemptValueAndStartTime(SituationInstance instance) {
         List<StepInstance> listStepInstance = instance.getStepInstances();
-        StepInstance lastStepInstance = listStepInstance.get(listStepInstance.size() - 1);
+        StepInstance lastStepInstance = listStepInstance.getLast();
         if (listStepInstance.size() > 1) {
             StepInstance secondToLastStepInstance = listStepInstance.get(listStepInstance.size() - 2);
             lastStepInstance.setCurrentValidAttemptValue(secondToLastStepInstance.getCurrentValidAttemptValue() + 1);
             lastStepInstance.setStartTime(secondToLastStepInstance.getStartTime());
-            listStepInstance.remove(0);
+            listStepInstance.removeFirst();
         } else {
             lastStepInstance.setCurrentValidAttemptValue(lastStepInstance.getCurrentValidAttemptValue() + 1);
         }
@@ -563,8 +562,7 @@ public class SituationExecutorService {
 
     private boolean isRetryOnFailStep(StepInstance stepInstance) {
         boolean result = false;
-        if (stepInstance.getStep() instanceof IntegrationStep) {
-            IntegrationStep integrationStep = (IntegrationStep) stepInstance.getStep();
+        if (stepInstance.getStep() instanceof IntegrationStep integrationStep) {
             if (integrationStep.isRetryOnFail()) {
                 result = true;
             }
@@ -663,7 +661,7 @@ public class SituationExecutorService {
 
     private StepInstance getLastStepInstance(SituationInstance instance) {
         List<StepInstance> listStepInstance = instance.getStepInstances();
-        return listStepInstance.get(listStepInstance.size() - 1);
+        return listStepInstance.getLast();
     }
 
     private void postStepEventFinishIfIsRetryStep(SituationInstance instance) {

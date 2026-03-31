@@ -147,7 +147,7 @@ public class UITemplate extends UIObject {
     }
 
     private Collection<UIInterceptor> getUIInterceptors(Template template) {
-        Collection<UIInterceptor> result = new ArrayList<UIInterceptor>();
+        Collection<UIInterceptor> result = new ArrayList<>();
         List<Interceptor> interceptors = template.getInterceptors();
         interceptors.sort(Comparators.INTERCEPTOR_COMPARATOR);
         for (Interceptor interceptor : interceptors) {

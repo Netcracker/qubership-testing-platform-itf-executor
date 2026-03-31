@@ -25,7 +25,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.IllegalClassException;
 import org.aspectj.apache.bcel.classfile.ClassFormatException;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.callchain.CallChain;
@@ -136,7 +135,7 @@ public class Collector {
             } else if (storable instanceof ChainFolder folder) {
                 callChainFolders.add(folder);
             } else {
-                throw new IllegalClassException("Unexpected class: " + storable);
+                throw new IllegalArgumentException("Unexpected class: " + storable);
             }
         }
         callChains.addAll(collectCallChainsFromFolders(callChainFolders));
@@ -156,7 +155,7 @@ public class Collector {
                 .flatMap(chainFolder -> chainFolder.getObjects().stream())
                 .collect(Collectors.toSet());
         // loop over nested folders
-        if (chainFolders.size() > 0) {
+        if (!chainFolders.isEmpty()) {
             collectedCallChains.addAll(collectCallChainsFromFolders((Set) chainFolders
                     .stream()
                     .flatMap(chainFolder -> chainFolder.getSubFolders().stream())
@@ -180,7 +179,7 @@ public class Collector {
             } else if (storable instanceof SystemFolder folder) {
                 systemFolders.add(folder);
             } else {
-                throw new IllegalClassException("Unexpected class: " + storable);
+                throw new IllegalArgumentException("Unexpected class: " + storable);
             }
         }
         systems.addAll(collectSystemsFromFolders(systemFolders));
@@ -200,7 +199,7 @@ public class Collector {
                 .flatMap(systemFolder -> systemFolder.getObjects().stream())
                 .collect(Collectors.toSet());
         // loop over nested folders
-        if (systemFolders.size() > 0) {
+        if (!systemFolders.isEmpty()) {
             collectedSystems.addAll(collectSystemsFromFolders((Set) systemFolders
                     .stream()
                     .flatMap(systemFolder -> systemFolder.getSubFolders().stream())

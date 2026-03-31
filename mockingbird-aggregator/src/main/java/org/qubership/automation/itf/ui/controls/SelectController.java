@@ -45,19 +45,19 @@ public class SelectController extends ControllerHelper {
 
     private static final LoadingCache<String, UIList<UIObject>> CACHE =
             CacheBuilder.newBuilder()
-                    .expireAfterWrite(30, TimeUnit.SECONDS).build(new CacheLoader<String, UIList<UIObject>>() {
-        @Override
-        public UIList<UIObject> load(@Nonnull String className) throws Exception {
-            UIList<UIObject> uiObjects = new UIObjectList();
-            Class<? extends Storable> aClass = Class.forName(className).asSubclass(Storable.class);
-            for (Storable storable : CoreObjectManager.getInstance().getManager(aClass).getAll()) {
-                if (aClass.isAssignableFrom(storable.getClass())) {
-                    uiObjects.addObject(new UIObject(storable));
-                }
-            }
-            return uiObjects;
-        }
-    });
+                    .expireAfterWrite(30, TimeUnit.SECONDS).build(new CacheLoader<>() {
+                        @Override
+                        public UIList<UIObject> load(@Nonnull String className) throws Exception {
+                            UIList<UIObject> uiObjects = new UIObjectList();
+                            Class<? extends Storable> aClass = Class.forName(className).asSubclass(Storable.class);
+                            for (Storable storable : CoreObjectManager.getInstance().getManager(aClass).getAll()) {
+                                if (aClass.isAssignableFrom(storable.getClass())) {
+                                    uiObjects.addObject(new UIObject(storable));
+                                }
+                            }
+                            return uiObjects;
+                        }
+                    });
 
     //todo It seems don't using...check it and delete this controller
     @Transactional(readOnly = true)

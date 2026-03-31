@@ -74,7 +74,7 @@ public class FileUploadController {
                                       @RequestParam(value = "projectId") BigInteger projectId,
                                       @RequestParam(value = "projectUuid") UUID projectUuid,
                                       @RequestHeader(value = CustomHeader.X_PROJECT_ID) String tenantId,
-                                      @RequestParam(value = "file") MultipartFile[] files) throws IOException {
+                                      @RequestParam(value = "file") MultipartFile[] files) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = "Undefined";
         UUID userId = null;

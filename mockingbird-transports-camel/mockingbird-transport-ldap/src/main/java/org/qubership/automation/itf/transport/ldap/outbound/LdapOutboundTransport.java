@@ -444,7 +444,7 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
                 }
                 if (!values.isEmpty()) {
                     if (values.size() == 1) {
-                        itemAttrs.put(attrId, values.get(0));
+                        itemAttrs.put(attrId, values.getFirst());
                     } else {
                         itemAttrs.put(attrId, values);
                     }

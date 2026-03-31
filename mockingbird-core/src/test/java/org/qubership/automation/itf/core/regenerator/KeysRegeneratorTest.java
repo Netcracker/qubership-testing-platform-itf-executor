@@ -42,7 +42,7 @@ public class KeysRegeneratorTest {
         keysToRegenerate.put(key1, value);
         keysToRegenerate.put(key2, value2);
         KeysRegenerator.getInstance().regenerateKeys(context, keysToRegenerate);
-        assertEquals(context.get(key1), value);
-        assertEquals(context.get(key2), value2);
+        assertEquals(value, context.get(key1));
+        assertEquals(value2, context.get(key2));
     }
 }

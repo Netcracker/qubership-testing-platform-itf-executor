@@ -140,7 +140,7 @@ public class ConfigController {
             }
         }
         return result.isEmpty() ? new UIConfig(property, StringUtils.EMPTY) : new UIConfig(property,
-                result.iterator().next().get(property));
+                result.getFirst().get(property));
     }
 
 }

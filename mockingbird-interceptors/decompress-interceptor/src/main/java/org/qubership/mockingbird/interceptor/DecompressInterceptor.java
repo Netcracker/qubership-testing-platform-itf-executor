@@ -151,7 +151,7 @@ public class DecompressInterceptor extends ContentInterceptor {
         return args;
     }
 
-    private File getResultFile(File file) throws IOException {
+    private File getResultFile(File file) {
         File[] files = file.listFiles();
         if (files != null) {
             return files[0];

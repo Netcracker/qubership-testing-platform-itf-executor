@@ -49,7 +49,7 @@ import com.google.common.collect.Lists;
 public class DebugExecutor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DebugExecutor.class);
-    private EventBusProvider eventBusProvider;
+    private final EventBusProvider eventBusProvider;
 
     public DebugExecutor(EventBusProvider eventBusProvider) {
         this.eventBusProvider = eventBusProvider;

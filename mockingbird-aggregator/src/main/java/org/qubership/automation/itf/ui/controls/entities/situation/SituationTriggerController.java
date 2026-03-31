@@ -53,7 +53,7 @@ public class SituationTriggerController {
     public UIObjectList getDownstreamSituationsOnStart(
             @RequestParam(value = "id", defaultValue = "0") String id,
             @RequestParam(value = "projectId") BigInteger projectId,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         return getDownstreamSituations(id, SituationEventTrigger.On.START, projectId);
     }
 
@@ -65,7 +65,7 @@ public class SituationTriggerController {
     public UIObjectList getDownstreamSituationsOnFinish(
             @RequestParam(value = "id", defaultValue = "0") String id,
             @RequestParam(value = "projectId") BigInteger projectId,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         return getDownstreamSituations(id, SituationEventTrigger.On.FINISH, projectId);
     }
 
@@ -76,7 +76,7 @@ public class SituationTriggerController {
     @GetMapping("/situation/triggers")
     public List<UITriggerRelation> getTriggers(
             @RequestParam(value = "id", defaultValue = "0") String id,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         //TODO Always returns empty list. Is this method useful or can be deleted?
         return new ArrayList<>();
     }

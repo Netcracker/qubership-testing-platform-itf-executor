@@ -59,7 +59,7 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseDataSetListManager.class);
     private final BigInteger folderId = new BigInteger("7");
     private Collection<DataSetListRepository> repos;
-    private final Folder<DataSetListsSource> folder = new Folder<DataSetListsSource>(DataSetListsSource.class) {
+    private final Folder<DataSetListsSource> folder = new Folder<>(DataSetListsSource.class) {
         @Override
         public List<DataSetListsSource> getObjects() {
             return ImmutableList.copyOf(BaseDataSetListManager.this.getAllSources());
@@ -186,11 +186,11 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
 
     @Override
     public DataSetList getById(@Nonnull Object id) {
-        return getByNatureId(id, null).get(0);
+        return getByNatureId(id, null).getFirst();
     }
 
     public DataSetList getById(@Nonnull Object id, Object projectId) {
-        return getByNatureId(id, projectId).get(0);
+        return getByNatureId(id, projectId).getFirst();
     }
 
     @Override

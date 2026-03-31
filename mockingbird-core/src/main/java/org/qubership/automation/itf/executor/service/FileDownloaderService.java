@@ -26,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -187,7 +186,7 @@ public class FileDownloaderService {
         } catch (IOException e) {
             throw new ExportException("Cannot get size of file %s".formatted(archive), e);
         }
-        headers.setAccessControlExposeHeaders(Arrays.asList("Content-Disposition"));
+        headers.setAccessControlExposeHeaders(List.of("Content-Disposition"));
         headers.setContentDisposition(ContentDisposition.builder("attachment").filename(fileName).build());
         return headers;
     }

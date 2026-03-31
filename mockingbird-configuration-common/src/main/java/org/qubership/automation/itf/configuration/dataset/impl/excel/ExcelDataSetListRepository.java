@@ -73,7 +73,7 @@ public class ExcelDataSetListRepository implements DataSetListRepository {
     /**
      * returns a pair of entity and parameter strings. all is not null or empty
      */
-    private static final ParamsEntryConverter<String> PARAM_CONV = new ParamsEntryConverter<String>() {
+    private static final ParamsEntryConverter<String> PARAM_CONV = new ParamsEntryConverter<>() {
         @Nullable
         @Override
         public String doParamsEntry(@Nullable DSCell entity, @Nonnull DSCell parameter) {
@@ -107,7 +107,7 @@ public class ExcelDataSetListRepository implements DataSetListRepository {
     private final Folder<DataSetListsSource> folder;
 
     public ExcelDataSetListRepository(@Nonnull Folder<DataSetListsSource> folder) {
-        tracker = new AbstractTracker<String, Set<String>, Collection<Triple<String, String, String>>>(DS_DIR, 10000L, true) {
+        tracker = new AbstractTracker<>(DS_DIR, 10000L, true) {
             @Nonnull
             @Override
             protected DSLists<String, Set<String>, Collection<Triple<String, String, String>>> build(
@@ -193,8 +193,8 @@ public class ExcelDataSetListRepository implements DataSetListRepository {
                     .filter(Files::isRegularFile)
                     .map(Path::toFile)
                     .filter(file -> file.getName().endsWith(DS_FILE_EXTENSION))
-                    .collect(Collectors.toList());
-            if (files.size() == 0) {
+                    .toList();
+            if (files.isEmpty()) {
                 return null;
             }
             return files

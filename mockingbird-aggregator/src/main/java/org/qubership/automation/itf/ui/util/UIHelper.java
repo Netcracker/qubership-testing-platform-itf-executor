@@ -85,7 +85,7 @@ import jakarta.annotation.Nullable;
 public class UIHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UIHelper.class);
-    private static final Function<Storable, UIObject> STORABLE_TO_UIOBJ = new Function<Storable, UIObject>() {
+    private static final Function<Storable, UIObject> STORABLE_TO_UIOBJ = new Function<>() {
         @Nullable
         @Override
         public UIObject apply(@Nullable Storable input) {
@@ -93,7 +93,7 @@ public class UIHelper {
         }
     };
     private static final Function<Storable, UITreeElement> STORABLE_TO_UITREE =
-            new Function<Storable, UITreeElement>() {
+            new Function<>() {
                 @Nullable
                 @Override
                 public UITreeElement apply(@Nullable Storable input) {
@@ -257,7 +257,7 @@ public class UIHelper {
     @Nonnull
     protected static <I extends Storable, O extends UIObject> UIList<O> getUIList(
             @Nonnull Collection<I> from, @Nonnull Function<? super I, O> func) {
-        return fillUIList(from, new UIListImpl<O>(), func);
+        return fillUIList(from, new UIListImpl<>(), func);
     }
 
     /**
@@ -374,8 +374,7 @@ public class UIHelper {
      */
     public static UITypeList convertMapOfTypeToUITypeList(Map<String, String> map) {
         UITypeList uiTypeList = new UITypeList();
-        uiTypeList.defineTypes(Collections2.transform(map.entrySet(), new Function<Map.Entry<String, String>,
-                UITypedObject>() {
+        uiTypeList.defineTypes(Collections2.transform(map.entrySet(), new Function<>() {
             @Nonnull
             @Override
             public UITypedObject apply(Map.Entry<String, String> input) {

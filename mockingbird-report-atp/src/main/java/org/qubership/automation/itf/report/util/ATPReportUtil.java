@@ -51,10 +51,7 @@ public class ATPReportUtil {
     public static String getTestingServerUrl(AbstractContainerInstance startedBy) {
         StepContainer stepContainer = startedBy.getStepContainer();
         if (stepContainer instanceof CallChain) {
-            String server = getServerFromStarter(startedBy, stepContainer);
-            if (server != null) {
-                return server;
-            }
+            return getServerFromStarter(startedBy, stepContainer);
         }
         return null;
     }
@@ -73,15 +70,19 @@ public class ATPReportUtil {
             if (!step.isEnabled()) {
                 continue;
             }
-            if (step instanceof IntegrationStep) {
-                return extractUrl(step, startedBy);
-            } else if (step instanceof SituationStep situationStep) {
-                return extractUrl(situationStep.getSituation().getIntegrationStep(), startedBy);
-            } else if (step instanceof EmbeddedStep embeddedStep) {
-                String result = getServerFromStarter(startedBy, embeddedStep.getChain());
-                if (result != null) {
-                    return result;
-                }
+            switch (step) {
+                case IntegrationStep integrationStep:
+                    return extractUrl(step, startedBy);
+                case SituationStep situationStep:
+                    return extractUrl(situationStep.getSituation().getIntegrationStep(), startedBy);
+                case EmbeddedStep embeddedStep:
+                    String result = getServerFromStarter(startedBy, embeddedStep.getChain());
+                    if (result != null) {
+                        return result;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         return null;

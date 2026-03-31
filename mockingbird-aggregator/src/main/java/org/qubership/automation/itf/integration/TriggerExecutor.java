@@ -437,8 +437,8 @@ public class TriggerExecutor implements IDiameterEventProducer {
             log.warn("More than one environment with inbound system {} and server {} found", system, server);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("id", environmentInfo.get(0)[0]);
-        map.put("name", environmentInfo.get(0)[1]);
+        map.put("id", environmentInfo.getFirst()[0]);
+        map.put("name", environmentInfo.getFirst()[1]);
         return map;
     }
 

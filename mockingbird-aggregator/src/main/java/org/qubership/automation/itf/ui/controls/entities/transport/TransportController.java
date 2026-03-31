@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
@@ -163,7 +162,7 @@ public class TransportController extends AbstractController<UITransport, Transpo
         List<TransportConfiguration> filteredTransportConfigurations = system.getTransports().stream().filter(
                 transportConfiguration -> Arrays.asList(uiDeleteObjectReq.getIds())
                         .contains(transportConfiguration.getID().toString())
-        ).collect(Collectors.toList());
+        ).toList();
         Map<String, List<UIObject>> transportsWithTriggers = new HashMap<>();
         Map<String, String> usingTransports = new HashMap<>();
         List<TransportConfiguration> transportsWithoutTriggers = new ArrayList<>();

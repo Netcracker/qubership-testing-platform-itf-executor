@@ -258,12 +258,12 @@ public class ItfImportExecutor implements ImportExecutor {
     }
 
     @Override
-    public ValidationResult preValidateData(ExportImportData exportImportData, Path path) throws Exception {
+    public ValidationResult preValidateData(ExportImportData exportImportData, Path path) {
         return null;
     }
 
     @Override
-    public ValidationResult validateData(ExportImportData exportImportData, Path path) throws Exception {
+    public ValidationResult validateData(ExportImportData exportImportData, Path path) {
         return null;
     }
 
@@ -412,7 +412,7 @@ public class ItfImportExecutor implements ImportExecutor {
                 .flatMap(situation -> situation.getSteps().stream())
                 .filter(step -> step instanceof IntegrationStep is && Objects.nonNull(
                         is.getReceiver())).map(IntegrationStep.class::cast)
-                .collect(Collectors.toList());
+                .toList();
         //invalidate reference to System as receiver
         integrationSteps.parallelStream().forEach(step -> step.setReceiver(systems.get(step.getReceiver().getID())));
 
@@ -497,7 +497,7 @@ public class ItfImportExecutor implements ImportExecutor {
         ObjectManager<Situation> situationManager = CoreObjectManager.getInstance().getManager(Situation.class);
         callChains.values().stream()
                 .flatMap(entry -> entry.getSteps().stream()).filter(step -> step instanceof SituationStep)
-                .map(SituationStep.class::cast).collect(Collectors.toList()).stream().forEach(step -> {
+                .map(SituationStep.class::cast).toList().stream().forEach(step -> {
                     step.setSituation(getSituationForSituationStep(step.getSituation(), replacementMap,
                             situationManager));
                     step.setEndSituations(getSituationsForSituationStep(step.getEndSituations(), replacementMap,

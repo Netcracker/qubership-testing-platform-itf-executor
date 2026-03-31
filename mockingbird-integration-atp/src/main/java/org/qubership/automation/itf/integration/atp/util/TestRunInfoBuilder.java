@@ -216,7 +216,7 @@ public class TestRunInfoBuilder {
                 if (dataSetList != null) {
                     IDataSet foundDataSet = dataSetList.getDataSet(splittedFullPath[2], testRunInfo.getProjectId());
                     if (foundDataSet != null) {
-                        CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().get(0);
+                        CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().getFirst();
                         for (CallChain callChain :
                                 getCallchainsByIdOrName(matcher.group(ATPActionConstants.CALLCHAIN_INDEX.intValue()),
                                         testRunInfo.getProjectId())) {
@@ -262,8 +262,8 @@ public class TestRunInfoBuilder {
                     List<? extends IDataSet> dataSets =
                             CoreObjectManager.getInstance().getSpecialManager(DataSetList.class,
                                     IDataSetListManager.class).getDataSetsWithLabel(dataSetList, datasetLabel, null);
-                    if (dataSets.size() > 0) {
-                        CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().get(0);
+                    if (!dataSets.isEmpty()) {
+                        CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().getFirst();
                         testRunInfo.getCallchainsToExecute().clear();
                         for (IDataSet dataSet : dataSets) {
                             CallchainRunInfo newRunInfo = new CallchainRunInfo(callchainRunInfo.getCallChain(),
@@ -293,7 +293,7 @@ public class TestRunInfoBuilder {
 
     public static void setDefaultDataset(TestRunInfo testRunInfo, Matcher matcher) {
         try {
-            CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().get(0);
+            CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().getFirst();
             for (CallChain callChain :
                     getCallchainsByIdOrName(matcher.group(ATPActionConstants.CALLCHAIN_INDEX.intValue()),
                             testRunInfo.getProjectId())) {

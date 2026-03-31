@@ -38,7 +38,7 @@ public class CallchainRunner implements Runnable {
     private CallchainRunInfo callchainRunInfo;
     private TestRunInfo testRunInfo;
     private AtomicBoolean isFailed;
-    private AtpCallchainExecutor atpCallchainExecutor;
+    private final AtpCallchainExecutor atpCallchainExecutor;
 
     public CallchainRunner(AtpCallchainExecutor atpCallchainExecutor) {
         this.atpCallchainExecutor = atpCallchainExecutor;

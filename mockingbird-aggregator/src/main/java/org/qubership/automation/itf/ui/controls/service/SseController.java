@@ -66,7 +66,7 @@ public class SseController {
             sseEmitters.remove(sessionId);
             log.info("Remove event emitter on timeout with sessionId:{}", sessionId);
         });
-        emitter.onError((ex) -> log.info("SseEmitter with sessionId:{} got error:{}", sessionId, ex));
+        emitter.onError((ex) -> log.info("SseEmitter with sessionId:{} got error:", sessionId, ex));
         SseEmitter.SseEventBuilder sseEvent = SseEmitter.event()
                 .id(sessionId)
                 .name("init")

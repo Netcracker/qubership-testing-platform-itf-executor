@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.apache.commons.lang3.IllegalClassException;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.exceptions.integration.IntegrationException;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.BvCaseContainingObjectManager;
@@ -78,7 +77,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
             String sourceId = source.getId();
             String sourceClassName = source.getClassName();
             if (!CallChain.class.getCanonicalName().equals(sourceClassName)) {
-                throw new IllegalClassException("Unexpected class: " + sourceClassName
+                throw new IllegalArgumentException("Unexpected class: " + sourceClassName
                         + ". Class is not supported by reference regenerator.");
             }
             result.add(coreObjectManager.getManager(CallChain.class).getById(sourceId));
@@ -210,7 +209,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
     public List<UIObject> regenerateBvCases(
             @RequestParam(value = "create_new") boolean createNew,
             @RequestParam(value = "projectId") BigInteger projectId,
-            @RequestBody List<UIObject> objects) throws Exception {
+            @RequestBody List<UIObject> objects) {
         EngineControlIntegration engine =
                 (EngineControlIntegration) EngineIntegrationRegistry.getInstance().find(BULK_VALIDATOR_INTEGRATION);
         if (engine != null) {

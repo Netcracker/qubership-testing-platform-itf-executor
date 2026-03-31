@@ -295,7 +295,7 @@ public class ContextController {
         String title = request.getProperty(TITLE, "");
         String message = request.getProperty(MESSAGE, "");
         List<AbstractContainerInstance> instances = tcContext.getInstances();
-        AbstractContainerInstance lastInstance = instances.get(instances.size() - 1);
+        AbstractContainerInstance lastInstance = instances.getLast();
         Report.terminated(lastInstance, title, message, null);
         ExecutionServices.getExecutionProcessManagerService().fail(tcContext);
     }
@@ -312,7 +312,7 @@ public class ContextController {
             if (step == null || !step.isEnabled()) {
                 continue;
             }
-            counterToString = counterToString + String.valueOf(i + 1); //FIXME use StringBuilder instead of concat.
+            counterToString = counterToString + (i + 1); //FIXME use StringBuilder instead of concat.
             if (step instanceof SituationStep situationStep) {
                 steps.add(new UISituationStep(situationStep, counterToString, false));
             } else if (step instanceof EmbeddedStep embeddedStep) {
@@ -378,7 +378,7 @@ public class ContextController {
                 return new String[]{contextId, "", "", "", "Unknown"};
             }
         }
-        return contextProperties.get(0);
+        return contextProperties.getFirst();
     }
 
     private boolean isContextFinished(String status) {

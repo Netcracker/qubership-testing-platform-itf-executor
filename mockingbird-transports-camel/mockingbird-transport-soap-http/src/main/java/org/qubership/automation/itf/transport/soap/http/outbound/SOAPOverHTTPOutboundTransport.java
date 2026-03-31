@@ -159,13 +159,12 @@ public class SOAPOverHTTPOutboundTransport extends HTTPOutboundTransport {
 
     @Override
     protected Exchange createRequestExchange(Message message, ProducerTemplate template, Map<String, Object> headers,
-                                             String endpoint, HttpComponent httpComponent) throws Exception {
+                                             String endpoint, HttpComponent httpComponent) {
         return createRequestExchange(message, template, headers, endpoint);
     }
 
     @Override
-    protected org.apache.camel.Message composeBody(org.apache.camel.Message camelMessage, Message itfMessage)
-            throws Exception {
+    protected org.apache.camel.Message composeBody(org.apache.camel.Message camelMessage, Message itfMessage) {
         return Helper.composeBodyForSOAPOutbound(camelMessage, itfMessage);
     }
 

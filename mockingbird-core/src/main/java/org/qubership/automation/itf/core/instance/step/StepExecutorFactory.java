@@ -31,9 +31,9 @@ import com.google.common.collect.Maps;
 @Component
 public class StepExecutorFactory {
 
-    private static Map<Class<? extends Step>, StepExecutor> executorBindings = Maps.newHashMapWithExpectedSize(10);
-    private IntegrationStepExecutor integrationStepExecutor;
-    private SituationStepExecutor situationStepExecutor;
+    private static final Map<Class<? extends Step>, StepExecutor> executorBindings = Maps.newHashMapWithExpectedSize(4);
+    private final IntegrationStepExecutor integrationStepExecutor;
+    private final SituationStepExecutor situationStepExecutor;
 
     public StepExecutorFactory(IntegrationStepExecutor integrationStepExecutor,
                                SituationStepExecutor situationStepExecutor) {
@@ -48,7 +48,7 @@ public class StepExecutorFactory {
         getExecutor(stepInstance).execute(stepInstance);
     }
 
-    private static StepExecutor getExecutor(StepInstance stepInstance) throws Exception {
+    private static StepExecutor getExecutor(StepInstance stepInstance) {
         for (Map.Entry<Class<? extends Step>, StepExecutor> entry : executorBindings.entrySet()) {
             if (entry.getKey().isAssignableFrom(stepInstance.getStep().getClass())) {
                 return entry.getValue();

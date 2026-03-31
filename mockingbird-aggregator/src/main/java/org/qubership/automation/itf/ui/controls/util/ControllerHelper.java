@@ -193,7 +193,7 @@ public class ControllerHelper extends UIHelper {
     public static void addInterceptorConfiguration(Interceptor interceptor, String transportName,
                                                    Map<String, String> configuration) {
         List<InterceptorParams> paramsList = interceptor.getInterceptorParams();
-        InterceptorParams parameters = paramsList.isEmpty() ? new InterceptorParams() : paramsList.get(0);
+        InterceptorParams parameters = paramsList.isEmpty() ? new InterceptorParams() : paramsList.getFirst();
         parameters.setParent(interceptor);
         parameters.setTransportName(transportName);
         parameters.update(configuration);

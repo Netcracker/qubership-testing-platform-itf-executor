@@ -439,7 +439,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
     }
 
     private Supplier<CEAInterceptor> createCeaSupplier() {
-        return new Supplier<CEAInterceptor>() {
+        return new Supplier<>() {
             private CEAInterceptor ceaInterceptor;
 
             @Override
@@ -453,7 +453,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
     }
 
     private <T extends Interceptor> Supplier<T> createInterceptorSupplier(Class<T> clazz) {
-        return new Supplier<T>() {
+        return new Supplier<>() {
             private T interceptor;
 
             @Override

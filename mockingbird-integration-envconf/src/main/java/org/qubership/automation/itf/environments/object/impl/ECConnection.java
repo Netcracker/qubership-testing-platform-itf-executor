@@ -73,7 +73,7 @@ public class ECConnection extends ConvertableECEntity<TransportConfiguration> {
     public boolean forEnvironment() {
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             if (ECIConstants.CONNECTION_FOR_ENVIRONMENT_PARAMETER.value().equals(entry.getKey().toLowerCase())
-                    && "true".equals(entry.getValue().toLowerCase())) {
+                    && "true".equalsIgnoreCase(entry.getValue())) {
                 return true;
             }
         }

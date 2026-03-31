@@ -29,7 +29,7 @@ public class KafkaProducerService {
 
     @Value("${kafka.topic.itf.lite.export.finish}")
     private String topic;
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public KafkaProducerService(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;

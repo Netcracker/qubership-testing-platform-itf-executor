@@ -93,7 +93,7 @@ public class TestRunInfo {
     private ConfigurationEntity configuration;
     private List<CallchainRunInfo> callchainsToExecute = new ArrayList<>();
     private Environment environment;
-    private Map<String, Set<System>> systems = new HashMap<>();
+    private final Map<String, Set<System>> systems = new HashMap<>();
     private Map<String, String> tcpDumpOptions = null;
     private String bvAction = null;
     private TestRunContext ramTestRunContext;
@@ -418,7 +418,7 @@ public class TestRunInfo {
                     Environment env = CoreObjectManager.getInstance()
                             .getSpecialManager(Environment.class, EnvironmentManager.class)
                             .findByServerAndSystems(
-                                    (BigInteger) servers.get(0).getID(),
+                                    (BigInteger) servers.getFirst().getID(),
                                     getIds(systems.get(OUTBOUND)));
                     if (env != null) {
                         environment = env;

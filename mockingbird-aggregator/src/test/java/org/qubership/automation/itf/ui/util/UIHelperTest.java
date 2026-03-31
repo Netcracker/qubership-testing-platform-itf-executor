@@ -34,7 +34,7 @@ import com.google.common.collect.Sets;
 public class UIHelperTest {
 
     @Test
-    public void testToJsonContextCreatesCorrectJsonContext() throws Exception {
+    public void testToJsonContextCreatesCorrectJsonContext() {
         UIHelper uiHelper = new UIHelper();
         UIDataSet dataSet = createDataSet();
         JsonContext context = uiHelper.toJSONContext(dataSet);

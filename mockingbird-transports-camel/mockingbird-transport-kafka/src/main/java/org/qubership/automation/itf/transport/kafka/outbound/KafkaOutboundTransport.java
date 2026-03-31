@@ -65,7 +65,7 @@ public class KafkaOutboundTransport extends AbstractCamelOutboundTransport {
     protected String key;
     @Parameter(shortName = PropertyConstants.Commons.ENDPOINT_PROPERTIES, longName = "Extra Endpoint Properties",
             description = PropertyConstants.Commons.ENDPOINT_PROPERTIES_DESCRIPTION,
-            forServer = true, forTemplate = false, isDynamic = true, optional = true)
+            isDynamic = true, optional = true)
     protected Map<String, Object> properties;
 
     @Override

@@ -37,7 +37,7 @@ public class JSONContextUtils {
     public static JsonContext convert(@Nonnull ObjectNode from, @Nonnull ObjectMapper mapper) throws IOException {
         JsonContext to = new JsonContext();
         LeafsIterator<Map.Entry<String, JsonNode>> leafsIter =
-                new LeafsIterator<Map.Entry<String, JsonNode>>(from.fields()) {
+                new LeafsIterator<>(from.fields()) {
                     @Nullable
                     @Override
                     protected Iterator<? extends Map.Entry<String, JsonNode>> getChildren(
@@ -51,7 +51,7 @@ public class JSONContextUtils {
                 };
         while (leafsIter.hasNext()) {
             List<Map.Entry<String, JsonNode>> path = leafsIter.next();
-            Map.Entry<String, JsonNode> leaf = path.get(path.size() - 1);//last one
+            Map.Entry<String, JsonNode> leaf = path.getLast();//last one
             Stream<Map.Entry<String, JsonNode>> pathToLeaf = path.stream().limit(path.size() - 1);//except leaf
             JsonNode leafNode = leaf.getValue();
             String paramKey = leaf.getKey();

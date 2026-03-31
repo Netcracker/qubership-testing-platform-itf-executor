@@ -40,7 +40,7 @@ import org.qubership.automation.itf.core.util.transport.service.report.Report;
 
 public class ReportIntegration {
 
-    private static ReportIntegration instance = new ReportIntegration();
+    private static final ReportIntegration instance = new ReportIntegration();
 
     private ReportIntegration() {
     }

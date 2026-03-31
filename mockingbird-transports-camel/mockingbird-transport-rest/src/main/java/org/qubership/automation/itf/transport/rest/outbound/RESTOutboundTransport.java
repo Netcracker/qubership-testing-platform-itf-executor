@@ -60,14 +60,14 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
 
     @Override
     protected Exchange createRequestExchange(Message message, ProducerTemplate template, Map<String, Object> headers,
-                                             String endpoint, HttpComponent httpComponent) throws Exception {
+                                             String endpoint, HttpComponent httpComponent) {
         int loopIndex = 0;
         boolean autoRedirect = checkRemoveFollowRedirectsHeader(headers);
         return createRequestExchange(message, template, headers, endpoint, autoRedirect, loopIndex, httpComponent);
     }
 
     @Override
-    protected org.apache.camel.Message composeBody(org.apache.camel.Message camelMessage, Message itfMessage) throws Exception {
+    protected org.apache.camel.Message composeBody(org.apache.camel.Message camelMessage, Message itfMessage) {
         return Helper.composeBodyForREST(camelMessage, itfMessage);
     }
 
@@ -103,8 +103,7 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
         }
 
         //Auto Redirect when status code 302 for REST Sync (POST), see NITP-4451
-        if (resp.getException() instanceof HttpOperationFailedException) {
-            HttpOperationFailedException ex = (HttpOperationFailedException) resp.getException();
+        if (resp.getException() instanceof HttpOperationFailedException ex) {
             int statusCode = ex.getStatusCode();
             if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
                 if (getOrDefault(message.getConnectionProperties(), HTTPConstants.METHOD, method).equals("POST") &&

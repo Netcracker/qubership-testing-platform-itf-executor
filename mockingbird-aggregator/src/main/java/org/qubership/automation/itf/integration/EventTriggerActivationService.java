@@ -188,8 +188,7 @@ public class EventTriggerActivationService {
                         trigger.remove();
                     }
                 } else if ((!trigger.getState().isOn() || force) && (turnOn == null || turnOn)) {
-                    if (trigger.getParent() instanceof Situation && trigger instanceof OperationEventTrigger) {
-                        Situation situation = (Situation) trigger.getParent();
+                    if (trigger.getParent() instanceof Situation situation && trigger instanceof OperationEventTrigger) {
                         if (conditionsParametersAreEmpty(situation.getOperationEventTriggers().iterator().next())) {
                             Storable alreadyActiveSituation = findAnotherActiveSituation(situation);
                             if (alreadyActiveSituation != null) {

@@ -17,8 +17,6 @@
 
 package org.qubership.automation.itf.ui.parser;
 
-import java.rmi.RemoteException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,8 +27,6 @@ import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.jpa.message.template.SystemTemplate;
 import org.qubership.automation.itf.core.model.jpa.message.template.Template;
-import org.qubership.automation.itf.core.util.exception.ExportException;
-import org.qubership.automation.itf.core.util.exception.FindRegistryException;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig(locations = {"classpath*:*ui-test-context.xml"})
@@ -38,10 +34,10 @@ public class ParserTestForNITP4002 {
 
     private static Template template;
     private static InstanceContext context;
-    private static String text = "$!tc.ggg.Test";
+    private static final String text = "$!tc.ggg.Test";
 
     @BeforeAll
-    public static void prepare() throws ExportException, RemoteException, FindRegistryException {
+    public static void prepare() {
         template = new SystemTemplate();
         template.setName("template");
         template.setText(text);
@@ -54,16 +50,10 @@ public class ParserTestForNITP4002 {
     }
 
     @Test
-    public void testProduceMessage() throws RemoteException {
+    public void testProduceMessage() {
         Message message = ProducerMessageHelper.getInstance().produceMessage(template, context, "org.qubership"
                 + ".automation.itf.transport.file.ftp.outbound.FileOverFtpOutbound");
         Assertions.assertNotNull(message);
         Assertions.assertEquals("999", message.getText(), "Message is bad parsed");
     }
-//    @Test
-//    public void testValidateName() throws Exception {
-//
-//        Assert.assertEquals("new message", "JSONContextName1", ((JsonStorable) context.getTC().get("ggg")).getName());
-//
-//    }
 }

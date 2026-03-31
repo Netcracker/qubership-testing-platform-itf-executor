@@ -56,7 +56,7 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 @RestController
 public class MockingbirdEngineRestInterface {
 
-    private MockingbirdEngineService mockingbirdEngineService;
+    private final MockingbirdEngineService mockingbirdEngineService;
 
     public MockingbirdEngineRestInterface(MockingbirdEngineService mockingbirdEngineService) {
         this.mockingbirdEngineService = mockingbirdEngineService;

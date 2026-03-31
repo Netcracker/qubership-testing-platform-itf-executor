@@ -231,7 +231,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                             }
                         }
                     })
-                    .build(new CacheLoader<ConnectionProperties, SqlConfig>() {
+                    .build(new CacheLoader<>() {
                         @Override
                         public SqlConfig load(@Nonnull ConnectionProperties id) {
                             BasicDataSource dataSource = (BasicDataSource) setupDataSource(id);
