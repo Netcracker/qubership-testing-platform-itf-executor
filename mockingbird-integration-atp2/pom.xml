@@ -11,15 +11,6 @@
     <artifactId>mockingbird-integration-atp2</artifactId>
     <name>mockingbird-integration-atp2</name>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>org.qubership.mockingbird</groupId>

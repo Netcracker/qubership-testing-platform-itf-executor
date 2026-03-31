@@ -11,14 +11,6 @@
     <artifactId>mockingbird-integration-atp</artifactId>
     <name>mockingbird-integration-atp</name>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>org.testng</groupId>

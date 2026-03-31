@@ -12,12 +12,6 @@
     <packaging>jar</packaging>
     <build>
         <finalName>compress-interceptor</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
     </build>
     <dependencies>
         <dependency>

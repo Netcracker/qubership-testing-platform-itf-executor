@@ -23,13 +23,6 @@
     <build>
         <finalName>test-interceptor</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                <release>21</release>
-                </configuration>
-            </plugin>
             <!--Should be added to the interceptor's pom in case when third-party libs are used in implementation.
                 This plugin will create target/classes/lib directory with all dependencies for interceptor-->
             <!--plugin>
