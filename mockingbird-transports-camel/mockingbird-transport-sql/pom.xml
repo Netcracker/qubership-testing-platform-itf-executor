@@ -48,7 +48,7 @@
                                 com.querydsl,org.projectlombok,org.latencyutils,joda-time,net.minidev,com.jayway.jsonpath,com.googlecode.json-simple
                             </excludeGroupIds>
                             <excludeArtifactIds>
-                                querydsl-core,pcap4j-core,camel-ssh,camel-http-common,camel-http4,commons-lang,
+                                querydsl-core,pcap4j-core,camel-ssh,camel-http-common,commons-lang,
                                 commons-fileupload,commons-configuration,snakeyaml,reactor-netty,reactor-core,jul-to-slf4j,jcip-annotations,
                                 error_prone_annotations,javax.annotation-api,antlr,dom4j,oss-parent,qubership-atp-common-logging,
                                 javax.persistence-api,clover-maven-plugin,atp-integration-spring-boot-starter,validation-api,atp-crypt,

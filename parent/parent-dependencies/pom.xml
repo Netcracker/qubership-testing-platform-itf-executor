@@ -13,11 +13,6 @@
         <spring.boot.version>3.3.13</spring.boot.version>
         <spring.cloud.version>2023.0.6</spring.cloud.version>
 
-        <keycloak.version>22.0.1</keycloak.version>
-        <camel.version>2.20.4</camel.version>
-        <activemq.version>5.16.8</activemq.version>
-        <aspectj.version>1.8.10</aspectj.version>
-
         <atp.itf.core.version>5.0.2-SNAPSHOT</atp.itf.core.version>
         <atp.auth.version>2.0.2-SNAPSHOT</atp.auth.version>
         <atp.common.version>1.0.0-SNAPSHOT</atp.common.version>
@@ -29,18 +24,22 @@
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <atp.adapter.common.version>4.5.71</atp.adapter.common.version>
 
+        <org.bouncycastle.version>1.80</org.bouncycastle.version>
         <io.undertow.version>2.3.21.Final</io.undertow.version>
         <org.jetbrains.kotlin.kotlin-stdlib.version>1.9.25</org.jetbrains.kotlin.kotlin-stdlib.version>
         <jackson.version>2.18.6</jackson.version>
+        <camel.version>4.14.5</camel.version>
+        <activemq.version>6.1.6</activemq.version>
+        <org.apache.cxf.version>4.1.4</org.apache.cxf.version>
+        <org.jboss.xnio.version>3.8.16.Final</org.jboss.xnio.version>
+        <aspectj.version>1.9.24</aspectj.version>
 
-        <commons.lang.version>3.20.0</commons.lang.version>
+        <keycloak.version>22.0.1</keycloak.version>
         <org.ow2.asm.asm.version>5.2</org.ow2.asm.asm.version>
         <log4j.log4j.version>1.2.17</log4j.log4j.version>
-        <org.bouncycastle.version>1.80</org.bouncycastle.version>
         <io.netty.version>4.1.125.Final</io.netty.version>
         <com.squareup.okhttp3.okhttp.version>4.9.3</com.squareup.okhttp3.okhttp.version>
         <org.jboss.logging.jboss-logging.version>3.4.3.Final</org.jboss.logging.jboss-logging.version>
-        <org.jboss.xnio.version>3.8.14.Final</org.jboss.xnio.version>
         <com.sun.xml.bind.jaxb.version>2.3.9</com.sun.xml.bind.jaxb.version>
         <com.fasterxml.woodstox.woodstox-core.version>5.0.3</com.fasterxml.woodstox.woodstox-core.version>
         <io.github.openfeign.feign-core.version>11.10</io.github.openfeign.feign-core.version>
@@ -48,7 +47,6 @@
         <org.jvnet.staxex.stax-ex.version>1.8.3</org.jvnet.staxex.stax-ex.version>
         <org.modelmapper.modelmapper.version>3.1.1</org.modelmapper.modelmapper.version>
         <com.squareup.okio.okio.version>2.8.0</com.squareup.okio.okio.version>
-        <org.apache.cxf.version>3.2.1</org.apache.cxf.version>
         <org.eclipse.jetty.version>9.4.57.v20241219</org.eclipse.jetty.version>
     </properties>
 
@@ -169,12 +167,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-http4</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-netty4</artifactId>
+                <artifactId>camel-netty</artifactId>
                 <version>${camel.version}</version>
             </dependency>
             <dependency>
@@ -205,12 +198,12 @@
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-cxf</artifactId>
-                <version>${camel.version}</version>
+                <version>${org.apache.cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-cxf-transport</artifactId>
-                <version>${camel.version}</version>
+                <version>${org.apache.cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
@@ -783,7 +776,7 @@
                 <artifactId>activemq-jms-pool</artifactId>
                 <version>${activemq.version}</version>
             </dependency>
-            <dependency>
+            <!--<dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-camel</artifactId>
                 <version>${activemq.version}</version>
@@ -793,7 +786,7 @@
                         <artifactId>commons-pool2</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
+            </dependency>-->
             <dependency>
                 <groupId>com.jayway.jsonpath</groupId>
                 <artifactId>json-path</artifactId>
