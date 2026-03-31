@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -31,8 +31,6 @@ import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 
-import javax.annotation.Nullable;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;
 import org.apache.camel.ProducerTemplate;
@@ -60,6 +58,7 @@ import org.qubership.automation.itf.xsd.XSDValidator;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.Striped;
+import jakarta.annotation.Nullable;
 
 @UserName("Outbound SOAP Over HTTP Synchronous")
 public class SOAPOverHTTPOutboundTransport extends HTTPOutboundTransport {

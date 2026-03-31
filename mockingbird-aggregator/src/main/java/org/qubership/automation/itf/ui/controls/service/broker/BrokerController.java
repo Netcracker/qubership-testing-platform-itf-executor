@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.qubership.automation.itf.executor.service.SecurityHelper;
 import org.qubership.automation.itf.ui.messages.objects.UIResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +40,6 @@ public class BrokerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BrokerController.class);
     private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
 
-    @Autowired
     public BrokerController(ExecutorToMessageBrokerSender executorToMessageBrokerSender) {
         this.executorToMessageBrokerSender = executorToMessageBrokerSender;
     }
@@ -59,7 +57,7 @@ public class BrokerController {
             executorToMessageBrokerSender.sendMessage(message, queueNameParameterName, queueType, tenantId);
         } catch (Exception e) {
             result.setSuccess(false);
-            String errorMsg = String.format("Error: Message was not delivered to %s in ActiveMQ: %s", queueType,
+            String errorMsg = "Error: Message was not delivered to %s in ActiveMQ: %s".formatted(queueType,
                     e.getMessage());
             result.setMessage(errorMsg);
             LOGGER.error(errorMsg);

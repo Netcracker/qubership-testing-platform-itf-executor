@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.util.Optional;
 
 import org.qubership.automation.itf.monitoring.tasks.RunningScheduledTask;
 import org.qubership.automation.itf.monitoring.tasks.ScheduledTaskKey;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,6 @@ public class RunningScheduledTasksCacheService {
 
     private final HazelcastInstance hazelcastClient;
 
-    @Autowired
     public RunningScheduledTasksCacheService(@Qualifier("hazelcastClient") HazelcastInstance hazelcastClient) {
         this.hazelcastClient = hazelcastClient;
     }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -29,8 +29,7 @@ import org.qubership.automation.itf.ui.controls.util.ControllerHelper;
 import org.qubership.automation.itf.ui.messages.objects.callchain.step.UISituationStep;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,7 +46,7 @@ public class CallChainUtilController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/preview", method = RequestMethod.GET)
+    @GetMapping("/callchain/preview")
     public List<UISituationStep> previewChain(@RequestParam(value = "id", defaultValue = "0") String id,
                                               @RequestParam(value = "projectUuid") UUID projectUuid) {
         CallChain chainObject = getManager(CallChain.class).getById(id);
@@ -58,10 +57,10 @@ public class CallChainUtilController extends ControllerHelper {
     private List<UISituationStep> previewChain(CallChain chain) {
         ArrayList<UISituationStep> result = Lists.newArrayListWithExpectedSize(chain.getSteps().size() * 10);
         for (Step step : chain.getSteps()) {
-            if (step instanceof SituationStep) {
-                result.add(new UISituationStep((SituationStep) step, false));
-            } else if (step instanceof EmbeddedStep && step.isEnabled()) {
-                result.addAll(previewChain(((EmbeddedStep) step).getChain()));
+            if (step instanceof SituationStep situationStep) {
+                result.add(new UISituationStep(situationStep, false));
+            } else if (step instanceof EmbeddedStep embeddedStep && step.isEnabled()) {
+                result.addAll(previewChain(embeddedStep.getChain()));
             }
         }
         return result;

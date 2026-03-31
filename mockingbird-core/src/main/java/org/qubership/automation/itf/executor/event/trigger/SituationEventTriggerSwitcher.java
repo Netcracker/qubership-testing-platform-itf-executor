@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import org.qubership.automation.itf.core.util.exception.TriggerException;
 import org.qubership.automation.itf.core.util.holder.EventTriggerHolder;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.executor.provider.EventBusProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
@@ -44,7 +43,6 @@ public class SituationEventTriggerSwitcher extends EventTriggerSwitcher {
     private transient Listener listener;
     private final EventBusProvider eventBusProvider;
 
-    @Autowired
     public SituationEventTriggerSwitcher(EventBusProvider eventBusProvider) {
         this.eventBusProvider = eventBusProvider;
     }
@@ -53,12 +51,12 @@ public class SituationEventTriggerSwitcher extends EventTriggerSwitcher {
         SituationEventTrigger situationEventTrigger = (SituationEventTrigger) eventTrigger;
         if (situationEventTrigger.getSituation() == null) {
             throw new TriggerException(
-                    String.format("Situation for trigger is not specified. Situation trigger container is: %s",
+                    "Situation for trigger is not specified. Situation trigger container is: %s".formatted(
                             eventTrigger.getParent().toString()));
         }
         if (situationEventTrigger.getOn() == null) {
             throw new TriggerException(
-                    String.format("On condition is not specified. Situation trigger container is: %s",
+                    "On condition is not specified. Situation trigger container is: %s".formatted(
                             eventTrigger.getParent().toString()));
         }
         deactivateOldThenActivateNew(situationEventTrigger.getID(), situationEventTrigger.getOn(),

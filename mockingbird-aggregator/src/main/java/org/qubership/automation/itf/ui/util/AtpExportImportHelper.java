@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ package org.qubership.automation.itf.ui.util;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.folder.Folder;
 import org.qubership.automation.itf.executor.objects.ei.SimpleItfEntity;
+
+import jakarta.annotation.Nonnull;
 
 public class AtpExportImportHelper {
 

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ public class ExtraObjectsCollector {
         BiFunction<Storable, Map<String, Set<Object>>, Map<Object, Storable>> function
                 = functionsMap.get(storable.getClass().getName());
         Objects.requireNonNull(function,
-                String.format("Function to collect extra objects for object [%s] was not found.", storableName));
+                "Function to collect extra objects for object [%s] was not found.".formatted(storableName));
         Map<Object, Storable> extraObjects = function.apply(storable, checkedObjectsMap);
         log.info("Collecting of extra objects for type {} is completed.", storableName);
         return extraObjects;
@@ -131,17 +131,17 @@ public class ExtraObjectsCollector {
             extraObjects.put(callChain.getID(), callChain);
             for (Step step : callChain.getSteps()) {
                 if (step != null) {
-                    if (step instanceof SituationStep) {
-                        if (((SituationStep) step).getSituation() != null) {
+                    if (step instanceof SituationStep situationStep) {
+                        if (situationStep.getSituation() != null) {
                             extraObjects.putAll(getExtraObjectsForSystem(
-                                    ((SituationStep) step).getSituation().getParent().getParent(), checkedObjectsMap));
+                                    situationStep.getSituation().getParent().getParent(), checkedObjectsMap));
                             collectSystemsFromSituations(extraObjects,
-                                    ((SituationStep) step).getEndSituations(), checkedObjectsMap);
+                                    situationStep.getEndSituations(), checkedObjectsMap);
                             collectSystemsFromSituations(extraObjects,
-                                    ((SituationStep) step).getExceptionalSituations(), checkedObjectsMap);
+                                    situationStep.getExceptionalSituations(), checkedObjectsMap);
                         }
-                    } else if (step instanceof EmbeddedStep) {
-                        CallChain nested = ((EmbeddedStep) step).getChain();
+                    } else if (step instanceof EmbeddedStep embeddedStep) {
+                        CallChain nested = embeddedStep.getChain();
                         if (nested != null) {
                             extraObjects.putAll(getExtraObjectsForCallChain(nested, checkedObjectsMap));
                         }
@@ -298,9 +298,9 @@ public class ExtraObjectsCollector {
     public void collectParents(Storable source, ConcurrentHashMap<Object, Pair<Folder<?>, Integer>> collectTo) {
         Storable current = source.getParent();
         while (Objects.nonNull(current) && Objects.nonNull(current.getParent())) {
-            if (current instanceof Folder) {
+            if (current instanceof Folder<?> folder) {
                 collectTo.put(current.getID(),
-                        new ImmutablePair<>(simpleFolder((Folder<?>) current), ((Folder<?>) current).hierarchyLevel()));
+                        new ImmutablePair<>(simpleFolder(folder), folder.hierarchyLevel()));
                 current = current.getParent();
             } else {
                 log.warn("Parent of {} is not Folder but {}", current, current.getParent().getClass());

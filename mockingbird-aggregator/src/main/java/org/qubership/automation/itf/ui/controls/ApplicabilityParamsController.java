@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -37,9 +37,11 @@ import org.qubership.automation.itf.ui.messages.objects.UIResult;
 import org.qubership.automation.itf.ui.messages.objects.transport.interceptor.UIApplicabilityParams;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +52,7 @@ public class ApplicabilityParamsController extends AbstractController<UIApplicab
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/custom/applicability_params", method = RequestMethod.GET)
+    @GetMapping("/custom/applicability_params")
     @AuditAction(auditAction = "Get all Applicability Params for Interceptor id {{#interceptorId}} "
             + "in the project {{#projectUuid}}")
     public List<UIApplicabilityParams> getAll(@RequestParam(value = "interceptorId") final String interceptorId,
@@ -67,7 +69,7 @@ public class ApplicabilityParamsController extends AbstractController<UIApplicab
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"CREATE\")")
-    @RequestMapping(value = "/custom/applicability_params", method = RequestMethod.POST)
+    @PostMapping("/custom/applicability_params")
     @AuditAction(auditAction = "Create Applicability Params for Interceptor id {{#interceptorId}} "
             + "in the project {{#projectUuid}}")
     public UIApplicabilityParams create(
@@ -79,7 +81,7 @@ public class ApplicabilityParamsController extends AbstractController<UIApplicab
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/custom/applicability_params", method = RequestMethod.PUT)
+    @PutMapping("/custom/applicability_params")
     @AuditAction(auditAction = "Update Applicability Params in the project {{#projectUuid}}")
     public UIResult update(
             @RequestBody List<UIApplicabilityParams> uiApplicabilityParamsList,
@@ -116,7 +118,7 @@ public class ApplicabilityParamsController extends AbstractController<UIApplicab
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"DELETE\")")
-    @RequestMapping(value = "/custom/applicability_params", method = RequestMethod.DELETE)
+    @DeleteMapping("/custom/applicability_params")
     @AuditAction(auditAction = "Delete Applicability Params from project {{#projectUuid}}")
     public void delete(
             @RequestBody Collection<UIApplicabilityParams> uiApplicabilityParamsList,

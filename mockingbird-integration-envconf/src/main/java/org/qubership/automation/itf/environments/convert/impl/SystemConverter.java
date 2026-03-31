@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -208,7 +208,7 @@ public class SystemConverter extends AbstractConverter<System, ECSystem> {
                 ECIErrorsCache.getInstance().put(eciSessionId,
                         "",
                         connectionType,
-                        String.format("There are more then 1 special connection for %s transports", connectionType),
+                        "There are more then 1 special connection for %s transports".formatted(connectionType),
                         ValidationLevel.INFO);
             } else if (connectionForEnvCount == 1 && !server.getOutbounds().isEmpty()
                     && server.getOutbound(system, connectionType).getEcId() != null
@@ -217,7 +217,7 @@ public class SystemConverter extends AbstractConverter<System, ECSystem> {
                 ECIErrorsCache.getInstance().put(eciSessionId,
                         "",
                         connectionType,
-                        String.format("Environment already has the %s transport configuration for %s/%s",
+                        "Environment already has the %s transport configuration for %s/%s".formatted(
                                 connectionType, system.getName(), server.getName()), ValidationLevel.INFO);
             } else {
                 connectionForEnvironment = byTarget.get(ECIConstants.FOR_ENV).get(0);
@@ -248,7 +248,7 @@ public class SystemConverter extends AbstractConverter<System, ECSystem> {
             if (!transportIsFound && transport.getEcId() != null) {
                 transport.unbindEntityWithHierarchy();
                 ECIErrorsCache.getInstance().put(eciSessionId, transport.getName(), transport.getTypeName(),
-                        String.format("Transport [id=%s, name=%s] has become unbind from EC during updating",
+                        "Transport [id=%s, name=%s] has become unbind from EC during updating".formatted(
                                 transport.getID(), transport.getName()), ValidationLevel.INFO);
             }
         }

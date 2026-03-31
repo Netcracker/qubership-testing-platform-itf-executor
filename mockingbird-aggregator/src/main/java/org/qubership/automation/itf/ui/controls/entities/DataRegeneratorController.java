@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -41,9 +41,9 @@ import org.qubership.automation.itf.core.util.provider.ParsingRuleProvider;
 import org.qubership.automation.itf.ui.controls.util.ControllerHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,7 +52,7 @@ public class DataRegeneratorController extends ControllerHelper {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"DELETE\")")
-    @RequestMapping(value = "regenerator/key/delete", method = RequestMethod.DELETE)
+    @DeleteMapping("regenerator/key/delete")
     @AuditAction(auditAction = "Delete Keys on Situation id {{#situationId}} / SituationStep id {{#situationStepId}} "
             + "in the project {{#projectUuid}}")
     public void deleteKeys(@RequestParam(defaultValue = StringUtils.EMPTY) String situationId,
@@ -64,7 +64,7 @@ public class DataRegeneratorController extends ControllerHelper {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "regenerator/key/check", method = RequestMethod.POST)
+    @PostMapping("regenerator/key/check")
     @AuditAction(auditAction = "Check Keys on Situation id {{#situationId}} / SituationStep id {{#situationStepId}} "
             + "in the project {{#projectId}}/{{#projectUuid}}")
     public List<Pair<String, String>> checkKeysBulk(

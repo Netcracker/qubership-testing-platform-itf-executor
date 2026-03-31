@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -231,7 +231,7 @@ public class ProjectSettingsService extends AbstractProjectSettingsService {
             set(projectId.toString(), shortName, value);
         } catch (Exception e) {
             throw new RuntimeException(
-                    String.format("Error while upsert project setting property to cache: '%s' for project %s",
+                    "Error while upsert project setting property to cache: '%s' for project %s".formatted(
                             shortName, projectId), e);
         }
     }

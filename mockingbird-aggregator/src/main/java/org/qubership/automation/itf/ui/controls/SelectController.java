@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.util.db.TxExecutor;
@@ -33,14 +31,14 @@ import org.qubership.automation.itf.ui.messages.UIObjectList;
 import org.qubership.automation.itf.ui.messages.objects.UIObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import jakarta.annotation.Nonnull;
 
 @RestController
 public class SelectController extends ControllerHelper {
@@ -64,7 +62,7 @@ public class SelectController extends ControllerHelper {
     //todo It seems don't using...check it and delete this controller
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/select/options", method = RequestMethod.GET)
+    @GetMapping("/select/options")
     @AuditAction(auditAction = "Get list of '{{#className}}' objects from project {{#projectId}}")
     public UIList getList(
             @RequestParam(value = "className", defaultValue = "") final String className,

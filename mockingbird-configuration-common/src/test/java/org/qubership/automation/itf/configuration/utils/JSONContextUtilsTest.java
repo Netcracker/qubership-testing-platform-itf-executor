@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 package org.qubership.automation.itf.configuration.utils;
 
 import org.json.simple.JSONArray;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,9 +39,9 @@ public class JSONContextUtilsTest {
         String input = "{\"Typ\":\"\",\"Internet_Access_Params\":{\"SN\":\"\",\"Typ\":\"\"},\"Params\":{\"Typ\":\"\"," +
                 "\"UNI_keyB_1\":\"UNI_1_35369354\"}}";
         JsonContext result = convertJsonObject(input);
-        Assert.assertNotNull(result.get("Typ"));
-        Assert.assertNotNull(result.get("Params.Typ"));
-        Assert.assertNotNull(result.get("Internet_Access_Params.Typ"));
+        Assertions.assertNotNull(result.get("Typ"));
+        Assertions.assertNotNull(result.get("Params.Typ"));
+        Assertions.assertNotNull(result.get("Internet_Access_Params.Typ"));
     }
 
     @Test
@@ -49,9 +49,9 @@ public class JSONContextUtilsTest {
         String input = "{\"Typ\":\"1\",\"Internet_Access_Params\":{\"SN\":\"\",\"Typ\":\"2\"}," +
                 "\"Params\":{\"Typ\":\"3\",\"UNI_keyB_1\":\"UNI_1_35369354\"}}";
         JsonContext result = convertJsonObject(input);
-        Assert.assertEquals(result.get("Typ"), "1");
-        Assert.assertEquals(result.get("Params.Typ"), "3");
-        Assert.assertEquals(result.get("Internet_Access_Params.Typ"), "2");
+        Assertions.assertEquals(result.get("Typ"), "1");
+        Assertions.assertEquals(result.get("Params.Typ"), "3");
+        Assertions.assertEquals(result.get("Internet_Access_Params.Typ"), "2");
     }
 
     @Test
@@ -60,14 +60,14 @@ public class JSONContextUtilsTest {
         JsonContext result = convertJsonObject(input);
         Object typ = result.get("Typ");
         Object ab = result.get("letters.ab");
-        Assert.assertTrue(typ instanceof JSONArray);
-        Assert.assertTrue(ab instanceof JSONArray);
+        Assertions.assertTrue(typ instanceof JSONArray);
+        Assertions.assertTrue(ab instanceof JSONArray);
         JSONArray typArray = (JSONArray) typ;
         JSONArray abArray = (JSONArray) ab;
-        Assert.assertEquals(typArray.get(1), "1");
-        Assert.assertEquals(typArray.get(2), "2");
-        Assert.assertEquals(abArray.get(1), "a");
-        Assert.assertEquals(abArray.get(2), "b");
+        Assertions.assertEquals(typArray.get(1), "1");
+        Assertions.assertEquals(typArray.get(2), "2");
+        Assertions.assertEquals(abArray.get(1), "a");
+        Assertions.assertEquals(abArray.get(2), "b");
     }
 
 }

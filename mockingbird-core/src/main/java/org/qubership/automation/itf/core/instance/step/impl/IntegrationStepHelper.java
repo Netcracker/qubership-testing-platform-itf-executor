@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ public class IntegrationStepHelper {
         String stringTtl = message.getConnectionProperties()
                 .getOrDefault(PropertyConstants.Http.CACHE_RESPONSE_FOR_SECONDS, StringUtils.EMPTY).toString();
         if (StringUtils.isNumeric(stringTtl)) {
-            String key = String.format("%s_%s%s", projectId,
+            String key = "%s_%s%s".formatted(projectId,
                     message.getConnectionPropertiesParameter("baseUrl"),
                     message.getConnectionPropertiesParameter("endpoint"));
             response = CacheServices.getResponseCacheService().getByKey(key);
@@ -212,10 +212,10 @@ public class IntegrationStepHelper {
 
     private void collectDurationMetric(TcContext tcContext, UUID projectUuid) {
         Object startTimeObject = tcContext.get("executor_start_time");
-        if (startTimeObject instanceof String) {
+        if (startTimeObject instanceof String string) {
             try {
                 // Parse from default String representation of OffsetDateTime objects
-                OffsetDateTime started = OffsetDateTime.parse((String) startTimeObject);
+                OffsetDateTime started = OffsetDateTime.parse(string);
                 OffsetDateTime finished = OffsetDateTime.now();
                 tcContext.put("executor_finish_time", finished.toString()); // Default string representation
                 Duration duration = Duration.between(started, finished);
@@ -254,8 +254,7 @@ public class IntegrationStepHelper {
         transport.getProperties().forEach(property -> {
             String shortName = property.getShortName();
             Object obtain = connectionProperties.obtain(shortName);
-            if (obtain instanceof String) {
-                String propertyValue = (String) obtain;
+            if (obtain instanceof String propertyValue) {
                 propertyValue = TemplateProcessor.getInstance()
                         .process(null, propertyValue, context, connectionProperties);
                 connectionProperties.put(shortName, propertyValue);
@@ -273,8 +272,8 @@ public class IntegrationStepHelper {
             Object obtain = connectionProperties.obtain(shortName);
             if (property.isDynamic()) {
                 String propertyValue;
-                if (obtain instanceof String) {
-                    propertyValue = (String) obtain;
+                if (obtain instanceof String string) {
+                    propertyValue = string;
                     propertyValue = TemplateEngineFactory.get().process((Storable) null, propertyValue, context,
                             "Connection property '" + shortName + "'");
                     connectionProperties.put(shortName, propertyValue);
@@ -362,7 +361,7 @@ public class IntegrationStepHelper {
     private Operation getAndCheckOperation(StepInstance stepInstance, IntegrationStep integrationStep) {
         Operation integrationStepOperation = integrationStep.getOperation();
         if (integrationStepOperation == null) {
-            throw new IllegalStateException(String.format("Operation is not set! Step: '%s', parent: '%s'",
+            throw new IllegalStateException("Operation is not set! Step: '%s', parent: '%s'".formatted(
                     stepInstance.getStep().getName(), stepInstance.getParent().getStepContainer().getName()));
         }
         return integrationStepOperation;
@@ -371,13 +370,13 @@ public class IntegrationStepHelper {
     private TransportConfiguration getAndCheckConfigurationFromDB(StepInstance stepInstance,
                                                                   TransportConfiguration transportConfigurationLink) {
         if (transportConfigurationLink == null) {
-            throw new IllegalStateException(String.format("Transport isn't set for operation! Step: '%s', parent: '%s'",
+            throw new IllegalStateException("Transport isn't set for operation! Step: '%s', parent: '%s'".formatted(
                     stepInstance.getStep().getName(), stepInstance.getParent().getStepContainer().getName()));
         }
         TransportConfiguration transportConfiguration = CoreObjectManager.managerFor(TransportConfiguration.class)
                 .getById(transportConfigurationLink.getID());
         if (transportConfiguration == null) {
-            throw new IllegalStateException(String.format("Transport isn't set for operation! Step: '%s', parent: '%s'",
+            throw new IllegalStateException("Transport isn't set for operation! Step: '%s', parent: '%s'".formatted(
                     stepInstance.getStep().getName(), stepInstance.getParent().getStepContainer().getName()));
         }
         return transportConfiguration;
@@ -386,7 +385,7 @@ public class IntegrationStepHelper {
     private TransportConfiguration getAndCheckConfiguration(StepInstance stepInstance,
                                                             TransportConfiguration transportConfigurationLink) {
         if (transportConfigurationLink == null) {
-            throw new IllegalStateException(String.format("Transport isn't set for operation! Step: '%s', parent: '%s'",
+            throw new IllegalStateException("Transport isn't set for operation! Step: '%s', parent: '%s'".formatted(
                     stepInstance.getStep().getName(), stepInstance.getParent().getStepContainer().getName()));
         }
         return transportConfigurationLink;
@@ -398,8 +397,7 @@ public class IntegrationStepHelper {
         if (transport == null) {
             // Null transport is returned in case of NotBoundException while looking in TransportRegistry.
             // I think we should throw an exception here
-            throw new IllegalStateException(String.format(
-                    "Transport is not bound for operation! Step: '%s', parent: '%s', transport type: '%s'",
+            throw new IllegalStateException("Transport is not bound for operation! Step: '%s', parent: '%s', transport type: '%s'".formatted(
                     stepInstance.getStep().getName(), stepInstance.getParent().getStepContainer().getName(),
                     transportTypeName));
         }
@@ -409,12 +407,12 @@ public class IntegrationStepHelper {
     private Environment getAndCheckEnvironment(TcContext tcContext) {
         if (tcContext.getEnvironmentId() == null) {
             throw new IllegalStateException(
-                    String.format("Environment has not been set up for context '%s'", tcContext.getName()));
+                    "Environment has not been set up for context '%s'".formatted(tcContext.getName()));
         }
         Environment environment = CoreObjectManager.managerFor(Environment.class).getById(tcContext.getEnvironmentId());
         if (environment == null) {
             throw new IllegalStateException(
-                    String.format("Environment isn't found by id [%s] for context '%s'", tcContext.getEnvironmentId(),
+                    "Environment isn't found by id [%s] for context '%s'".formatted(tcContext.getEnvironmentId(),
                             tcContext.getName()));
         }
         return environment;
@@ -424,7 +422,7 @@ public class IntegrationStepHelper {
         Server server = environment.getOutbound().get(receiverSystem);
         if (server == null) {
             throw new IllegalStateException(
-                    String.format("No associated server found for system '%s' in environment '%s'", receiverSystem,
+                    "No associated server found for system '%s' in environment '%s'".formatted(receiverSystem,
                             environment));
         }
         return server;

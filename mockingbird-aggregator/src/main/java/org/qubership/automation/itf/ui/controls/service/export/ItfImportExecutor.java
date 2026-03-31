@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -39,9 +39,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.hibernate.Session;
 import org.qubership.atp.ei.node.ImportExecutor;
@@ -97,6 +94,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.vavr.Function3;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -411,8 +410,8 @@ public class ItfImportExecutor implements ImportExecutor {
                                 ConcurrentHashMap::new));
         List<IntegrationStep> integrationSteps = situations.values().parallelStream()
                 .flatMap(situation -> situation.getSteps().stream())
-                .filter(step -> step instanceof IntegrationStep && Objects.nonNull(
-                        ((IntegrationStep) step).getReceiver())).map(IntegrationStep.class::cast)
+                .filter(step -> step instanceof IntegrationStep is && Objects.nonNull(
+                        is.getReceiver())).map(IntegrationStep.class::cast)
                 .collect(Collectors.toList());
         //invalidate reference to System as receiver
         integrationSteps.parallelStream().forEach(step -> step.setReceiver(systems.get(step.getReceiver().getID())));
@@ -591,9 +590,9 @@ public class ItfImportExecutor implements ImportExecutor {
                 storable.getID(), storable.getClass().getSimpleName(), storable.getName(),
                 timestampConfigAndSaveStorableStart);
 
-        if (storable instanceof ProjectSettings) {
+        if (storable instanceof ProjectSettings settings) {
             log.info("Importing project settings...");
-            Map<String, String> projectSettings = ((ProjectSettings) storable).getConfiguration();
+            Map<String, String> projectSettings = settings.getConfiguration();
             project.setStorableProp(projectSettings);
             project.store();
             projectSettingsService.fillCache(project, projectSettings);
@@ -601,8 +600,8 @@ public class ItfImportExecutor implements ImportExecutor {
             return;
         }
         checkAndRemoveOldIntegrationConfig(storable, project);
-        if (storable instanceof System) {
-            processTemplatesTransportConfigurations((System) storable);
+        if (storable instanceof System system) {
+            processTemplatesTransportConfigurations(system);
         }
         log.info("Storable name: {} id: {} importing...", storable.getName(), storable.getID());
         Timestamp timestampReplicateStart = new Timestamp(java.lang.System.currentTimeMillis());
@@ -665,8 +664,7 @@ public class ItfImportExecutor implements ImportExecutor {
     }
 
     private void checkAndRemoveOldIntegrationConfig(Storable storable, StubProject project) {
-        if (storable instanceof IntegrationConfig) {
-            IntegrationConfig currentIntegrationConfig = (IntegrationConfig) storable;
+        if (storable instanceof IntegrationConfig currentIntegrationConfig) {
             log.info("Start checking if integration config '{}' exists...", currentIntegrationConfig.getTypeName());
             Set<IntegrationConfig> integrationConfs = project.getIntegrationConfs();
             Iterator<IntegrationConfig> iter = integrationConfs.iterator();
@@ -713,7 +711,7 @@ public class ItfImportExecutor implements ImportExecutor {
             }
             if (projectId == null) {
                 throw new IllegalArgumentException(
-                        String.format("Project with uuid=%s wasn't created, import process can't be started!",
+                        "Project with uuid=%s wasn't created, import process can't be started!".formatted(
                                 projectUuid));
             }
         }

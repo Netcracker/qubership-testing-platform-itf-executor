@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.environment.Environment;
 import org.qubership.automation.itf.core.model.jpa.project.IntegrationConfig;
@@ -42,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 
 public class UIConfiguration extends UITypedObject {
 
@@ -97,7 +96,7 @@ public class UIConfiguration extends UITypedObject {
                 defineProperties(configuration, Extractor.extractProperties((PropertyProvider) aClass.newInstance()));
             }
         } catch (Exception e) {
-            LOGGER.error(String.format("Can't extract properties from %s for configuration %s",
+            LOGGER.error("Can't extract properties from %s for configuration %s".formatted(
                     configuration.getTypeName(), configuration.getID()), e);
         }
     }

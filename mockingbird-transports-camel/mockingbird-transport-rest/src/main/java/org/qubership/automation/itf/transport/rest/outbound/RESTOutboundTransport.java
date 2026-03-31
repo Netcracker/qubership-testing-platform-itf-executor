@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.apache.camel.component.http4.HttpEndpoint;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;
@@ -138,13 +138,15 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
 
     private void logRedirect(String endpoint, Exchange resp, int loopIndex) {
         HttpOperationFailedException ex = (HttpOperationFailedException) resp.getException();
-        LOGGER.debug("Redirection attempt #{}, original endpoint '{}': Response status: {}\n"
-                        + " Response:\n"
-                        + "   Exception: {}\n" +
-                        "   - URI: {}\n" +
-                        "   - RedirectLocation: {}\n" +
-                        "   - ResponseBody: {}\n" +
-                        "   - ResponseHeaders: {}\n",
+        LOGGER.debug("""
+                        Redirection attempt #{}, original endpoint '{}': Response status: {}
+                         Response:
+                           Exception: {}
+                           - URI: {}
+                           - RedirectLocation: {}
+                           - ResponseBody: {}
+                           - ResponseHeaders: {}
+                        """,
                 loopIndex, endpoint, ex.getStatusCode(), ex,
                 ex.getUri(),
                 ex.getRedirectLocation(),

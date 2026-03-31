@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -113,10 +113,12 @@ public class HtmlBuilder {
                 .append(bvHighlighterBulkValidatorStyles)
                 //.append(bvHighlighterItfStyles)
                 .append("</style>");
-        builder.append("<script type='application/javascript'>").append("function toggle(root) {\n" +
-                "\tjQuery(root).parent().find('pre').toggle();\n" +
-                "\tjQuery(root).text(jQuery(root).text() == 'Collapse'?'Expand':'Collapse');\n" +
-                "}").append("</script>");
+        builder.append("<script type='application/javascript'>").append("""
+                function toggle(root) {
+                	jQuery(root).parent().find('pre').toggle();
+                	jQuery(root).text(jQuery(root).text() == 'Collapse'?'Expand':'Collapse');
+                }\
+                """).append("</script>");
     }
 
     public HtmlBuilder beginTable(String title) {

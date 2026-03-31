@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class InterceptorHelper {
                 if (params.isEmpty()) return "Interceptor can't be activated, because parameters are empty.";
                 for (Map.Entry<String, String> param : params.entrySet()) {
                     if (StringUtils.isEmpty(param.getValue()) && !isOptional(transportInterceptor, param.getKey()))
-                        return String.format("Interceptor can't be activated, because '%s' parameter is empty.",
+                        return "Interceptor can't be activated, because '%s' parameter is empty.".formatted(
                                 param.getKey());
                 }
             }
@@ -94,9 +94,8 @@ public class InterceptorHelper {
     }
 
     private static boolean isOptional(TransportInterceptor transportInterceptor, String parameterName) {
-        if (transportInterceptor instanceof ContentInterceptor) {
-            for (InterceptorPropertyDescriptor descriptor :
-                    ((ContentInterceptor) transportInterceptor).getParameters()) {
+        if (transportInterceptor instanceof ContentInterceptor interceptor) {
+            for (InterceptorPropertyDescriptor descriptor : interceptor.getParameters()) {
                 if (descriptor.getName().equals(parameterName)) {
                     return descriptor.isOptional();
                 }

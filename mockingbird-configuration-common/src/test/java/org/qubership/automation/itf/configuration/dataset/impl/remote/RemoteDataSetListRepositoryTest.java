@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@
 
 package org.qubership.automation.itf.configuration.dataset.impl.remote;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.dataset.DataSetList;
 
 import com.google.common.base.Stopwatch;
 
 public class RemoteDataSetListRepositoryTest {
 
-    @Ignore
+    @Disabled
     @Test
     public void testGetAllDatasets() {
 //        for (int i = 0; i < 50; i++) {

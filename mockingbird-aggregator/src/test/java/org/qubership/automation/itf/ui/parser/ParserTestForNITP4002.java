@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,10 +19,9 @@ package org.qubership.automation.itf.ui.parser;
 
 import java.rmi.RemoteException;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.message.parser.ProducerMessageHelper;
 import org.qubership.automation.itf.core.model.jpa.context.InstanceContext;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
@@ -32,18 +31,16 @@ import org.qubership.automation.itf.core.model.jpa.message.template.SystemTempla
 import org.qubership.automation.itf.core.model.jpa.message.template.Template;
 import org.qubership.automation.itf.core.util.exception.ExportException;
 import org.qubership.automation.itf.core.util.exception.FindRegistryException;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath*:*ui-test-context.xml"})
+@SpringJUnitConfig(locations = {"classpath*:*ui-test-context.xml"})
 public class ParserTestForNITP4002 {
 
     private static Template template;
     private static InstanceContext context;
     private static String text = "$!tc.ggg.Test";
 
-    @BeforeClass
+    @BeforeAll
     public static void prepare() throws ExportException, RemoteException, FindRegistryException {
         template = new SystemTemplate();
         template.setName("template");
@@ -60,8 +57,8 @@ public class ParserTestForNITP4002 {
     public void testProduceMessage() throws RemoteException {
         Message message = ProducerMessageHelper.getInstance().produceMessage(template, context, "org.qubership"
                 + ".automation.itf.transport.file.ftp.outbound.FileOverFtpOutbound");
-        Assert.assertNotNull(message);
-        Assert.assertEquals("Message is bad parsed", "999", message.getText());
+        Assertions.assertNotNull(message);
+        Assertions.assertEquals("999", message.getText(), "Message is bad parsed");
     }
 //    @Test
 //    public void testValidateName() throws Exception {

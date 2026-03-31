@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -39,13 +39,14 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(
@@ -66,6 +67,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 @ComponentScan.Filter(type = FilterType.REGEX,
                         pattern = "org.qubership.automation.itf.core.hibernate.spring.managers.reports.*")
         })
+@Configuration
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableDiscoveryClient
 @EnableJpaRepositories(basePackages = {"org.qubership.automation.itf.core.hibernate.spring.repositories.executor"})
@@ -78,7 +80,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "org.qubership.atp.integration.configuration.feign",
         "org.qubership.automation.itf.integration.catalogue"})
 @EnableOauth2FeignClientInterceptor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 @EnableAtpLockManager
 @Import({
         WebMvcAutoConfiguration.class,

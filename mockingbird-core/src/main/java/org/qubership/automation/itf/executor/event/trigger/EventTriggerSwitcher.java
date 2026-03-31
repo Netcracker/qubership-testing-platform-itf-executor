@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public abstract class EventTriggerSwitcher implements IEventTriggerSwitcher {
         } catch (Throwable e) {
             eventTrigger.setState(TriggerState.ERROR);
             eventTrigger.setException(e);
-            throw new TriggerException(String.format("Error while starting trigger %s", this), e);
+            throw new TriggerException("Error while starting trigger %s".formatted(this), e);
         }
     }
 
@@ -55,7 +55,7 @@ public abstract class EventTriggerSwitcher implements IEventTriggerSwitcher {
         } catch (Throwable e) {
             eventTrigger.setState(TriggerState.ERROR);
             eventTrigger.setException(e);
-            throw new TriggerException(String.format("Error while stopping trigger %s", this), e);
+            throw new TriggerException("Error while stopping trigger %s".formatted(this), e);
         }
     }
 

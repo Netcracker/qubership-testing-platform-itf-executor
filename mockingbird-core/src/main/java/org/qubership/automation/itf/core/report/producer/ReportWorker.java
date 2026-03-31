@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,9 +26,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.commons.lang3.BooleanUtils;
@@ -59,7 +56,6 @@ import org.qubership.automation.itf.executor.service.ExecutorToMessageBrokerSend
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -72,6 +68,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.PropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
 
 @Component
 public class ReportWorker {
@@ -104,7 +102,6 @@ public class ReportWorker {
     private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
     private final MetricsAggregateService metricsAggregateService;
 
-    @Autowired
     public ReportWorker(ExecutorToMessageBrokerSender executorToMessageBrokerSender,
                         MetricsAggregateService metricsAggregateService) {
         this.executorToMessageBrokerSender = executorToMessageBrokerSender;
@@ -112,10 +109,10 @@ public class ReportWorker {
     }
 
     private static String objectDescription(Storable object) {
-        if (object instanceof AbstractInstance) {
+        if (object instanceof AbstractInstance instance) {
             return object.getClass().getSimpleName() + " id=" + object.getID()
                     + ", name '" + object.getName() + "'"
-                    + " of " + objectDescription(((AbstractInstance) object).getContext().getTC());
+                    + " of " + objectDescription(instance.getContext().getTC());
         } else {
             return object.getClass().getSimpleName() + " id=" + object.getID()
                     + ", name '" + object.getName() + "'";
@@ -273,7 +270,7 @@ public class ReportWorker {
                                                JsonGenerator jgen,
                                                boolean writeOriginal) throws IOException {
         if (originalStringLength > maxSize) {
-            String newString = String.format(messageTemplate, objectTypeName, originalStringLength);
+            String newString = messageTemplate.formatted(objectTypeName, originalStringLength);
             jgen.writeStringField(fieldName, newString);
             return true;
         } else if (writeOriginal) {
@@ -324,7 +321,7 @@ public class ReportWorker {
                     tenantId, partNum));
             LOGGER.debug("Message is sent: id - {}, type - {}", id, type);
         } catch (JMSException e) {
-            throw new Throwable(String.format("Error while sending message: id - %s, type - %s", id, type), e);
+            throw new Throwable("Error while sending message: id - %s, type - %s".formatted(id, type), e);
         }
     }
 
@@ -333,8 +330,8 @@ public class ReportWorker {
                                   BigInteger projectId,
                                   ObjectMapper mapper,
                                   String tenantId) throws Throwable {
-        if (object instanceof CallChainInstance) {
-            TcContext tc = ((CallChainInstance) object).getContext().getTC();
+        if (object instanceof CallChainInstance instance) {
+            TcContext tc = instance.getContext().getTC();
             if (tc != null && tc.getInitiator() == object) {
                 LOGGER.debug("CallChainInstance {} is Initiator of TcContext {}, sending is skipped",
                         object.getID(), tc.getID());
@@ -346,8 +343,7 @@ public class ReportWorker {
         String jsonString = mapper.writeValueAsString(object);
         String type;
         int partNum;
-        if (object instanceof TcContext && ((TcContext) object).getInitiator() != null) {
-            TcContext tcContext = (TcContext) object;
+        if (object instanceof TcContext tcContext && tcContext.getInitiator() != null) {
             AbstractContainerInstance initiator = tcContext.getInitiator();
             if (initiator.getName() == null) {
                 /*
@@ -365,8 +361,7 @@ public class ReportWorker {
             }
             partNum = tcContext.getPartNum();
             collectContextSizeMetric(tcContext, initiator, jsonString.length());
-        } else if (object instanceof SituationInstance) {
-            SituationInstance situationInstance = (SituationInstance) object;
+        } else if (object instanceof SituationInstance situationInstance) {
             String logMessage =
                     "Report SituationInstance: [" + situationInstance.getID() + "] " + situationInstance.getName();
             jsonString = "{\"SituationInstance\":"
@@ -397,8 +392,8 @@ public class ReportWorker {
         } else {
             type = object.getClass().getSimpleName();
             LOGGER.debug("Message of type {} is sent", type);
-            if (object instanceof AbstractInstance) {
-                partNum = ((AbstractInstance) object).getContext().tc().getPartNum();
+            if (object instanceof AbstractInstance instance) {
+                partNum = instance.getContext().tc().getPartNum();
             } else {
                 partNum = 1;
                 LOGGER.warn("Object type {}: Cannot determine partNum; 1 is set", type);

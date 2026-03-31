@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,9 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.automation.itf.core.hibernate.spring.managers.base.ObjectManager;
@@ -82,6 +79,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class UIHelper {
 
@@ -334,17 +333,17 @@ public class UIHelper {
                 }
                 return uiPresentation;
             } catch (NoSuchMethodException e) {
-                error = String.format("Cannot find the constructor(Storable storable) for the %s",
+                error = "Cannot find the constructor(Storable storable) for the %s".formatted(
                         storable.getClass().getName());
                 exception = e;
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                error = String.format("Cannot create the UI-presentation for the %s", storable.getName());
+                error = "Cannot create the UI-presentation for the %s".formatted(storable.getName());
                 exception = e;
             }
             LOGGER.error(error, exception);
             throw new UIException(error);
         } else {
-            String error = String.format("UI Mapping for the %s is not set", storable.getName());
+            String error = "UI Mapping for the %s is not set".formatted(storable.getName());
             LOGGER.error(error);
             throw new UIException(error);
         }
@@ -359,8 +358,7 @@ public class UIHelper {
     public static void updateObject(UIObject object, Storable storable) {
         storable.setDescription(object.getDescription());
         storable.setName(object.getName());
-        if (storable instanceof LabeledStorable) {
-            LabeledStorable labeledStorable = (LabeledStorable) storable;
+        if (storable instanceof LabeledStorable labeledStorable) {
             labeledStorable.getLabels().clear();
             if (object.getLabels() != null) {
                 labeledStorable.getLabels().addAll(object.getLabels());

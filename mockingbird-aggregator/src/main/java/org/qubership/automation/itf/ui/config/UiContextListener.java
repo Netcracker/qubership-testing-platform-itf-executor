@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -42,8 +42,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.catalogue.openapi.dto.ProjectDto;
@@ -90,6 +88,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hazelcast.core.HazelcastInstance;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -340,7 +339,7 @@ public class UiContextListener {
                     invalidDataFromCatalogue);
             log.info("Filling project setting cache & refreshing from ATP Catalogue "
                             + "for ADDITIONAL clusters is finished. It takes {}",
-                    String.format("%.3f", (double) processingTime / 1000000000.0));
+                    "%.3f".formatted((double) processingTime / 1000000000.0));
             TenantContext.setDefaultTenantInfo();
         }
         List<StubProject> defaultClustersProjects = new ArrayList<>(projects.get(DEFAULT_CLUSTER));
@@ -351,7 +350,7 @@ public class UiContextListener {
                 invalidDataFromCatalogue);
         log.info("Filling project setting cache & refreshing from ATP Catalogue "
                         + "for DEFAULT cluster is finished. It takes {}",
-                String.format("%.3f", (double) processingTime / 1000000000.0));
+                "%.3f".formatted((double) processingTime / 1000000000.0));
     }
 
     private long refreshProjectSettingsAndInitCache(List<StubProject> itfProjects,

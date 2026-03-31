@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -30,8 +30,7 @@ import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.ui.controls.util.ControllerHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,7 +43,7 @@ public class EnvironmentUtilController extends ControllerHelper {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/environment/simplified", method = RequestMethod.GET)
+    @GetMapping("/environment/simplified")
     @AuditAction(auditAction = "Get all Environments (simplified) for project {{#projectId}}/{{#projectUuid}}")
     public JSONArray getAllSimplifiedEnvironments(@RequestParam(value = "projectId") BigInteger projectId,
                                                   @RequestParam(value = "projectUuid") UUID projectUuid) {

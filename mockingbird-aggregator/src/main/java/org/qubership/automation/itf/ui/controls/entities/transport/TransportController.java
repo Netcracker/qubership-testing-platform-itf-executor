@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -63,9 +63,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -83,7 +85,7 @@ public class TransportController extends AbstractController<UITransport, Transpo
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/transport/all", method = RequestMethod.GET)
+    @GetMapping("/transport/all")
     @AuditAction(auditAction = "Get all Transports by parent id {{#parentId}} in the project {{#projectUuid}}")
     public List<? extends UIObject> getAll(@RequestParam(value = "parent", defaultValue = "0") String parentId,
                                            @RequestParam(value = "isFull", defaultValue = "true") boolean isFull,
@@ -117,7 +119,7 @@ public class TransportController extends AbstractController<UITransport, Transpo
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/transport", method = RequestMethod.GET)
+    @GetMapping("/transport")
     @AuditAction(auditAction = "Get Transport Configuration by id {{#id}} in the project {{#projectUuid}}")
     public UITransport get(@RequestParam(value = "id", defaultValue = "0") String id,
                            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
@@ -135,7 +137,7 @@ public class TransportController extends AbstractController<UITransport, Transpo
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/transport", method = RequestMethod.POST)
+    @PostMapping("/transport")
     @AuditAction(auditAction = "Create Transport under System with id {{#parentId}} in the project {{#projectUuid}}")
     public UIObject create(
             @RequestParam(value = "system", defaultValue = "0") String parentId,
@@ -148,7 +150,7 @@ public class TransportController extends AbstractController<UITransport, Transpo
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/transport", method = RequestMethod.DELETE)
+    @DeleteMapping("/transport")
     @AuditAction(auditAction = "Delete Transport from System with id {{#id}} from project "
             + "{{#projectId}}/{{#projectUuid}}")
     public Map<String, Object> delete(
@@ -230,7 +232,7 @@ public class TransportController extends AbstractController<UITransport, Transpo
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/transport", method = RequestMethod.PUT)
+    @PutMapping("/transport")
     @AuditAction(auditAction = "Update Transport by id {{#id}} in the project {{#projectUuid}}")
     public UITransport update(
             @RequestParam(value = "id", defaultValue = "0") String id,
@@ -268,7 +270,7 @@ public class TransportController extends AbstractController<UITransport, Transpo
     }
 
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/transport/getTransportPropertiesByType", method = RequestMethod.GET)
+    @GetMapping("/transport/getTransportPropertiesByType")
     @AuditAction(auditAction = "Get Transport properties by type {{#type}}")
     public List<UIProperty> getTransportPropertiesByType(
             @RequestParam(value = "type") Class<? extends AbstractTransportImpl> type) throws TransportException {
@@ -283,7 +285,7 @@ public class TransportController extends AbstractController<UITransport, Transpo
     }
 
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/transport/getTransportPropertiesForTrigger", method = RequestMethod.GET)
+    @GetMapping("/transport/getTransportPropertiesForTrigger")
     @AuditAction(auditAction = "Get Transport properties by type {{#type}} for trigger")
     public List<UIProperty> getTransportPropertiesForTrigger(
             @RequestParam(value = "type") Class<? extends AbstractTransportImpl> type) throws TransportException {

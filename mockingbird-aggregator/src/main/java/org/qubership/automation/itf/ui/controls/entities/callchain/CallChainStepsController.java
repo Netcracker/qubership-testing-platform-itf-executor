@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -39,9 +39,11 @@ import org.qubership.automation.itf.ui.messages.objects.callchain.step.UISituati
 import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,7 +56,7 @@ public class CallChainStepsController extends AbstractController<UIAbstractCallC
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/steps", method = RequestMethod.GET)
+    @GetMapping("/callchain/steps")
     @AuditAction(auditAction = "Get CallChain Steps of CallChain {{#id}} in the project {{#projectUuid}}")
     public UIWrapper<List<UIAbstractCallChainStep>> getSteps(
             @RequestParam(value = "id", defaultValue = "0") String id,
@@ -64,11 +66,9 @@ public class CallChainStepsController extends AbstractController<UIAbstractCallC
         UIWrapper<List<UIAbstractCallChainStep>> wrapper = new UIWrapper<>();
         wrapper.setData(Lists.newArrayList());
         for (Step step : chainObject.getSteps()) {
-            if (step instanceof SituationStep) {
-                SituationStep situationStep = (SituationStep) step;
+            if (step instanceof SituationStep situationStep) {
                 wrapper.getData().add(new UISituationStep(situationStep, false));
-            } else if (step instanceof EmbeddedStep) {
-                EmbeddedStep embeddedStep = (EmbeddedStep) step;
+            } else if (step instanceof EmbeddedStep embeddedStep) {
                 wrapper.getData().add(new UIEmbeddedChainStep(embeddedStep, false));
             }
         }
@@ -82,7 +82,7 @@ public class CallChainStepsController extends AbstractController<UIAbstractCallC
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/callchain/steps", method = RequestMethod.POST)
+    @PostMapping("/callchain/steps")
     @AuditAction(auditAction = "Create CallChain Step of type {{#type}} under CallChain id {{#parentId}} in the "
             + "project {{#projectUuid}}")
     public UIAbstractCallChainStep create(
@@ -96,7 +96,7 @@ public class CallChainStepsController extends AbstractController<UIAbstractCallC
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"DELETE\")")
-    @RequestMapping(value = "/callchain/steps", method = RequestMethod.DELETE)
+    @DeleteMapping("/callchain/steps")
     @AuditAction(auditAction = "Delete Steps from CallChain id {{#parentId}} in the project {{#projectUuid}}")
     public Map<String, Object> delete(@RequestParam(value = "parentId") String parentId,
                                       @RequestBody Collection<UIAbstractCallChainStep> objectsToDelete,
@@ -118,10 +118,10 @@ public class CallChainStepsController extends AbstractController<UIAbstractCallC
 
     @Override
     protected UIAbstractCallChainStep _newInstanceTClass(Step step) {
-        if (step instanceof SituationStep) {
-            return new UISituationStep((SituationStep) step, false);
-        } else if (step instanceof EmbeddedStep) {
-            return new UIEmbeddedChainStep((EmbeddedStep) step, false);
+        if (step instanceof SituationStep situationStep) {
+            return new UISituationStep(situationStep, false);
+        } else if (step instanceof EmbeddedStep embeddedStep) {
+            return new UIEmbeddedChainStep(embeddedStep, false);
         } else {
             throw new IllegalArgumentException("Illegal step was created: " + step);
         }
@@ -133,7 +133,7 @@ public class CallChainStepsController extends AbstractController<UIAbstractCallC
     }
 
     @Transactional
-    @RequestMapping(value = "/callchain/step/prescript", method = RequestMethod.PUT)
+    @PutMapping("/callchain/step/prescript")
     @AuditAction(auditAction = "Save pre-script on the Step by id {{#stepId}} [Deprecated]")
     public void saveStepPreScript(@RequestParam(value = "stepId", defaultValue = "0") String stepId,
                                   @RequestBody(required = false) String preScript) {

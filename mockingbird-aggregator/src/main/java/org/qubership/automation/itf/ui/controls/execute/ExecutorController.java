@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -27,10 +27,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.adapter.common.context.AtpCompaund;
@@ -70,9 +66,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Strings;
@@ -83,6 +78,9 @@ import com.google.gson.GsonBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -141,8 +139,11 @@ public class ExecutorController extends ControllerHelper {
                     processValidationError(errors, "unexpectedSettings", ENVIRONMENT_NAME_MUST_BE_SET);
                 }
                 if (errors.hasErrors()) {
-                    log.error("Request isn't executed due to above errors, error code 400 'Bad request' is "
-                            + "returned instead.\nRequest body: {}", gson.toJson(target));
+                    log.error("""
+                            Request isn't executed due to above errors, error code 400 'Bad request' is \
+                            returned instead.
+                            Request body: {}\
+                            """, gson.toJson(target));
                 }
             }
         });
@@ -172,7 +173,7 @@ public class ExecutorController extends ControllerHelper {
      * @param properties if dataSetList is specified, dataset name is not used.
      */
     @Transactional
-    @RequestMapping(value = "/executor/execute", method = RequestMethod.POST)
+    @PostMapping("/executor/execute")
     @Operation(summary = "Execute", description = "Execute callchain", tags = {SwaggerConstants.EXECUTOR_COMMAND_API})
     @AuditAction(auditAction = "Execute CallChain with properties")
     public String execute(@RequestBody @Valid ExecutionRequest properties) throws Exception {

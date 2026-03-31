@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package org.qubership.automation.itf.executor.cache.hazelcast.listener;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.apache.logging.log4j.util.Strings;
 import org.qubership.automation.itf.core.metric.MetricsAggregateService;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
@@ -33,6 +31,7 @@ import com.hazelcast.map.impl.DataAwareEntryEvent;
 import com.hazelcast.map.listener.EntryAddedListener;
 import com.hazelcast.map.listener.EntryEvictedListener;
 import com.hazelcast.map.listener.EntryUpdatedListener;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

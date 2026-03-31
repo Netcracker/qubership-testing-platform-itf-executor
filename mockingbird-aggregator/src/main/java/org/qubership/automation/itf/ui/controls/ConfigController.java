@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -34,9 +34,9 @@ import org.qubership.automation.itf.executor.service.ProjectSettingsService;
 import org.qubership.automation.itf.ui.messages.objects.UIConfig;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,7 +54,7 @@ public class ConfigController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/config/set", method = RequestMethod.POST)
+    @PostMapping("/config/set")
     @AuditAction(auditAction = "Set properties of project {{#projectUuid}}")
     public void setProperties(@RequestBody Properties properties,
                               @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -62,7 +62,7 @@ public class ConfigController {
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/config/get", method = RequestMethod.GET)
+    @GetMapping("/config/get")
     @AuditAction(auditAction = "Get property '{{#property}}' of project {{#projectUuid}}")
     public UIConfig getProperty(@RequestParam(value = "property", defaultValue = "") String property,
                                 @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -71,7 +71,7 @@ public class ConfigController {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/config/getByProjectId", method = RequestMethod.GET)
+    @GetMapping("/config/getByProjectId")
     @AuditAction(auditAction = "Get property '{{#property}}' with default value '{{#defaultValue}}' of project "
             + "{{#projectId}}/{{#projectUuid}}")
     public UIConfig getProperty(
@@ -83,7 +83,7 @@ public class ConfigController {
     }
 
     // TODO: Need to be revised after changing UI to angular 2+
-    @RequestMapping(value = "/config/getAuthType", method = RequestMethod.GET)
+    @GetMapping("/config/getAuthType")
     @AuditAction(auditAction = "Get property by name '{{#property}}'")
     public UIConfig getAuthTypeProperty(
             @RequestParam(value = "property", defaultValue = "authentication.type") String property) {
@@ -96,7 +96,7 @@ public class ConfigController {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/config/get/properties/for_run", method = RequestMethod.GET)
+    @GetMapping("/config/get/properties/for_run")
     @AuditAction(auditAction = "Get properties for run with prefix {{#prefix}}, truncPrefix {{#truncPrefix}} of "
             + "project {{#projectId}}/{{#projectUuid}}")
     public List<UIConfig> getPropertiesForRun(
@@ -115,7 +115,7 @@ public class ConfigController {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/integration/config/get", method = RequestMethod.GET)
+    @GetMapping("/integration/config/get")
     @AuditAction(auditAction = "Get Integration config property with config name {{#configName}} and property name "
             + "{{#property}} of project {{#projectId}}/{{#projectUuid}}")
     public UIConfig getIntegrationConfigProperty(

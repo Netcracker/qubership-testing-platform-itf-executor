@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -28,9 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.hibernate.spring.managers.base.ObjectManager;
@@ -58,14 +55,18 @@ import org.qubership.automation.itf.ui.messages.objects.callchain.step.UIAbstrac
 import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @Transactional(readOnly = true)
 @RestController
@@ -74,7 +75,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/all", method = RequestMethod.GET)
+    @GetMapping("/callchain/all")
     @AuditAction(auditAction = "Get all CallChains for project {{#projectId}}/{{#projectUuid}}")
     public List<? extends UIObject> getAll(@RequestParam(value = "projectId") BigInteger projectId,
                                            @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -86,7 +87,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/allbyparent", method = RequestMethod.GET)
+    @GetMapping("/callchain/allbyparent")
     public List<? extends UIObject> getAll(@RequestParam(value = "parentId", defaultValue = "0") String parentId,
                                            @RequestParam(value = "projectUuid") UUID projectUuid) {
         return super.getAll(parentId);
@@ -95,7 +96,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/allIdsAndNames", method = RequestMethod.GET)
+    @GetMapping("/callchain/allIdsAndNames")
     @AuditAction(auditAction = "Get all CallChains (id, name) for project {{#projectId}}/{{#projectUuid}}")
     public UIChainObjectsList getAllIdsAndNames(@RequestParam(value = "projectId") BigInteger projectId,
                                                 @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -105,7 +106,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain", method = RequestMethod.GET)
+    @GetMapping("/callchain")
     @AuditAction(auditAction = "Get CallChain by id {{#id}} in the project {{#projectUuid}}")
     public UICallChain getById(@RequestParam(value = "id", defaultValue = "0") String id,
                                @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -116,7 +117,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/callchain", method = RequestMethod.POST)
+    @PostMapping("/callchain")
     @AuditAction(auditAction = "Create CallChain under parent id {{#parentId}} in the project "
             + "{{#projectId}}/{{#projectUuid}}")
     public UICallChain create(
@@ -253,7 +254,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/callchain/bulk", method = RequestMethod.POST)
+    @PostMapping("/callchain/bulk")
     @AuditAction(auditAction = "Bulk update CallChains in the project {{#projectId}}")
     public UIResult bulkUpdate(@RequestParam(value = "projectId") BigInteger projectId,
                                @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -273,7 +274,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/callchain", method = RequestMethod.PUT)
+    @PutMapping("/callchain")
     @AuditAction(auditAction = "Update CallChain by id {{#callchain.id}} in the project {{#projectUuid}}")
     public UICallChain update(@RequestBody UICallChain callChain,
                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -284,7 +285,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/callchain", method = RequestMethod.DELETE)
+    @DeleteMapping("/callchain")
     @AuditAction(auditAction = "Delete CallChains from project {{#projectUuid}}")
     public Map<String, List<UIObject>> delete(@RequestBody Collection<UICallChain> objectsToDelete,
                                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -296,7 +297,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/fullPath", method = RequestMethod.GET)
+    @GetMapping("/callchain/fullPath")
     @AuditAction(auditAction = "Get full-path-to-CallChain by id {{#id}}")
     public UIWrapper getFullPath(@RequestParam(value = "id", defaultValue = "0") String id,
                                  @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -312,7 +313,7 @@ public class CallChainController extends AbstractController<UICallChain, CallCha
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/usages", method = RequestMethod.GET, produces = "application/json")
+    @GetMapping(value = "/callchain/usages", produces = "application/json")
     @AuditAction(auditAction = "Get usages of CallChain by id {{#id}}")
     public Map<String, Object> getUsages(@RequestParam(value = "id") String id,
                                          @RequestParam(value = "projectUuid") UUID projectUuid) {

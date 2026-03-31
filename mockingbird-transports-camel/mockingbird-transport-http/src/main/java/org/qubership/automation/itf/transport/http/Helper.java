@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 package org.qubership.automation.itf.transport.http;
 
-import static org.apache.http.entity.ContentType.MULTIPART_FORM_DATA;
+import static org.apache.hc.core5.http.ContentType.MULTIPART_FORM_DATA;
 import static org.qubership.automation.itf.transport.camel.Helper.GSON;
 
 import java.io.BufferedWriter;
@@ -38,12 +38,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.activation.URLDataSource;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.StringSource;
 import org.apache.camel.component.cxf.CxfPayload;
@@ -51,19 +45,25 @@ import org.apache.camel.component.http4.HttpComponent;
 import org.apache.camel.impl.DefaultHeaderFilterStrategy;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.entity.mime.ByteArrayBody;
+import org.apache.hc.client5.http.entity.mime.FileBody;
+import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpStatus;
 import org.qubership.automation.itf.core.util.config.ApplicationConfig;
 import org.qubership.automation.itf.core.util.feign.http.HttpClientFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+
+import jakarta.activation.DataHandler;
+import jakarta.activation.FileDataSource;
+import jakarta.activation.URLDataSource;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class Helper {
 
@@ -198,7 +198,7 @@ public class Helper {
             return camelMessage;
         }
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
-        multipartEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        multipartEntityBuilder.setMode(HttpMultipartMode.LEGACY);
         String boundary = contentType.getParameter("boundary");
         if (!StringUtils.isBlank(boundary)) {
             multipartEntityBuilder.setBoundary(boundary);
@@ -348,7 +348,7 @@ public class Helper {
             ResponseEntity<Resource> responseEntity = HttpClientFactory.getDatasetsAttachmentFeignClient()
                     .getAttachmentByParameterId(dataSetUuid);
             if (!responseEntity.hasBody()) {
-                throw new IOException(String.format("Response body is null for '%s', http status %s.",
+                throw new IOException("Response body is null for '%s', http status %s.".formatted(
                         url, responseEntity.getStatusCode()));
             }
             return Objects.requireNonNull(responseEntity.getBody()).getInputStream();
@@ -356,18 +356,18 @@ public class Helper {
         CloseableHttpClient client = PreconfiguredHttpClientHolder.get();
         HttpGet request = new HttpGet(url.toURI());
         CloseableHttpResponse response = client.execute(request);
-        int statusCode = response.getStatusLine().getStatusCode();
+        int statusCode = response.getCode();
         if (statusCode >= HttpStatus.SC_MULTIPLE_CHOICES) {
             String body = StringUtils.EMPTY;
             if (response.getEntity() != null) {
                 body = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             }
-            throw new IOException(String.format("Response is not accepted for '%s': %s [%s],\n body: %s",
-                    url, response.getStatusLine().getReasonPhrase(), statusCode, body));
+            throw new IOException("Response is not accepted for '%s': %s [%s],\n body: %s".formatted(
+                    url, response.getReasonPhrase(), statusCode, body));
         }
         if (response.getEntity() == null) {
-            throw new IOException(String.format("Response body is null for '%s': %s [%s]",
-                    url, response.getStatusLine().getReasonPhrase(), statusCode));
+            throw new IOException("Response body is null for '%s': %s [%s]".formatted(
+                    url, response.getReasonPhrase(), statusCode));
         }
         return response.getEntity().getContent();
     }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -135,7 +135,7 @@ public class ItfStubsRequestsService {
         List<TriggerSample> triggers = collectActiveTriggers(projectsWithEnabledProperty, projectUuids);
         long elapsedTime = java.lang.System.nanoTime() - startTime;
         log.info("Getting transport triggers for activation is completed, triggers count {}, elapsed time {} (s)",
-                Objects.requireNonNull(triggers).size(), String.format("%.3f", (double) elapsedTime / 1000000000.0));
+                Objects.requireNonNull(triggers).size(), "%.3f".formatted((double) elapsedTime / 1000000000.0));
         return triggers;
     }
 
@@ -162,7 +162,7 @@ public class ItfStubsRequestsService {
         long elapsedTime = java.lang.System.nanoTime() - startTime;
         log.info("Getting {} triggers of {} project is completed: triggers count {}, elapsed time {} (s)",
                 actionName, projectUuid, Objects.requireNonNull(triggers).size(),
-                String.format("%.3f", (double) elapsedTime / 1000000000.0));
+                "%.3f".formatted((double) elapsedTime / 1000000000.0));
         return triggers;
     }
 
@@ -203,7 +203,7 @@ public class ItfStubsRequestsService {
         TriggerConfiguration triggerConfiguration =
                 CoreObjectManager.getInstance().getManager(TriggerConfiguration.class).getById(triggerId);
         if (triggerConfiguration == null) {
-            String errorMsg = String.format("Trigger [id=%s] doesn't exist.", triggerId);
+            String errorMsg = "Trigger [id=%s] doesn't exist.".formatted(triggerId);
             log.debug(errorMsg);
             return new Result(false, errorMsg);
         }
@@ -212,12 +212,12 @@ public class ItfStubsRequestsService {
             triggerConfiguration.setActivationErrorMessage(uiUpdateTriggerStatus.getDescription());
             triggerConfiguration.setState(triggerState);
             triggerConfiguration.store();
-            String statusChangeMessage = String.format("Status of trigger [id=%s] is changed to %s.", triggerId,
+            String statusChangeMessage = "Status of trigger [id=%s] is changed to %s.".formatted(triggerId,
                     triggerState);
             log.debug(statusChangeMessage);
             return new Result(!(TriggerState.ERROR.equals(triggerState)), statusChangeMessage);
         } else {
-            String errorMsg = String.format("Status can't be found by value=%s. Trigger [id=%s] is not updated",
+            String errorMsg = "Status can't be found by value=%s. Trigger [id=%s] is not updated".formatted(
                     uiUpdateTriggerStatus.getStatus(), triggerId);
             log.debug(errorMsg);
             return new Result(false, errorMsg);
@@ -295,7 +295,7 @@ public class ItfStubsRequestsService {
                                 return createTriggerSample(trigger, project.getUuid());
                             } catch (Exception ex) {
                                 throw new RuntimeException(
-                                        String.format("Error while getting all triggers for activation: trigger %s",
+                                        "Error while getting all triggers for activation: trigger %s".formatted(
                                                 trigger.getID()), ex);
                             }
                         })
@@ -318,7 +318,7 @@ public class ItfStubsRequestsService {
                                 return createTriggerSample(trigger, project.getUuid());
                             } catch (Exception ex) {
                                 throw new RuntimeException(
-                                        String.format("Error while getting all active and error triggers: trigger %s",
+                                        "Error while getting all active and error triggers: trigger %s".formatted(
                                                 trigger.getID()), ex);
                             }
                         })

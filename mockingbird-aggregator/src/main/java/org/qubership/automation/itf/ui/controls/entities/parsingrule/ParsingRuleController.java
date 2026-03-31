@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -51,9 +51,11 @@ import org.qubership.automation.itf.ui.messages.objects.UIObjectsToDelete;
 import org.qubership.automation.itf.ui.messages.objects.UIParsingRule;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,7 +68,7 @@ public class ParsingRuleController extends AbstractController<UIParsingRule, Par
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).PARSING_RULE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/parsingrule/all", method = RequestMethod.GET)
+    @GetMapping("/parsingrule/all")
     @AuditAction(auditAction = "Get all ParsingRules by parent id {{#parentId}} in the project {{#projectUuid}}")
     public List<? extends UIObject> getAll(@RequestParam(value = "parent", defaultValue = "0") String parentId,
                                            @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -78,7 +80,7 @@ public class ParsingRuleController extends AbstractController<UIParsingRule, Par
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).PARSING_RULE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/parsingrule", method = RequestMethod.GET)
+    @GetMapping("/parsingrule")
     @AuditAction(auditAction = "Get ParsingRule by id {{#id}} in the project {{#projectUuid}}")
     public UIParsingRule getById(@RequestParam(value = "id", defaultValue = "0") String id,
                                  @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -89,7 +91,7 @@ public class ParsingRuleController extends AbstractController<UIParsingRule, Par
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).PARSING_RULE.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/parsingrule", method = RequestMethod.POST)
+    @PostMapping("/parsingrule")
     @AuditAction(auditAction = "Create ParsingRule under parent id {{#id}} of type {{#type}} in the project " +
             "{{#projectUuid}}")
     public UIParsingRule create(@RequestParam(value = "parent", defaultValue = "0") String parentId,
@@ -104,7 +106,7 @@ public class ParsingRuleController extends AbstractController<UIParsingRule, Par
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).PARSING_RULE.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/parsingrule", method = RequestMethod.PUT)
+    @PutMapping("/parsingrule")
     @AuditAction(auditAction = "Update ParsingRule by id {{#parsingRule.id}} in the project {{#projectUuid}}")
     public UIParsingRule update(@RequestBody UIParsingRule parsingRule,
                                 @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -119,7 +121,7 @@ public class ParsingRuleController extends AbstractController<UIParsingRule, Par
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).PARSING_RULE.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/parsingrule", method = RequestMethod.DELETE)
+    @DeleteMapping("/parsingrule")
     @AuditAction(auditAction = "Delete ParsingRules from project {{#projectUuid}}")
     public List<UIObject> delete(@RequestBody UIObjectsToDelete uiObjectsToDelete,
                                  @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -169,8 +171,9 @@ public class ParsingRuleController extends AbstractController<UIParsingRule, Par
     }
 
     private String makeErrorMessage(Map<ParsingRule<? extends ParsingRuleProvider>, List<String>> usages) {
-        StringBuilder errorMessageBuilder = new StringBuilder("Some of parsing rules to be deleted are selected in " +
-                "situations,\n please unselect them first:");
+        StringBuilder errorMessageBuilder = new StringBuilder("""
+                Some of parsing rules to be deleted are selected in situations,
+                 please unselect them first:""");
         usages.forEach((key, value) -> {
             errorMessageBuilder.append("\nParsingRule: '").append(key.getParamName()).append("' is used in: ");
             boolean started = false;

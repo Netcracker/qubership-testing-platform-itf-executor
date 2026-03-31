@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -87,6 +84,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -585,9 +584,9 @@ public class SituationExecutorService {
             String timeUnit = integrationStep.getRetryTimeoutUnit().toLowerCase();
             if (isLastRetry) {
                 Report.info(instance,
-                        String.format("Pause %d %s after each [%s] (count: %d)", retryTimeout, timeUnit,
+                        "Pause %d %s after each [%s] (count: %d)".formatted(retryTimeout, timeUnit,
                                 instance.getName(), stepInstance.getCurrentValidAttemptValue() - 1),
-                        String.format("Waiting for [%d] %s", retryTimeout, timeUnit));
+                        "Waiting for [%d] %s".formatted(retryTimeout, timeUnit));
             } else {
                 try {
                     log.info("{}: waiting for timeout '{}' {}...", instance, retryTimeout, timeUnit);
@@ -681,16 +680,14 @@ public class SituationExecutorService {
 
     private void failureOfSituationWithoutAtpReport(SituationInstance instance, Exception e) {
         log.warn("Failed message validation at the {}, Error: {}", instance,
-                (e instanceof EngineIntegrationException)
-                        ? ((EngineIntegrationException) e).getShortMessage() : e.getMessage());
+                (e instanceof EngineIntegrationException eie) ? eie.getShortMessage() : e.getMessage());
         instance.setStatus(Status.FAILED);
         instance.setEndTime(new Date());
     }
 
     private void failureInstance(SituationInstance instance, Exception e, String message) {
         log.error("{} at the {}, Error: {}", message, instance,
-                (e instanceof EngineIntegrationException)
-                        ? ((EngineIntegrationException) e).getShortMessage() : e.getMessage());
+                (e instanceof EngineIntegrationException eie) ? eie.getShortMessage() : e.getMessage());
         instance.setError(e);
         instance.setStatus(Status.FAILED);
         instance.setEndTime(new Date());
@@ -792,7 +789,7 @@ public class SituationExecutorService {
         IntegrationStep step = new IntegrationStep();
         step.setOperation(parentOperation);
         step.setReceiver(parentOperation.getParent());
-        step.setName(String.format("[%s] receives [%s]", step.getReceiver().getName(), step.getOperation().getName()));
+        step.setName("[%s] receives [%s]".formatted(step.getReceiver().getName(), step.getOperation().getName()));
         StepInstance stepInstance = new StepInstance();
         stepInstance.setParent(null);
         stepInstance.setID(UniqueIdGenerator.generate());
@@ -848,7 +845,7 @@ public class SituationExecutorService {
 
     private void sendEndExceptionalSituationFinishEvent(TcContext tcContext, SituationInstance situationInstance) {
         boolean isItEndSituationForSomeone = CacheServices.getAwaitingContextsCacheService()
-                .containsKey(String.format("%s_%s", tcContext.getID(), situationInstance.getSituationId()));
+                .containsKey("%s_%s".formatted(tcContext.getID(), situationInstance.getSituationId()));
         if (isItEndSituationForSomeone) {
             executorToMessageBrokerSender.sendEventToEndExceptionalSituationsTopic(
                     new SituationEvent.EndExceptionalSituationFinish(situationInstance),

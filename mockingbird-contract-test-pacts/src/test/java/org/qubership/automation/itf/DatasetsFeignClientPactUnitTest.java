@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,10 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.datasets.dto.AbstractParameterDto;
 import org.qubership.atp.datasets.dto.AttributeTypeDto;
@@ -50,9 +51,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import au.com.dius.pact.consumer.dsl.DslPart;
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
@@ -64,11 +64,11 @@ import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.gson.Gson;
 
-@RunWith(SpringRunner.class)
 @EnableFeignClients(clients = {DatasetsDatasetFeignClient.class, DatasetsAttachmentFeignClient.class,
         DatasetsAttributeFeignClient.class, DatasetsDatasetListFeignClient.class,
         DatasetsVisibilityAreaFeignClient.class})
-@ContextConfiguration(classes = {DatasetsFeignClientPactUnitTest.TestApp.class})
+@ExtendWith(ExternalResourceSupport.class)
+@SpringJUnitConfig(classes = {DatasetsFeignClientPactUnitTest.TestApp.class})
 @Import({JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class,
         FeignConfiguration.class, FeignAutoConfiguration.class})
 @TestPropertySource(properties = {"feign.atp.datasets.name=atp-datasets", "feign.atp.datasets.route=",
@@ -97,57 +97,57 @@ public class DatasetsFeignClientPactUnitTest {
     @PactVerification()
     public void allPass() {
         ResponseEntity<Resource> result1 = dsAttachmentFeignClient.getAttachmentByParameterId(attachmentUuid);
-        Assert.assertEquals(200, result1.getStatusCode().value());
-        Assert.assertTrue(result1.getHeaders().get("Content-Disposition").contains("attachment; filename=\"name\""));
+        Assertions.assertEquals(200, result1.getStatusCode().value());
+        Assertions.assertTrue(result1.getHeaders().get("Content-Disposition").contains("attachment; filename=\"name\""));
 
         ResponseEntity<String> result2 = dsDatasetFeignClient.getItfContext(dataSetId);
-        Assert.assertEquals(200, result2.getStatusCode().value());
-        Assert.assertTrue(result2.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertNotNull(result2.getBody());
+        Assertions.assertEquals(200, result2.getStatusCode().value());
+        Assertions.assertTrue(result2.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertNotNull(result2.getBody());
 
         ResponseEntity<DataSetTreeDto> result3 = dsDatasetFeignClient.getAtpContextFull(dataSetId, "true", body);
-        Assert.assertEquals(200, result3.getStatusCode().value());
-        Assert.assertTrue(result3.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3_4_5_6(), result3.getBody());
+        Assertions.assertEquals(200, result3.getStatusCode().value());
+        Assertions.assertTrue(result3.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody3_4_5_6(), result3.getBody());
 
         ResponseEntity<DataSetTreeDto> result4 = dsDatasetFeignClient.getAtpContextObject(dataSetId, "true", body);
-        Assert.assertEquals(200, result4.getStatusCode().value());
-        Assert.assertTrue(result4.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3_4_5_6(), result4.getBody());
+        Assertions.assertEquals(200, result4.getStatusCode().value());
+        Assertions.assertTrue(result4.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody3_4_5_6(), result4.getBody());
 
         ResponseEntity<DataSetTreeDto> result5
                 = dsDatasetFeignClient.getAtpContextObjectExtended(dataSetId, "true", body);
-        Assert.assertEquals(200, result5.getStatusCode().value());
-        Assert.assertTrue(result5.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3_4_5_6(), result5.getBody());
+        Assertions.assertEquals(200, result5.getStatusCode().value());
+        Assertions.assertTrue(result5.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody3_4_5_6(), result5.getBody());
 
         ResponseEntity<DataSetTreeDto> result6
                 = dsDatasetFeignClient.getAtpContextOptimized(dataSetId, "true", body);
-        Assert.assertEquals(200, result6.getStatusCode().value());
-        Assert.assertTrue(result6.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3_4_5_6(), result6.getBody());
+        Assertions.assertEquals(200, result6.getStatusCode().value());
+        Assertions.assertTrue(result6.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody3_4_5_6(), result6.getBody());
 
         ResponseEntity<List<VisibilityAreaFlatModelDto>> result7 = dsVisibilityAreaFeignClient.getVisibilityAreas();
-        Assert.assertEquals(200, result7.getStatusCode().value());
-        Assert.assertTrue(result7.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody7(), result7.getBody());
+        Assertions.assertEquals(200, result7.getStatusCode().value());
+        Assertions.assertTrue(result7.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody7(), result7.getBody());
 
         ResponseEntity<List<DataSetListCreatedModifiedViewDto>> result8
                 = dsDatasetListFeignClient.getDataSetListsByVaId(dataSetListId, null);
-        Assert.assertEquals(200, result8.getStatusCode().value());
-        Assert.assertTrue(result8.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody8(), result8.getBody());
+        Assertions.assertEquals(200, result8.getStatusCode().value());
+        Assertions.assertTrue(result8.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody8(), result8.getBody());
 
         ResponseEntity<List<DataSetDto>> result9
                 = dsDatasetListFeignClient.getDataSets(dataSetListId, null, "label");
-        Assert.assertEquals(200, result9.getStatusCode().value());
-        Assert.assertTrue(result9.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody9(), result9.getBody());
+        Assertions.assertEquals(200, result9.getStatusCode().value());
+        Assertions.assertTrue(result9.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody9(), result9.getBody());
 
         ResponseEntity<Object> result10 = dsAttributeFeignClient.getAttributesInItfFormat(dataSetListId);
-        Assert.assertEquals(200, result10.getStatusCode().value());
-        Assert.assertTrue(result10.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody10(), result10.getBody());
+        Assertions.assertEquals(200, result10.getStatusCode().value());
+        Assertions.assertTrue(result10.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody10(), result10.getBody());
     }
 
     @Pact(consumer = "atp-itf-executor")

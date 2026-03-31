@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import org.qubership.automation.itf.core.util.constants.Status;
 import org.qubership.automation.itf.integration.atp.exector.AtpCallchainExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,6 @@ public class CallchainRunner implements Runnable {
     private AtomicBoolean isFailed;
     private AtpCallchainExecutor atpCallchainExecutor;
 
-    @Autowired
     public CallchainRunner(AtpCallchainExecutor atpCallchainExecutor) {
         this.atpCallchainExecutor = atpCallchainExecutor;
     }
@@ -58,7 +56,7 @@ public class CallchainRunner implements Runnable {
         try {
             result = executeCallChain();
         } catch (Exception e) {
-            String title = String.format("Execution of '%s' callchain from ATP is failed.",
+            String title = "Execution of '%s' callchain from ATP is failed.".formatted(
                     callchainRunInfo.getCallChain().getName());
             testRunInfo.reportError("Errors", title, StringUtils.EMPTY, e);
             LOGGER.error(title, e);

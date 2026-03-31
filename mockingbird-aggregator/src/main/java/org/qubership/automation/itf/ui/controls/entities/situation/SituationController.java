@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -65,10 +65,12 @@ import org.qubership.automation.itf.ui.util.UIHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -101,7 +103,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/all", method = RequestMethod.GET)
+    @GetMapping("/situation/all")
     @AuditAction(auditAction = "Get all Situations under Operation by id {{#parentId}} in the project {{#projectUuid}}")
     public UIListImpl getSituations(@RequestParam(value = "parent", defaultValue = "0") String parentId,
                                     @RequestParam(value = "isFull", defaultValue = "true") boolean isFull,
@@ -147,7 +149,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation", method = RequestMethod.GET)
+    @GetMapping("/situation")
     @AuditAction(auditAction = "Get Situation by id {{#id}} in the project {{#projectUuid}}")
     public UISituation getById(@RequestParam(value = "id", defaultValue = "0") String id,
                                @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -162,7 +164,7 @@ public class SituationController extends AbstractController<UISituation, Situati
      * @return {@link UISituation} for the situation found
      */
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/situation/{id}", method = RequestMethod.GET)
+    @GetMapping("/situation/{id}")
     @AuditAction(auditAction = "Get Situation by id {{#id}} via feign")
     public UISituation feignGetById(@PathVariable(value = "id") String id) {
         return super.getById(id);
@@ -179,7 +181,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/situation", method = RequestMethod.POST)
+    @PostMapping("/situation")
     @AuditAction(auditAction = "Create Situation under Operation with id {{#parentId}} in the project {{#projectUuid}}")
     public UISituation create(@RequestParam(value = "operation", defaultValue = "0") String parentId,
                               @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -214,7 +216,7 @@ public class SituationController extends AbstractController<UISituation, Situati
             + "#projectUuid, 'CREATE') and @entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/createTemplateAndSituation", method = RequestMethod.POST)
+    @PostMapping("/createTemplateAndSituation")
     @AuditAction(auditAction = "Create Template and Situation under Operation with id {{#id}} in the project "
             + "{{#projectUuid}}")
     public UISituation createTemplateAndSituation(@RequestParam(value = "operation", defaultValue = "0") String id,
@@ -248,7 +250,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/situation", method = RequestMethod.PUT)
+    @PutMapping("/situation")
     @AuditAction(auditAction = "Update Situation with id {{#uiSituation.id}} in the project {{#projectUuid}}")
     public UISituation update(@RequestBody UISituation uiSituation,
                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -279,7 +281,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/scripts", method = RequestMethod.GET)
+    @GetMapping("/situation/scripts")
     @AuditAction(auditAction = "Get Scripts of the Situation with id {{#id}} in the project {{#projectUuid}}")
     public String[] getScripts(@RequestParam(value = "id", defaultValue = "0") String id,
                                @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -310,7 +312,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/situation", method = RequestMethod.DELETE)
+    @DeleteMapping("/situation")
     @AuditAction(auditAction = "Delete Situations from Project {{#projectId}}/{{#projectUuid}}")
     public List<UIObject> delete(@RequestBody UIIds uiDeleteObjectReq,
                                  @RequestParam(value = "projectId") BigInteger projectId,
@@ -350,7 +352,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/situation/integration/bv", method = RequestMethod.GET, produces = "text/plain")
+    @GetMapping(value = "/situation/integration/bv", produces = "text/plain")
     @AuditAction(auditAction = "Create BVCase with bvLink {{#bvTcId}} on Situation with id {{#situationId}} in the "
             + "project {{#projectId}}")
     public String createBvCaseOnSituation(@RequestParam(value = "situationId") String situationId,
@@ -378,8 +380,9 @@ public class SituationController extends AbstractController<UISituation, Situati
                 }
                 return situation.getBvTestcase();
             } else {
-                throw new ConfigurationException("Bulk Validator Integration config isn't found for the project!"
-                        + "\nPlease check 'Integration Configurations' and configure BV integration.");
+                throw new ConfigurationException("""
+                        Bulk Validator Integration config isn't found for the project!
+                        Please check 'Integration Configurations' and configure BV integration.""");
 
             }
         } else {
@@ -399,7 +402,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/situation/integration/bv", method = RequestMethod.DELETE)
+    @DeleteMapping("/situation/integration/bv")
     @AuditAction(auditAction = "Delete or unlink BVCase on Situation with id {{#situationId}} in the project "
             + "{{#projectId}} / {{#projectUuid}}")
     public void deleteOrUnlinkBvCaseOnSituation(@RequestParam(value = "situationId") String situationId,
@@ -434,7 +437,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/getSituationsWithBvLinks", method = RequestMethod.GET)
+    @GetMapping("/situation/getSituationsWithBvLinks")
     @AuditAction(auditAction = "Get Situations with BvLinks in the project {{#projectId}}/{{#projectUuid}}")
     public List<Object[]> getSituationsWithBvLinks(@RequestParam(value = "projectId") BigInteger projectId,
                                                    @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -453,7 +456,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/parsingRules", method = RequestMethod.GET)
+    @GetMapping("/situation/parsingRules")
     @AuditAction(auditAction = "Get ParsingRules for Situation by id {{#id}} in the project {{#projectUuid}}")
     public Set<UIParsingRule> getParsingRules(@RequestParam(value = "id", defaultValue = "0") String id,
                                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -481,7 +484,7 @@ public class SituationController extends AbstractController<UISituation, Situati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/label", method = RequestMethod.GET)
+    @GetMapping("/situation/label")
     @AuditAction(auditAction = "Get all Situation Labels in the project {{#projectId}}/{{#projectUuid}}")
     public Set<String> getLabels(@RequestParam(value = "projectId") BigInteger projectId,
                                  @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -569,10 +572,10 @@ public class SituationController extends AbstractController<UISituation, Situati
         if (Objects.isNull(usages) || usages.isEmpty()) {
             return;
         }
-        throw new OperationException("Delete Situation", String.format(
-                "Situation [name: '%s', id: '%s'] is used on callChain step(s) and/or on situation event trigger(s).\n"
-                        + " Please find usages of this situation (use UI button 'Usages' on situation)"
-                        + " and remove trigger(s) and(or) callChain step(s) first",
+        throw new OperationException("Delete Situation", """
+                Situation [name: '%s', id: '%s'] is used on callChain step(s) and/or on situation event trigger(s).
+                 Please find usages of this situation (use UI button 'Usages' on situation)\
+                 and remove trigger(s) and(or) callChain step(s) first""".formatted(
                 situation.getName(), situation.getID()));
     }
 

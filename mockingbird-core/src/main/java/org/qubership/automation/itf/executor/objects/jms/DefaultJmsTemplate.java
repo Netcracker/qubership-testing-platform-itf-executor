@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ package org.qubership.automation.itf.executor.objects.jms;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.jms.Message;
-
 import org.qubership.atp.multitenancy.interceptor.jms.AtpJmsTemplate;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
+
+import jakarta.jms.Message;
 
 public class DefaultJmsTemplate extends JmsTemplate implements AtpJmsTemplate {
 
@@ -39,7 +39,7 @@ public class DefaultJmsTemplate extends JmsTemplate implements AtpJmsTemplate {
     public void convertAndSend(String destination, Object message, Map<String, Object> properties) throws JmsException {
         super.send(destination, (session) -> {
             Message messageToSend = Objects.requireNonNull(super.getMessageConverter(),
-                            String.format("MessageConverter wasn't configured for %s destination", destination))
+                            "MessageConverter wasn't configured for %s destination".formatted(destination))
                     .toMessage(message, session);
             for (Map.Entry<String, Object> property : properties.entrySet()) {
                 messageToSend.setStringProperty(property.getKey(), String.valueOf(property.getValue()));

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -45,9 +45,11 @@ import org.qubership.automation.itf.ui.messages.objects.UIResult;
 import org.qubership.automation.itf.ui.messages.objects.environment.UIServer;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,7 +58,7 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/server/all", method = RequestMethod.GET)
+    @GetMapping("/server/all")
     @AuditAction(auditAction = "Get all Servers from project {{#projectUuid}}")
     public List<? extends UIObject> getAll(@RequestParam(value = "projectUuid") UUID projectUuid) {
         return super.getAll();
@@ -64,7 +66,7 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/server/allbyparent", method = RequestMethod.GET)
+    @GetMapping("/server/allbyparent")
     @AuditAction(auditAction = "Get all Servers in Folder by id {{#parentId}} in the project {{#projectUuid}}")
     public List<? extends UIObject> getAll(@RequestParam(value = "parentId", defaultValue = "0") String parentId,
                                            @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -73,7 +75,7 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/server", method = RequestMethod.GET)
+    @GetMapping("/server")
     @AuditAction(auditAction = "Get Server by id {{#id}} in the project {{#projectUuid}}")
     public UIServer getById(@RequestParam(value = "id", defaultValue = "0") String id,
                             @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -82,7 +84,7 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"CREATE\")")
-    @RequestMapping(value = "/server", method = RequestMethod.POST)
+    @PostMapping("/server")
     @AuditAction(auditAction = "Create Server under Folder id {{#parentId}} in the project "
             + "{{#projectId}}/{{#projectUuid}}")
     public UIServer create(
@@ -94,7 +96,7 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"CREATE\")")
-    @RequestMapping(value = "/server/duplicate", method = RequestMethod.POST)
+    @PostMapping("/server/duplicate")
     @AuditAction(auditAction = "Copy Servers in the project {{#projectId}}/{{#projectUuid}}")
     public ArrayList<UIServer> create(
             @RequestParam(value = "parent", defaultValue = "0") String parentId,
@@ -113,7 +115,7 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/server", method = RequestMethod.PUT)
+    @PutMapping("/server")
     @AuditAction(auditAction = "Update Server by id {{#uiServer.id}} in the project {{#projectUuid}}")
     public UIServer update(@RequestBody UIServer uiServer,
                            @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -122,7 +124,7 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/server", method = RequestMethod.DELETE)
+    @DeleteMapping("/server")
     @AuditAction(auditAction = "Delete Servers from Project {{#projectUuid}}")
     public DeleteEntityResultMessage<String, UIObject> delete(
             @RequestParam(value = "ignoreUsages", defaultValue = "false") Boolean ignoreUsages,
@@ -165,7 +167,7 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/server/usages", method = RequestMethod.POST)
+    @PostMapping("/server/usages")
     public Map<String, Object> getUsages(@RequestParam(value = "projectUuid") UUID projectUuid,
                                          @RequestBody UIIds uiServersObj) {
         Map<String, Object> res = new HashMap<>();
@@ -183,15 +185,15 @@ public class ServerController extends AbstractController<UIServer, Server> {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"DELETE\")")
-    @RequestMapping(value = "/server/deleteUnusedOutboundConfigurations", method = RequestMethod.DELETE)
+    @DeleteMapping("/server/deleteUnusedOutboundConfigurations")
     public UIResult deleteUnusedConfigurationByProjectId(@RequestParam(value = "projectId") BigInteger projectId) {
         try {
             int deletedCount = CoreObjectManager.getInstance()
                     .getSpecialManager(Server.class, ServerObjectManager.class)
                     .deleteUnusedOutboundConfigurationsByProjectId(projectId);
-            return new UIResult(true, String.format("%s rows are deleted", deletedCount));
+            return new UIResult(true, "%s rows are deleted".formatted(deletedCount));
         } catch (Exception ex) {
-            return new UIResult(false, String.format("Deleting isn't performed due to error: %s", ex.getMessage()));
+            return new UIResult(false, "Deleting isn't performed due to error: %s".formatted(ex.getMessage()));
         }
     }
 

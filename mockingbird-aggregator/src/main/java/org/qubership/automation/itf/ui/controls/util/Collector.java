@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.IllegalClassException;
+import org.apache.commons.lang3.IllegalClassException;
 import org.aspectj.apache.bcel.classfile.ClassFormatException;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.callchain.CallChain;
@@ -45,8 +45,7 @@ public class Collector {
     public static Set<System> collectSystemsFromSituationSteps(Collection<SituationStep> steps) {
         HashSet<System> collectedSystems = new HashSet<>();
         for (Step step : steps.stream().filter(Objects::nonNull).collect(Collectors.toSet())) {
-            if (step instanceof SituationStep) {
-                SituationStep situationStep = (SituationStep) step;
+            if (step instanceof SituationStep situationStep) {
                 if (situationStep.getSituation() != null) {
                     collectedSystems.add(situationStep.getSituation().getParent().getParent());
                 }
@@ -132,10 +131,10 @@ public class Collector {
         HashSet<CallChain> callChains = new HashSet<>();
         HashSet<ChainFolder> callChainFolders = new HashSet<>();
         for (Storable storable : storables) {
-            if (storable instanceof CallChain) {
-                callChains.add((CallChain) storable);
-            } else if (storable instanceof ChainFolder) {
-                callChainFolders.add((ChainFolder) storable);
+            if (storable instanceof CallChain chain) {
+                callChains.add(chain);
+            } else if (storable instanceof ChainFolder folder) {
+                callChainFolders.add(folder);
             } else {
                 throw new IllegalClassException("Unexpected class: " + storable);
             }
@@ -176,10 +175,10 @@ public class Collector {
         HashSet<System> systems = new HashSet<>();
         HashSet<SystemFolder> systemFolders = new HashSet<>();
         for (Storable storable : storables) {
-            if (storable instanceof System) {
-                systems.add((System) storable);
-            } else if (storable instanceof SystemFolder) {
-                systemFolders.add((SystemFolder) storable);
+            if (storable instanceof System system) {
+                systems.add(system);
+            } else if (storable instanceof SystemFolder folder) {
+                systemFolders.add(folder);
             } else {
                 throw new IllegalClassException("Unexpected class: " + storable);
             }

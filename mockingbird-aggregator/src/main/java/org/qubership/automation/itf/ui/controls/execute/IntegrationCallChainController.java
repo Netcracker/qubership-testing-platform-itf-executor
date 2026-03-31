@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.apache.commons.lang.IllegalClassException;
+import org.apache.commons.lang3.IllegalClassException;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.exceptions.integration.IntegrationException;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.BvCaseContainingObjectManager;
@@ -51,9 +51,11 @@ import org.qubership.automation.itf.ui.messages.objects.parents.UIIdentifiedObje
 import org.qubership.automation.itf.ui.swagger.SwaggerConstants;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -88,7 +90,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/callchain/integration/bv", method = RequestMethod.DELETE)
+    @DeleteMapping("/callchain/integration/bv")
     @Operation(summary = "DeleteOrUnlinkBvCase",
             description = "Delete or unlink bv case",
             tags = {SwaggerConstants.BULK_INTEGRATION_API})
@@ -118,7 +120,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/callchain/integration/bv/read", method = RequestMethod.POST)
+    @PostMapping("/callchain/integration/bv/read")
     @Operation(summary = "ReadBVCase", description = "Read BV Case", tags = {SwaggerConstants.BULK_INTEGRATION_API})
     @AuditAction(auditAction = "Read BV case with selected DataSet name {{#dsName}} and CallChain id {{#chainId}} in "
             + "the project {{#projectId}}/{{#projectUuid}}")
@@ -148,7 +150,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/integration/bv/get/bvconfig", method = RequestMethod.GET)
+    @GetMapping("/callchain/integration/bv/get/bvconfig")
     @Operation(summary = "GetBvAction",
             description = "Retrieve BV Case config",
             tags = {SwaggerConstants.BULK_INTEGRATION_API})
@@ -164,7 +166,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
     }
 
     @Transactional
-    @RequestMapping(value = "/callchain/integration/bv", method = RequestMethod.GET, produces = "text/plain")
+    @GetMapping(value = "/callchain/integration/bv", produces = "text/plain")
     @Operation(summary = "CreateBvCase", description = "Create BV Case", tags = {SwaggerConstants.BULK_INTEGRATION_API})
     @AuditAction(auditAction = "Create BV case using BV link {{#bvTcId}} with selected DataSet name {{#dsName}} and "
             + "CallChain id {{#callChainId}} in the project {{#projectId}}/{{#projectUuid}}")
@@ -199,8 +201,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
     }
 
     @Transactional
-    @RequestMapping(value = "/callchain/integration/bv/regenerate",
-            method = RequestMethod.PUT,
+    @PutMapping(value = "/callchain/integration/bv/regenerate",
             produces = "application/json")
     @Operation(summary = "RegenerateBvCases",
             description = "Copy BV testcases linked with callchain + dataset",

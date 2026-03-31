@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,61 +26,65 @@ import org.qubership.automation.itf.core.model.jpa.context.JsonStorable;
 
 public class ContextTest {
 
-    public static final String JSON_STRING_1 = "{\n" +
-            "\t\"simpleObject\": \"value\",\n" +
-            "\t\"simpleObjectState\": \"valueState\",\n" +
-            "\t\"simpleMap\": {\n" +
-            "\t\t\"mapEntry1\": \"mapValue1\",\n" +
-            "\t\t\"mapEntry2\": \"mapValue2\",\n" +
-            "\t\t\"mapEntryState\": \"mapValueState\"\n" +
-            "\t},\n" +
-            "\t\"simpleList\": [\"value1\",\n" +
-            "\t\"value2\",\n" +
-            "\t\"valueState\"\n" +
-            "\t],\n" +
-            "\t\"listOverride\": [\"value1\",\n" +
-            "\t\"value2\",\n" +
-            "\t\"value3\"\n" +
-            "\t],\n" +
-            "\t\"mapOfMap\": {\n" +
-            "\t\t\"mapEntry1\": {\n" +
-            "\t\t\t\"mapMapEntry1\": \"mapMapValue1\",\n" +
-            "\t\t\t\"mapMapEntry2\": \"mapMapValue2\",\n" +
-            "\t\t\t\"mapMapEntryState\": \"mapMapValueState\"\n" +
-            "\t\t}, \n" +
-            "\t\t\"mapEntryState\": {\n" +
-            "\t\t\t\"mapMapEntry1\": \"mapMapValue1\",\n" +
-            "\t\t\t\"mapMapEntry2\": \"mapMapValue2\",\n" +
-            "\t\t\t\"mapMapEntryState\": \"mapMapValueState\"\n" +
-            "\t\t}\n" +
-            "\t}\n" +
-            "}";
-    public static final String JSON_STRING_2 = "{\n" +
-            "\t\"simpleObject\": \"valueNew\",\n" +
-            "\t\"simpleMap\": {\n" +
-            "\t\t\"mapEntry1\": \"mapValue1New\",\n" +
-            "\t\t\"mapEntry2\": \"mapValue2New\",\n" +
-            "\t},\n" +
-            "\t\"simpleList\": [\"value1New\",\n" +
-            "\t\"value2New\"\n" +
-            "\t],\n" +
-            "\t\"listOverride\": [\"value1New\",\n" +
-            "\t\"value2New\",\n" +
-            "\t\"value3New\",\n" +
-            "\t\"value4Add\"\n" +
-            "\t],\n" +
-            "\t\"mapOfMap\": {\n" +
-            "\t\t\"mapEntry1\": {\n" +
-            "\t\t\t\"mapMapEntry1\": \"mapMapValue1New\",\n" +
-            "\t\t\t\"mapMapEntry2\": \"mapMapValue2New\",\n" +
-            "\t\t}\n" +
-            "\t}, \n" +
-            "\t\"simpleMapNew\": {\n" +
-            "\t\t\"mapEntry1\": \"mapValue1\",\n" +
-            "\t\t\"mapEntry2\": \"mapValue2\",\n" +
-            "\t\t\"mapEntryState\": \"mapValueState\"\n" +
-            "\t},\n" +
-            "}";
+    public static final String JSON_STRING_1 = """
+            {
+            	"simpleObject": "value",
+            	"simpleObjectState": "valueState",
+            	"simpleMap": {
+            		"mapEntry1": "mapValue1",
+            		"mapEntry2": "mapValue2",
+            		"mapEntryState": "mapValueState"
+            	},
+            	"simpleList": ["value1",
+            	"value2",
+            	"valueState"
+            	],
+            	"listOverride": ["value1",
+            	"value2",
+            	"value3"
+            	],
+            	"mapOfMap": {
+            		"mapEntry1": {
+            			"mapMapEntry1": "mapMapValue1",
+            			"mapMapEntry2": "mapMapValue2",
+            			"mapMapEntryState": "mapMapValueState"
+            		},\s
+            		"mapEntryState": {
+            			"mapMapEntry1": "mapMapValue1",
+            			"mapMapEntry2": "mapMapValue2",
+            			"mapMapEntryState": "mapMapValueState"
+            		}
+            	}
+            }\
+            """;
+    public static final String JSON_STRING_2 = """
+            {
+            	"simpleObject": "valueNew",
+            	"simpleMap": {
+            		"mapEntry1": "mapValue1New",
+            		"mapEntry2": "mapValue2New",
+            	},
+            	"simpleList": ["value1New",
+            	"value2New"
+            	],
+            	"listOverride": ["value1New",
+            	"value2New",
+            	"value3New",
+            	"value4Add"
+            	],
+            	"mapOfMap": {
+            		"mapEntry1": {
+            			"mapMapEntry1": "mapMapValue1New",
+            			"mapMapEntry2": "mapMapValue2New",
+            		}
+            	},\s
+            	"simpleMapNew": {
+            		"mapEntry1": "mapValue1",
+            		"mapEntry2": "mapValue2",
+            		"mapEntryState": "mapValueState"
+            	},
+            }\
+            """;
 
     @Test
     public void testMerge() throws ParseException, IllegalAccessException, InstantiationException {

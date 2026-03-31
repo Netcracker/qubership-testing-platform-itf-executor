@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -229,7 +229,7 @@ public class HistoryEntityHelper {
 
     public static void isSupportEntityByType(Class itemType) {
         if (isNotSupportEntity(itemType)) {
-            String message = String.format("Entity with type %s is skip, because not supported in itf history.",
+            String message = "Entity with type %s is skip, because not supported in itf history.".formatted(
                     itemType.getName());
             log.warn(message);
             throw new HistoryRetrieveException(message);

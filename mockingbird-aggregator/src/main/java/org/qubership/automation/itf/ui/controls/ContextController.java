@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -54,10 +54,10 @@ import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
 import org.qubership.automation.itf.ui.swagger.SwaggerConstants;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -94,7 +94,7 @@ public class ContextController {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/context/state", method = RequestMethod.GET)
+    @GetMapping("/context/state")
     @Operation(summary = "GetContextStatusById",
             description = "Retrieve status of context",
             tags = {SwaggerConstants.CONTEXT_QUERY_API})
@@ -132,8 +132,7 @@ public class ContextController {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/context/get",
-            method = RequestMethod.GET,
+    @GetMapping(value = "/context/get",
             produces = {"application/json; charset=UTF-8"})
     @Operation(summary = "GetContextById",
             description = "Retrieve context by id",
@@ -152,7 +151,7 @@ public class ContextController {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/context/keys", method = RequestMethod.GET)
+    @GetMapping("/context/keys")
     @Operation(summary = "GetKeysById",
             description = "Retrieve context keys by id",
             tags = {SwaggerConstants.CONTEXT_QUERY_API})
@@ -169,7 +168,7 @@ public class ContextController {
     }
 
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/context/info", method = RequestMethod.GET, produces = {"application/json; charset=UTF-8"})
+    @GetMapping(value = "/context/info", produces = {"application/json; charset=UTF-8"})
     @Operation(summary = "GetInfoById",
             description = "Retrieve context info by id",
             tags = {SwaggerConstants.CONTEXT_QUERY_API})
@@ -202,7 +201,7 @@ public class ContextController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"EXECUTE\")")
-    @RequestMapping(value = "/context/fail", method = RequestMethod.POST)
+    @PostMapping("/context/fail")
     @Operation(summary = "FailTC",
             description = "Force context to be failed.",
             tags = {SwaggerConstants.CONTEXT_COMMAND_API})
@@ -215,14 +214,14 @@ public class ContextController {
         }
         TcContext tcContext = CacheServices.getTcContextCacheService().getById(contextId);
         if (tcContext == null) {
-            throw new IllegalArgumentException(String.format("Context isn't found by id '%s'", contextId));
+            throw new IllegalArgumentException("Context isn't found by id '%s'".formatted(contextId));
         }
         failTc(request, tcContext);
     }
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"EXECUTE\")")
-    @RequestMapping(value = "/context/setstate", method = RequestMethod.POST)
+    @PostMapping("/context/setstate")
     @Operation(summary = "SetState", description = "Set state of context", tags =
             {SwaggerConstants.CONTEXT_COMMAND_API})
     @AuditAction(auditAction = "Set state of tc-contexts selected in the project {{#projectUuid}}")
@@ -236,7 +235,7 @@ public class ContextController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"EXECUTE\")")
-    @RequestMapping(value = "/context/continue", method = RequestMethod.GET)
+    @GetMapping("/context/continue")
     @Operation(summary = "PushCallAndContinueTC",
             description = "Continue paused context",
             tags = {SwaggerConstants.CONTEXT_COMMAND_API})
@@ -256,7 +255,7 @@ public class ContextController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'EXECUTE')")
-    @RequestMapping(value = "/callchain/run/disablestepbystep", method = RequestMethod.GET)
+    @GetMapping("/callchain/run/disablestepbystep")
     @AuditAction(auditAction = "Disable StepByStep mode during execution of TC context {{#contextId}}")
     public void disableStepByStep(@RequestParam(value = "contextId") BigInteger contextId,
                                   @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -269,7 +268,7 @@ public class ContextController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/getallstepsituation", method = RequestMethod.GET)
+    @GetMapping("/callchain/getallstepsituation")
     @Operation(summary = "GetAllSituationStep",
             description = "Retrieve all situation steps of context",
             tags = {SwaggerConstants.CONTEXT_QUERY_API})
@@ -314,13 +313,13 @@ public class ContextController {
                 continue;
             }
             counterToString = counterToString + String.valueOf(i + 1); //FIXME use StringBuilder instead of concat.
-            if (step instanceof SituationStep) {
-                steps.add(new UISituationStep((SituationStep) step, counterToString, false));
-            } else if (step instanceof EmbeddedStep) {
-                if (((EmbeddedStep) step).getChain() != null
-                        && !(chainIds.contains(((EmbeddedStep) step).getChain().getID()))) {
+            if (step instanceof SituationStep situationStep) {
+                steps.add(new UISituationStep(situationStep, counterToString, false));
+            } else if (step instanceof EmbeddedStep embeddedStep) {
+                if (embeddedStep.getChain() != null
+                        && !(chainIds.contains(embeddedStep.getChain().getID()))) {
                     steps = getAllSituationStepForCallChain(
-                            ((EmbeddedStep) step).getChain(),
+                            embeddedStep.getChain(),
                             steps,
                             counterToString + ".",
                             chainIds
@@ -335,10 +334,10 @@ public class ContextController {
     private TcContext searchAndGetValidTcContext(String contextId) {
         TcContext tcContext = CacheServices.getTcContextCacheService().getById(new BigInteger(contextId));
         if (tcContext == null) {
-            throw new IllegalArgumentException(String.format("Context isn't found by id '%s'", contextId));
+            throw new IllegalArgumentException("Context isn't found by id '%s'".formatted(contextId));
         }
         if (Objects.isNull(tcContext.getInitiator()) || !(tcContext.getInitiator() instanceof CallChainInstance)) {
-            throw new IllegalArgumentException(String.format("Initiator isn't found by context id '%s'", contextId));
+            throw new IllegalArgumentException("Initiator isn't found by context id '%s'".formatted(contextId));
         }
         tcContext.setStartedFrom(StartedFrom.ITF_UI);
         return tcContext;
@@ -347,7 +346,7 @@ public class ContextController {
     private Step searchAndGetValidStep(String stepId) {
         Step step = CoreObjectManager.getInstance().getManager(Step.class).getById(stepId);
         if (!(step instanceof SituationStep)) {
-            throw new IllegalArgumentException(String.format("Step isn't found by id '%s'", stepId));
+            throw new IllegalArgumentException("Step isn't found by id '%s'".formatted(stepId));
         }
         return step;
     }
@@ -374,7 +373,7 @@ public class ContextController {
         List<Object[]> contextProperties = reportsService.getContextProperties(contextId, projectUuid);
         if (contextProperties == null || contextProperties.isEmpty()) {
             if (failIfNotFound) {
-                throw new IllegalArgumentException(String.format("Context isn't found by id '%s'", contextId));
+                throw new IllegalArgumentException("Context isn't found by id '%s'".formatted(contextId));
             } else {
                 return new String[]{contextId, "", "", "", "Unknown"};
             }

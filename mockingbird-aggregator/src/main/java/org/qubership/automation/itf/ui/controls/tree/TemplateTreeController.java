@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -43,8 +43,7 @@ import org.qubership.automation.itf.ui.messages.objects.template.UITemplate;
 import org.qubership.automation.itf.ui.messages.tree.UITreeData;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,7 +60,7 @@ public class TemplateTreeController extends AbstractTreeBuilder<Template, Templa
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/folder", method = RequestMethod.GET)
+    @GetMapping("/template/folder")
     @AuditAction(auditAction = "Get Template Tree under Folder id {{#id}} in the project {{#projectUuid}}")
     public UITreeData getTree(
             @RequestParam(required = false) String id,
@@ -113,7 +112,7 @@ public class TemplateTreeController extends AbstractTreeBuilder<Template, Templa
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/tree/node", method = RequestMethod.GET)
+    @GetMapping("/template/tree/node")
     @AuditAction(auditAction = "Get Template Tree for current id {{#id}} or parent id {{#parentId}} in the project "
             + "{{#projectUuid}}")
     public UITreeData getTreeFromNode(
@@ -126,16 +125,14 @@ public class TemplateTreeController extends AbstractTreeBuilder<Template, Templa
         } else {
             UITreeData uiTreeData = getTree(parentId, projectUuid);
             node = getTemplateOrFolder(id);
-            if (node instanceof System) {
+            if (node instanceof System system) {
                 // Expand system node, so add the system children (operations and templates) to tree
-                replaceAndExpandSystem(uiTreeData, (System) node);
-            } else if (node instanceof Operation) {
+                replaceAndExpandSystem(uiTreeData, system);
+            } else if (node instanceof Operation operation) {
                 // Expand system node (parent of the operation),
                 // so add the system children (operations and templates) to tree.
                 // And, expand operation node.
-                replaceAndExpandSystemExpandOperation(uiTreeData,
-                        (System) node.getParent(),
-                        (Operation) node);
+                replaceAndExpandSystemExpandOperation(uiTreeData, (System) node.getParent(), operation);
             } else {
                 if (node.getParent() instanceof System) {
                     // Expand system node, so add the system children (operations and templates) to tree
@@ -201,7 +198,7 @@ public class TemplateTreeController extends AbstractTreeBuilder<Template, Templa
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/tree/node/name", method = RequestMethod.GET)
+    @GetMapping("/template/tree/node/name")
     @AuditAction(auditAction = "Get Template Tree for node by name {{#value}} and parent id {{#parentId}} in the "
             + "project {{#projectId}}/{{#projectUuid}}")
     public UITreeData getTreeFromNodeByName(
@@ -235,7 +232,7 @@ public class TemplateTreeController extends AbstractTreeBuilder<Template, Templa
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/label", method = RequestMethod.GET)
+    @GetMapping("/template/label")
     @AuditAction(auditAction = "Get all Template Labels in the project {{#projectId}}/{{#projectUuid}}")
     public Set<String> gelLabels(
             @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -246,15 +243,13 @@ public class TemplateTreeController extends AbstractTreeBuilder<Template, Templa
     @Override
     UITreeElement fillFolder(Storable nodeProvider) {
         UITreeElement currentFolder = new UITreeElement();
-        if (nodeProvider instanceof TemplateProvider) {
-            TemplateProvider templateProvider = (TemplateProvider) nodeProvider;
+        if (nodeProvider instanceof TemplateProvider templateProvider) {
             configureObject(currentFolder, templateProvider);
-            if (templateProvider instanceof System) {
-                addSubElements(currentFolder, ((System) templateProvider).getOperations());
+            if (templateProvider instanceof System system) {
+                addSubElements(currentFolder, system.getOperations());
             }
             addSubElements(currentFolder, templateProvider.returnTemplates());
-        } else if (nodeProvider instanceof SystemFolder) {
-            SystemFolder systemFolder = (SystemFolder) nodeProvider;
+        } else if (nodeProvider instanceof SystemFolder systemFolder) {
             configureObject(currentFolder, systemFolder);
             addSubElements(currentFolder, systemFolder.getObjects());
             addSubElements(currentFolder, systemFolder.getSubFolders());

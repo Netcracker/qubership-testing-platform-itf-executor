@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -35,8 +35,7 @@ import org.qubership.automation.itf.ui.messages.objects.UITriggerRelation;
 import org.qubership.automation.itf.ui.messages.objects.eventtrigger.UIEventTrigger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +49,7 @@ public class SituationTriggerController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/downstream/start", method = RequestMethod.GET)
+    @GetMapping("/situation/downstream/start")
     public UIObjectList getDownstreamSituationsOnStart(
             @RequestParam(value = "id", defaultValue = "0") String id,
             @RequestParam(value = "projectId") BigInteger projectId,
@@ -62,7 +61,7 @@ public class SituationTriggerController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/downstream/finish", method = RequestMethod.GET)
+    @GetMapping("/situation/downstream/finish")
     public UIObjectList getDownstreamSituationsOnFinish(
             @RequestParam(value = "id", defaultValue = "0") String id,
             @RequestParam(value = "projectId") BigInteger projectId,
@@ -74,7 +73,7 @@ public class SituationTriggerController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/triggers", method = RequestMethod.GET)
+    @GetMapping("/situation/triggers")
     public List<UITriggerRelation> getTriggers(
             @RequestParam(value = "id", defaultValue = "0") String id,
             @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {

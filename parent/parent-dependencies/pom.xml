@@ -3,16 +3,16 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird</artifactId>
-        <version>4.4.365-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>parent-dependencies</artifactId>
     <packaging>pom</packaging>
     <name>parent-dependencies</name>
     <properties>
-        <spring.boot.version>2.7.18</spring.boot.version>
+        <spring.boot.version>3.3.13</spring.boot.version>
         <org.springframework.version>5.3.21</org.springframework.version>
-        <spring.cloud.version>2021.0.8</spring.cloud.version>
+        <spring.cloud.version>2023.0.6</spring.cloud.version>
         <keycloak.version>22.0.1</keycloak.version>
         <camel.version>2.20.4</camel.version>
         <activemq.version>5.16.8</activemq.version>
@@ -28,19 +28,19 @@
         <atp.crypt.version>0.0.24</atp.crypt.version>
         <atp.adapter.common.version>4.5.71</atp.adapter.common.version>
 
-        <commons.lang.version>2.6</commons.lang.version>
+        <commons.lang.version>3.20.0</commons.lang.version>
         <org.ow2.asm.asm.version>5.2</org.ow2.asm.asm.version>
         <log4j.log4j.version>1.2.17</log4j.log4j.version>
-        <org.bouncycastle.bcp.version>1.69</org.bouncycastle.bcp.version>
+        <org.bouncycastle.version>1.80</org.bouncycastle.version>
         <io.netty.version>4.1.125.Final</io.netty.version>
         <com.squareup.okhttp3.okhttp.version>4.9.3</com.squareup.okhttp3.okhttp.version>
         <org.jboss.logging.jboss-logging.version>3.4.3.Final</org.jboss.logging.jboss-logging.version>
         <org.jboss.xnio.version>3.8.14.Final</org.jboss.xnio.version>
         <io.undertow.version>2.2.39.Final</io.undertow.version>
-        <com.sun.xml.bind.jaxb.version>2.2.11</com.sun.xml.bind.jaxb.version>
+        <com.sun.xml.bind.jaxb.version>2.3.9</com.sun.xml.bind.jaxb.version>
         <com.fasterxml.woodstox.woodstox-core.version>5.0.3</com.fasterxml.woodstox.woodstox-core.version>
         <io.github.openfeign.feign-core.version>11.10</io.github.openfeign.feign-core.version>
-        <javax.ws.rs.javax.ws.rs-api.version>2.1</javax.ws.rs.javax.ws.rs-api.version>
+        <javax.ws.rs.javax.ws.rs-api.version>3.1.0</javax.ws.rs.javax.ws.rs-api.version>
         <org.jvnet.staxex.stax-ex.version>1.8.3</org.jvnet.staxex.stax-ex.version>
         <org.modelmapper.modelmapper.version>3.1.1</org.modelmapper.modelmapper.version>
         <org.jetbrains.kotlin.kotlin-stdlib.version>1.6.21</org.jetbrains.kotlin.kotlin-stdlib.version>
@@ -129,7 +129,7 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
-                <version>5.7.13</version>
+                <version>6.3.10</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -289,7 +289,7 @@
             <dependency>
                 <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-rt</artifactId>
-                <version>2.2.10</version>
+                <version>4.0.4</version>
                 <exclusions>
                     <exclusion>
                         <groupId>oracle</groupId>
@@ -310,6 +310,14 @@
                     <exclusion>
                         <groupId>org.codehaus.woodstox</groupId>
                         <artifactId>woodstox-core-asl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.glassfish.jaxb</groupId>
+                        <artifactId>jaxb-runtime</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>jakarta.annotation</groupId>
+                        <artifactId>jakarta.annotation-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -403,7 +411,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.14.8</version>
+                <version>1.18.44</version>
             </dependency>
             <!-- Commented, because became absent suddenly
             <dependency>
@@ -523,12 +531,12 @@
             <dependency>
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>
-                <version>3.0</version>
+                <version>5.1.0</version>
             </dependency>
             <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>1</version>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>2.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
@@ -575,12 +583,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>1.9.0</version><!-- DF uses to 1.9.0 -->
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>2.10.1</version>
@@ -612,6 +614,10 @@
                     <exclusion>
                         <groupId>commons-collections</groupId>
                         <artifactId>commons-collections</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-lang3</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -647,29 +653,19 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>1.6.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-core</artifactId>
-                <version>1.6.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
-                <version>1.6.5</version>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>5.23.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.5.13</version>
+                <version>4.5.14</version>
             </dependency>
             <dependency>
                 <groupId>com.github.tomakehurst</groupId>
                 <artifactId>wiremock</artifactId>
-                <version>1.58</version>
+                <version>2.27.2</version>
             </dependency>
             <dependency>
                 <groupId>org.json</groupId>
@@ -730,13 +726,13 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>
-                <artifactId>jackson-module-jaxb-annotations</artifactId>
-                <version>${jackson.version}</version>
+                <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+                <version>2.13.5</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.9</version>
+                <version>1.17.2</version>
             </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>
@@ -832,6 +828,10 @@
                         <groupId>org.qubership.atp.auth</groupId>
                         <artifactId>atp-auth-spring-boot-starter</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-lang3</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -896,7 +896,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
-                <version>3.1.8</version>
+                <version>4.1.5</version>
             </dependency>
             <dependency>
                 <groupId>io.github.openfeign</groupId>
@@ -1001,6 +1001,10 @@
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-api</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>jakarta.xml.bind</groupId>
+                        <artifactId>jakarta.xml.bind-api</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -1008,11 +1012,6 @@
                 <groupId>org.qubership.atp</groupId>
                 <artifactId>atp-crypt</artifactId>
                 <version>${atp.crypt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons.lang.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
@@ -1026,13 +1025,13 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
-                <version>${org.bouncycastle.bcp.version}</version>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${org.bouncycastle.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
-                <version>${org.bouncycastle.bcp.version}</version>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${org.bouncycastle.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
@@ -1070,16 +1069,6 @@
                 <version>${io.undertow.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-core</artifactId>
-                <version>${com.sun.xml.bind.jaxb.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>${com.sun.xml.bind.jaxb.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.fasterxml.woodstox</groupId>
                 <artifactId>woodstox-core</artifactId>
                 <version>${com.fasterxml.woodstox.woodstox-core.version}</version>
@@ -1090,8 +1079,8 @@
                 <version>${io.github.openfeign.feign-core.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
+                <groupId>jakarta.ws.rs</groupId>
+                <artifactId>jakarta.ws.rs-api</artifactId>
                 <version>${javax.ws.rs.javax.ws.rs-api.version}</version>
             </dependency>
             <dependency>
@@ -1140,9 +1129,9 @@
                 <version>${org.eclipse.jetty.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlet</artifactId>
-                <version>${org.eclipse.jetty.version}</version>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-servlet</artifactId>
+                <version>12.0.33</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -1155,9 +1144,9 @@
                 <version>${org.eclipse.jetty.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <version>${org.eclipse.jetty.version}</version>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-webapp</artifactId>
+                <version>12.0.33</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -1224,12 +1213,30 @@
             <dependency>
                 <groupId>org.springframework.kafka</groupId>
                 <artifactId>spring-kafka</artifactId>
-                <version>2.9.11</version>
+                <version>3.0.17</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.18.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-junit</artifactId>
+                <version>2.0.0.0</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>3.0.0</version>
+                <scope>compile</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

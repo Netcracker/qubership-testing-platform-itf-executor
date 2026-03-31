@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -172,8 +172,8 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
         try {
             JSONParser parser = new JSONParser();
             jsonMessage = parser.parse(message.getText());
-            if (jsonMessage instanceof JSONObject) {
-                changeType = (String) ((JSONObject) jsonMessage).get("changetype");
+            if (jsonMessage instanceof JSONObject object) {
+                changeType = (String) object.get("changetype");
                 isSearchRequest = (changeType == null);
             } else {
                 isSearchRequest = true;
@@ -405,9 +405,9 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
             // So, I commented this attribute temporarily
             if (!(key.equals("changetype") || key.equals("dn") || key.equals("inet-bandwidth"))) {
                 BasicAttribute attr;
-                if (value instanceof List) {
+                if (value instanceof List list) {
                     attr = new BasicAttribute((String) key);
-                    ((List) value).forEach(attr::add);
+                    list.forEach(attr::add);
                 } else {
                     attr = new BasicAttribute((String) key, value);
                 }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 
 import org.apache.cxf.Bus;
@@ -67,7 +66,7 @@ public class SOAPOverHTTPHelper {
             return url.toString();
         } catch (MalformedURLException ex) {
             // May be the value is not URL but a path (relative or absolute)?
-            Path path = Paths.get(pathString);
+            Path path = Path.of(pathString);
             String absolutePath = path.toAbsolutePath().toString();
             if (checkFileExists) {
                 File file = new File(absolutePath);

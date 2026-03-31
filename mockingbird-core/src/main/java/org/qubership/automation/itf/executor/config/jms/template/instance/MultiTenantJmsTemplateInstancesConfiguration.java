@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,14 +17,13 @@
 
 package org.qubership.automation.itf.executor.config.jms.template.instance;
 
-import javax.annotation.Nonnull;
-import javax.jms.ConnectionFactory;
-
 import org.qubership.atp.multitenancy.interceptor.jms.MultiTenantJmsTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import jakarta.annotation.Nonnull;
+import jakarta.jms.ConnectionFactory;
 import lombok.RequiredArgsConstructor;
 
 @Configuration

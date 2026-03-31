@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,9 +25,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
@@ -71,6 +68,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -103,10 +102,10 @@ public class CallChainExecutorService {
             }
             for (String toolName : EngineIntegrationRegistry.getInstance().getAvailableIntegrations()) {
                 EngineIntegration integration = EngineIntegrationRegistry.getInstance().find(toolName);
-                if (integration instanceof EngineBeforeIntegration) {
+                if (integration instanceof EngineBeforeIntegration beforeIntegration) {
                     for (IntegrationConfig config : confs) {
                         if (config.getTypeName().equals(toolName)) {
-                            ((EngineBeforeIntegration) integration).executeBefore(instance, config);
+                            beforeIntegration.executeBefore(instance, config);
                         }
                     }
                 }
@@ -380,8 +379,7 @@ public class CallChainExecutorService {
         context.setNeedToReportToAtp(startedByAtp);
         context.setStartValidation(runValidation);
         context.setInitiator(instance);
-        context.setName(String.format("%s [%s]", instance.getName(),
-                dataSet == null ? "No Data Set" : dataSet.getName()));
+        context.setName("%s [%s]".formatted(instance.getName(), dataSet == null ? "No Data Set" : dataSet.getName()));
         context.setEnvironmentId((BigInteger) environment.getID());
         context.setEnvironmentName(environment.getName());
         context.setProjectId(projectId);

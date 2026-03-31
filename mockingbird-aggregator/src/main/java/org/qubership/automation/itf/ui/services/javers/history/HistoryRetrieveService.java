@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -37,8 +37,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
@@ -78,6 +76,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -235,14 +234,14 @@ public class HistoryRetrieveService {
                 .stream()
                 .filter(change ->
                         !(toSkip.get(entityClass.getTypeName()) != null
-                                && change instanceof ValueChange
+                                && change instanceof ValueChange vc
                                 && toSkip.get(entityClass.getTypeName())
-                                .contains(((ValueChange) change).getPropertyNameWithPath())))
+                                .contains(vc.getPropertyNameWithPath())))
                 .map(change -> {
                     if (!entityClass.getTypeName().equals(change.getAffectedGlobalId().getTypeName())
-                            && change instanceof ValueChange
+                            && change instanceof ValueChange valueChange
                             && !childrenToIncludeInParentChanges.contains(change.getAffectedGlobalId().getTypeName())) {
-                        String propertyNameWithPath = ((ValueChange) change).getPropertyNameWithPath();
+                        String propertyNameWithPath = valueChange.getPropertyNameWithPath();
                         return propertyNameWithPath.split("/")[0].split("\\.")[0];
                     } else {
                         return ((PropertyChange) change).getPropertyName();
@@ -307,7 +306,7 @@ public class HistoryRetrieveService {
         if (entity.isPresent()) {
             return buildCompareEntity(objectId, entityClass, entity.get(), version);
         } else {
-            throw new EntityNotFoundException(String.format("Failed to found shadow with id:%s, class:%s",
+            throw new EntityNotFoundException("Failed to found shadow with id:%s, class:%s".formatted(
                     objectId, entityClass));
         }
     }

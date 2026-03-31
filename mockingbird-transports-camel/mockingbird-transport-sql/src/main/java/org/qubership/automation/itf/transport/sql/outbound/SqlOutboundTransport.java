@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -57,7 +57,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import org.apache.camel.CamelContext;
@@ -102,6 +101,7 @@ import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalCause;
 import com.google.common.cache.RemovalListener;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 
 @UserName("Outbound SQL Synchronous")
@@ -325,7 +325,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         try {
             reqProperty = connectionProperties.get(field).toString();
         } catch (Exception e) {
-            throw new IllegalArgumentException(String.format("Required property '%s' can't be empty", fieldName));
+            throw new IllegalArgumentException("Required property '%s' can't be empty".formatted(fieldName));
         }
         return reqProperty;
     }
@@ -786,14 +786,14 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private Object processCassandraResponse(Object responseBody) {
         if (responseBody == null) {
             return null;
-        } else if (responseBody instanceof ArrayList) {
-            List<Object> array = new ArrayList<>(((ArrayList) responseBody).size());
-            for (Object row : (ArrayList) responseBody) {
-                if (row instanceof Row) {
-                    ColumnDefinitions columnDefinitions = ((Row) row).getColumnDefinitions();
+        } else if (responseBody instanceof ArrayList list) {
+            List<Object> array = new ArrayList<>(list.size());
+            for (Object row : list) {
+                if (row instanceof Row row1) {
+                    ColumnDefinitions columnDefinitions = row1.getColumnDefinitions();
                     LinkedHashMap<String, Object> rowValuesMap = new LinkedHashMap<>(columnDefinitions.size());
                     for (int i = 0; i < columnDefinitions.size(); i++) {
-                        Object value = getColumnValue((Row) row, i, columnDefinitions.getType(i).getName());
+                        Object value = getColumnValue(row1, i, columnDefinitions.getType(i).getName());
                         rowValuesMap.put(columnDefinitions.getName(i), value);
                     }
                     array.add(rowValuesMap);

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class ItfJaversSpringDataJpaAuditableRepositoryAspect extends ItfAbstract
     @AfterReturning("execution(public * delete(..)) && this(org.springframework.data.repository.CrudRepository)")
     public void onDeleteExecuted(JoinPoint pjp) {
         for (Object deletedObject : AspectUtil.collectArguments(pjp)) {
-            if (deletedObject instanceof Storable) {
+            if (deletedObject instanceof Storable storable) {
                 try {
                     if (HistoryEntityHelper.isNotSupportEntity(deletedObject.getClass())) {
                         log.debug("Entity with type {} is skipped, because it isn't supported in itf history.",
@@ -54,10 +54,10 @@ public class ItfJaversSpringDataJpaAuditableRepositoryAspect extends ItfAbstract
                     }
                     if (!isHistoryEnabled(deletedObject)) {
                         log.debug("Project setting 'enable.history.versioning' for project id {} is disabled, "
-                                + "so history commit is skipped.", ((Storable) deletedObject).getProjectId());
+                                + "so history commit is skipped.", storable.getProjectId());
                         return;
                     }
-                    deleteHistoryEntity(((Storable) deletedObject).getID(), deletedObject.getClass());
+                    deleteHistoryEntity(storable.getID(), deletedObject.getClass());
                 } catch (Exception e) {
                     log.error("An error occurred while object history processing for type {}.",
                             deletedObject.getClass(), e);

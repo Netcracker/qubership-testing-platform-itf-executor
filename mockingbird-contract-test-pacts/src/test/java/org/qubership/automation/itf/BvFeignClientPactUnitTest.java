@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,10 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.bv.dto.CopyWithNameRequestDto;
 import org.qubership.automation.itf.core.util.feign.impl.BvApiResourceFeignClient;
@@ -46,9 +47,8 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import au.com.dius.pact.consumer.dsl.PactDslResponse;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
@@ -58,10 +58,10 @@ import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.gson.Gson;
 
-@RunWith(SpringRunner.class)
 @EnableFeignClients(clients = {BvTestCaseResourceFeignClient.class, BvPublicApiResourceFeignClient.class,
         BvApiResourceFeignClient.class})
-@ContextConfiguration(classes = {BvFeignClientPactUnitTest.TestApp.class})
+@ExtendWith(ExternalResourceSupport.class)
+@SpringJUnitConfig(classes = {BvFeignClientPactUnitTest.TestApp.class})
 @Import({JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class,
         FeignConfiguration.class, FeignAutoConfiguration.class})
 @TestPropertySource(properties = {"feign.atp.bv.name=atp-bv", "feign.atp.bv.route=",
@@ -85,59 +85,59 @@ public class BvFeignClientPactUnitTest {
     public void allPass() {
         ResponseEntity<String> result1
                 = bvTestCaseResourceFeignClient.create(projectUuid, objectToString(getRequestBody1()));
-        Assert.assertEquals(200, result1.getStatusCode().value());
-        Assert.assertTrue(result1.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody1(), result1.getBody());
+        Assertions.assertEquals(200, result1.getStatusCode().value());
+        Assertions.assertTrue(result1.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody1(), result1.getBody());
 
         ResponseEntity<String> result2 = bvTestCaseResourceFeignClient.remove(projectUuid, getRequestBody2());
-        Assert.assertEquals(200, result2.getStatusCode().value());
-        Assert.assertTrue(result2.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody2(), result2.getBody());
+        Assertions.assertEquals(200, result2.getStatusCode().value());
+        Assertions.assertTrue(result2.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody2(), result2.getBody());
 
         ResponseEntity<String> result3
                 = bvTestCaseResourceFeignClient.getTestCaseStatus(projectUuid, getRequestBody3());
-        Assert.assertEquals(200, result3.getStatusCode().value());
-        Assert.assertTrue(result3.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3(), result3.getBody());
+        Assertions.assertEquals(200, result3.getStatusCode().value());
+        Assertions.assertTrue(result3.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody3(), result3.getBody());
 
         ResponseEntity<String> result4 = bvTestCaseResourceFeignClient.getParameters(projectUuid, getRequestBody4());
-        Assert.assertEquals(200, result4.getStatusCode().value());
-        Assert.assertTrue(result4.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody4(), result4.getBody());
+        Assertions.assertEquals(200, result4.getStatusCode().value());
+        Assertions.assertTrue(result4.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody4(), result4.getBody());
 
         ResponseEntity<String> result5 = bvTestCaseResourceFeignClient.copyWithName(projectUuid, getRequestBody5());
-        Assert.assertEquals(200, result5.getStatusCode().value());
-        Assert.assertTrue(result5.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody5(), result5.getBody());
+        Assertions.assertEquals(200, result5.getStatusCode().value());
+        Assertions.assertTrue(result5.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody5(), result5.getBody());
 
         ResponseEntity<Object> result6
                 = bvPublicApiResourceFeignClient.createTr(projectUuid, objectToString(getRequestBody6()));
-        Assert.assertEquals(200, result6.getStatusCode().value());
-        Assert.assertTrue(result6.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody6(), objectToString(result6.getBody()));
+        Assertions.assertEquals(200, result6.getStatusCode().value());
+        Assertions.assertTrue(result6.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody6(), objectToString(result6.getBody()));
 
         ResponseEntity<Object> result7
                 = bvPublicApiResourceFeignClient.quickCompare(projectUuid, objectToString(getRequestBody7()));
-        Assert.assertEquals(200, result7.getStatusCode().value());
-        Assert.assertTrue(result7.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody7(), objectToString(result7.getBody()));
+        Assertions.assertEquals(200, result7.getStatusCode().value());
+        Assertions.assertTrue(result7.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody7(), objectToString(result7.getBody()));
 
         ResponseEntity<String> result8 = bvApiResourceFeignClient.read(projectUuid, objectToString(getRequestBody8()));
-        Assert.assertEquals(200, result8.getStatusCode().value());
-        Assert.assertTrue(result8.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody8(), result8.getBody());
+        Assertions.assertEquals(200, result8.getStatusCode().value());
+        Assertions.assertTrue(result8.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody8(), result8.getBody());
 
         ResponseEntity<String> result9
                 = bvApiResourceFeignClient.readAndCompare(projectUuid, objectToString(getRequestBody9()));
-        Assert.assertEquals(200, result9.getStatusCode().value());
-        Assert.assertTrue(result9.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody9(), result9.getBody());
+        Assertions.assertEquals(200, result9.getStatusCode().value());
+        Assertions.assertTrue(result9.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody9(), result9.getBody());
 
         ResponseEntity<String> result10
                 = bvApiResourceFeignClient.compare(projectUuid, objectToString(getRequestBody10()));
-        Assert.assertEquals(200, result10.getStatusCode().value());
-        Assert.assertTrue(result10.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody10(), result10.getBody());
+        Assertions.assertEquals(200, result10.getStatusCode().value());
+        Assertions.assertTrue(result10.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(getResponseBody10(), result10.getBody());
     }
 
     @Pact(consumer = "atp-itf-executor")

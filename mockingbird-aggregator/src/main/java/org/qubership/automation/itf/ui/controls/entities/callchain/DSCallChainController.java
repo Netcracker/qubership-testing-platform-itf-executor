@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -40,8 +40,7 @@ import org.qubership.automation.itf.ui.messages.objects.UITypedObject;
 import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,7 +54,7 @@ public class DSCallChainController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/callchain/setDefaultDataset", method = RequestMethod.GET)
+    @GetMapping("/callchain/setDefaultDataset")
     @AuditAction(auditAction = "Dataset {{#datasetName}} with id {{#datasetId}} set as Default for CallChain id "
             + "{{#callchainId}} in the project {{#projectUuid}}")
     public void setDefaultDataset(
@@ -73,7 +72,7 @@ public class DSCallChainController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/getDefaultDataset", method = RequestMethod.GET)
+    @GetMapping("/callchain/getDefaultDataset")
     @AuditAction(auditAction = "Get Default Dataset for CallChain id {{#id}} in the project {{#projectUuid}}")
     public String getDefaultDataset(@RequestParam(value = "id", defaultValue = "0") String id,
                                     @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -87,7 +86,7 @@ public class DSCallChainController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/datasetlists", method = RequestMethod.GET)
+    @GetMapping("/callchain/datasetlists")
     @AuditAction(auditAction = "Get Dataset Lists for CallChain id {{#id}} in the project {{#projectUuid}}")
     public UIWrapper<List<UIDataSetList>> getDataSetLists(@RequestParam(value = "id", defaultValue = "0") String id,
                                                           @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -103,7 +102,7 @@ public class DSCallChainController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/datasets", method = RequestMethod.GET)
+    @GetMapping("/callchain/datasets")
     @AuditAction(auditAction = "Get Datasets for CallChain id {{#id}} in the project {{#projectUuid}}")
     public List<UIObject> getDataSetList(
             @RequestParam(value = "parent", defaultValue = "0") String id,
@@ -148,7 +147,7 @@ public class DSCallChainController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/getDatasetsLabels", method = RequestMethod.GET)
+    @GetMapping("/callchain/getDatasetsLabels")
     @AuditAction(auditAction = "Get Datasets' Labels for CallChain id {{#id}} in the project {{#projectUuid}}")
     public List<UIDataSetLabel> getDataSetLabels(
             @RequestParam(value = "id", defaultValue = "0") String id,

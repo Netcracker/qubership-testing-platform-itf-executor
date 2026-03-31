@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 
 package org.qubership.automation.itf.ui.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashSet;
 
 import org.json.simple.JSONArray;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
 import org.qubership.automation.itf.ui.messages.objects.UIDataSet;
 import org.qubership.automation.itf.ui.messages.objects.UIDataSetParameter;

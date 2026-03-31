@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,13 +17,12 @@
 
 package org.qubership.automation.itf.core.execution;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.qubership.automation.itf.core.util.config.Config;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Factory with an ability to pass executionProvider thru constructor using DI.

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
 import org.qubership.automation.itf.core.hibernate.ManagerFactory;
 import org.qubership.automation.itf.core.hibernate.spring.managers.base.ObjectManager;
@@ -51,15 +50,13 @@ import org.qubership.automation.itf.core.model.jpa.server.Server;
 import org.qubership.automation.itf.core.model.jpa.system.operation.Operation;
 import org.qubership.automation.itf.core.util.engine.TemplateEngine;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.testng.Assert;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath*:*template-velocity-test-context.xml"})
+@SpringJUnitConfig(locations = {"classpath*:*template-velocity-test-context.xml"})
 public class VelocityTemplateEngineTest {
 
     @Rule
@@ -236,10 +233,11 @@ public class VelocityTemplateEngineTest {
 
     @Test
     public void testXmlTool() {
-        String velocityString = "#set($myXML = $xml.parse($tc.response))\n"
-                + "#foreach($eventFragment in $myXML.children().iterator())\n"
-                + "$eventFragment\n"
-                + "#end";
+        String velocityString = """
+                #set($myXML = $xml.parse($tc.response))
+                #foreach($eventFragment in $myXML.children().iterator())
+                $eventFragment
+                #end""";
         TcContext context = new TcContext();
         context.put("response", "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>");
         Map<String, Storable> map = Maps.newHashMap();

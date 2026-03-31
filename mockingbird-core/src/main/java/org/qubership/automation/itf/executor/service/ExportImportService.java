@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -183,13 +183,13 @@ public class ExportImportService {
         }
         List<Step> callChainSteps = callChain.getSteps();
         for (Step step : callChainSteps) {
-            if (step instanceof SituationStep) {
-                Situation situation = ((SituationStep) step).getSituation();
+            if (step instanceof SituationStep situationStep) {
+                Situation situation = situationStep.getSituation();
                 if (situation != null) {
                     addIfNotEmpty(situation.getBvTestcase(), bvCasesSet);
                 }
-            } else if (step instanceof EmbeddedStep) {
-                CallChain chain = ((EmbeddedStep) step).getChain();
+            } else if (step instanceof EmbeddedStep embeddedStep) {
+                CallChain chain = embeddedStep.getChain();
                 if (chain != null) {
                     collectBvCasesByCallChain(bvCasesSet, chain);
                 }

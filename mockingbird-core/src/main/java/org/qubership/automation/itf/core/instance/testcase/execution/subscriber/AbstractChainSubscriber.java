@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,14 +17,13 @@
 
 package org.qubership.automation.itf.core.instance.testcase.execution.subscriber;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.itf.core.model.event.AbstractEvent;
 import org.qubership.automation.itf.core.model.event.NextCallChainEvent;
 import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.qubership.automation.itf.executor.provider.EventBusServiceProvider;
 import org.slf4j.LoggerFactory;
 
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 
 @Getter

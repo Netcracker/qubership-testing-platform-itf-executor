@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -63,8 +63,8 @@ public class UserService {
      */
     public String getLoggedUserToken() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof KeycloakPrincipal) {
-            return ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getTokenString();
+        if (principal instanceof KeycloakPrincipal<?> keycloakPrincipal) {
+            return keycloakPrincipal.getKeycloakSecurityContext().getTokenString();
         }
         return StringUtils.EMPTY;
     }
@@ -92,9 +92,9 @@ public class UserService {
         AccessToken accessToken;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = new User();
-        if (principal instanceof KeycloakPrincipal) {
-            accessToken = ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken();
-            user.setId(((KeycloakPrincipal<?>) principal).getName());
+        if (principal instanceof KeycloakPrincipal<?> keycloakPrincipal) {
+            accessToken = keycloakPrincipal.getKeycloakSecurityContext().getToken();
+            user.setId(keycloakPrincipal.getName());
             user.setName(accessToken.getName());
         } else {
             setUndefinedUser(user);
@@ -117,10 +117,10 @@ public class UserService {
             Set<String> roles = ((SimpleKeycloakAccount) authentication.getDetails()).getRoles();
             loginInfo.setSupport(roles.contains("ATP_SUPPORT") || roles.contains("ATP_ADMIN"));
             Object principal = authentication.getPrincipal();
-            if (principal instanceof KeycloakPrincipal) {
-                loginInfo.setToken(((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getTokenString());
-                accessToken = ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken();
-                user.setId(((KeycloakPrincipal<?>) principal).getName());
+            if (principal instanceof KeycloakPrincipal<?> keycloakPrincipal) {
+                loginInfo.setToken(keycloakPrincipal.getKeycloakSecurityContext().getTokenString());
+                accessToken = keycloakPrincipal.getKeycloakSecurityContext().getToken();
+                user.setId(keycloakPrincipal.getName());
                 user.setName(accessToken.getName());
             } else {
                 isAuthOff = true;

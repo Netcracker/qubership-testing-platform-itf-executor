@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import java.io.PrintStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,7 +49,7 @@ public class EndpointDocBuilder {
         PrintStream printStream = null;
         for (Class<?> clazz : typesAnnotatedWith) {
             try {
-                printStream = new PrintStream(Paths.get("./docs/", clazz.getSimpleName() + ".txt").toFile());
+                printStream = new PrintStream(Path.of("./docs/", clazz.getSimpleName() + ".txt").toFile());
                 out = printStream;
                 printRequestMethodsForClass(clazz);
             } finally {
@@ -79,7 +79,7 @@ public class EndpointDocBuilder {
     private String getParmTypesAsString(Method method) {
         Set<String> set = Sets.newLinkedHashSet();
         for (Parameter parameter : method.getParameters()) {
-            set.add(String.format("%s %s %s", getAnnotations(parameter), parameter.getType().getSimpleName(),
+            set.add("%s %s %s".formatted(getAnnotations(parameter), parameter.getType().getSimpleName(),
                     parameter.getName()));
         }
         return Arrays.toString(set.toArray());

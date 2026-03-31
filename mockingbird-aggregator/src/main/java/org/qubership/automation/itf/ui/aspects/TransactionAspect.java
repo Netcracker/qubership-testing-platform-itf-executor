@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ public class TransactionAspect implements MethodInterceptor {
                     return methodInvocation.proceed();
                 } catch (Throwable throwable) {
                     LoggerFactory.getLogger(TransactionAspect.class).error("Failed to execute Tx method", throwable);
-                    if (throwable instanceof Exception) {
-                        throw (Exception) throwable;
+                    if (throwable instanceof Exception exception) {
+                        throw exception;
                     } else {
                         throw new Exception(throwable);
                     }

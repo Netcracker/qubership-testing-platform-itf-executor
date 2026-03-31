@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import org.qubership.automation.itf.executor.cache.service.CacheServices;
 import org.qubership.automation.itf.executor.service.TCContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,7 +40,6 @@ public class CacheCleanerService {
     private boolean stopped = false;
     private final ReportLinkCollector reportLinkCollector;
 
-    @Autowired
     public CacheCleanerService(ReportLinkCollector reportLinkCollector) {
         this.reportLinkCollector = reportLinkCollector;
     }

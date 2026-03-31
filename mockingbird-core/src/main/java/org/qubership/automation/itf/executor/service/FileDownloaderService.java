@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -72,22 +71,22 @@ public class FileDownloaderService {
     public ResponseEntity<InputStreamResource> zipProjectFiles(List<EdsContentType> typesToDownload, UUID projectUuid)
             throws IOException, ExportException {
         String rootDirectory = FileSystems.getDefault().getPath("").toAbsolutePath().toString();
-        Path rootPath = Paths.get(rootDirectory, "data_temp");
+        Path rootPath = Path.of(rootDirectory, "data_temp");
         if (!Files.exists(rootPath)) {
             Files.createDirectory(rootPath);
         }
 
         String sanitizedFileName = FilenameUtils.getName(
-                String.format("project_files_%s_%s.zip", projectUuid,
+                "project_files_%s_%s.zip".formatted(projectUuid,
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_hh_mm_ss"))));
         FileOutputStream fileOutputStream = new FileOutputStream(rootPath.resolve(sanitizedFileName).toString());
         ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
         int skippedTypes = 0;
         for (EdsContentType edsContentType : typesToDownload) {
             String type = edsContentType.getStringValue();
-            String sourceDir = Paths.get(rootFolder, type, projectUuid.toString()).toString();
+            String sourceDir = Path.of(rootFolder, type, projectUuid.toString()).toString();
             if (EdsContentType.KEYSTORE.equals(edsContentType)) {
-                sourceDir = Paths.get(rootFolder, type).toString();
+                sourceDir = Path.of(rootFolder, type).toString();
             }
             File fileSource = new File(sourceDir);
             log.debug("Trying to get files of type: '{}', source dir: '{}'", type, sourceDir);
@@ -107,7 +106,7 @@ public class FileDownloaderService {
         fileOutputStream.close();
 
         File file = new File(rootPath.resolve(sanitizedFileName).toString());
-        Path path = Paths.get(file.getAbsolutePath());
+        Path path = Path.of(file.getAbsolutePath());
         return downloadFile(sanitizedFileName, path);
     }
 
@@ -132,7 +131,7 @@ public class FileDownloaderService {
                 .getDirectoryPath(contentType.getStringValue(), projectUuid, sanitizedFilePath)
                 .resolve(sanitizedFileName);
         File file = new File(fullPathToFile.toString());
-        Path path = Paths.get(file.getAbsolutePath());
+        Path path = Path.of(file.getAbsolutePath());
         return downloadFile(sanitizedFileName, path);
     }
 
@@ -186,7 +185,7 @@ public class FileDownloaderService {
         try {
             headers.setContentLength(Files.size(archive));
         } catch (IOException e) {
-            throw new ExportException(String.format("Cannot get size of file %s", archive), e);
+            throw new ExportException("Cannot get size of file %s".formatted(archive), e);
         }
         headers.setAccessControlExposeHeaders(Arrays.asList("Content-Disposition"));
         headers.setContentDisposition(ContentDisposition.builder("attachment").filename(fileName).build());

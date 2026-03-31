@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ package org.qubership.automation.itf.executor.event.trigger;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.qubership.automation.itf.core.model.jpa.system.stub.OperationEventTrigger;
 import org.qubership.automation.itf.core.model.jpa.system.stub.SituationEventTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class EventTriggerSwitcherFactory {

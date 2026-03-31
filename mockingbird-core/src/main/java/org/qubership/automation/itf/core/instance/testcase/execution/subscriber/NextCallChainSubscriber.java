@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
@@ -61,6 +59,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -137,25 +136,25 @@ public class NextCallChainSubscriber extends AbstractChainSubscriber<NextCallCha
             } else if (event instanceof NextCallChainEvent.ResumeWithoutContinue) {
                 thisInstanceTcContext.merge(event.getInstance().getContext().tc());
                 thisInstanceTcContext.setStatus(Status.IN_PROGRESS);
-            } else if (event instanceof NextCallChainEvent.Exception) {
+            } else if (event instanceof NextCallChainEvent.Exception exception) {
                 if (this.getParentId() != null) {
                     sendFailEventToTheSubscriber(this.getParentId(),
-                            new Exception(((NextCallChainEvent.Exception) event).getExceptionMessage()));
+                            new Exception(exception.getExceptionMessage()));
                 }
-                throw new RuntimeException(((NextCallChainEvent.Exception) event).getExceptionMessage());
-            } else if (event instanceof NextCallChainEvent.Fail) {
-                failInstance(instance, ((NextCallChainEvent.Fail) event).getException());
+                throw new RuntimeException(exception.getExceptionMessage());
+            } else if (event instanceof NextCallChainEvent.Fail fail) {
+                failInstance(instance, fail.getException());
                 if (this.getParentId() != null) {
-                    sendFailEventToTheSubscriber(this.getParentId(), ((NextCallChainEvent.Fail) event).getException());
+                    sendFailEventToTheSubscriber(this.getParentId(), fail.getException());
                 } else {
                     ExecutionServices.getExecutionProcessManagerService().fail(thisInstanceTcContext);
                 }
                 destroy();
-            } else if (event instanceof NextCallChainEvent.FailByTimeout) {
-                failInstance(instance, ((NextCallChainEvent.FailByTimeout) event).getException());
+            } else if (event instanceof NextCallChainEvent.FailByTimeout timeout) {
+                failInstance(instance, timeout.getException());
                 if (this.getParentId() != null) {
                     sendFailEventToTheSubscriber(this.getParentId(),
-                            ((NextCallChainEvent.FailByTimeout) event).getException());
+                            timeout.getException());
                 } else {
                     ExecutionServices.getExecutionProcessManagerService().failByTimeout(thisInstanceTcContext);
                 }
@@ -257,7 +256,7 @@ public class NextCallChainSubscriber extends AbstractChainSubscriber<NextCallCha
         String tcId = String.valueOf(stepInstance.getContext().tc().getID());
         for (Situation endSit : endSituations) {
             CacheServices.getAwaitingContextsCacheService()
-                    .putIfAbsent(String.format("%s_%s", tcId, endSit.getID()), stepInstance.getStepId());
+                    .putIfAbsent("%s_%s".formatted(tcId, endSit.getID()), stepInstance.getStepId());
         }
     }
 
@@ -269,7 +268,7 @@ public class NextCallChainSubscriber extends AbstractChainSubscriber<NextCallCha
         String tcId = String.valueOf(stepInstance.getContext().tc().getID());
         for (Situation exceptionalSituation : exceptionalSituations) {
             CacheServices.getAwaitingContextsCacheService()
-                    .putIfAbsent(String.format("%s_%s", tcId, exceptionalSituation.getID()),
+                    .putIfAbsent("%s_%s".formatted(tcId, exceptionalSituation.getID()),
                             stepInstance.getStepId());
         }
     }
@@ -305,9 +304,11 @@ public class NextCallChainSubscriber extends AbstractChainSubscriber<NextCallCha
                 stepInstance.setStartTime(new Date());
             } else {
                 AbstractCallChainStep callChainStep = (AbstractCallChainStep) stepInstance.getStep();
-                LOGGER.info("Execute step again [iteration #{} of {}] due to retry conditions."
-                                + "\nConditions: {}."
-                                + "\nStepInstance: {}",
+                LOGGER.info("""
+                                Execute step again [iteration #{} of {}] due to retry conditions.
+                                Conditions: {}.
+                                StepInstance: {}\
+                                """,
                         stepInstance.getCurrentCondAttemptValue() + 1,
                         callChainStep.getConditionMaxAttempts(),
                         callChainStep.getConditionParameters(),
@@ -459,7 +460,7 @@ public class NextCallChainSubscriber extends AbstractChainSubscriber<NextCallCha
             NextCallChainEventSubscriberHolder.getInstance()
                     .add(stepInstance.getContext().getTC().getID(), this.getId(), this.getParentId(), true);
         }
-        LOGGER.warn(String.format("Situation %s is paused", situationInstance));
+        LOGGER.warn("Situation %s is paused".formatted(situationInstance));
     }
 
     private void failInstance(AbstractContainerInstance instance, Exception e) {

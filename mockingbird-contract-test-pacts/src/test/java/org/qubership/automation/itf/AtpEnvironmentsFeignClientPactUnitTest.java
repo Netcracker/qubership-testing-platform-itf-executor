@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,10 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.environments.openapi.dto.ConnectionDto;
 import org.qubership.atp.environments.openapi.dto.ConnectionFullVer1ViewDto;
@@ -48,9 +49,8 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import au.com.dius.pact.consumer.dsl.DslPart;
 import au.com.dius.pact.consumer.dsl.PactDslJsonArray;
@@ -62,10 +62,10 @@ import au.com.dius.pact.consumer.junit.PactVerification;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 
-@RunWith(SpringRunner.class)
 @EnableFeignClients(clients = {AtpEnvironmentsEnvironmentFeignClient.class, AtpEnvironmentsSystemFeignClient.class,
         AtpEnvironmentsProjectFeignClient.class, AtpEnvironmentsConnectionFeignClient.class})
-@ContextConfiguration(classes = {AtpEnvironmentsFeignClientPactUnitTest.TestApp.class})
+@ExtendWith(ExternalResourceSupport.class)
+@SpringJUnitConfig(classes = {AtpEnvironmentsFeignClientPactUnitTest.TestApp.class})
 @Import({JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class,
         FeignConfiguration.class, FeignAutoConfiguration.class})
 @TestPropertySource(properties = {"feign.atp.environments.name=atp-environments", "feign.atp.environments.route=",
@@ -92,58 +92,58 @@ public class AtpEnvironmentsFeignClientPactUnitTest {
     @PactVerification()
     public void allPass() {
         ResponseEntity<List<ProjectNameViewDto>> result1 = atpEnvironmentsProjectFeignClient.getAllShort(false);
-        Assert.assertEquals(200, result1.getStatusCode().value());
-        Assert.assertTrue(result1.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result1.getStatusCode().value());
+        Assertions.assertTrue(result1.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<ProjectFullVer1ViewDto> result2
                 = atpEnvironmentsProjectFeignClient.getProject(projectUuid, false);
-        Assert.assertEquals(200, result2.getStatusCode().value());
-        Assert.assertTrue(result2.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result2.getStatusCode().value());
+        Assertions.assertTrue(result2.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<List<EnvironmentNameViewDto>> result3
                 = atpEnvironmentsProjectFeignClient.getEnvironmentsShort(projectUuid);
-        Assert.assertEquals(200, result3.getStatusCode().value());
-        Assert.assertTrue(result3.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result3.getStatusCode().value());
+        Assertions.assertTrue(result3.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<List<EnvironmentResDto>> result4
                 = atpEnvironmentsProjectFeignClient.getEnvironments(projectUuid, true);
-        Assert.assertEquals(200, result4.getStatusCode().value());
-        Assert.assertTrue(result4.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result4.getStatusCode().value());
+        Assertions.assertTrue(result4.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<EnvironmentFullVer1ViewDto> result5
                 = atpEnvironmentsEnvironmentFeignClient.getEnvironment(environmentUuid, false);
-        Assert.assertEquals(200, result5.getStatusCode().value());
-        Assert.assertTrue(result5.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result5.getStatusCode().value());
+        Assertions.assertTrue(result5.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<EnvironmentFullVer1ViewDto> result6
                 = atpEnvironmentsEnvironmentFeignClient.getEnvironment(environmentUuid, true);
-        Assert.assertEquals(200, result6.getStatusCode().value());
-        Assert.assertTrue(result6.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result6.getStatusCode().value());
+        Assertions.assertTrue(result6.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<List<SystemNameViewDto>> result7
                 = atpEnvironmentsEnvironmentFeignClient.getSystemsShort(environmentUuid);
-        Assert.assertEquals(200, result7.getStatusCode().value());
-        Assert.assertTrue(result7.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result7.getStatusCode().value());
+        Assertions.assertTrue(result7.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<ConnectionDto> result8
                 = atpEnvironmentsConnectionFeignClient.getConnection(connectionId, false);
-        Assert.assertEquals(200, result8.getStatusCode().value());
-        Assert.assertTrue(result8.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result8.getStatusCode().value());
+        Assertions.assertTrue(result8.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<SystemFullVer1ViewDto> result9
                 = atpEnvironmentsSystemFeignClient.getSystem(systemUuid, false);
-        Assert.assertEquals(200, result9.getStatusCode().value());
-        Assert.assertTrue(result9.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result9.getStatusCode().value());
+        Assertions.assertTrue(result9.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<SystemFullVer1ViewDto> result10
                 = atpEnvironmentsSystemFeignClient.getSystem(systemUuid, true);
-        Assert.assertEquals(200, result10.getStatusCode().value());
-        Assert.assertTrue(result10.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result10.getStatusCode().value());
+        Assertions.assertTrue(result10.getHeaders().get("Content-Type").contains("application/json"));
 
         ResponseEntity<List<ConnectionFullVer1ViewDto>> result11
                 = atpEnvironmentsSystemFeignClient.getSystemConnections(systemUuid, false);
-        Assert.assertEquals(200, result11.getStatusCode().value());
-        Assert.assertTrue(result11.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertEquals(200, result11.getStatusCode().value());
+        Assertions.assertTrue(result11.getHeaders().get("Content-Type").contains("application/json"));
     }
 
     @Pact(consumer = "atp-itf-executor")

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.executor.cache.service.CacheServices;
@@ -37,6 +35,7 @@ import org.springframework.stereotype.Service;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -211,7 +210,7 @@ public class BoundContextsCacheService {
             return projectUuid.toString() + '/';
         }
         throw new IllegalArgumentException(
-                String.format("Can't %s TcContext to/from %s cache. Key prefix (projectUuid) is null for TcContext %s ",
+                "Can't %s TcContext to/from %s cache. Key prefix (projectUuid) is null for TcContext %s ".formatted(
                         action, ATP_ITF_TC_CONTEXTS_IDS_BOUND_BY_KEY, context.getID()));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.qubership.automation.itf.executor.service.ExecutionServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
@@ -52,7 +51,6 @@ public class DebugExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(DebugExecutor.class);
     private EventBusProvider eventBusProvider;
 
-    @Autowired
     public DebugExecutor(EventBusProvider eventBusProvider) {
         this.eventBusProvider = eventBusProvider;
     }
@@ -129,9 +127,9 @@ public class DebugExecutor {
                     steps.add(step);
                 }
             } else {
-                if (step instanceof EmbeddedStep) {
-                    if (((EmbeddedStep) step).getChain() != null) { //This is a crutch. Chain can't be empty.
-                        searchingPointOfEntrySteps(((EmbeddedStep) step).getChain(), situationStep, steps);
+                if (step instanceof EmbeddedStep embeddedStep) {
+                    if (embeddedStep.getChain() != null) { //This is a crutch. Chain can't be empty.
+                        searchingPointOfEntrySteps(embeddedStep.getChain(), situationStep, steps);
                     }
                 }
             }

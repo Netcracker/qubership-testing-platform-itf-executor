@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -39,15 +39,12 @@ import org.qubership.automation.itf.executor.cache.service.CacheServices;
 import org.qubership.automation.itf.integration.reports.ReportsService;
 import org.qubership.automation.itf.ui.messages.objects.ResponseObject;
 import org.qubership.automation.itf.ui.messages.objects.UIVelocityRequestBody;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,7 +53,6 @@ public class VelocityController {
 
     private final ReportsService reportsService;
 
-    @Autowired
     public VelocityController(ReportsService reportsService) {
         this.reportsService = reportsService;
     }
@@ -79,7 +75,7 @@ public class VelocityController {
                     .getEntityInternalIdByUuid(projectUuid);
             if (projectId == null) {
                 ResponseObject responseObject = new ResponseObject();
-                responseObject.setResponse(String.format("Can't find project by uuid = %s", projectUuid));
+                responseObject.setResponse("Can't find project by uuid = %s".formatted(projectUuid));
                 return responseObject;
             }
         }
@@ -108,8 +104,8 @@ public class VelocityController {
             }
             SpContext sp = new SpContext();
             Object saved = tcContext.get("saved");
-            if (saved instanceof Map) {
-                sp.putAll((Map) saved);
+            if (saved instanceof Map map) {
+                sp.putAll(map);
             }
             InstanceContext instanceContext = InstanceContext.from(tcContext, sp);
             process += TemplateEngineFactory.process(null, message, instanceContext);
@@ -129,7 +125,7 @@ public class VelocityController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/velocity/processTemplate", method = RequestMethod.PUT)
+    @PutMapping("/velocity/processTemplate")
     @AuditAction(auditAction = "Process velocity template, project {{#projectId}}/{{#projectUuid}}")
     public ResponseObject processTemplate(@RequestBody UIVelocityRequestBody requestBody,
                                           @RequestParam(value = "projectId") BigInteger projectId,
@@ -157,8 +153,8 @@ public class VelocityController {
                 SpContext spContext = SpContext.fromJson(spContextStr, SpContext.class);
                 if (tcContext != null) {
                     Object saved = tcContext.get("saved");
-                    if (saved instanceof Map) {
-                        spContext.putAll((Map) saved);
+                    if (saved instanceof Map map) {
+                        spContext.putAll(map);
                     }
                 }
                 context.setSP(spContext);
@@ -176,12 +172,12 @@ public class VelocityController {
         Throwable cause = ex.getCause();
         if (cause == null) {
             return ExceptionUtils.getMessage(ex) + (ex instanceof ParseException ? ex.toString() : "");
-        } else if (cause instanceof JDBCException) {
+        } else if (cause instanceof JDBCException exception1) {
             throw new RuntimeException(ex.getMessage()
-                    + "\nCaused by: " + ((JDBCException) cause).getSQLException().getMessage());
-        } else if (cause instanceof DataAccessException) {
+                    + "\nCaused by: " + exception1.getSQLException().getMessage());
+        } else if (cause instanceof DataAccessException exception) {
             throw new RuntimeException(ex.getMessage()
-                    + "\nCaused by: " + ((DataAccessException) cause).getMessage()
+                    + "\nCaused by: " + exception.getMessage()
                     + ((cause.getCause() != null && cause.getCause() instanceof JDBCException)
                     ? "\nCaused by: " + ((JDBCException) cause.getCause()).getSQLException().getMessage()
                     : "")

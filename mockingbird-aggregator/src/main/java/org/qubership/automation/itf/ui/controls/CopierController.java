@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -61,9 +61,10 @@ import org.qubership.automation.itf.ui.messages.objects.copy.UICopyMove;
 import org.qubership.automation.itf.ui.util.UIHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -131,7 +132,7 @@ public class CopierController extends ControllerHelper {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/copyobject", method = RequestMethod.POST)
+    @PostMapping("/copyobject")
     @AuditAction(auditAction = "Copy selected objects in the project {{#projectUuid}}")
     public UIObject copyObject(@RequestBody UICopyMove request,
                                @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -155,7 +156,7 @@ public class CopierController extends ControllerHelper {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/moveobject", method = RequestMethod.POST)
+    @PostMapping("/moveobject")
     @AuditAction(auditAction = "Move selected objects in the project {{#projectUuid}}")
     public UIObject moveObject(@RequestBody UICopyMove request,
                                @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -168,7 +169,7 @@ public class CopierController extends ControllerHelper {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/issmart", method = RequestMethod.GET)
+    @GetMapping("/issmart")
     @AuditAction(auditAction = "Check if SmartCopy is turned on for project {{#projectId}}/{{#projectUuid}}")
     public boolean getIsSmartValue(@RequestParam(value = "projectId") String projectId,
                                    @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -230,16 +231,16 @@ public class CopierController extends ControllerHelper {
                                     Storable copiedMovedSource, String projectId) {
         // Perform some post-actions against the copy of object itself and/or its subordinates, according to object type
         if (copyMoveOperation == OPERATION_COPY) {
-            if (sourceObject instanceof Situation) {
-                performPostCopyActions_Situation(sessionId, (Situation) sourceObject, (Situation) copiedMovedSource);
-            } else if (sourceObject instanceof Operation) {
-                for (Situation situation : ((Operation) sourceObject).getSituations()) {
+            if (sourceObject instanceof Situation situation1) {
+                performPostCopyActions_Situation(sessionId, situation1, (Situation) copiedMovedSource);
+            } else if (sourceObject instanceof Operation operation1) {
+                for (Situation situation : operation1.getSituations()) {
                     Situation copiedSituation = (Situation) (OriginalCopyMap.getInstance().get(sessionId,
                             situation.getID()));
                     performPostCopyActions_Situation(sessionId, situation, copiedSituation);
                 }
-            } else if (sourceObject instanceof System) {
-                for (Operation operation : ((System) sourceObject).getOperations()) {
+            } else if (sourceObject instanceof System system) {
+                for (Operation operation : system.getOperations()) {
                     for (Situation situation : operation.getSituations()) {
                         Situation copiedSituation = (Situation) (OriginalCopyMap.getInstance().get(sessionId,
                                 situation.getID()));
@@ -252,12 +253,12 @@ public class CopierController extends ControllerHelper {
         } else /* MOVE */ {
             if (sourceObject instanceof Situation) {
                 performPostMoveActions_Situation((Situation) copiedMovedSource);
-            } else if (sourceObject instanceof Operation) {
-                for (Situation situation : ((Operation) sourceObject).getSituations()) {
+            } else if (sourceObject instanceof Operation operation1) {
+                for (Situation situation : operation1.getSituations()) {
                     performPostMoveActions_Situation(situation);
                 }
-            } else if (sourceObject instanceof System) {
-                for (Operation operation : ((System) sourceObject).getOperations()) {
+            } else if (sourceObject instanceof System system) {
+                for (Operation operation : system.getOperations()) {
                     for (Situation situation : operation.getSituations()) {
                         performPostMoveActions_Situation(situation);
                     }

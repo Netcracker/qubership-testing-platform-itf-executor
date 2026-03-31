@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -33,9 +32,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Triple;
@@ -64,16 +60,18 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ExcelDataSetListRepository implements DataSetListRepository {
 
     public static final char DS_LIST_NATURAL_ID_SEPARATOR = File.separatorChar;
     public static final String DS_FILE_EXTENSION = ".xlsx";
     public static final Joiner COMMA_JOINER = Joiner.on(',');
-    public static final Path DS_DIR = Paths.get(Config.getConfig().getString("local.storage.directory"), "dataset");
+    public static final Path DS_DIR = Path.of(Config.getConfig().getString("local.storage.directory"), "dataset");
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelDataSetListRepository.class);
     /**
-     * returns pair of entity and parameter strings. all is not null or empty
+     * returns a pair of entity and parameter strings. all is not null or empty
      */
     private static final ParamsEntryConverter<String> PARAM_CONV = new ParamsEntryConverter<String>() {
         @Nullable
@@ -242,7 +240,7 @@ public class ExcelDataSetListRepository implements DataSetListRepository {
         String filePath = naturalId.substring(0, separatorIndex + DS_FILE_EXTENSION.length());
         String sheetName = naturalId.substring(separatorIndex + DS_FILE_EXTENSION.length() + 1);
         try {
-            DataSetListsSource source = createSource(Paths.get(filePath), projectUuid);
+            DataSetListsSource source = createSource(Path.of(filePath), projectUuid);
             return create(source, sheetName);
         } catch (InvalidPathException e) {
             return null;
@@ -355,7 +353,7 @@ public class ExcelDataSetListRepository implements DataSetListRepository {
         if (resource.getResource().isPresent()) {
             return resource;
         } else {
-            throw new RuntimeException(String.format("Can not read ds list [%s] with status [%s]", resource.getPath(),
+            throw new RuntimeException("Can not read ds list [%s] with status [%s]".formatted(resource.getPath(),
                     resource.getStatus()), resource.getLastException().orElse(null));
         }
     }

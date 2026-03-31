@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -64,9 +64,11 @@ import org.qubership.automation.itf.ui.messages.objects.transport.UIProperty;
 import org.qubership.automation.itf.ui.messages.objects.transport.UITransport;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -86,7 +88,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/all", method = RequestMethod.GET)
+    @GetMapping("/template/all")
     @AuditAction(auditAction = "Get all Templates in the project {{#projectId}}/{{#projectUuid}}")
     public List<? extends UIObject> getAll(@RequestParam(value = "projectUuid") UUID projectUuid,
                                            @RequestParam(value = "projectId") BigInteger projectId) {
@@ -99,7 +101,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/allIdAndName", method = RequestMethod.GET)
+    @GetMapping("/template/allIdAndName")
     @AuditAction(auditAction = "Get all Templates (briefly) in the project {{#projectId}}/{{#projectUuid}}")
     public List<IdNamePair> getIdAndName(
             @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -122,7 +124,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/onOperationAndSystem", method = RequestMethod.GET)
+    @GetMapping("/template/onOperationAndSystem")
     @AuditAction(auditAction = "Get all Templates under Operation by id {{#id}} and parent System in the project "
             + "{{#projectUuid}}")
     public List<? extends UIObject> getTemplateOnOperationAndSystem(
@@ -152,7 +154,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/onOperationAndSystemFiltered", method = RequestMethod.GET)
+    @GetMapping("/template/onOperationAndSystemFiltered")
     public List<IdNamePair> getTemplateOnOperationAndSystemFiltered(
             @RequestParam(value = "id") String id,
             @RequestParam(value = "name") String name,
@@ -174,7 +176,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template", method = RequestMethod.GET)
+    @GetMapping("/template")
     @AuditAction(auditAction = "Get Template by id {{#id}} in the project {{#projectUuid}}")
     public UITemplate getById(@RequestParam(value = "id", defaultValue = "0") BigInteger id,
                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -185,7 +187,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/template", method = RequestMethod.POST)
+    @PostMapping("/template")
     @AuditAction(auditAction = "Create Template under {{#type}} with id {{#parentId}} in the project {{#projectUuid}}")
     public UITemplate create(@RequestParam(value = "selectedId") String parentId,
                              @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -203,7 +205,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/template", method = RequestMethod.PUT)
+    @PutMapping("/template")
     @AuditAction(auditAction = "Update Template with id {{#uiTemplate.id}} in the project {{#projectUuid}}")
     public UITemplate update(@RequestBody UITemplate uiTemplate,
                              @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -222,7 +224,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/template", method = RequestMethod.DELETE, produces = "application/json")
+    @DeleteMapping(value = "/template", produces = "application/json")
     @AuditAction(auditAction = "Delete Templates from project {{#projectUuid}}")
     public List<List<UIObject>> delete(
             @RequestParam(value = "ignoreUsages", defaultValue = "false") Boolean ignoreUsages,
@@ -253,7 +255,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/templateByName", method = RequestMethod.GET)
+    @GetMapping("/templateByName")
     @AuditAction(auditAction = "Get Templates by name {{#name}} in the project {{#projectUuid}}")
     public UITemplate getByName(
             @RequestParam(value = "name") String name,
@@ -273,7 +275,7 @@ public class TemplateController extends AbstractController<UITemplate, Template>
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/usages", method = RequestMethod.GET, produces = "application/json")
+    @GetMapping(value = "/template/usages", produces = "application/json")
     @AuditAction(auditAction = "Get usages of Template with id {{#id}} in the project {{#projectUuid}}")
     public Map<String, Object> getUsages(@RequestParam(value = "id") BigInteger id,
                                          @RequestParam(value = "projectUuid") UUID projectUuid) {

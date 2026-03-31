@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.qubership.automation.itf.core.message.parser.testimpl.TestRuleProvider;
 import org.qubership.automation.itf.core.model.jpa.context.InstanceContext;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
@@ -31,15 +30,13 @@ import org.qubership.automation.itf.core.model.jpa.message.parser.MessageParamet
 import org.qubership.automation.itf.core.util.provider.ParsingRuleProvider;
 import org.qubership.automation.itf.core.util.services.CoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.testng.Assert;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ProjectSettingsServiceTestConfig.class, CoreServices.class})
+@SpringJUnitConfig(classes = {ProjectSettingsServiceTestConfig.class, CoreServices.class})
 public class ParserTest {
 
     @Autowired
@@ -57,8 +54,13 @@ public class ParserTest {
 
     @Test
     public void testParse() {
-        Message message = new Message("<note>\n<to>Tove</to>\n<from>Jani</from>\n<heading>Reminder</heading>\n" +
-                "<body>Don't forget me this weekend!</body>\n</note>");
+        Message message = new Message("""
+                <note>
+                <to>Tove</to>
+                <from>Jani</from>
+                <heading>Reminder</heading>
+                <body>Don't forget me this weekend!</body>
+                </note>""");
         Parser parser = new Parser();
         ParsingRuleProvider provider = new TestRuleProvider();
         TcContext context = new TcContext();

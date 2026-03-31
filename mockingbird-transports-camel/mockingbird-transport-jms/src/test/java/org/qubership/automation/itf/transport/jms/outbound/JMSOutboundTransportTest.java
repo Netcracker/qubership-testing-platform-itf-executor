@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 
 package org.qubership.automation.itf.transport.jms.outbound;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 import javax.naming.InitialContext;
 
 import org.apache.camel.Exchange;
@@ -29,6 +27,9 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.qubership.automation.itf.transport.jms.InitialContextBuilder;
+
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
 
 public class JMSOutboundTransportTest {
     private final InitialContextBuilder initialContextBuilder = new InitialContextBuilder();

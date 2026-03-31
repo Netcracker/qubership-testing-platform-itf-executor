@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.automation.itf.core.instance.testcase.execution.holders.DefferedSituationInstanceHolder;
@@ -62,6 +60,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -236,7 +235,7 @@ public class TCContextService {
                 finish(tcContext);
                 log.debug("TC context (inbound) is terminated by timeout (old status: {})", tcContext.getStatus());
             } else {
-                String message = String.format("TC context [%s] '%s' is failed by timeout (old status: %s)",
+                String message = "TC context [%s] '%s' is failed by timeout (old status: %s)".formatted(
                         tcContext.getID(), tcContext.getName(), tcContext.getStatus());
                 log.error(message);
                 terminateCallChainContextByTimeout(tcContext.getID(), message);
@@ -319,7 +318,7 @@ public class TCContextService {
         }
         for (MessageParameter parameter : messageParameters) {
             if (parameter.isAutosave()) {
-                tcContext.put(String.format("%s.%s", savedKey, parameter.getParamName()), (parameter.isMultiple())
+                tcContext.put("%s.%s".formatted(savedKey, parameter.getParamName()), (parameter.isMultiple())
                         ? parameter.getMultipleValue()
                         : parameter.getSingleValue());
             }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ public class UIInterceptor extends UIObject {
         for (UIProperty parameter : parameters) {
             if (!Boolean.valueOf(parameter.getOptional()) && StringUtils.isEmpty(parameter.getValue())) {
                 return new UIResult(false,
-                        String.format("Parameter %s can not be empty. Please, fill the parameter.",
+                        "Parameter %s can not be empty. Please, fill the parameter.".formatted(
                                 parameter.getName()));
             }
         }

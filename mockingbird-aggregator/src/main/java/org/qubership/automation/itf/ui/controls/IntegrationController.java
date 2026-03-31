@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -45,10 +45,11 @@ import org.qubership.automation.itf.ui.messages.objects.UIObject;
 import org.qubership.automation.itf.ui.messages.objects.transport.UIProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,7 +63,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/project/integrations/available", method = RequestMethod.GET)
+    @GetMapping("/project/integrations/available")
     @AuditAction(auditAction = "Get Available Integrations, project {{#projectUuid}}")
     public Collection<String> getAvailableIntegrations(@RequestParam(value = "projectUuid") UUID projectUuid) {
         return EngineIntegrationRegistry.getInstance().getAvailableIntegrations();
@@ -70,7 +71,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/project/integrations/all", method = RequestMethod.GET)
+    @GetMapping("/project/integrations/all")
     @AuditAction(auditAction = "Get Integration Configs in the project {{#projectId}}/{{#projectUuid}}")
     public Collection<UIIntegrationConfig> getConfigurations(
             @RequestParam(value = "projectId") BigInteger projectId,
@@ -94,7 +95,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/project/integrations", method = RequestMethod.GET)
+    @GetMapping("/project/integrations")
     @AuditAction(auditAction = "Get Integration Config with id {{#id}} in the project {{#projectUuid}}")
     public UIIntegrationConfig getConfiguration(
             @RequestParam(value = "id", defaultValue = "") String id,
@@ -106,7 +107,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/project/integrations/property", method = RequestMethod.GET, produces = "text/plain")
+    @GetMapping(value = "/project/integrations/property", produces = "text/plain")
     @AuditAction(auditAction = "Get Integration Config property value by Configuration name {{#name}} and property "
             + "name {{#property}} in the project {{#projectId}}/{{#projectUuid}}")
     public String getConfigurationByNameAndGetProperty(
@@ -136,7 +137,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
             return StringUtils.EMPTY;
         } else {
             String uuid = getProjectUUID(projectId);
-            return result.iterator().next().get(property) + String.format(ENDPOINT_FOR_LINK_TO_TC, uuid);
+            return result.iterator().next().get(property) + ENDPOINT_FOR_LINK_TO_TC.formatted(uuid);
         }
     }
 
@@ -148,14 +149,14 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
         String catalogueUrl = ApplicationConfig.env.getProperty(property);
         if (StringUtils.isBlank(catalogueUrl)) {
             LOGGER.warn("The property {} has an empty value. Please set a value for the property.", property);
-            return String.format(ENDPOINT_FOR_LINK_TO_TC, projectUuid);
+            return ENDPOINT_FOR_LINK_TO_TC.formatted(projectUuid);
         } else {
-            return catalogueUrl + String.format(ENDPOINT_FOR_LINK_TO_TC, projectUuid);
+            return catalogueUrl + ENDPOINT_FOR_LINK_TO_TC.formatted(projectUuid);
         }
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"CREATE\")")
-    @RequestMapping(value = "/project/integrations", method = RequestMethod.POST)
+    @PostMapping("/project/integrations")
     @AuditAction(auditAction = "Create Integration Config with name {{#name}}, type {{#type}} in the project "
             + "{{#projectId}}/{{#projectUuid}}")
     public UIIntegrationConfig create(
@@ -183,7 +184,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/project/integrations", method = RequestMethod.PUT)
+    @PutMapping("/project/integrations")
     @AuditAction(auditAction = "Update Integration Config with id {{#configuration.id}} in the project "
             + "{{#projectUuid}}")
     public UIIntegrationConfig update(@RequestBody UIIntegrationConfig configuration,
@@ -192,7 +193,7 @@ public class IntegrationController extends AbstractController<UIIntegrationConfi
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"DELETE\")")
-    @RequestMapping(value = "/project/integrations", method = RequestMethod.DELETE)
+    @DeleteMapping("/project/integrations")
     @AuditAction(auditAction = "Delete Integration Configs from project {{#projectUuid}}")
     public List<UIObject> delete(@RequestBody UIIds uiIds,
                                  @RequestParam(value = "projectUuid") UUID projectUuid) {

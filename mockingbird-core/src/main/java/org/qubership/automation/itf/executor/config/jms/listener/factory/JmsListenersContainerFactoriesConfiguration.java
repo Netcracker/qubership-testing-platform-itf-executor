@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 
 package org.qubership.automation.itf.executor.config.jms.listener.factory;
 
-import javax.jms.ConnectionFactory;
-
 import org.apache.activemq.ActiveMQSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
+
+import jakarta.jms.ConnectionFactory;
 
 @Configuration
 public class JmsListenersContainerFactoriesConfiguration {

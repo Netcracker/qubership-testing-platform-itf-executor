@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.qubership.automation.itf.ui.services.javers.history.HistoryRetrieveSe
 import org.qubership.automation.itf.ui.services.javers.history.model.HistoryCompareEntity;
 import org.qubership.automation.itf.ui.services.javers.history.model.HistoryEntityConstant;
 import org.qubership.automation.itf.ui.services.javers.history.model.HistoryItemResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +48,6 @@ public class JaversController {
     private final HistoryRetrieveService historyRetrieveService;
     private final ItfReplicationService itfReplicationService;
 
-    @Autowired
     public JaversController(HistoryRestoreService historyRestoreService, HistoryRetrieveService historyRetrieveService,
                             ItfReplicationService itfReplicationService) {
         this.historyRestoreService = historyRestoreService;

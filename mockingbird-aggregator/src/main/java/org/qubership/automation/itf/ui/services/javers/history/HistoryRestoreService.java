@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.ObjectNotFoundException;
@@ -87,6 +85,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Throwables;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -271,8 +270,7 @@ public class HistoryRestoreService {
             if (historyIntegrationStep != null) {
                 IntegrationStep integrationStep = situation.getIntegrationStep();
                 if (integrationStep == null) {
-                    throw new RuntimeException(String.format(
-                            "Situation %s [id=%s] has no integration step. Object cannot be restored.",
+                    throw new RuntimeException("Situation %s [id=%s] has no integration step. Object cannot be restored.".formatted(
                             situation.getName(),
                             situation.getID()));
                 }
@@ -335,7 +333,7 @@ public class HistoryRestoreService {
                                                   UUID projectUuid) {
         try {
             if (HistoryEntityHelper.isNotSupportEntity(itemType)) {
-                String message = String.format("Entity with type %s is skip, because not supported in itf history.",
+                String message = "Entity with type %s is skip, because not supported in itf history.".formatted(
                         itemType.getName());
                 log.warn(message);
                 throw new HistoryRestoreException(message);
@@ -343,8 +341,8 @@ public class HistoryRestoreService {
             Class historyEntityClass = HistoryEntityHelper.getHistoryEntityClass(itemType);
             Optional<Shadow<Object>> optionalShadow = getShadow(objectId, historyEntityClass, revisionId);
             Object shadowObject;
-            if (!optionalShadow.isPresent()) {
-                String errorMessage = String.format("Failed to found shadow with id:%s, class:%s", objectId,
+            if (optionalShadow.isEmpty()) {
+                String errorMessage = "Failed to found shadow with id:%s, class:%s".formatted(objectId,
                         itemType.getName());
                 log.error(errorMessage);
                 throw new EntityNotFoundException(errorMessage);
@@ -352,7 +350,7 @@ public class HistoryRestoreService {
             shadowObject = optionalShadow.get().get();
 
             if (Objects.isNull(shadowObject)) {
-                String errorMessage = String.format("Failed to found shadow with id:%s, class:%s", objectId,
+                String errorMessage = "Failed to found shadow with id:%s, class:%s".formatted(objectId,
                         itemType.getName());
                 log.error(errorMessage);
                 throw new EntityNotFoundException(errorMessage);
@@ -375,14 +373,14 @@ public class HistoryRestoreService {
     private LinkedList<Runnable> doAfter(Storable storable, UUID projectUuid) {
         LinkedList<Runnable> runnableList = new LinkedList<>();
         runnableList.add(storable::store);
-        if (storable instanceof SituationEventTrigger) {
+        if (storable instanceof SituationEventTrigger trigger) {
             runnableList.add(() ->
-                    getMessageToSynchronizeSituationEventTriggers((SituationEventTrigger) storable, projectUuid)
+                    getMessageToSynchronizeSituationEventTriggers(trigger, projectUuid)
             );
         }
-        if (storable instanceof Situation) {
+        if (storable instanceof Situation situation) {
             Optional<OperationEventTrigger> trigger =
-                    ((Situation) storable).getOperationEventTriggers().stream().findFirst();
+                    situation.getOperationEventTriggers().stream().findFirst();
             if (trigger.isPresent() && trigger.get().getState().isOn()) {
                 runnableList.add(() ->
                         getMessageToActivateOperationEventTrigger(trigger.get(), projectUuid)
@@ -444,12 +442,11 @@ public class HistoryRestoreService {
     }
 
     private void postActionsToStorable(Object shadowObject, Storable storable) {
-        if (storable instanceof CallChain) {
+        if (storable instanceof CallChain callChain) {
             HistoryCallChain historyCallChain = (HistoryCallChain) shadowObject;
             List<HistoryStep> historySteps = historyCallChain.getSteps();
 
             if (!historySteps.isEmpty()) {
-                CallChain callChain = (CallChain) storable;
                 List<Step> steps = callChain.getSteps();
                 if (historySteps.size() == steps.size()) {
 
@@ -473,8 +470,7 @@ public class HistoryRestoreService {
                 }
             }
         }
-        if (storable instanceof Operation) {
-            Operation operation = (Operation) storable;
+        if (storable instanceof Operation operation) {
             if (operation.getMep().isInboundRequest()) {
                 HistoryOperation historyOperation = (HistoryOperation) shadowObject;
                 Set<Situation> situations = operation.getSituations();
@@ -504,8 +500,8 @@ public class HistoryRestoreService {
                 }
             }
         }
-        if (storable instanceof StubProject) {
-            projectSettingsService.fillCache((StubProject) storable, storable.getStorableProp());
+        if (storable instanceof StubProject project) {
+            projectSettingsService.fillCache(project, storable.getStorableProp());
         }
     }
 

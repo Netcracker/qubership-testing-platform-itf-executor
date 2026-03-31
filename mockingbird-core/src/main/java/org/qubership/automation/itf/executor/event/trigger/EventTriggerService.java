@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class EventTriggerService {
                     try {
                         ExecutionServices.getSituationExecutorService().execute(parent, instanceContext);
                     } catch (Exception e) {
-                        LOGGER.error(String.format("Error executing situation %s", parent), e);
+                        LOGGER.error("Error executing situation %s".formatted(parent), e);
                     }
                 } else {
                     LOGGER.warn("Run situation handler was called, but situation to execute is null");

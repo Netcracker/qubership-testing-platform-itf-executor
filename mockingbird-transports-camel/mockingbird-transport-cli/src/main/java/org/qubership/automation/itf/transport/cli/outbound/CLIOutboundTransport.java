@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -32,8 +32,6 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import javax.annotation.Nonnull;
-
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
@@ -56,6 +54,7 @@ import org.qubership.automation.itf.transport.camel.outbound.AbstractCamelOutbou
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -185,8 +184,7 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
             Object answerObject = exchange.getOut().getBody();
             if (answerObject == null) {
                 response = new Message();
-            } else if (answerObject instanceof ByteArrayInputStream) {
-                ByteArrayInputStream answer = (ByteArrayInputStream) answerObject;
+            } else if (answerObject instanceof ByteArrayInputStream answer) {
                 int n = answer.available();
                 if (n > 0) {
                     byte[] bytes = new byte[n];

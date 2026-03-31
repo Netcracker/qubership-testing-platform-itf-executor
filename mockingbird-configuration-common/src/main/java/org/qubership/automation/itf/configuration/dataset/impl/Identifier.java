@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 
 package org.qubership.automation.itf.configuration.dataset.impl;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.itf.core.model.common.Identified;
 import org.qubership.automation.itf.core.model.common.Named;
+
+import jakarta.annotation.Nonnull;
 
 public class Identifier<T> implements Identified<T>, Named {
 

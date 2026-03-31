@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,10 +19,6 @@ package org.qubership.automation.itf.core.report;
 
 import java.util.Date;
 import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.ContextManager;
@@ -49,12 +45,14 @@ import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.qubership.automation.itf.executor.service.ExecutionServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 @Component
 public class LoggerSubscriber {
@@ -68,7 +66,6 @@ public class LoggerSubscriber {
     private final ReportLinkCollector reportLinkCollector;
     private final EventBusProvider eventBusProvider;
 
-    @Autowired
     public LoggerSubscriber(ReportWorker worker, RunSubscriberInterface runSubscriber,
                             ReportLinkCollector reportLinkCollector,
                             EventBusProvider eventBusProvider) {
@@ -305,7 +302,7 @@ public class LoggerSubscriber {
 
     private void logStepInfo(StepInstance stepInstance, String format) {
         if (stepInstance.getContext().tc().isNeedToReportToAtp()) {
-            Report.info(stepInstance, String.format(format, stepInstance.getStep().getName()),
+            Report.info(stepInstance, format.formatted(stepInstance.getStep().getName()),
                     stepInstance.getContext().sp());
         }
     }
@@ -336,17 +333,17 @@ public class LoggerSubscriber {
                         "#/context/", standalone));
             }
             AbstractContainerInstance initiator = context.getInitiator();
-            if (initiator instanceof SituationInstance) {
-                if (((SituationInstance) initiator).getSystemId() != null) {
+            if (initiator instanceof SituationInstance instance1) {
+                if (instance1.getSystemId() != null) {
                     reportLinks.put("System link", reportLinkCollector.getLinkToObject(
                             context.getProjectId(), context.getProjectUuid(),
-                            ((SituationInstance) initiator).getSystemId(),
+                            instance1.getSystemId(),
                             "#/system/", standalone));
                 }
-            } else if (initiator instanceof CallChainInstance) {
+            } else if (initiator instanceof CallChainInstance instance) {
                 reportLinks.put("Callchain link", reportLinkCollector.getLinkToObject(
                         context.getProjectId(), context.getProjectUuid(),
-                        ((CallChainInstance) initiator).getTestCaseId(),
+                        instance.getTestCaseId(),
                         "#/callchain/", standalone));
             }
         } catch (Throwable ex) {

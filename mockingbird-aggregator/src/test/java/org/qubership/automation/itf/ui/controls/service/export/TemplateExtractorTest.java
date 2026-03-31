@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,15 +19,12 @@ package org.qubership.automation.itf.ui.controls.service.export;
 
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TemplateExtractor.class})
+@SpringJUnitConfig(classes = {TemplateExtractor.class})
 public class TemplateExtractorTest {
 
     @Autowired
@@ -50,9 +47,9 @@ public class TemplateExtractorTest {
                 + "   #load_part(\"1235\")#end "
                 + "#load_part(\"Rebase\")";// the same name of template - won't be added
         Set<String> loadPartTemplates = templateExtractor.findLoadPartTemplates(input);
-        Assert.assertNotNull(loadPartTemplates);
-        Assert.assertFalse(loadPartTemplates.isEmpty());
+        Assertions.assertNotNull(loadPartTemplates);
+        Assertions.assertFalse(loadPartTemplates.isEmpty());
         String s = loadPartTemplates.toString();
-        Assert.assertEquals(s, "[Rebase3, 1235, Rebase2, Rebase4, Rebase]");
+        Assertions.assertEquals(s, "[Rebase3, 1235, Rebase2, Rebase4, Rebase]");
     }
 }

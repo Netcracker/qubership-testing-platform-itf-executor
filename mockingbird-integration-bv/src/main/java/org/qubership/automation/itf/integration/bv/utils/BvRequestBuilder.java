@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -185,8 +185,8 @@ public class BvRequestBuilder {
      * Build a request to BulkValidator.
      */
     public static RequestData buildSimpleRequestData(Storable storable, Map<String, String> properties) {
-        if (storable instanceof CallChain) {
-            return new RequestData(((CallChain) storable).getBvCases().get(properties.get("dataset.name")));
+        if (storable instanceof CallChain chain) {
+            return new RequestData(chain.getBvCases().get(properties.get("dataset.name")));
         } else {
             return new RequestData(((Situation) storable).getBvTestcase());
         }
@@ -255,8 +255,8 @@ public class BvRequestBuilder {
         JsonContext saved = new JsonContext();
         try {
             Object savedObj = tc.get("saved");
-            if (savedObj instanceof Map) {
-                saved.putAll((Map) savedObj);
+            if (savedObj instanceof Map map) {
+                saved.putAll(map);
             }
         } catch (Exception e) {
             LOGGER.error("Error occurred during unpacking tc.saved: [" + tc.get("saved").toString() + "]: ", e);
@@ -310,8 +310,7 @@ public class BvRequestBuilder {
         try {
             if (obj == null || obj.toString().isEmpty()) {
                 return "";
-            } else if (obj instanceof ArrayList) {
-                List objList = (ArrayList) obj;
+            } else if (obj instanceof List objList) {
                 if (!objList.isEmpty()) {
                     try {
                         List<Object> newobjs = new ArrayList<>();

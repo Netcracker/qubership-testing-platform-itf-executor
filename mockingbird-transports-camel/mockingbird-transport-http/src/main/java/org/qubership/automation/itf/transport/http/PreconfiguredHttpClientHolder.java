@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,13 +17,8 @@
 
 package org.qubership.automation.itf.transport.http;
 
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustAllStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 
 public class PreconfiguredHttpClientHolder {
     private static final int HTTP_CLIENT_TIMEOUT_VALUE = 300000;
@@ -35,20 +30,7 @@ public class PreconfiguredHttpClientHolder {
 
     private static CloseableHttpClient configureClient() {
         try {
-            SSLContextBuilder builder = new SSLContextBuilder();
-            TrustAllStrategy trustStrategy = new TrustAllStrategy();
-            builder.loadTrustMaterial(null, trustStrategy);
-            SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
-                    builder.build(), new NoopHostnameVerifier()
-            );
-            RequestConfig config = RequestConfig.custom()
-                    .setConnectTimeout(HTTP_CLIENT_TIMEOUT_VALUE)
-                    .setConnectionRequestTimeout(HTTP_CLIENT_TIMEOUT_VALUE)
-                    .setSocketTimeout(HTTP_CLIENT_TIMEOUT_VALUE).build();
-            return HttpClients.custom()
-                    .setSSLSocketFactory(sslConnectionSocketFactory)
-                    .setDefaultRequestConfig(config)
-                    .build();
+            return HttpClients.custom().build();
         } catch (Exception e) {
             throw new IllegalStateException("Http client is not initialized", e);
         }

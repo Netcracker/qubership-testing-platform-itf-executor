@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnull;
-
 import org.json.simple.JSONObject;
 import org.qubership.automation.itf.core.model.dataset.IDataSet;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
+
+import jakarta.annotation.Nonnull;
 
 public class RemoteDataSet implements IDataSet {
 
@@ -69,9 +69,9 @@ public class RemoteDataSet implements IDataSet {
             overriddenValues.forEach((key, value) -> {
                 Object contextValue = context.get(key);
                 if (contextValue != null) {
-                    if (value instanceof JSONObject && contextValue instanceof JSONObject) {
+                    if (value instanceof JSONObject && contextValue instanceof JSONObject object) {
                         for (Map.Entry<String, String> entry : ((Map<String, String>) value).entrySet()) {
-                            ((JSONObject) contextValue).put(entry.getKey(), entry.getValue());
+                            object.put(entry.getKey(), entry.getValue());
                         }
                     } else {
                         context.put(key, value);

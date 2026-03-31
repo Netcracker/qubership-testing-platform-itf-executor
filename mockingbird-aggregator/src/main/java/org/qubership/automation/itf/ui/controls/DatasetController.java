@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -53,8 +53,7 @@ import org.qubership.automation.itf.ui.messages.objects.UIObject;
 import org.qubership.automation.itf.ui.util.UIHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,7 +71,7 @@ public class DatasetController extends UIHelper {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/datasetlists", method = RequestMethod.GET)
+    @GetMapping("/datasetlists")
     @AuditAction(auditAction = "Get Dataset Lists for project {{#projectUuid}}")
     public UIList<UIObject> getLists(@RequestParam(value = "projectUuid") UUID projectUuid) {
         Collection<? extends DataSetListsSource> dataSetLists =
@@ -95,7 +94,7 @@ public class DatasetController extends UIHelper {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/datasetlist", method = RequestMethod.GET)
+    @GetMapping("/datasetlist")
     @AuditAction(auditAction = "Get all Dataset Lists by VA id {{#id}} in the project {{#projectUuid}}")
     public UIList<UIDataSetList> getList(@RequestParam(value = "source", required = false) String id,
                                          @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
@@ -119,7 +118,7 @@ public class DatasetController extends UIHelper {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/dataset/all", method = RequestMethod.GET)
+    @GetMapping("/dataset/all")
     @AuditAction(auditAction = "Get all Datasets under Sources '{{#sources}}' in the project {{#projectUuid}}")
     public String getAllDatasets(@RequestParam(value = "sources", defaultValue = "") String sources,
                                  @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -132,8 +131,7 @@ public class DatasetController extends UIHelper {
             for (IDataSet dataSet : dataSetList.getDataSets(projectUuid)) {
                 final String groupName = dataSetList.getName();
                 final String datasetName = dataSet.getName();
-                final String displayName =
-                        String.format("[%s] %s", groupName, datasetName);
+                final String displayName = "[%s] %s".formatted(groupName, datasetName);
                 datasets.add(new JSONObject() {
                     {
                     put("groupName", groupName);
@@ -156,7 +154,7 @@ public class DatasetController extends UIHelper {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/datasetsources/all", method = RequestMethod.GET)
+    @GetMapping("/datasetsources/all")
     @AuditAction(auditAction = "Get all DSLs and Datasets in the project {{#projectUuid}}")
     public String getAllDatalists(@RequestParam(value = "projectUuid") UUID projectUuid) {
         JSONObject result = new JSONObject();
@@ -185,7 +183,7 @@ public class DatasetController extends UIHelper {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/dataset/read/debug", method = RequestMethod.GET)
+    @GetMapping("/dataset/read/debug")
     @AuditAction(auditAction = "Read dataset with name {{#datasetName}} for debug, project {{#projectUuid}}")
     public JsonContext readDatasetForDebugger(
             @RequestParam(value = "name", defaultValue = "") String datasetName,
@@ -216,7 +214,7 @@ public class DatasetController extends UIHelper {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/dataset/read", method = RequestMethod.GET)
+    @GetMapping("/dataset/read")
     @AuditAction(auditAction = "Read dataset with name {{#datasetName}}, for Entity id {{#entityId}} and type "
             + "{{#entityType}}, project {{#projectUuid}}")
     public UIDataSet readDataset(
@@ -280,9 +278,9 @@ public class DatasetController extends UIHelper {
     }
 
     private void processParameter(Object value, String key, Set<UIDataSetParameter> datasetParameters) {
-        if (value instanceof JSONArray) {
+        if (value instanceof JSONArray array) {
             int indx = 0;
-            for (Object arrayValue : (JSONArray) value) {
+            for (Object arrayValue : array) {
                 datasetParameters.add(
                         new UIDataSetParameter(key + "[" + (indx++) + "]", (String) arrayValue));
             }

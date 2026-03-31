@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class DiameterTransportController {
         executorToMessageBrokerSender.sendMessageToSyncReloadDictionaryTopic(
                 new DictionaryReloadMessage(dictionaryPath, parserClass, project), tenantId);
         return new UIResult(true,
-                String.format("Diameter dictionary is successfully reloaded from path: %s\n Parser: %s",
+                "Diameter dictionary is successfully reloaded from path: %s\n Parser: %s".formatted(
                         dictionaryPath, parserClass.getSimpleName()));
     }
 }

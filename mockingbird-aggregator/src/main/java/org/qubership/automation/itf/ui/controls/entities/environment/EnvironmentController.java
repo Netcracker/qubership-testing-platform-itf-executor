@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -59,14 +59,14 @@ import org.qubership.automation.itf.ui.messages.objects.environment.UIEnvironmen
 import org.qubership.automation.itf.ui.messages.objects.transport.UIConfiguration;
 import org.qubership.automation.itf.ui.messages.objects.transport.UIProperty;
 import org.qubership.automation.itf.ui.messages.objects.transport.UITriggerConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -78,7 +78,6 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
 
     private final ReportLinkCollector reportLinkCollector;
 
-    @Autowired
     public EnvironmentController(ReportLinkCollector reportLinkCollector) {
         this.reportLinkCollector = reportLinkCollector;
     }
@@ -92,7 +91,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/environment/all", method = RequestMethod.GET)
+    @GetMapping("/environment/all")
     @AuditAction(auditAction = "Get all Environments for project {{#projectId}}/{{#projectUuid}}")
     public List<? extends UIObject> getAll(@RequestParam UUID projectUuid,
                                            @RequestParam BigInteger projectId) {
@@ -103,7 +102,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
 
     @Override
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/environment/allbyparent", method = RequestMethod.GET)
+    @GetMapping("/environment/allbyparent")
     @AuditAction(auditAction = "Get all Environments by parent id {{#parentId}}")
     public List<? extends UIObject> getAll(@RequestParam(value = "parentId", defaultValue = "0") String parentId) {
         return super.getAll(parentId);
@@ -111,7 +110,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/environment", method = RequestMethod.GET)
+    @GetMapping("/environment")
     @AuditAction(auditAction = "Get Environment by id {{#id}} in the project {{#projectUuid}}")
     public UIEnvironment getById(@RequestParam(value = "id", defaultValue = "0") String id,
                                  @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -123,7 +122,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
         through feign client (see MonitoringController)
      */
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/environment/{id}", method = RequestMethod.GET)
+    @GetMapping("/environment/{id}")
     @AuditAction(auditAction = "Get Environment by id {{#id}} via feign")
     public UIEnvironment feignGetById(@PathVariable(value = "id") String id) {
         return super.getById(id);
@@ -131,7 +130,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"CREATE\")")
-    @RequestMapping(value = "/environment", method = RequestMethod.POST)
+    @PostMapping("/environment")
     @AuditAction(auditAction = "Create Environment under parent id {{#parentId}} in the project "
             + "{{#projectId}}/{{#projectUuid}}")
     public UIEnvironment create(
@@ -143,7 +142,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/environment", method = RequestMethod.PUT)
+    @PutMapping("/environment")
     @AuditAction(auditAction = "Update Environment by id {{#uiEnvironment.id}} in the project {{#projectUuid}}")
     public UIEnvironment update(@RequestBody UIEnvironment uiEnvironment,
                                 @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -159,7 +158,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"DELETE\")")
-    @RequestMapping(value = "/environment", method = RequestMethod.DELETE)
+    @DeleteMapping("/environment")
     @AuditAction(auditAction = "Delete Environments from project {{#projectUuid}}")
     public DeleteEntityResultMessage<String, UITriggerConfiguration> deleteEnv(
             @RequestBody Collection<UIEnvironment> objectsToDelete,
@@ -206,7 +205,7 @@ public class EnvironmentController extends AbstractController<UIEnvironment, Env
      * @return the result as a UIResult model.
      */
     @Transactional
-    @RequestMapping(value = "/environment/bulk", method = RequestMethod.POST)
+    @PostMapping("/environment/bulk")
     @AuditAction(auditAction = "Bulk Update Servers in the Environment")
     public UIResult bulkServerUpdate(@RequestBody String[] serverData) {
         serverData[0] = serverData[0].trim();

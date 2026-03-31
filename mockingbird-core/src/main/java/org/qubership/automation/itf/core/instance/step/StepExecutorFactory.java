@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import org.qubership.automation.itf.core.model.jpa.instance.step.StepInstance;
 import org.qubership.automation.itf.core.model.jpa.step.IntegrationStep;
 import org.qubership.automation.itf.core.model.jpa.step.SituationStep;
 import org.qubership.automation.itf.core.model.jpa.step.Step;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Maps;
@@ -36,7 +35,6 @@ public class StepExecutorFactory {
     private IntegrationStepExecutor integrationStepExecutor;
     private SituationStepExecutor situationStepExecutor;
 
-    @Autowired
     public StepExecutorFactory(IntegrationStepExecutor integrationStepExecutor,
                                SituationStepExecutor situationStepExecutor) {
         this.integrationStepExecutor = integrationStepExecutor;
@@ -56,7 +54,7 @@ public class StepExecutorFactory {
                 return entry.getValue();
             }
         }
-        throw new IllegalArgumentException(String.format("No executor found for stepInstance [%s], type [%s]",
+        throw new IllegalArgumentException("No executor found for stepInstance [%s], type [%s]".formatted(
                 stepInstance.getStep(), stepInstance.getStep().getClass().getSimpleName()));
     }
 

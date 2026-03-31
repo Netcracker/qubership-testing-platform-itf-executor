@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.exceptions.common.NotValidValueException;
@@ -41,12 +38,13 @@ import org.qubership.automation.itf.ui.messages.objects.UITreeElement;
 import org.qubership.automation.itf.ui.messages.tree.UITreeData;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Sets;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @RestController
 @Transactional(readOnly = true)
@@ -61,7 +59,7 @@ public class CallChainTreeController extends AbstractTreeBuilder<CallChain, Fold
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/folder", method = RequestMethod.GET)
+    @GetMapping("/callchain/folder")
     @AuditAction(auditAction = "Get CallChain Tree under Folder id {{#id}} in the project {{#projectUuid}}")
     public UITreeData getTree(@RequestParam(required = false) String id,
                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -72,7 +70,7 @@ public class CallChainTreeController extends AbstractTreeBuilder<CallChain, Fold
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/tree/node", method = RequestMethod.GET)
+    @GetMapping("/callchain/tree/node")
     @AuditAction(auditAction = "Get CallChain Tree for current id {{#id}} or parent id {{#parentId}} in the project "
             + "{{#projectUuid}}")
     public UITreeData getTreeFromNode(@RequestParam(required = false) String id,
@@ -85,7 +83,7 @@ public class CallChainTreeController extends AbstractTreeBuilder<CallChain, Fold
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/tree/node/name", method = RequestMethod.GET)
+    @GetMapping("/callchain/tree/node/name")
     @AuditAction(auditAction = "Get CallChain Tree for node by name {{#value}} and parent id {{#parentId}} in the "
             + "project {{#projectId}}/{{#projectUuid}}")
     public UITreeData getTreeFromNodeByName(@RequestParam(required = false) String value,
@@ -118,7 +116,7 @@ public class CallChainTreeController extends AbstractTreeBuilder<CallChain, Fold
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/label", method = RequestMethod.GET)
+    @GetMapping("/callchain/label")
     @AuditAction(auditAction = "Get all CallChain Labels in the project {{#projectId}}/{{#projectUuid}}")
     public Set<String> gelLabels(
             @RequestParam(value = "projectUuid") UUID projectUuid,

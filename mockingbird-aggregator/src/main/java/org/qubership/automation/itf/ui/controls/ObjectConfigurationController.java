@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -45,9 +45,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,7 +59,7 @@ public class ObjectConfigurationController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/exists", method = RequestMethod.POST)
+    @PostMapping("/situation/exists")
     @AuditAction(auditAction = "Check if Situation exists in the project {{#projectId}}/{{#projectUuid}}")
     public ResponseEntity isSituationExists(
             @RequestBody StarterSituationExistanceChecker checker,
@@ -73,15 +72,15 @@ public class ObjectConfigurationController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/entity/exists", method = RequestMethod.POST)
+    @PostMapping("/entity/exists")
     @AuditAction(auditAction = "Check if Entity exists in the project {{#projectId}}/{{#projectUuid}}")
     public ResponseEntity isEntityExists(@RequestBody ExistenceChecker checker,
                                          @RequestParam(value = "projectId") BigInteger projectId,
                                          @RequestParam(value = "projectUuid") UUID projectUuid) {
         Storable storable = checkEntityExisting(checker, projectId);
         if (storable != null) {
-            String returnedData = storable instanceof Operation ?
-                    storable.getName() + "|" + ((Operation) storable).getTransport().getName() : storable.getName();
+            String returnedData = storable instanceof Operation o ?
+                    storable.getName() + "|" + o.getTransport().getName() : storable.getName();
             return getResponseEntity(HttpStatus.OK, returnedData);
         }
         return getResponseEntity(HttpStatus.NO_CONTENT);
@@ -114,7 +113,7 @@ public class ObjectConfigurationController {
                                 break;
                             }
                         } catch (NoSuchFieldException | IllegalAccessException e) {
-                            LOGGER.error(String.format("Error while getting the value of %s for %s", entry.getKey(),
+                            LOGGER.error("Error while getting the value of %s for %s".formatted(entry.getKey(),
                                     operation.getName()));
                         }
                     }

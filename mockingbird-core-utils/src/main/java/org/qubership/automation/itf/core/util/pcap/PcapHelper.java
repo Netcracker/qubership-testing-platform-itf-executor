@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class PcapHelper {
             log.error("Required parameters are missed - TCP dump is disabled. Network interface name: {}, Packet "
                     + "count: {}", niName, packetCount);
         }
-        String dumpfilePath = String.format("%s/%s/%s.pcap", Config.getConfig().getString(TCP_DUMP_FOLDER),
+        String dumpfilePath = "%s/%s/%s.pcap".formatted(Config.getConfig().getString(TCP_DUMP_FOLDER),
                 projectId.toString(), id);
         int maxPacketCount;
         try {
@@ -92,7 +92,7 @@ public class PcapHelper {
                 port = "8080";
             }
             //noinspection HttpUrlsUsage
-            return String.format("http://%s:%s/%s", host, port, filename);
+            return "http://%s:%s/%s".formatted(host, port, filename);
         } catch (UnknownHostException e) {
             log.error("Can't identify the host. Link to the created file with TCPDump will not be created. "
                     + "You can find the file in ITF-folder.");

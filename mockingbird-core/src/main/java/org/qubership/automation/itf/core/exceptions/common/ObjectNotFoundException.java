@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@ public class ObjectNotFoundException extends ItfExecutorException {
     private static final String OPERATION_INSERT = " while trying to %s";
 
     public ObjectNotFoundException(String type, String id, String name, String operation) {
-        super(String.format(DEFAULT_MESSAGE,
-                        type,
-                        id,
-                        StringUtils.isNotEmpty(name) ? String.format(NAME_INSERT, name) : "",
-                        StringUtils.isNotEmpty(operation) ? String.format(OPERATION_INSERT, operation) : ""
-                )
+        super(DEFAULT_MESSAGE.formatted(
+                type,
+                id,
+                StringUtils.isNotEmpty(name) ? NAME_INSERT.formatted(name) : "",
+                StringUtils.isNotEmpty(operation) ? OPERATION_INSERT.formatted(operation) : ""
+        )
         );
     }
 

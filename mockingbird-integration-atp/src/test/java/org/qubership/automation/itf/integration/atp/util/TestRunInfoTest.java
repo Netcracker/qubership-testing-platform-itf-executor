@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package org.qubership.automation.itf.integration.atp.util;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +47,11 @@ public class TestRunInfoTest {
         TestRunInfo runInfo = new TestRunInfo();
 
         String filename = sanitizePathTraversal("src/test/resources/flatContextToParse.txt");
-        String flatContextToParse = new String(Files.readAllBytes(Paths.get(SERVED_FILES_DIR + filename)));
+        String flatContextToParse = new String(Files.readAllBytes(Path.of(SERVED_FILES_DIR + filename)));
         JSONObject flatContext = (JSONObject) new JSONParser().parse(flatContextToParse);
 
         filename = sanitizePathTraversal("src/test/resources/erJsonContext.txt");
-        String erJsonContext = new String(Files.readAllBytes(Paths.get(SERVED_FILES_DIR + filename)));
+        String erJsonContext = new String(Files.readAllBytes(Path.of(SERVED_FILES_DIR + filename)));
         JSONObject expectedContext = (JSONObject) new JSONParser().parse(erJsonContext);
 
         JSONObject actualContext = new JSONObject();
@@ -67,11 +66,11 @@ public class TestRunInfoTest {
         TestRunInfo runInfo = new TestRunInfo();
 
         String filename = sanitizePathTraversal("src/test/resources/flatContextToParse_emptyGroupOrArray.txt");
-        String flatContextToParse = new String(Files.readAllBytes(Paths.get(SERVED_FILES_DIR + filename)));
+        String flatContextToParse = new String(Files.readAllBytes(Path.of(SERVED_FILES_DIR + filename)));
         JSONObject flatContext = (JSONObject) new JSONParser().parse(flatContextToParse);
 
         filename = sanitizePathTraversal("src/test/resources/erJsonContext_emptyGroupOrArray.txt");
-        String erJsonContext = new String(Files.readAllBytes(Paths.get(SERVED_FILES_DIR + filename)));
+        String erJsonContext = new String(Files.readAllBytes(Path.of(SERVED_FILES_DIR + filename)));
         JSONObject expectedContext = (JSONObject) new JSONParser().parse(erJsonContext);
 
         JSONObject actualContext = new JSONObject();
@@ -80,7 +79,7 @@ public class TestRunInfoTest {
     }
 
     private static String sanitizePathTraversal(String filename) {
-        Path p = Paths.get(filename);
+        Path p = Path.of(filename);
         return p.getFileName().toString();
     }
 
@@ -169,22 +168,26 @@ public class TestRunInfoTest {
         Assert.isTrue(((JSONArray) testRunInfo1.getContextToMerge().get("Params.reservation_id")).get(0).equals("0"),
                 "Check #1 is failed: 'Params.reservation_id[0]' property value is not equal \"0\"!");
 
-        String atpContextString2 = "{\n"
-                + "\"Params.reservation_id[1]\": \"1\",\n"
-                + "\"Params.reservation_id\": [\"0\"]\n"
-                + "    }";
+        String atpContextString2 = """
+                {
+                "Params.reservation_id[1]": "1",
+                "Params.reservation_id": ["0"]
+                    }\
+                """;
         TestRunInfo testRunInfo2 = prepareTestRunInfo(atpContextString2);
         Assert.isTrue(((JSONArray) testRunInfo2.getContextToMerge().get("Params.reservation_id")).get(0).equals("0"),
                 "Check #2 is failed: 'Params.reservation_id[0]' property value is not equal \"0\"!");
         Assert.isTrue(((JSONArray) testRunInfo2.getContextToMerge().get("Params.reservation_id")).get(1).equals("1"),
                 "Check #2 is failed: 'Params.reservation_id[1]' property value is not equal \"1\"!");
 
-        String atpContextString3 = "{\n"
-                + "\"Params.reservation_id[0]\": \"1\",\n"
-                + "\"Params.reservation_id[1]\": \"2\",\n"
-                + "\"Params.reservation_id[3]\": \"4\",\n"
-                + "\"Params.reservation_id\": [\"0\",\"1\"]\n"
-                + "    }";
+        String atpContextString3 = """
+                {
+                "Params.reservation_id[0]": "1",
+                "Params.reservation_id[1]": "2",
+                "Params.reservation_id[3]": "4",
+                "Params.reservation_id": ["0","1"]
+                    }\
+                """;
         TestRunInfo testRunInfo3 = prepareTestRunInfo(atpContextString3);
         Assert.isTrue(((JSONArray) testRunInfo3.getContextToMerge().get("Params.reservation_id")).get(0).equals("1"),
                 "Check #3 is failed: 'Params.reservation_id[0]' property value is not equal \"1\"!");

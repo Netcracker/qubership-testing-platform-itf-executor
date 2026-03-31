@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-
 import org.assertj.core.util.Lists;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.EnvironmentManager;
 import org.qubership.automation.itf.core.hibernate.spring.managers.executor.EnvironmentObjectManager;
@@ -45,8 +43,7 @@ import org.qubership.automation.itf.ui.swagger.SwaggerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,6 +52,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -72,7 +70,7 @@ public class EnvironmentSwitchController extends ControllerHelper {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "environment/status", method = RequestMethod.GET)
+    @GetMapping("environment/status")
     @Operation(summary = "GetEnvironmentState",
             description = "Retrieve environment status by id",
             tags = {SwaggerConstants.ENVIRONMENT_TRIGGER_QUERY_API})
@@ -91,7 +89,7 @@ public class EnvironmentSwitchController extends ControllerHelper {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/environment/inbound/info", method = RequestMethod.GET)
+    @GetMapping("/environment/inbound/info")
     @Operation(summary = "GetEnvironmentInfo",
             description = "Retrieve environment info by id",
             tags = {SwaggerConstants.ENVIRONMENT_TRIGGER_QUERY_API})

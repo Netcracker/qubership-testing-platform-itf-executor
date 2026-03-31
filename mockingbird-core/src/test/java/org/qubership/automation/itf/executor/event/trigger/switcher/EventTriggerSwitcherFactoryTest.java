@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,18 +19,15 @@ package org.qubership.automation.itf.executor.event.trigger.switcher;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.qubership.automation.itf.core.model.jpa.system.stub.OperationEventTrigger;
 import org.qubership.automation.itf.core.model.jpa.system.stub.SituationEventTrigger;
 import org.qubership.automation.itf.executor.event.trigger.EventTriggerSwitcherFactory;
 import org.qubership.automation.itf.executor.event.trigger.IEventTriggerSwitcher;
 import org.qubership.automation.itf.executor.event.trigger.OperationEventTriggerSwitcher;
 import org.qubership.automation.itf.executor.event.trigger.SituationEventTriggerSwitcher;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {EventTriggerSwitcherFactory.class, SituationEventTriggerSwitcher.class,
+@SpringJUnitConfig(classes = {EventTriggerSwitcherFactory.class, SituationEventTriggerSwitcher.class,
         OperationEventTriggerSwitcher.class})
 public class EventTriggerSwitcherFactoryTest {
 

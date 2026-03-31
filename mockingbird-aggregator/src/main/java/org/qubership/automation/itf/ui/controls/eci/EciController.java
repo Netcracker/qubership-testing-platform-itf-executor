@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -55,9 +55,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -81,7 +81,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/project", method = RequestMethod.GET)
+    @GetMapping("/project")
     @AuditAction(auditAction = "Get ATP-Environments Project Id bound")
     public Set<String> getEcProjectId(@RequestParam("projectId") BigInteger projectId,
                                       @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -108,7 +108,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/bind", method = RequestMethod.PUT)
+    @PutMapping("/bind")
     @AuditAction(auditAction =
             "Bind Entity with id {{#entityId}} to ATP-Environments Object id {{#ecId}} from project {{#ecProjectId}}")
     public UIResult bindEntityToEC(@RequestParam("id") BigInteger entityId,
@@ -121,18 +121,18 @@ public class EciController {
             Class<? extends EciConfigurable> asClass = entityClass.getEntityClass();
             EciConfigurable storable = CoreObjectManager.getInstance().getManager(asClass).getById(entityId);
             storable.setEciParameters(ecId, ecProjectId);
-            if (storable instanceof System) {
-                ((System) storable).setEcLabel(ecName);
+            if (storable instanceof System system) {
+                system.setEcLabel(ecName);
             }
             storable.store();
             log.info("Storable [id={}, name={}, type={}] was bound to EC[id={}, project={}]", storable.getID(),
                     storable.getName(), entityClass, ecId, ecProjectId);
-            return new UIResult(true, String.format("%s was bound to EC", asClass.getSimpleName()));
+            return new UIResult(true, "%s was bound to EC".formatted(asClass.getSimpleName()));
         } catch (Exception e) {
-            log.error("Storable [id={}, type={}] was not bound to EC[id={}, project={}]. Exception: {}", entityId,
+            log.error("Storable [id={}, type={}] was not bound to EC[id={}, project={}]. Exception:", entityId,
                     entityClass, ecId, ecProjectId, e);
             return new UIResult(false,
-                    String.format("%s wasn't bound to EC", entityClass.getEntityClass().getSimpleName()));
+                    "%s wasn't bound to EC".formatted(entityClass.getEntityClass().getSimpleName()));
         }
     }
 
@@ -148,7 +148,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping("/update")
     @AuditAction(auditAction
             = "Update Entity with id {{#entityId}} from EC (type {{#entityClassName}}, parent id {{#entityParentId}})")
     public UIResult updateEntityFromEc(@RequestParam("entityId") BigInteger entityId,
@@ -164,7 +164,7 @@ public class EciController {
                         ? CoreObjectManager.managerFor(System.class).getById(entityParentId) :
                         CoreObjectManager.managerFor(Folder.class).getById(entityParentId);
                 convertAndStoreEntity(eciConfigurable, entityClass, parent);
-                return new UIResult(true, String.format("%s was updated from EC", entityClass.getSimpleName()));
+                return new UIResult(true, "%s was updated from EC".formatted(entityClass.getSimpleName()));
             } else {
                 EciConfigurable storable = CoreObjectManager.managerFor(entityClass).getById(entityId);
                 storable.unbindEntityWithHierarchy();
@@ -173,12 +173,12 @@ public class EciController {
                         storable.getName(), entityClassName);
                 UIResult warn = new UIResult();
                 warn.setSuccess(false);
-                warn.setMessage(String.format("%s was unbound from EC during update", entityClass.getSimpleName()));
+                warn.setMessage("%s was unbound from EC during update".formatted(entityClass.getSimpleName()));
                 return warn;
             }
         } catch (Exception e) {
-            log.error("Storable [id={}, type={}] wasn't updated from EC. Exception: {}", entityId, entityClassName, e);
-            return new UIResult(false, String.format("%s wasn't updated from EC",
+            log.error("Storable [id={}, type={}] wasn't updated from EC. Exception:", entityId, entityClassName, e);
+            return new UIResult(false, "%s wasn't updated from EC".formatted(
                     entityClassName.getEntityClass().getSimpleName()));
         }
     }
@@ -193,7 +193,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/unbind", method = RequestMethod.PUT)
+    @PutMapping("/unbind")
     @AuditAction(auditAction = "Unbind Entities with type {{#entityClass}} from EC")
     public UIResult unbindEntityFromEC(@RequestBody UIIdentifiedObject[] objects,
                                        @RequestParam("entityClass") EciEntityConstant entityClassName,
@@ -209,11 +209,11 @@ public class EciController {
                 storable.unbindEntityWithHierarchy();
                 storable.store();
             }
-            return new UIResult(true, String.format("%s was unbound from EC", entityClass.getSimpleName()));
+            return new UIResult(true, "%s was unbound from EC".formatted(entityClass.getSimpleName()));
         } catch (Exception e) {
             log.error("Unbinding was failed. Exception: {}", e.getMessage());
             return new UIResult(false,
-                    String.format("%s wasn't unbound from EC", entityClassName.getEntityClass().getSimpleName()));
+                    "%s wasn't unbound from EC".formatted(entityClassName.getEntityClass().getSimpleName()));
         }
     }
 
@@ -226,7 +226,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/upload/environments", method = RequestMethod.PUT)
+    @PutMapping("/upload/environments")
     @AuditAction(auditAction = "Upload Environments from EC from project {{#projectId}}/{{#projectUuid}}")
     public void uploadEnvironmentsFromEc(@RequestParam BigInteger projectId,
                                          @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -270,7 +270,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/update/environments", method = RequestMethod.PUT)
+    @PutMapping("/update/environments")
     @AuditAction(auditAction = "Update Environments from EC")
     public void updateEnvironmentsFromEc(@RequestBody ECEnvironment[] ecEnvironments,
                                          @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -285,7 +285,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/update/systems", method = RequestMethod.PUT)
+    @PutMapping("/update/systems")
     @AuditAction(auditAction = "Update Systems from EC")
     public void updateSystemsFromEc(@RequestBody ECSystem[] ecSystems,
                                     @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -300,7 +300,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/update/transports", method = RequestMethod.PUT)
+    @PutMapping("/update/transports")
     @AuditAction(auditAction = "Update Transports from EC")
     public void uploadTransportsFromEc(@RequestBody ECConnection[] ecConnections,
                                        @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -315,9 +315,9 @@ public class EciController {
                 log.info("Storable [id={}, type={}] has become unbind from EC during updating",
                         ecEntity.getSourceEntityId(), ecEntity.getGenericType());
             } else {
-                if (ecEntity instanceof ECEnvironment) {
-                    removeSystemWithoutItfParameters((ECEnvironment) ecEntity);
-                    fillEcProjectIdHierarchically((ECEnvironment) ecEntity);
+                if (ecEntity instanceof ECEnvironment environment) {
+                    removeSystemWithoutItfParameters(environment);
+                    fillEcProjectIdHierarchically(environment);
                 }
                 convertAndStoreEntity(ecEntity, ecEntity.getGenericType(),
                         CoreObjectManager.getInstance().getManager(ecEntity.getParentClass())
@@ -399,7 +399,7 @@ public class EciController {
      */
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/unbind/byproject/{ecProjectId}", method = RequestMethod.GET)
+    @GetMapping("/unbind/byproject/{ecProjectId}")
     @AuditAction(auditAction = "Unbind Entities By EcProject")
     public void unbindEntitiesByEcProject(@PathVariable("ecProjectId") String ecProjectId,
                                           @RequestParam(value = "projectUuid") UUID projectUuid) {

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,14 +22,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.env.OriginTrackedMapPropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.support.StandardServletEnvironment;
@@ -39,13 +37,12 @@ public class EnvPropertiesController {
 
     private Environment environment;
 
-    @Autowired
     public EnvPropertiesController(Environment environment) {
         this.environment = environment;
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/getEnvironmentProperties", method = RequestMethod.GET)
+    @GetMapping("/getEnvironmentProperties")
     @AuditAction(auditAction = "Get Environment properties, project {{#projectUuid}}")
     public Map<String, String> getEnvironmentProperties(@RequestParam(value = "projectUuid") UUID projectUuid) {
         Map<String, String> environmentProperties = new HashMap<>();

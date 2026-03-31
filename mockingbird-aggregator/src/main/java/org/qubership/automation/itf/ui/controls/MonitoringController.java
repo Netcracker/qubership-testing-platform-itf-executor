@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -46,10 +46,10 @@ import org.qubership.automation.itf.ui.messages.monitoring.UIGetReportList;
 import org.qubership.automation.itf.ui.messages.objects.UIReportItem;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -92,7 +92,7 @@ public class MonitoringController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/monitoring/page/size", method = RequestMethod.POST)
+    @PostMapping("/monitoring/page/size")
     @AuditAction(auditAction = "Set page size to {{#size}} for project {{#projectId}}/{{#projectUuid}}")
     public void setPageSize(@RequestParam String size,
                             @RequestParam(value = "projectId") BigInteger projectId,
@@ -104,7 +104,7 @@ public class MonitoringController {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/monitoring/page/size", method = RequestMethod.GET)
+    @GetMapping("/monitoring/page/size")
     @AuditAction(auditAction = "Get page size for project {{#projectId}}/{{#projectUuid}}")
     public int getPageSize(@RequestParam(value = "projectId") BigInteger projectId,
                            @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -118,8 +118,7 @@ public class MonitoringController {
     @Deprecated
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"EXECUTE\")")
-    @RequestMapping(value = "/monitoring/setcontext",
-            method = RequestMethod.POST,
+    @PostMapping(value = "/monitoring/setcontext",
             consumes = "application/json",
             headers = "Accept=application/json")
     @AuditAction(auditAction = "Merge context into tc-context id {{#contextId}} in the project {{#projectUuid}}")
@@ -132,7 +131,7 @@ public class MonitoringController {
         TcContext tcContext = CoreObjectManager.getInstance().getManager(TcContext.class).getById(contextId);
         if (tcContext.getInitiator() == null || !(tcContext.getInitiator() instanceof CallChainInstance)) {
             throw new IllegalArgumentException(
-                    String.format("Context ID=%s: initiator is NOT a callchain;  Update is cancelled", contextId));
+                    "Context ID=%s: initiator is NOT a callchain;  Update is cancelled".formatted(contextId));
         }
         tcContext.merge(context);
         CacheServices.getTcBindingCacheService().bind(tcContext);
@@ -142,7 +141,7 @@ public class MonitoringController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"EXECUTE\")")
-    @RequestMapping(value = "/monitoring/terminateContexts", method = RequestMethod.POST)
+    @PostMapping("/monitoring/terminateContexts")
     @AuditAction(auditAction = "Terminate contexts for project {{#projectUuid}}")
     public void terminate(@RequestBody UIIds ids,
                           @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -154,7 +153,7 @@ public class MonitoringController {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"EXECUTE\")")
-    @RequestMapping(value = "/monitoring/context/pauseResume", method = RequestMethod.POST)
+    @PostMapping("/monitoring/context/pauseResume")
     @AuditAction(auditAction = "Do '{{#action}}' action for contexts in the project {{#projectUuid}}")
     public UIGetReportList pauseResumeContext(@RequestParam(value = "action") String action,
                                               @RequestBody UIIds uiIds,
@@ -170,7 +169,7 @@ public class MonitoringController {
             newStatus = Status.IN_PROGRESS;
         } else {
             throw new IllegalArgumentException(
-                    String.format("Parameter 'action' (values are pause or resume) value is incorrect: '%s'", action));
+                    "Parameter 'action' (values are pause or resume) value is incorrect: '%s'".formatted(action));
         }
         UIGetReportList result = new UIGetReportList();
 

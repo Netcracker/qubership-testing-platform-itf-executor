@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class CleanTmpFileScheduler {
     public void cleanTempArchiveFiles() {
         log.debug("Scheduled Cleanup of Temp Files Job is started...");
         String rootDirectory = FileSystems.getDefault().getPath("").toAbsolutePath().toString();
-        Path tempPath = Paths.get(rootDirectory + File.separatorChar + "data_temp");
+        Path tempPath = Path.of(rootDirectory + File.separatorChar + "data_temp");
 
         final Long expirationDate = System.currentTimeMillis() - modifiedBeforeMs;
         if (Objects.isNull(tempPath) || !Files.exists(tempPath)) {

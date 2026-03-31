@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.qubership.automation.itf.core.model.common.LabeledStorable;
 import org.qubership.automation.itf.core.model.common.Storable;
@@ -40,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import jakarta.annotation.Nullable;
 
 public abstract class AbstractTreeBuilder<C extends Storable, P extends Storable> extends ControllerHelper
         implements TreeBuilder {
@@ -82,8 +81,8 @@ public abstract class AbstractTreeBuilder<C extends Storable, P extends Storable
                 elem.setIsFolder(false);
             }
 
-            if (storable instanceof EciConfigurable) {
-                elem.setEcId(((EciConfigurable) storable).getEcId());
+            if (storable instanceof EciConfigurable configurable) {
+                elem.setEcId(configurable.getEcId());
             }
             putUITreeElementAndParents(uiTreeElementMap, elem);
         });
@@ -139,11 +138,11 @@ public abstract class AbstractTreeBuilder<C extends Storable, P extends Storable
         if (storable.getParent() != null) {
             treeElement.setParent(new UIObject(storable.getParent()));
         }
-        if (storable instanceof LabeledStorable) {
-            treeElement.setLabels(((LabeledStorable) storable).getLabels());
+        if (storable instanceof LabeledStorable labeledStorable) {
+            treeElement.setLabels(labeledStorable.getLabels());
         }
-        if (storable instanceof EciConfigurable) {
-            treeElement.setEcId(((EciConfigurable) storable).getEcId());
+        if (storable instanceof EciConfigurable configurable) {
+            treeElement.setEcId(configurable.getEcId());
         }
         treeElement.setClassName(storable.getClass().getName());
         treeElement.setIsFolder(getParentClass().isAssignableFrom(storable.getClass()));
@@ -185,8 +184,8 @@ public abstract class AbstractTreeBuilder<C extends Storable, P extends Storable
         HashSet<String> labelsSet =
                 Sets.newHashSetWithExpectedSize(ControllerConstants.DEFAULT_LABELS_COUNT.getIntValue());
         for (Storable labeledObj : objects) {
-            if (labeledObj instanceof LabeledStorable) {
-                List<String> labels = ((LabeledStorable) labeledObj).getLabels();
+            if (labeledObj instanceof LabeledStorable storable) {
+                List<String> labels = storable.getLabels();
                 if (labels != null) {
                     labelsSet.addAll(labels);
                 }
@@ -198,8 +197,8 @@ public abstract class AbstractTreeBuilder<C extends Storable, P extends Storable
     // labelName should be .toLowerCase() while invoking this function
     public Boolean findLabeledByPieceOfName(Storable labeledObject, String labelName) {
         List<String> labels = null;
-        if (labeledObject instanceof LabeledStorable) {
-            labels = ((LabeledStorable) labeledObject).getLabels();
+        if (labeledObject instanceof LabeledStorable storable) {
+            labels = storable.getLabels();
             if (labels != null) {
                 for (String label : labels) {
                     if (label.toLowerCase().contains(labelName)) {

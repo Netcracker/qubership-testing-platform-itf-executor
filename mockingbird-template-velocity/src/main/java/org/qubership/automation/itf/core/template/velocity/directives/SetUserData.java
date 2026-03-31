@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -50,11 +50,13 @@ public class SetUserData extends Directive {
     public boolean render(InternalContextAdapter internalContextAdapter, Writer writer, Node node)
             throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
         if (node.jjtGetNumChildren() < 2 || node.jjtGetNumChildren() > 3) {
-            writer.append("Incorrect #set_userdata directive format.\n" + " Please check parameters:\n"
-                    + "       where \"UPSERT\" is for PostgreSql only (see PostgreSql documentation),\n"
-                    + "  1. Action: \"SELECT\" / \"INSERT\" / \"UPDATE\" / \"DELETE\" / \"UPSERT\" ,\n"
-                    + "  2. Key: Unique row identifier (String(50)),\n"
-                    + "  3. Text: Text to store (String) - only for INSERT/UPDATE actions");
+            writer.append("""
+                    Incorrect #set_userdata directive format.
+                     Please check parameters:
+                           where "UPSERT" is for PostgreSql only (see PostgreSql documentation),
+                      1. Action: "SELECT" / "INSERT" / "UPDATE" / "DELETE" / "UPSERT" ,
+                      2. Key: Unique row identifier (String(50)),
+                      3. Text: Text to store (String) - only for INSERT/UPDATE actions""");
             return true;
         }
 

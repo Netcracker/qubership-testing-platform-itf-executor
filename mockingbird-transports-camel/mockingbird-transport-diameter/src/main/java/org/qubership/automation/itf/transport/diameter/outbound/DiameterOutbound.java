@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.automation.diameter.config.ConfigReader;
@@ -70,6 +68,7 @@ import org.qubership.automation.itf.transport.diameter.interceptors.util.Diamete
 
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Striped;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -186,7 +185,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
             ConnectionFactory.destroy(connectionId);
             String podName = Config.getConfig().getRunningHostname();
             DiameterConnectionInfoProvider.getDiameterConnectionInfoCacheService()
-                    .remove(String.format("%s%s", connectionId, podName));
+                    .remove("%s%s".formatted(connectionId, podName));
             return new Message(StringUtils.EMPTY);
         }
         String interceptorName = connectionProperties.obtain(
@@ -216,7 +215,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
     }
 
     private String replacePlaceholder(String key, String value, String text) {
-        return text.replaceAll(Pattern.quote(String.format(PROPERTY_TEMPLATE, key)), value);
+        return text.replaceAll(Pattern.quote(PROPERTY_TEMPLATE.formatted(key)), value);
     }
 
     private Message sendMessageAndGetResponse(Message message, ConnectionProperties connectionProperties, int port,
@@ -263,7 +262,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
                 ConnectionFactory.destroy(connectionId);
                 String podName = Config.getConfig().getRunningHostname();
                 DiameterConnectionInfoProvider.getDiameterConnectionInfoCacheService()
-                        .remove(String.format("%s%s", connectionId, podName));
+                        .remove("%s%s".formatted(connectionId, podName));
             }
             throw new RuntimeException("Message sending is failed or CEA response isn't received", e);
         }
@@ -339,7 +338,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
                                                      List<Interceptor> interceptors,
                                                      Supplier<CEAInterceptor> ceaSupplier,
                                                      BigInteger projectId) throws Exception {
-        String localCacheId = String.format("%s%s%s%s%d", projectId, UNDERLINE,
+        String localCacheId = "%s%s%s%s%d".formatted(projectId, UNDERLINE,
                 props.obtain(PropertyConstants.DiameterTransportConstants.HOST).toString(), UNDERLINE, port);
         synchronized (LOCK_STRIPED.get(localCacheId)) {
             DiameterConnection connection = ConnectionFactory.getExisting(localCacheId);
@@ -418,7 +417,7 @@ public class DiameterOutbound extends AbstractOutboundTransportImpl {
 
     private String getRequired(ConnectionProperties connectionProperties, String field) {
         return String.valueOf(connectionProperties.computeIfAbsent(field, key -> {
-            throw new IllegalArgumentException(String.format("Required %s doesn't configured", key));
+            throw new IllegalArgumentException("Required %s doesn't configured".formatted(key));
         }));
     }
 

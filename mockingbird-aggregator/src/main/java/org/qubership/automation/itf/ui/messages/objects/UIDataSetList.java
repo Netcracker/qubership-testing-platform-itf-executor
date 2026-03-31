@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ package org.qubership.automation.itf.ui.messages.objects;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.itf.core.model.dataset.DataSetList;
 import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
+
+import jakarta.annotation.Nonnull;
 
 public class UIDataSetList extends UIObject {
 

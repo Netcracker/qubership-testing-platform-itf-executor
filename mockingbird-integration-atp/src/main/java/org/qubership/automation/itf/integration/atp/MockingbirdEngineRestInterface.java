@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import org.qubership.automation.itf.integration.atp.model.PingResponse;
 import org.qubership.automation.itf.integration.atp.model.WarmUpResponse;
 import org.qubership.automation.itf.integration.atp.model.ram2.Ram2ExecuteStepRequest;
 import org.qubership.automation.itf.integration.atp.model.ram2.Ram2WarmUpRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,7 +58,6 @@ public class MockingbirdEngineRestInterface {
 
     private MockingbirdEngineService mockingbirdEngineService;
 
-    @Autowired
     public MockingbirdEngineRestInterface(MockingbirdEngineService mockingbirdEngineService) {
         this.mockingbirdEngineService = mockingbirdEngineService;
     }

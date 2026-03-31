@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.net.URIBuilder;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.util.annotation.Options;
@@ -132,15 +132,15 @@ public class SS7OutboundTransport extends AbstractTransportImpl implements SS7Co
 
     private Message send(URIBuilder uri, String message) throws URISyntaxException, IOException, TransportException {
         URI build = uri.build();
-        HttpResponse httpResponse = doPost(build, message);
+        ClassicHttpResponse httpResponse = doPost(build, message);
         String response = parseHttpResponse(httpResponse);
-        if (httpResponse.getStatusLine().getStatusCode() == 500) {
+        if (httpResponse.getCode() == 500) {
             throw new TransportException("Unable to send SS7 message: " + response);
         }
         return new Message(response);
     }
 
-    private HttpResponse doPost(URI uri, String body) throws IOException {
+    private ClassicHttpResponse doPost(URI uri, String body) throws IOException {
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost request = new HttpPost(uri);
         HttpEntity entity = new StringEntity(body);
@@ -148,7 +148,7 @@ public class SS7OutboundTransport extends AbstractTransportImpl implements SS7Co
         return client.execute(request);
     }
 
-    private String parseHttpResponse(HttpResponse response) throws IOException {
+    private String parseHttpResponse(ClassicHttpResponse response) throws IOException {
         return IOUtils.toString(response.getEntity().getContent());
     }
 

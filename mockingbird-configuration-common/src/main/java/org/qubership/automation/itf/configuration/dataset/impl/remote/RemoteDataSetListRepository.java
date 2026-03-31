@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -41,9 +41,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.datasets.dto.DataSetDto;
 import org.qubership.atp.datasets.dto.DataSetListCreatedModifiedViewDto;
@@ -69,6 +66,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,7 +95,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
     @Nonnull
     private static ObjectNode object(@Nonnull JsonNode jsonNode) throws IOException {
         if (!jsonNode.isObject()) {
-            throw new IOException(String.format("Expected json object, got [%s]", jsonNode.getNodeType().name()));
+            throw new IOException("Expected json object, got [%s]".formatted(jsonNode.getNodeType().name()));
         }
         return (ObjectNode) jsonNode;
     }
@@ -134,7 +133,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
             ResponseEntity<List<VisibilityAreaFlatModelDto>> response
                     = HttpClientFactory.getDatasetsVisibilityAreaFeignClient().getVisibilityAreas();
             if (!response.hasBody()) {
-                throw new IOException(String.format("Response body is null for '%s', http status %s.",
+                throw new IOException("Response body is null for '%s', http status %s.".formatted(
                         endpoint, response.getStatusCode()));
             }
             return Objects.requireNonNull(response.getBody()).stream()
@@ -156,7 +155,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
             ResponseEntity<List<VisibilityAreaFlatModelDto>> response
                     = HttpClientFactory.getDatasetsVisibilityAreaFeignClient().getVisibilityAreas();
             if (!response.hasBody()) {
-                throw new IOException(String.format("Response body is null for '%s', http status %s.",
+                throw new IOException("Response body is null for '%s', http status %s.".formatted(
                         endpoint, response.getStatusCode()));
             }
             return Objects.requireNonNull(response.getBody()).stream()
@@ -223,7 +222,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
             ResponseEntity<List<DataSetListCreatedModifiedViewDto>> response
                     = HttpClientFactory.getDatasetsDatasetListFeignClient().getDataSetListsByVaId(vaId, null);
             if (!response.hasBody()) {
-                throw new IOException(String.format("Response body is null for '%s', http status %s.",
+                throw new IOException("Response body is null for '%s', http status %s.".formatted(
                         endpoint, response.getStatusCode()));
             }
             return Objects.requireNonNull(response.getBody()).stream()
@@ -247,8 +246,8 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
     public Set<IDataSet> getDataSetsWithLabel(@Nonnull DataSetList list, String label, @Nonnull Object projectId) {
         long startTime = System.currentTimeMillis();
         String dslId = list.getNaturalId().toString().split("_")[1];
-        String endpoint = StringUtils.isNotBlank(label) ? String.format("/dsl/%s/ds?label=%s", dslId, label) :
-                String.format("/dsl/%s/ds", dslId);
+        String endpoint = StringUtils.isNotBlank(label) ? "/dsl/%s/ds?label=%s".formatted(dslId, label) :
+                "/dsl/%s/ds".formatted(dslId);
         try {
             UUID dataSetListId = UUID.fromString(dslId);
             ResponseEntity<List<DataSetDto>> response;
@@ -260,7 +259,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
                         .getDataSets(dataSetListId, null, null);
             }
             if (!response.hasBody()) {
-                throw new IOException(String.format("Response body is null for '%s', http status %s.",
+                throw new IOException("Response body is null for '%s', http status %s.".formatted(
                         endpoint, response.getStatusCode()));
             }
             return Objects.requireNonNull(response.getBody()).stream()
@@ -281,19 +280,19 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
     Set<String> getVariables(@Nonnull DataSetList list) {
         long startTime = System.currentTimeMillis();
         String dslId = list.getNaturalId().toString().split("_")[1];
-        String endpoint = String.format("/attribute/dsl/%s/itf", dslId);
+        String endpoint = "/attribute/dsl/%s/itf".formatted(dslId);
         try {
             UUID vaId = UUID.fromString(dslId);
             ResponseEntity<Object> responseEntity
                     = HttpClientFactory.getDatasetsAttributeFeignClient().getAttributesInItfFormat(vaId);
             if (!responseEntity.hasBody()) {
-                throw new IOException(String.format("Response body is null for '%s', http status %s.",
+                throw new IOException("Response body is null for '%s', http status %s.".formatted(
                         endpoint, responseEntity.getStatusCode()));
             }
             return (Set<String>) ((ArrayList) Objects.requireNonNull(responseEntity.getBody()))
                     .stream().collect(Collectors.toSet());
         } catch (IOException | IllegalArgumentException e) {
-            String errorMessage = String.format("Can not get variables for DSL id:%s", dslId);
+            String errorMessage = "Can not get variables for DSL id:%s".formatted(dslId);
             log.error(makeErrorMessage(errorMessage, endpoint, startTime), e);
             return Collections.emptySet();
         }
@@ -372,26 +371,26 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
 
         private static JsonContext getItf(String dsId) {
             long startTime = System.currentTimeMillis();
-            String endpoint = String.format("/ds/%s/itf", dsId);
+            String endpoint = "/ds/%s/itf".formatted(dsId);
             try {
                 UUID dataSetId = UUID.fromString(dsId);
                 ResponseEntity<String> response
                         = HttpClientFactory.getDatasetsDatasetFeignClient().getItfContext(dataSetId);
                 if (!response.hasBody()) {
-                    throw new IOException(String.format("Response body is null for '%s', http status %s.",
+                    throw new IOException("Response body is null for '%s', http status %s.".formatted(
                             endpoint, response.getStatusCode()));
                 }
                 return GSON.fromJson(response.getBody(), JsonContext.class);
             } catch (IOException | IllegalArgumentException e) {
                 String errorMessage = makeErrorMessage(
-                        String.format("Can not get contents of Dataset with id:%s", dsId), endpoint, startTime);
+                        "Can not get contents of Dataset with id:%s".formatted(dsId), endpoint, startTime);
                 throw new RuntimeException(errorMessage, e);
             }
         }
 
         public static JsonContext getAtp(String dsId, String datasetFormat) {
             long startTime = System.currentTimeMillis();
-            String endpoint = String.format("/ds/%s/%s?evaluate=true", dsId, datasetFormat);
+            String endpoint = "/ds/%s/%s?evaluate=true".formatted(dsId, datasetFormat);
             try {
                 ResponseEntity<DataSetTreeDto> response = null;
                 UUID dataSetId = UUID.fromString(dsId);
@@ -420,7 +419,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
                     }
                 }
                 if (Objects.nonNull(response) && !response.hasBody()) {
-                    throw new IOException(String.format("Response body is null for '%s', http status %s.",
+                    throw new IOException("Response body is null for '%s', http status %s.".formatted(
                             endpoint, response.getStatusCode()));
                 }
                 ObjectNode objectNode = MAPPER.convertValue(Objects.requireNonNull(response).getBody(),
@@ -428,7 +427,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
                 return JSONContextUtils.convert(atp2itf(objectNode, dsId), MAPPER);
             } catch (IOException | IllegalArgumentException e) {
                 String errorMessage = makeErrorMessage(
-                        String.format("Can not get contents of Dataset with id:%s", dsId), endpoint, startTime);
+                        "Can not get contents of Dataset with id:%s".formatted(dsId), endpoint, startTime);
                 throw new RuntimeException(errorMessage, e);
             }
         }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ package org.qubership.automation.itf.ui.swagger;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.springdoc.core.SpringDocUtils;
 import org.springdoc.core.converters.models.Pageable;
-import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OpenApiCustomizer;
+import org.springdoc.core.utils.SpringDocUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +44,7 @@ public class SwaggerConfiguration {
     private static final String API_VERSION = "4.3.10";
 
     @Bean
-    public OpenApiCustomiser globalOperationOpenApiCustomiser() {
+    public OpenApiCustomizer globalOperationOpenApiCustomiser() {
         return openAPI -> openAPI
                 .getPaths()
                 .values()
@@ -61,7 +61,7 @@ public class SwaggerConfiguration {
     }
 
     @Bean
-    public OpenApiCustomiser sortSchemasAlphabetically() {
+    public OpenApiCustomizer sortSchemasAlphabetically() {
         return openApi -> {
             Map<String, Schema> schemas = openApi.getComponents().getSchemas();
             openApi.getComponents().setSchemas(new TreeMap<>(schemas));

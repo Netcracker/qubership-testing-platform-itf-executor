@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -36,8 +36,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Nullable;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -89,6 +87,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.MapDifference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import jakarta.annotation.Nullable;
 import net.sf.json.JSONObject;
 
 public class RAM2ReportAdapter implements ReportAdapter {
@@ -106,8 +105,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
     private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static String getShortTransportName(AbstractInstance instance) {
-        if (instance instanceof StepInstance) {
-            return getShortTransportName(((IntegrationStep) ((StepInstance) instance).getStep()).getOperation().getTransport().getTypeName());
+        if (instance instanceof StepInstance stepInstance) {
+            return getShortTransportName(((IntegrationStep) stepInstance.getStep()).getOperation().getTransport().getTypeName());
         } else {
             return "ITF";
         }
@@ -149,10 +148,10 @@ public class RAM2ReportAdapter implements ReportAdapter {
         ramExtension.setSectionId(parentSectionId);
         LOGGER.debug("After open section: logRecordUuid {}, CurrentSectionId {}", testRunContext.getLogRecordUuid(),
                 currentSectionId);
-        if (instance instanceof CallChainInstance) {
+        if (instance instanceof CallChainInstance chainInstance) {
             setCustomLinkToCallChain(testRunContext.getCurrentSection(),
                     instance.getContext().getTC().getProjectUuid().toString(),
-                    ((CallChainInstance) instance).getTestCaseId());
+                    chainInstance.getTestCaseId());
         }
         getAdapter(instance.getContext().getTC().getID()).setContext(testRunContext);
     }
@@ -164,8 +163,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
                 return;
             }
             AtpRamAdapter adapter = getAdapter(containerInstance.getContext().getTC().getID());
-            if (containerInstance instanceof SituationInstance) {
-                reportEndOfSituationAndSteps(adapter, (SituationInstance) containerInstance);
+            if (containerInstance instanceof SituationInstance instance) {
+                reportEndOfSituationAndSteps(adapter, instance);
             } else {
                 if (!(containerInstance instanceof StepInstance) && containerInstance.getError() != null) {
                     adapter.getContext().getCurrentSection().setMessage(containerInstance.getError().toString());
@@ -267,19 +266,19 @@ public class RAM2ReportAdapter implements ReportAdapter {
     }
 
     private void setCustomLinkToCallChain(LogRecord logRecord, String projectUuid, BigInteger callChainId) {
-        String prefixLink = String.format("/project/%s/itf#", projectUuid);
+        String prefixLink = "/project/%s/itf#".formatted(projectUuid);
         List<CustomLink> customLinks = logRecord.getCustomLinks();
         if (Objects.isNull(customLinks)) {
             customLinks = new ArrayList<>();
             logRecord.setCustomLinks(customLinks);
         }
         customLinks.add(new CustomLink("Open Step in ITF",
-                String.format("%s/callchain/%s", prefixLink, callChainId), OpenMode.NEW_TAB));
+                "%s/callchain/%s".formatted(prefixLink, callChainId), OpenMode.NEW_TAB));
     }
 
     private void setCustomLinkToSituation(org.qubership.atp.adapter.common.entities.Message logRecord,
                                           String projectUuid, SituationInstance situationInstance) {
-        String prefixLink = String.format("/project/%s/itf#", projectUuid);
+        String prefixLink = "/project/%s/itf#".formatted(projectUuid);
         List<CustomLink> customLinks = logRecord.getCustomLinks();
         if (Objects.isNull(customLinks)) {
             customLinks = new ArrayList<>();
@@ -296,7 +295,7 @@ public class RAM2ReportAdapter implements ReportAdapter {
             LOGGER.error("An error occurred while creating custom link.");
             return StringUtils.EMPTY;
         }
-        return String.format("%s/system/%s/operation/%s/situation/%s",
+        return "%s/system/%s/operation/%s/situation/%s".formatted(
                 prefix,
                 situationInstance.getSystemId(),
                 situationInstance.getOperationId(),
@@ -418,8 +417,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
         Message message;
         Message responseMessage;
         Collection<MessageParameter> messageParameters;
-        if (containerInstance instanceof StepInstance) {
-            Mep mep = ((StepInstance) containerInstance).getMep();
+        if (containerInstance instanceof StepInstance instance) {
+            Mep mep = instance.getMep();
             switch (mep) {
                 case OUTBOUND_REQUEST_ASYNCHRONOUS:
                 case INBOUND_RESPONSE_ASYNCHRONOUS: {
@@ -615,8 +614,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
         record.setStartDate(new Timestamp(System.currentTimeMillis()));
         record.setRequest(createRequest(containerInstance));
         record.setResponse(createResponse(containerInstance));
-        if (containerInstance instanceof SituationInstance && !((SituationInstance) containerInstance).getLabels().isEmpty()) {
-            record.setValidationLabels(new HashSet<>(((SituationInstance) containerInstance).getLabels()));
+        if (containerInstance instanceof SituationInstance instance && !instance.getLabels().isEmpty()) {
+            record.setValidationLabels(new HashSet<>(instance.getLabels()));
         }
         return record;
     }
@@ -639,8 +638,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
         }
         message.setRequest(createRequest(instance));
         message.setResponse(createResponse(instance));
-        if (instance instanceof SituationInstance && !((SituationInstance) instance).getLabels().isEmpty()) {
-            message.setValidationLabels(new HashSet<>(((SituationInstance) instance).getLabels()));
+        if (instance instanceof SituationInstance situationInstance && !situationInstance.getLabels().isEmpty()) {
+            message.setValidationLabels(new HashSet<>(situationInstance.getLabels()));
         }
         message.setMessageParameters(fillMessageParameters(instance.getContext().getSP().getMessageParameters()));
         message.setStepContextVariables(fillContextVariables(instance.getContext().getSP()));
@@ -783,8 +782,7 @@ public class RAM2ReportAdapter implements ReportAdapter {
     public org.qubership.atp.adapter.common.entities.Message updateBVStatus(AbstractInstance instance,
                                                                             org.qubership.atp.adapter.common.entities.Message message,
                                                                             JSONObject bvResult) {
-        if (instance instanceof SituationInstance) {
-            SituationInstance situationInstance = (SituationInstance) instance;
+        if (instance instanceof SituationInstance situationInstance) {
             if (situationInstance.getSituationById().getValidateIncoming().equals(SituationLevelValidation.FAIL) &&
                     bvResult.containsKey("compareResult") && !bvResult.get("compareResult").equals("IDENTICAL")) {
                 message.setTestingStatus("FAILED");
@@ -833,8 +831,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
         if (instance.getContext().getSP().containsKey("endpointForRam")) {
             request.setEndpoint(instance.getContext().getSP().get("endpointForRam").toString());
         }
-        if (instance instanceof StepInstance) {
-            Mep mep = ((StepInstance) instance).getMep();
+        if (instance instanceof StepInstance stepInstance) {
+            Mep mep = stepInstance.getMep();
             if (mep != null && mep.isOutbound()) {
                 if (instance.getTransportConfiguration() != null) {
                     request.getHeadersList().addAll(convertMapToRequestHeaders(instance.getTransportConfiguration()));
@@ -870,8 +868,8 @@ public class RAM2ReportAdapter implements ReportAdapter {
         if (instance.getContext().getSP().containsKey("endpointForRam")) {
             response.setEndpoint(instance.getContext().getSP().get("endpointForRam").toString());
         }
-        if (instance instanceof StepInstance) {
-            Mep mep = ((StepInstance) instance).getMep();
+        if (instance instanceof StepInstance stepInstance) {
+            Mep mep = stepInstance.getMep();
             if (mep != null && mep.isInbound()) {
                 if (instance.getTransportConfiguration() != null) {
                     response.getHeadersList().addAll(convertMapToRequestHeaders(instance.getTransportConfiguration()));

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -31,12 +31,20 @@ import org.qubership.automation.itf.core.util.constants.PropertyConstants;
 
 public class SOAPOverHTTPOutboundTransportTest {
 
-    String body = "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www"
-            + ".w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
-            + "xmlns:urn=\"urn:examples:helloservice\">\n" + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "    "
-            + "  <urn:sayHello soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n" + "         "
-            + "<firstName xsi:type=\"xsd:string\">Salavat</firstName>\n" + "      </urn:sayHello>\n" + "   </soapenv"
-            + ":Body>\n" + "</soapenv:Envelope>";
+    String body = """
+            <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www\
+            .w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" \
+            xmlns:urn="urn:examples:helloservice">
+               <soapenv:Header/>
+               <soapenv:Body>
+                \
+              <urn:sayHello soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+                     \
+            <firstName xsi:type="xsd:string">Salavat</firstName>
+                  </urn:sayHello>
+               </soapenv\
+            :Body>
+            </soapenv:Envelope>""";
 
     @Test
     public void testSendMessageToTAProd() throws Exception {

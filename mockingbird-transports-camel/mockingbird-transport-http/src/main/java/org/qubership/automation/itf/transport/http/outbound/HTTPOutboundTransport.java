@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -49,8 +49,8 @@ import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.http.HttpVersion;
-import org.apache.http.conn.HttpHostConnectException;
+import org.apache.hc.client5.http.HttpHostConnectException;
+import org.apache.hc.core5.http.HttpVersion;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;
 import org.qubership.automation.itf.core.util.annotation.Options;
@@ -605,8 +605,8 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
         if (exchange.hasOut()) {
             if (exchange.getOut().hasHeaders()) {
                 Object strResponseCode = exchange.getOut().getHeader("CamelHttpResponseCode");
-                if (strResponseCode instanceof Integer) {
-                    return (int) strResponseCode;
+                if (strResponseCode instanceof Integer integer) {
+                    return integer;
                 } else {
                     try {
                         return Integer.parseInt((String) strResponseCode);
@@ -616,8 +616,8 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
             }
         } else if (exchange.isFailed()) {
             Exception ex = exchange.getException();
-            if (ex instanceof HttpOperationFailedException) {
-                return ((HttpOperationFailedException) ex).getStatusCode();
+            if (ex instanceof HttpOperationFailedException exception) {
+                return exception.getStatusCode();
             }
         }
         return 0;

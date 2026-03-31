@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
                     .getProjectUuid().toString();
             executorToMessageBrokerSender.sendMessageToExecutorStubsOutgoingResponseQueue(
                     new TriggerExecutionMessage(
-                            new Message(String.format("SessionId %s: Error while processing incoming message: %s",
+                            new Message("SessionId %s: Error while processing incoming message: %s".formatted(
                                     triggerExecutionMessage.getSessionId(), t)),
                             triggerExecutionMessage.getSessionId(),
                             triggerExecutionMessage.getBrokerMessageSelectorValue()), projectUuid);
@@ -287,7 +287,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
                                 OffsetDateTime started) throws Exception {
         if (transport == null) {
             throw new IllegalStateException(
-                    String.format("No matching transport found for %s", triggerConfiguration.getName()));
+                    "No matching transport found for %s".formatted(triggerConfiguration.getName()));
         }
         instanceContext.setTransport(transport);
         Server server = triggerConfiguration.getParent().getParent();
@@ -363,8 +363,12 @@ public class TriggerExecutor implements IDiameterEventProducer {
         boolean isRest = typename.endsWith(".RESTInboundTransport");
         boolean isSoap = !isRest && typename.endsWith(".SOAPOverHTTPInboundTransport");
         StringBuilder builder = new StringBuilder((isSoap)
-                ? "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                + "<soap:Body>\n<soap:Fault>\n<faultcode>soap:Server</faultcode>\n<faultstring>"
+                ? """
+                <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                <soap:Body>
+                <soap:Fault>
+                <faultcode>soap:Server</faultcode>
+                <faultstring>"""
                 : "");
         builder.append("Exception while processing incoming message received by the trigger: ");
         builder.append(triggerConfigurationDescriptor.getName()).append("\nSession id: ").append(sessionId);
@@ -428,7 +432,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
                 .getByServerAndSystemIdPair((BigInteger) system.getID(), (BigInteger) server.getID());
         if (environmentInfo.isEmpty()) {
             throw new DetectEnvironmentException(
-                    String.format("No environment with inbound system %s and server %s found", system, server));
+                    "No environment with inbound system %s and server %s found".formatted(system, server));
         } else if (environmentInfo.size() > 1) {
             log.warn("More than one environment with inbound system {} and server {} found", system, server);
         }
@@ -451,7 +455,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
         log.error("Error while processing incoming message", e);
         if (instanceContext.tc() == null) {
             instanceContext.setTC(CacheServices.getTcBindingCacheService().findByKey(
-                    String.format("Unexpected instanceContext at %s", LocalDateTime.now().format(dateTimeFormatter)),
+                    "Unexpected instanceContext at %s".formatted(LocalDateTime.now().format(dateTimeFormatter)),
                     projectId, projectUuid));
         }
         TcContext tcContext = instanceContext.tc();
@@ -534,7 +538,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
                 Warning (see below).
                 Confirmed as correct behavior by Nikolay Durasov at 12/05/2021
              */
-            String msg = String.format(TECH_SITUATION_STEP_FORMAT, system.getName(), operation.getName());
+            String msg = TECH_SITUATION_STEP_FORMAT.formatted(system.getName(), operation.getName());
             instance.setErrorName("No suitable configured situation is found");
             instance.setErrorMessage(
                     "No suitable configured situation is found! Please check configuration and/or incoming message."

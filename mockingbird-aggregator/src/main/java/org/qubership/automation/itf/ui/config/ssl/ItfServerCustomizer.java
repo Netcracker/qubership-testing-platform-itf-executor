@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
@@ -48,7 +47,6 @@ public class ItfServerCustomizer implements WebServerFactoryCustomizer<UndertowS
     @Value("${embedded.ssl.server.port}")
     private int sslServerPort;
 
-    @Autowired
     public ItfServerCustomizer(TrustManagerFactory trustManagerFactory, KeyManagerFactory keyManagerFactory) {
         this.trustManagerFactory = trustManagerFactory;
         this.keyManagerFactory = keyManagerFactory;

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,11 +25,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "ITFEXE-4002")
 public class NotActualVersionException extends ItfExecutorException {
     public static final String DEFAULT_MESSAGE =
-            "Object '%s' can not be saved because it was changed by another user.\n"
-                    + "UI version = %s, actual version = %s.\n"
-                    + "Please reload object first. After that you will be able to change and save it.";
+            """
+            Object '%s' can not be saved because it was changed by another user.
+            UI version = %s, actual version = %s.
+            Please reload object first. After that you will be able to change and save it.""";
 
     public NotActualVersionException(String objectName, String uiVersion, String dbVersion) {
-        super(String.format(DEFAULT_MESSAGE, objectName, uiVersion, dbVersion));
+        super(DEFAULT_MESSAGE.formatted(objectName, uiVersion, dbVersion));
     }
 }

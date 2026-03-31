@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -220,15 +220,15 @@ public class VelocityVariablesParser extends Parser {
 
         @Override
         public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof VelocityVariablesListener) {
-                ((VelocityVariablesListener) listener).enterVariables(this);
+            if (listener instanceof VelocityVariablesListener variablesListener) {
+                variablesListener.enterVariables(this);
             }
         }
 
         @Override
         public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof VelocityVariablesListener) {
-                ((VelocityVariablesListener) listener).exitVariables(this);
+            if (listener instanceof VelocityVariablesListener variablesListener) {
+                variablesListener.exitVariables(this);
             }
         }
 
@@ -261,15 +261,15 @@ public class VelocityVariablesParser extends Parser {
 
         @Override
         public void enterRule(ParseTreeListener listener) {
-            if (listener instanceof VelocityVariablesListener) {
-                ((VelocityVariablesListener) listener).enterVariable(this);
+            if (listener instanceof VelocityVariablesListener variablesListener) {
+                variablesListener.enterVariable(this);
             }
         }
 
         @Override
         public void exitRule(ParseTreeListener listener) {
-            if (listener instanceof VelocityVariablesListener) {
-                ((VelocityVariablesListener) listener).exitVariable(this);
+            if (listener instanceof VelocityVariablesListener variablesListener) {
+                variablesListener.exitVariable(this);
             }
         }
 

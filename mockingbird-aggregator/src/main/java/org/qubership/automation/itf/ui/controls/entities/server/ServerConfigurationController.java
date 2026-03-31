@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package org.qubership.automation.itf.ui.controls.entities.server;
 import static org.qubership.automation.itf.ui.controls.util.ControllerHelper.getManager;
 
 import java.math.BigInteger;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -59,9 +58,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -95,7 +94,7 @@ public class ServerConfigurationController {
     @Transactional(readOnly = true)
     @Modifying
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/server/outbound", method = RequestMethod.GET)
+    @GetMapping("/server/outbound")
     @Operation(summary = "GetOutbound",
             description = "Retrieve outbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_QUERY_API})
@@ -117,7 +116,7 @@ public class ServerConfigurationController {
     @Transactional(readOnly = true)
     @Modifying
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/server/inbound", method = RequestMethod.GET)
+    @GetMapping("/server/inbound")
     @Operation(summary = "GetInbound",
             description = "Retrieve inbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_QUERY_API})
@@ -138,7 +137,7 @@ public class ServerConfigurationController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/server/outbound", method = RequestMethod.PUT)
+    @PutMapping("/server/outbound")
     @Operation(summary = "SetOutbound",
             description = "Set outbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_COMMAND_API})
@@ -171,7 +170,7 @@ public class ServerConfigurationController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/server/inbound", method = RequestMethod.PUT)
+    @PutMapping("/server/inbound")
     @Operation(summary = "SetInbound",
             description = "Set inbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_COMMAND_API})
@@ -214,7 +213,7 @@ public class ServerConfigurationController {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "server/checkSystemServerDuplications", method = RequestMethod.GET)
+    @GetMapping("server/checkSystemServerDuplications")
     @Operation(summary = "CheckDuplicates",
             description = "Check for System-Server duplicates",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_QUERY_API})

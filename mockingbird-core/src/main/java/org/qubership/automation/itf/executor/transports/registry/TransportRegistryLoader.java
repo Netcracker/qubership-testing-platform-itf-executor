@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package org.qubership.automation.itf.executor.transports.registry;
 
 import java.rmi.RemoteException;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.itf.core.util.config.ApplicationConfig;
 import org.qubership.automation.itf.core.util.exception.ExportException;
 import org.qubership.automation.itf.core.util.exception.NoDeployedTransportException;
@@ -38,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import jakarta.annotation.Nonnull;
 
 public class TransportRegistryLoader extends AbstractTransportRegistry {
 
@@ -51,10 +50,10 @@ public class TransportRegistryLoader extends AbstractTransportRegistry {
                 @Override
                 public AccessTransport load(@Nonnull String transportType) throws Exception {
                     MeansCommunication instanceClass = loader.getInstanceClass(transportType);
-                    if (instanceClass instanceof InboundTransport) {
-                        return new LoaderInboundTransportImpl((InboundTransport) instanceClass);
-                    } else if (instanceClass instanceof OutboundTransport) {
-                        return new LoaderOutboundTransportImpl((OutboundTransport) instanceClass);
+                    if (instanceClass instanceof InboundTransport transport1) {
+                        return new LoaderInboundTransportImpl(transport1);
+                    } else if (instanceClass instanceof OutboundTransport transport) {
+                        return new LoaderOutboundTransportImpl(transport);
                     } else {
                         throw new NoDeployedTransportException(transportType + " is not loaded");
                     }

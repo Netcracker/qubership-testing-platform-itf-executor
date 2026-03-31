@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -48,9 +48,9 @@ import org.qubership.automation.itf.ui.messages.objects.transport.UITransport;
 import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,7 +64,7 @@ public class SituationUtilController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/usages", method = RequestMethod.POST)
+    @PostMapping("/situation/usages")
     @AuditAction(auditAction = "Get all usages of selected Situations in the project {{#projectUuid}}")
     public Map<String, Object> getUsages(@RequestBody UIIds uiSituation,
                                          @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
@@ -99,7 +99,7 @@ public class SituationUtilController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/byparent", method = RequestMethod.GET)
+    @GetMapping("/situation/byparent")
     @AuditAction(auditAction = "Get Situations under Operation id {{#id}} in the project {{#projectUuid}}")
     public UIObjectList getSituationsByParent(
             @RequestParam(value = "id", defaultValue = "0") String id,
@@ -113,7 +113,7 @@ public class SituationUtilController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/situation/outbound", method = RequestMethod.GET)
+    @GetMapping("/situation/outbound")
     @AuditAction(auditAction = "Get Outbound Situations in the project {{#projectId}}/{{#projectUuid}}")
     public UIObjectList getSituationsOutbound(@RequestParam(value = "projectId") BigInteger projectId,
                                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -128,7 +128,7 @@ public class SituationUtilController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).SITUATION.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/situation/simple", method = RequestMethod.POST)
+    @PostMapping("/situation/simple")
     @AuditAction(auditAction = "Create Situation under Operation with id {{#uiOperation.id}} in the project "
             + "{{#projectUuid}}")
     public UISituation add(@RequestBody UIOperation uiOperation,

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 
 package org.qubership.automation.itf.ui.tree;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.report.ReportObject;
 import org.springframework.util.Assert;
 
@@ -58,9 +58,9 @@ public class TreeNodeBuilderTest {
                 "outgoing message", "send", "", 6, "PASSED", "01.069");
         objects.add(reportObject7);
         TreeNode treeNode = new TreeNodeBuilder(new BigInteger("60420003267")).findAndAddChildNode(objects, 2).build();
-        Assert.notEmpty(treeNode.getNodes());
+        Assert.notEmpty(treeNode.getNodes(), "must not be empty");
         assertEquals("60420003271", treeNode.getNodes().stream().findFirst().get().getId());
-        Assert.notEmpty(treeNode.getNodes().stream().findFirst().get().getNodes());
+        Assert.notEmpty(treeNode.getNodes().stream().findFirst().get().getNodes(), "must not be empty");
         assertEquals("60420003272",
                 treeNode.getNodes().stream().findFirst().get().getNodes().stream().findFirst().get().getId());
         assertEquals(0,

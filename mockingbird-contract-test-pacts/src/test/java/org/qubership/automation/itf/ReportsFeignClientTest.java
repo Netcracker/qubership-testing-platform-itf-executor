@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,10 +26,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.automation.itf.integration.reports.ReportsFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,8 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import au.com.dius.pact.consumer.dsl.PactDslResponse;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
@@ -52,10 +52,9 @@ import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.gson.Gson;
 
-@RunWith(SpringRunner.class)
-
 @EnableFeignClients(clients = {ReportsFeignClient.class})
-@ContextConfiguration(classes = {ReportsFeignClientTest.TestApp.class})
+@ExtendWith(ExternalResourceSupport.class)
+@SpringJUnitConfig(classes = {ReportsFeignClientTest.TestApp.class})
 @Import({JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class, FeignConfiguration.class,
         FeignAutoConfiguration.class})
 @TestPropertySource(properties = {"feign.atp.reports.name=atp-itf-reports", "feign.atp.reports.route=",
@@ -74,22 +73,22 @@ public class ReportsFeignClientTest {
     @PactVerification()
     public void allPass() {
         ResponseEntity<List<List<Object>>> result1 = reportsFeignClient.getContextProperties(contextId, projectUuid);
-        Assert.assertEquals(200, result1.getStatusCode().value());
-        Assert.assertTrue(Objects.requireNonNull(result1.getHeaders().get("Content-Type")).contains("application/json"
+        Assertions.assertEquals(200, result1.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result1.getHeaders().get("Content-Type")).contains("application/json"
         ));
 
         ResponseEntity<String> result2 = reportsFeignClient.getContextVariables(contextId, projectUuid);
-        Assert.assertEquals(200, result2.getStatusCode().value());
-        Assert.assertTrue(Objects.requireNonNull(result2.getHeaders().get("Content-Type")).contains("text/plain"));
+        Assertions.assertEquals(200, result2.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result2.getHeaders().get("Content-Type")).contains("text/plain"));
 
         ResponseEntity<Set<String>> result3 = reportsFeignClient.getKeys(contextId, projectUuid);
-        Assert.assertEquals(200, result3.getStatusCode().value());
-        Assert.assertTrue(Objects.requireNonNull(result3.getHeaders().get("Content-Type")).contains("application/json"
+        Assertions.assertEquals(200, result3.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result3.getHeaders().get("Content-Type")).contains("application/json"
         ));
 
         ResponseEntity<Map<String, Integer>> result4 = reportsFeignClient.getCurrentPartitionNumbers();
-        Assert.assertEquals(200, result4.getStatusCode().value());
-        Assert.assertTrue(Objects.requireNonNull(result4.getHeaders().get("Content-Type")).contains("application/json"
+        Assertions.assertEquals(200, result4.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result4.getHeaders().get("Content-Type")).contains("application/json"
         ));
     }
 

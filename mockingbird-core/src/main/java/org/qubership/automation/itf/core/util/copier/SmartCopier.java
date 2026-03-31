@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -70,9 +70,8 @@ public class SmartCopier {
      */
     public static Storable setAllValuesOnCopyStorable(Storable copiedSource, Storable source, JSONObject jsonObject,
                                                       String projectId) {
-        if (copiedSource instanceof Environment) {
-            return setAllValuesOnCopyEnvironment((Environment) copiedSource, (Environment) source, jsonObject,
-                    projectId);
+        if (copiedSource instanceof Environment environment) {
+            return setAllValuesOnCopyEnvironment(environment, (Environment) source, jsonObject, projectId);
         }
         return copiedSource;
     }

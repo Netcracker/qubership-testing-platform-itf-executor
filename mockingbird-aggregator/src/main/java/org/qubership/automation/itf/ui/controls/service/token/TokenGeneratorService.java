@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -21,9 +21,8 @@ import java.util.Base64;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.qubership.automation.itf.ui.swagger.SwaggerConstants;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +36,7 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 })
 public class TokenGeneratorService {
 
-    @RequestMapping(value = "/service/token", method = RequestMethod.POST)
+    @PostMapping("/service/token")
     @Operation(summary = "GenerateToken", description = "Generate token of chosen type based on username/password "
             + "pair. Generated token can be used in further requests to authorize them by putting the token to the "
             + "\"Authorization\" header in request. Supported token types: Basic.",

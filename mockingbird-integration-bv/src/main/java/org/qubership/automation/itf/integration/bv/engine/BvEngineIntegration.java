@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.ClientProtocolException;
+import org.apache.hc.client5.http.ClientProtocolException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -122,11 +122,11 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         switch (action) {
             case BvIntegrationProperties.READ_COMPARE:
                 requestData = BvRequestBuilder.buildReadCompareRequest(integrationConf, chainInstance, bvInstance);
-                endpoint = String.format(BvEndpoints.READ_COMPARE_ENDPOINT, projectUuid);
+                endpoint = BvEndpoints.READ_COMPARE_ENDPOINT.formatted(projectUuid);
                 break;
             case BvIntegrationProperties.CREATE_NEW_TESTRUN:
                 requestData = BvRequestBuilder.buildCreateNewTRRequest(integrationConf, chainInstance, bvInstance);
-                endpoint = String.format(BvEndpoints.CREATING_NEW_TR_ENDPOINT, projectUuid);
+                endpoint = BvEndpoints.CREATING_NEW_TR_ENDPOINT.formatted(projectUuid);
                 break;
             default:
         }
@@ -152,7 +152,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         if (BvIntegrationProperties.CREATE_NEW_TESTRUN.equals(action) && trId != null) {
             requestData = BvRequestBuilder.buildCompareRequest(trId, bvInstance);
             request = GSON_INSTANCE.toJson(requestData);
-            endpoint = String.format(BvEndpoints.COMPARE_ENDPOINT, projectUuid);
+            endpoint = BvEndpoints.COMPARE_ENDPOINT.formatted(projectUuid);
 
             ResponseEntity<String> responseEntity
                     = HttpClientFactory.getBvApiResourceFeignClient().compare(projectUuid, request);
@@ -170,7 +170,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         UUID projectUuid = UUID.fromString(BvHelper.getProjectUUID(projectId));
         String request = GSON_INSTANCE.toJson(requestData);
 
-        String endpoint = String.format(BvEndpoints.CREATE_TC_ENDPOINT, projectUuid);
+        String endpoint = BvEndpoints.CREATE_TC_ENDPOINT.formatted(projectUuid);
         ResponseEntity<String> responseEntity
                 = HttpClientFactory.getBvTestCaseResourceFeignClient().create(projectUuid, request);
         String response = sendRequest("Creation: {}", endpoint, request, responseEntity.getBody());
@@ -189,7 +189,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         UUID projectUuid = UUID.fromString(BvHelper.getProjectUUID(projectId));
         String request = GSON_INSTANCE.toJson(requestData);
 
-        String endpoint = String.format(BvEndpoints.CREATE_TC_ENDPOINT, projectUuid);
+        String endpoint = BvEndpoints.CREATE_TC_ENDPOINT.formatted(projectUuid);
         ResponseEntity<String> responseEntity
                 = HttpClientFactory.getBvTestCaseResourceFeignClient().create(projectUuid, request);
         String response = sendRequest("Creation: {}", endpoint, request, responseEntity.getBody());
@@ -207,7 +207,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         RequestData requestData = BvRequestBuilder.buildSimpleRequestData(callChain, properties);
         String request = GSON_INSTANCE.toJson(requestData);
         UUID projectUuid = UUID.fromString(BvHelper.getProjectUUID(projectId));
-        String endpoint = String.format(BvEndpoints.REMOVE_TC_ENDPOINT, projectUuid);
+        String endpoint = BvEndpoints.REMOVE_TC_ENDPOINT.formatted(projectUuid);
 
         ResponseEntity<String> response
                 = HttpClientFactory.getBvTestCaseResourceFeignClient().remove(projectUuid, request);
@@ -219,7 +219,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         RequestData requestData = new RequestData(situation.getBvTestcase());
         String request = GSON_INSTANCE.toJson(requestData);
         UUID projectUuid = UUID.fromString(BvHelper.getProjectUUID(projectId));
-        String endpoint = String.format(BvEndpoints.REMOVE_TC_ENDPOINT, projectUuid);
+        String endpoint = BvEndpoints.REMOVE_TC_ENDPOINT.formatted(projectUuid);
 
         ResponseEntity<String> response
                 = HttpClientFactory.getBvTestCaseResourceFeignClient().remove(projectUuid, request);
@@ -232,7 +232,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         RequestData requestData = BvRequestBuilder.buildReadRequestData(callChain, integrationConf, properties);
         String request = GSON_INSTANCE.toJson(requestData);
         UUID projectUuid = UUID.fromString(BvHelper.getProjectUUID(projectId));
-        String endpoint = String.format(BvEndpoints.READ_ENDPOINT, projectUuid);
+        String endpoint = BvEndpoints.READ_ENDPOINT.formatted(projectUuid);
 
         ResponseEntity<String> responseEntity
                 = HttpClientFactory.getBvApiResourceFeignClient().read(projectUuid, request);
@@ -255,7 +255,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         RequestData requestData = BvRequestBuilder.buildSimpleRequestData(storable, properties);
         String request = GSON_INSTANCE.toJson(requestData);
         UUID projectUuid = UUID.fromString(BvHelper.getProjectUUID(projectId));
-        String endpoint = String.format(BvEndpoints.IS_EXIST_ENDPOINT, projectUuid);
+        String endpoint = BvEndpoints.IS_EXIST_ENDPOINT.formatted(projectUuid);
 
         ResponseEntity<String> responseEntity
                 = HttpClientFactory.getBvTestCaseResourceFeignClient().getTestCaseStatus(projectUuid, request);
@@ -271,7 +271,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         CopyWithNameRequestDto request = BvRequestBuilder.buildCopyRequestData(newName, sourceTcId);
         String requestString = GSON_INSTANCE.toJson(request);
         UUID projectUuid = UUID.fromString(BvHelper.getProjectUUID(projectId));
-        String endpoint = String.format(BvEndpoints.COPY_TC_WITH_NAME_ENDPOINT, projectUuid);
+        String endpoint = BvEndpoints.COPY_TC_WITH_NAME_ENDPOINT.formatted(projectUuid);
 
         ResponseEntity<String> responseEntity
                 = HttpClientFactory.getBvTestCaseResourceFeignClient().copyWithName(projectUuid, request);
@@ -296,7 +296,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
             ITF_LOGGER.debug("Response from BulkValidator:\n{}", response);
             return response;
         } catch (Exception ex) {
-            String message = String.format("Request to BV failed: endpoint=%s\n%s", endpoint, ex);
+            String message = "Request to BV failed: endpoint=%s\n%s".formatted(endpoint, ex);
             ITF_LOGGER.debug(message);
             throw new EngineIntegrationException(message);
         }
@@ -321,8 +321,8 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         }
         boolean situationTestcase = true;
         String tcId = situation.getBvTestcase();
-        if (StringUtils.isBlank(tcId) && initiator instanceof CallChainInstance) {
-            tcId = BvRequestBuilder.getBVCaseId((CallChainInstance) initiator);
+        if (StringUtils.isBlank(tcId) && initiator instanceof CallChainInstance chainInstance) {
+            tcId = BvRequestBuilder.getBVCaseId(chainInstance);
             situationTestcase = false;
         }
         if (StringUtils.isBlank(tcId)) {
@@ -336,7 +336,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
         UUID projectUuid = initiator.getContext().tc().getProjectUuid();
         if (situationTestcase) {
             request = "{\"testCasesIds\": [\"" + tcId + "\"] }";
-            String endpoint = String.format(BvEndpoints.GET_TESTCASE_PARAMETERS_ENDPOINT, projectUuid);
+            String endpoint = BvEndpoints.GET_TESTCASE_PARAMETERS_ENDPOINT.formatted(projectUuid);
             ResponseEntity<String> responseEntity
                     = HttpClientFactory.getBvTestCaseResourceFeignClient().getParameters(projectUuid, request);
             response = sendRequest("Getting testcase vobjects: {}", endpoint, request, responseEntity.getBody());
@@ -351,7 +351,7 @@ public class BvEngineIntegration implements EngineAfterIntegration, EngineContro
                     spContext.getIncomingMessage(), tcId);
         }
         request = GSON_INSTANCE.toJson(quickCompareRequest);
-        String endpoint = String.format(BvEndpoints.VALIDATE_MESSAGE_ENDPOINT, projectUuid);
+        String endpoint = BvEndpoints.VALIDATE_MESSAGE_ENDPOINT.formatted(projectUuid);
         ResponseEntity<Object> responseEntity
                 = HttpClientFactory.getBvPublicApiResourceFeignClient().quickCompare(projectUuid, request);
         response = sendRequest("Executing message validation: {}", endpoint, request,

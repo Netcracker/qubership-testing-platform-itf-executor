@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.qubership.automation.itf.core.model.jpa.context.InstanceContext;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.jpa.message.template.OperationTemplate;
@@ -32,13 +31,11 @@ import org.qubership.automation.itf.core.util.exception.ExportException;
 import org.qubership.automation.itf.core.util.transport.base.Transport;
 import org.qubership.automation.itf.core.util.transport.manager.TransportRegistryManager;
 import org.qubership.automation.itf.executor.transports.registry.TransportRegistryLoader;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.google.common.collect.Sets;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath*:*core-test-context-no-broker-bean.xml"})
+@SpringJUnitConfig(locations = {"classpath*:*core-test-context-no-broker-bean.xml"})
 public class ProducerMessageHelperTest {
 
     private static final Set<Transport> transports = Sets.newConcurrentHashSet();
@@ -52,10 +49,21 @@ public class ProducerMessageHelperTest {
         transports.add(new TestFileOverFtpOutbound());
         template = new OperationTemplate();
         template.setName("template");
-        String text = "##load_part(\"activateService Start part\")\n" + "#load_part(\"activateService " +
-                "Start part Entry point\")\n" + "\n" + "\n" + "#$tc.dynamic_param_one = \"ONE\" " + "#$tc" +
-                ".dynamic_param_two = \"TWO\" " + "\n" + "\n" + "\n" + "#$tc.filename = \"newFileName-\" + " +
-                "#next_index" + "(\"NNN\")" + "\n" + "#load_part(\"activateService Finish part\")";
+        String text = """
+                ##load_part("activateService Start part")
+                #load_part("activateService \
+                Start part Entry point")
+                
+                
+                #$tc.dynamic_param_one = "ONE" \
+                #$tc\
+                .dynamic_param_two = "TWO"\s
+                
+                
+                #$tc.filename = "newFileName-" + \
+                #next_index\
+                ("NNN")
+                #load_part("activateService Finish part")""";
         template.setText(text);
         OutboundTemplateTransportConfiguration configurationRest = new OutboundTemplateTransportConfiguration(
                 TestRestOverHttpOutbound.class.getName(), template);

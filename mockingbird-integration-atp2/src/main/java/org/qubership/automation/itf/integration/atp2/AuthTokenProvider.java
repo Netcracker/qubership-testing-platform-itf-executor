@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ public class AuthTokenProvider {
             Optional<String> bearerToken = getAuthToken();
             if (bearerToken.isPresent()) {
                 httpRequest.addHeader(AUTHORIZATION_HEADER_NAME,
-                        String.format("%s %s", BEARER_TOKEN_TYPE, bearerToken.get()));
+                        "%s %s".formatted(BEARER_TOKEN_TYPE, bearerToken.get()));
             } else {
                 log.warn("Token is empty.");
             }

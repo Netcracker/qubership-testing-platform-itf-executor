@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.qubership.automation.itf.ui.controls.service.export;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -198,12 +197,12 @@ public class ItfExportExecutor implements ExportExecutor {
 
     private Path parentPath(Path initialPath, int order) {
         return initialPath.resolve(
-                Paths.get(StringUtils.leftPad(String.valueOf(order), 4, '0') + "_Parent"));
+                Path.of(StringUtils.leftPad(String.valueOf(order), 4, '0') + "_Parent"));
     }
 
     private Path otherObjectsPath(Path initialPath, Storable storable) {
         return initialPath.resolve(
-                Paths.get("1"
+                Path.of("1"
                                 + StringUtils.leftPad(String.valueOf(
                                 typesForExportInCorrectImportOrder.indexOf(storable.getClass().getName()) + 1
                         ), 3, '0')
