@@ -40,7 +40,7 @@ public class NextCallChainSubscriberTest {
     @Before
     public void before() {
         callChainInstance = mock(CallChainInstance.class);
-        when(callChainInstance.getID()).thenReturn(1);
+        when(callChainInstance.getID()).thenReturn(BigInteger.valueOf(1));
         when(this.callChainInstance.iterator()).thenReturn(mock(CallChainStepIterator.class));
         when(this.callChainInstance.iterator().hasNext()).thenReturn(true);
         when(this.callChainInstance.iterator().next()).thenReturn(getStepInstance());
@@ -93,7 +93,7 @@ public class NextCallChainSubscriberTest {
         step.setManual(false);
         step.setDelay(2000);
         step.setUnit(TimeUnit.MILLISECONDS.toString());
-        stepInstance.setStepId((BigInteger) step.getID());
+        stepInstance.setStepId(step.getID());
         return stepInstance;
     }
 }

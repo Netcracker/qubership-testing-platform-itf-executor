@@ -454,7 +454,7 @@ public class ReportWorker {
 
     private void setIdIfNull(Storable object) {
         if (object != null && object.getID() == null) {
-            object.setID(UniqueIdGenerator.generateReportingId());
+            object.setID((BigInteger)UniqueIdGenerator.generateReportingId());
         }
     }
 

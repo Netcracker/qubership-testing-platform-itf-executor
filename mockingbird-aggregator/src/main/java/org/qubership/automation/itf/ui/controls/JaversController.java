@@ -96,7 +96,7 @@ public class JaversController {
     public void testHistoryForReplicate(@RequestParam(value = "systemId") BigInteger systemId, BigInteger projectId) {
         System system = CoreObjectManager.getInstance().getManager(System.class).getById(systemId);
         SystemTemplate template = new SystemTemplate();
-        template.setID(UniqueIdGenerator.generate());
+        template.setID((BigInteger)UniqueIdGenerator.generate());
         template.setParent(system);
         template.setName("Test History For Replication");
         template.setText("TEST");

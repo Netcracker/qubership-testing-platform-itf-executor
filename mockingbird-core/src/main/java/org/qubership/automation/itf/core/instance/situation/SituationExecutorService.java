@@ -210,13 +210,13 @@ public class SituationExecutorService {
     }
 
     private void fillParentsInfo(SituationInstance instance, Situation situation, Operation parentOperation) {
-        instance.setSituationId((BigInteger) situation.getID());
+        instance.setSituationId(situation.getID());
         if (parentOperation != null) {
             // default auto created situations don't have parents...
             instance.setOperationName(parentOperation.getName());
-            instance.setOperationId((BigInteger) parentOperation.getID());
+            instance.setOperationId(parentOperation.getID());
             instance.setSystemName(parentOperation.getParent().getName());
-            instance.setSystemId((BigInteger) parentOperation.getParent().getID());
+            instance.setSystemId(parentOperation.getParent().getID());
         }
     }
 
@@ -360,7 +360,7 @@ public class SituationExecutorService {
         StepIterator iterator = instance.iterator();
         while (iterator.hasNext()) {
             StepInstance stepInstance = iterator.next();
-            stepInstance.setID(UniqueIdGenerator.generate());
+            stepInstance.setID((BigInteger)UniqueIdGenerator.generate());
             if (spContext != null) {
                 stepInstance.getContext().sp().putAll(spContext);
             }
@@ -730,7 +730,7 @@ public class SituationExecutorService {
         log.info("Preparing instance for situation {}...", situation);
         SituationInstance instance = new SituationInstance();
         log.debug("UniqueIdGenerator.generate - started");
-        instance.setID(UniqueIdGenerator.generate());
+        instance.setID((BigInteger)UniqueIdGenerator.generate());
         log.debug("UniqueIdGenerator.generate - finished");
         instance.setStepContainer(situation);
         instance.setName(situation.getName());
@@ -790,7 +790,7 @@ public class SituationExecutorService {
         step.setName("[%s] receives [%s]".formatted(step.getReceiver().getName(), step.getOperation().getName()));
         StepInstance stepInstance = new StepInstance();
         stepInstance.setParent(null);
-        stepInstance.setID(UniqueIdGenerator.generate());
+        stepInstance.setID((BigInteger)UniqueIdGenerator.generate());
         stepInstance.init(step, instance.getContext(), spContext);
         stepInstance.getContext().setProjectId(stepInstance.getContext().tc().getProjectId());
         stepInstance.getContext().setProjectUuid(stepInstance.getContext().tc().getProjectUuid());

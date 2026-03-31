@@ -180,7 +180,7 @@ public class CallChainExecutorService {
         MdcUtils.put(MdcField.CALL_CHAIN_ID.toString(), testCase.getID().toString());
         log.info("Preparing instance for call chain {}...", testCase);
         CallChainInstance instance = new CallChainInstance();
-        instance.setID(UniqueIdGenerator.generate());
+        instance.setID((BigInteger)UniqueIdGenerator.generate());
         instance.setParent(null);
         instance.setStepContainer(testCase);
         instance.setName(testCase.getName());
@@ -380,7 +380,7 @@ public class CallChainExecutorService {
         context.setStartValidation(runValidation);
         context.setInitiator(instance);
         context.setName("%s [%s]".formatted(instance.getName(), dataSet == null ? "No Data Set" : dataSet.getName()));
-        context.setEnvironmentId((BigInteger) environment.getID());
+        context.setEnvironmentId(environment.getID());
         context.setEnvironmentName(environment.getName());
         context.setProjectId(projectId);
         context.setProjectUuid(projectUuid);

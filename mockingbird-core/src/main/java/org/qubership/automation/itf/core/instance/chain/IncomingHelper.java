@@ -253,7 +253,7 @@ public class IncomingHelper {
                                                       SituationInstance unexpectedSituation,
                                                       Throwable error) {
         StepInstance stepInstance = new StepInstance();
-        stepInstance.setID(UniqueIdGenerator.generate());
+        stepInstance.setID((BigInteger)UniqueIdGenerator.generate());
         stepInstance.init(UNEXPECTED_STEP);
         stepInstance.getContext().putAll(context);
         stepInstance.setParent(unexpectedSituation);
@@ -269,7 +269,7 @@ public class IncomingHelper {
 
     private SituationInstance createUnexpectedSituationInstance(InstanceContext context, Throwable error) {
         SituationInstance unexpectedSituation = new SituationInstance();
-        unexpectedSituation.setID(UniqueIdGenerator.generate());
+        unexpectedSituation.setID((BigInteger)UniqueIdGenerator.generate());
         unexpectedSituation.setParentContext(context.getTC());
         unexpectedSituation.getContext().putAll(context);
         unexpectedSituation.setStepContainer(UNEXPECTED_SITUATION);
