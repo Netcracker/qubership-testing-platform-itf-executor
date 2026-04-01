@@ -20,13 +20,12 @@ package org.qubership.automation.itf;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.users.clients.dto.ProjectDto;
 import org.qubership.automation.itf.integration.users.UsersProjectFeignClient;
@@ -47,38 +46,39 @@ import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.consumer.dsl.PactDslJsonRootValue;
 import au.com.dius.pact.consumer.dsl.PactDslResponse;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.consumer.junit.PactProviderRule;
-import au.com.dius.pact.consumer.junit.PactVerification;
+import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
+import au.com.dius.pact.consumer.junit5.PactTestFor;
+import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 
 @EnableFeignClients(clients = {UsersProjectFeignClient.class})
-@ExtendWith(ExternalResourceSupport.class)
+@ExtendWith(PactConsumerTestExt.class)
 @SpringJUnitConfig(classes = {UsersProjectFeignClientPactTest.TestApp.class})
 @Import({JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class, FeignConfiguration.class,
         FeignAutoConfiguration.class})
 @TestPropertySource(
         properties = {"feign.atp.users.name=atp-users-backend", "feign.atp.users.route=",
                 "feign.atp.users.url=http://localhost:8888", "feign.httpclient.enabled=false"})
+@PactTestFor(providerName = "atp-users-backend", port = "8888", pactVersion = PactSpecVersion.V3)
 public class UsersProjectFeignClientPactTest {
 
-    @Rule
-    public PactProviderRule mockProvider
-            = new PactProviderRule("atp-users-backend", "localhost", 8888, this);
     @Autowired
     private UsersProjectFeignClient usersProjectFeignClient;
 
     @Test
-    @PactVerification()
+    @PactTestFor(pactMethod = "createPact")
     public void allPass() {
         ResponseEntity<List<ProjectDto>> result1 = usersProjectFeignClient.getAllProjects();
         Assertions.assertEquals(200, result1.getStatusCode().value());
-        Assertions.assertTrue(result1.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertTrue(Objects.requireNonNull(result1.getHeaders().get("Content-Type"))
+                .contains("application/json"));
 
         UUID projectId = UUID.fromString("5518c918-b816-40a6-aa1d-9efd0df476f8");
         ResponseEntity<ProjectDto> result2 = usersProjectFeignClient.getProjectUsersByProjectId(projectId);
         Assertions.assertEquals(200, result2.getStatusCode().value());
-        Assertions.assertTrue(result2.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertTrue(Objects.requireNonNull(result2.getHeaders().get("Content-Type"))
+                .contains("application/json"));
     }
 
     @Pact(consumer = "atp-itf-executor")

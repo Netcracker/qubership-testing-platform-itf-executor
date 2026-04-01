@@ -20,13 +20,12 @@ package org.qubership.automation.itf;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.catalogue.openapi.dto.ObjectOperationDto;
 import org.qubership.atp.catalogue.openapi.dto.ProjectDto;
@@ -45,14 +44,15 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import au.com.dius.pact.consumer.dsl.PactDslResponse;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.consumer.junit.PactProviderRule;
-import au.com.dius.pact.consumer.junit.PactVerification;
+import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
+import au.com.dius.pact.consumer.junit5.PactTestFor;
+import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.gson.Gson;
 
 @EnableFeignClients(clients = {CatalogueProjectFeignClient.class})
-@ExtendWith(ExternalResourceSupport.class)
+@ExtendWith(PactConsumerTestExt.class)
 @SpringJUnitConfig(classes = {CatalogueFeignClientPactUnitTest.TestApp.class})
 @Import({JacksonAutoConfiguration.class,
         HttpMessageConvertersAutoConfiguration.class,
@@ -63,22 +63,21 @@ import com.google.gson.Gson;
         "feign.atp.catalogue.route=",
         "feign.atp.catalogue.url=http://localhost:8888",
         "feign.httpclient.enabled=false"})
+@PactTestFor(providerName = "atp-catalogue-backend", port = "8888", pactVersion = PactSpecVersion.V3)
 public class CatalogueFeignClientPactUnitTest {
 
     private final UUID projectUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9701");
-    @Rule
-    public PactProviderRule mockProvider
-            = new PactProviderRule("atp-catalogue-backend", "localhost", 8888, this);
 
     @Autowired
     private CatalogueProjectFeignClient catalogueProjectFeignClient;
 
     @Test
-    @PactVerification()
+    @PactTestFor(pactMethod = "createPact")
     public void allPass() {
         ResponseEntity<ProjectDto> result = catalogueProjectFeignClient.getProjectById(projectUuid);
         Assertions.assertEquals(200, result.getStatusCode().value());
-        Assertions.assertTrue(result.getHeaders().get("Content-Type").contains("application/json"));
+        Assertions.assertTrue(Objects.requireNonNull(result.getHeaders().get("Content-Type"))
+                .contains("application/json"));
         Assertions.assertEquals(formProject(), result.getBody());
     }
 
