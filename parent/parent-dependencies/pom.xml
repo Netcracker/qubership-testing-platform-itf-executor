@@ -33,6 +33,7 @@
         <org.apache.cxf.version>4.1.4</org.apache.cxf.version>
         <org.jboss.xnio.version>3.8.16.Final</org.jboss.xnio.version>
         <aspectj.version>1.9.24</aspectj.version>
+        <logback.version>1.5.18</logback.version>
 
         <keycloak.version>22.0.1</keycloak.version>
         <org.ow2.asm.asm.version>5.2</org.ow2.asm.asm.version>
@@ -516,12 +517,12 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.13</version>
+                <version>${logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
-                <version>1.2.13</version>
+                <version>${logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject</groupId>
