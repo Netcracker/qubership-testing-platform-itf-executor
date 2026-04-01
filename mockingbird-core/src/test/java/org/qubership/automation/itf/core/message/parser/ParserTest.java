@@ -20,8 +20,9 @@ package org.qubership.automation.itf.core.message.parser;
 import java.math.BigInteger;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.message.parser.testimpl.TestRuleProvider;
 import org.qubership.automation.itf.core.model.jpa.context.InstanceContext;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
@@ -31,7 +32,6 @@ import org.qubership.automation.itf.core.util.provider.ParsingRuleProvider;
 import org.qubership.automation.itf.core.util.services.CoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.testng.Assert;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
@@ -42,10 +42,10 @@ public class ParserTest {
     @Autowired
     ProjectSettingsServiceTest projectSettingsServiceTest;
 
-    BigInteger projectId;
+    static BigInteger projectId;
 
-    @Before
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         projectId = new BigInteger("123");
         Config config = new Config();
         config.setInstanceName("test");
@@ -67,13 +67,13 @@ public class ParserTest {
         context.put("aaa", "bbb");
         Map<String, MessageParameter> parse = parser.parse(projectId, message, InstanceContext.from(context, null),
                 provider);
-        Assert.assertEquals(parse.size(), 2);
-        Assert.assertEquals(parse.get("regex").getSingleValue(), "Jani");
-        Assert.assertTrue(parse.get("xpath").isMultiple());
-        Assert.assertEquals(parse.get("xpath").getMultipleValue().size(), 4);
-        Assert.assertEquals(parse.get("xpath").getMultipleValue().get(0), "Tove");
-        Assert.assertEquals(parse.get("xpath").getMultipleValue().get(1), "Jani");
-        Assert.assertEquals(parse.get("xpath").getMultipleValue().get(2), "Reminder");
-        Assert.assertEquals(parse.get("xpath").getMultipleValue().get(3), "Don't forget me this weekend!");
+        Assertions.assertEquals(2, parse.size());
+        Assertions.assertEquals("Jani", parse.get("regex").getSingleValue());
+        Assertions.assertTrue(parse.get("xpath").isMultiple());
+        Assertions.assertEquals(4, parse.get("xpath").getMultipleValue().size());
+        Assertions.assertEquals("Tove", parse.get("xpath").getMultipleValue().get(0));
+        Assertions.assertEquals("Jani", parse.get("xpath").getMultipleValue().get(1));
+        Assertions.assertEquals("Reminder", parse.get("xpath").getMultipleValue().get(2));
+        Assertions.assertEquals("Don't forget me this weekend!", parse.get("xpath").getMultipleValue().get(3));
     }
 }
