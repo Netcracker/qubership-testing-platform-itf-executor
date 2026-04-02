@@ -24,12 +24,13 @@ import java.util.UUID;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.http4.HttpComponent;
-import org.apache.camel.component.http4.HttpEndpoint;
-import org.apache.camel.http.common.HttpOperationFailedException;
-import org.apache.commons.httpclient.HttpStatus;
+import org.apache.camel.component.http.HttpComponent;
+import org.apache.camel.component.http.HttpEndpoint;
+import org.apache.camel.http.base.HttpOperationFailedException;
+//import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.HttpStatus;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;

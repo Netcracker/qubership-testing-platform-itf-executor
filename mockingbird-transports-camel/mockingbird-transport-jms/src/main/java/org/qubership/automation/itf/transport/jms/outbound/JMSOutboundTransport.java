@@ -218,15 +218,20 @@ public class JMSOutboundTransport extends AbstractCamelOutboundTransport {
     private static Endpoint makeEndpoint(String id, String destinationType,
                                          String destinationName,
                                          JMSConfig jmsConfig,
-                                         CamelContext context) throws JMSException {
-        Endpoint endpoint;
+                                         CamelContext context) {
+        JmsEndpoint endpoint;
         //It's backport for destinationName format like
         // "NCJMSServer_clust1/NCJMSModule!SMF_PRODFULFILLMENT_RMK_RD_clust1"
         if (jmsConfig.getDestination() != null) {
             //So, let's take a destination from JNDI catalog (it can be QUEUE or TOPIC, we don't care about it).
-            endpoint = JmsEndpoint.newInstance(jmsConfig.getDestination(), jmsConfig.getComponent());
+
+            // TODO: Should be checked. Great changes from the old Camel (2.20.4) code
+            endpoint = new JmsEndpoint();
+            endpoint.setComponent(jmsConfig.getComponent());
+            endpoint.setDestinationName(destinationName);
+            endpoint.setDestinationType(destinationType);
         } else {
-            endpoint = context.getEndpoint(id + ':' + destinationType + ':' + destinationName);
+            endpoint = (JmsEndpoint) context.getEndpoint(id + ':' + destinationType + ':' + destinationName);
         }
         return endpoint;
     }

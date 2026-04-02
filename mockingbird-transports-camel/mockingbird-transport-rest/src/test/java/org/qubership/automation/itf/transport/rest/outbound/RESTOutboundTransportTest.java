@@ -31,10 +31,10 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
@@ -45,7 +45,7 @@ public class RESTOutboundTransportTest {
     public WireMockRule wireMockRule = new WireMockRule(8083);
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         stubFor(post(urlEqualTo("/test/post/"))
                 .withRequestBody(matching("test_post"))
                 .willReturn(aResponse().withBody(RESPONSE_BODY).withStatus(200)));
@@ -54,7 +54,7 @@ public class RESTOutboundTransportTest {
     @Test
     public void testSendPostRequestToMockWithResponse() throws Exception {
         RESTOutboundTransport transport = new RESTOutboundTransport();
-        Whitebox.setInternalState(transport, "method", "POST");
+        ReflectionTestUtils.setField(transport, "method", "POST");
         Message message = new Message("test_post");
         message.getConnectionProperties().put(HTTPConstants.ENDPOINT, "/test/post/");
         message.getConnectionProperties().put(HTTPConstants.BASE_URL, "http://localhost:8083");

@@ -37,8 +37,8 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.netty4.NettyComponent;
-import org.apache.camel.component.netty4.NettyEndpoint;
+import org.apache.camel.component.netty.NettyComponent;
+import org.apache.camel.component.netty.NettyEndpoint;
 import org.apache.camel.component.ssh.SshComponent;
 import org.apache.logging.log4j.util.Strings;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
@@ -64,14 +64,16 @@ import lombok.extern.slf4j.Slf4j;
 public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
 
     private static final String SSH_COMPONENT_KEY = "ssh";
-    private static final String NETTY_COMPONENT_KEY = "netty4";
+    private static final String NETTY_COMPONENT_KEY = "netty";
     private static final Cache<ConfiguredTransport, CLIConfig> CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(5, MINUTES)
             .removalListener((RemovalListener<ConfiguredTransport, CLIConfig>) notification -> {
                 CLIConfig cliConfig = notification.getValue();
                 try {
-                    CAMEL_CONTEXT.removeEndpoint(cliConfig.getEndpoint());
-                    cliConfig.getEndpoint().stop();
+                    if (cliConfig != null) {
+                        CAMEL_CONTEXT.removeEndpoint(cliConfig.getEndpoint());
+                        cliConfig.getEndpoint().stop();
+                    }
                 } catch (Throwable t) {
                     log.error("Error while Camel Context cleaning up", t);
                 }
@@ -157,7 +159,7 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
                             ((NettyEndpoint) cliEndPoint).setExchangePattern(ExchangePattern.InOut);
                             ((NettyEndpoint) cliEndPoint).getConfiguration().setSync(true);
                         } else {
-                            ((NettyEndpoint) cliEndPoint).setExchangePattern(ExchangePattern.OutOnly);
+                            ((NettyEndpoint) cliEndPoint).setExchangePattern(ExchangePattern.InOnly);
                             ((NettyEndpoint) cliEndPoint).getConfiguration().setSync(false);
                         }
                     }
@@ -177,7 +179,7 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         Exchange exchange = cliEndPoint.createExchange();
         exchange.getIn().setBody(message.getText());
         exchange = producerTemplate.send(cliEndPoint, exchange);
-        if (!exchange.hasOut() || exchange.getOut().isFault()) {
+        if (!exchange.hasOut() || exchange.isFailed()) {
             return makeExceptionMessage(exchange);
         } else {
             Message response;
@@ -243,7 +245,7 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
             composeSshUri(properties, uri);
             return uri.toString();
         }
-        return uri.append("netty4:")
+        return uri.append("netty:")
                 .append(properties.get(PropertyConstants.Cli.CONNECTION_TYPE))
                 .append("://").append(properties.get(PropertyConstants.Cli.REMOTE_IP))
                 .append(':').append(properties.get(PropertyConstants.Cli.REMOTE_PORT))

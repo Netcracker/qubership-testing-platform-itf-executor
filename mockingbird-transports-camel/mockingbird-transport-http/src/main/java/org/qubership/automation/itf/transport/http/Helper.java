@@ -39,10 +39,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.StringSource;
-import org.apache.camel.component.cxf.CxfPayload;
-import org.apache.camel.component.http4.HttpComponent;
-import org.apache.camel.impl.DefaultHeaderFilterStrategy;
+import org.apache.camel.attachment.AttachmentMessage;
+import org.apache.camel.component.cxf.common.CxfPayload;
+import org.apache.camel.component.http.HttpComponent;
+import org.apache.camel.support.DefaultHeaderFilterStrategy;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -276,6 +276,7 @@ public class Helper {
     private static org.apache.camel.Message composeAttachmentsBody(
             org.apache.camel.Message camelMessage,
             org.qubership.automation.itf.core.model.jpa.message.Message itfMessage) {
+        AttachmentMessage attMsg = camelMessage.getExchange().getIn(AttachmentMessage.class);
         String filename = (String) (camelMessage.getHeader("filename"));
         InputStream inputStream = null;
         try {
@@ -283,17 +284,15 @@ public class Helper {
             if (url.getProtocol().equals("https")) {
                 inputStream = getViaClient(url);
             }
-            camelMessage.addAttachment("fileAttachment", new DataHandler(new URLDataSource(url)));
+            attMsg.addAttachment("fileAttachment", new DataHandler(new URLDataSource(url)));
         } catch (MalformedURLException ex) {
-            camelMessage.addAttachment("fileAttachment", new DataHandler(new FileDataSource(filename)));
+            attMsg.addAttachment("fileAttachment", new DataHandler(new FileDataSource(filename)));
         } catch (Exception ex) {
             throw new RuntimeException("HTTPClient exception while composing attachments message", ex);
         }
         try {
             byte[] data = camelMessage.getExchange().getContext().getTypeConverter().convertTo(byte[].class,
-                    (inputStream == null)
-                            ? camelMessage.getAttachment("fileAttachment").getInputStream()
-                            : inputStream);
+                    (inputStream == null) ? attMsg.getAttachment("fileAttachment").getInputStream() : inputStream);
             camelMessage.setBody(data);
             return camelMessage;
         } catch (Exception ex) {

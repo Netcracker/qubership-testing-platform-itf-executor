@@ -202,7 +202,7 @@ public class CLIOutboundTransportTest {
                         + properties.get(PropertyConstants.Cli.REMOTE_PORT)
                         + ((sshKeyIsBlank) ? "" : "?certResource=file:"
                             + getTempPemFile((String) properties.get(PropertyConstants.Cli.SSH_KEY)).getPath())
-                : "netty4:" + properties.get(PropertyConstants.Cli.CONNECTION_TYPE) + "://"
+                : "netty:" + properties.get(PropertyConstants.Cli.CONNECTION_TYPE) + "://"
                         + properties.get(PropertyConstants.Cli.REMOTE_IP) + ':'
                         + properties.get(PropertyConstants.Cli.REMOTE_PORT)
                         + "?textline=true&requestTimeout=5000";

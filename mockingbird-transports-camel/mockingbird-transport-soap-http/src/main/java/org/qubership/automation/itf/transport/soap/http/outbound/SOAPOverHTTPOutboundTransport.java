@@ -21,8 +21,6 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.qubership.automation.itf.transport.soap.http.SOAPOverHTTPHelper.prepareBusContext;
 
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +30,11 @@ import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.Producer;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.cxf.CxfEndpoint;
-import org.apache.camel.component.cxf.CxfProducer;
-import org.apache.camel.component.cxf.DataFormat;
-import org.apache.camel.component.http4.HttpComponent;
-import org.apache.camel.impl.ProducerCache;
+import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
+import org.apache.camel.component.cxf.jaxws.CxfProducer;
+import org.apache.camel.component.cxf.common.DataFormat;
+import org.apache.camel.component.http.HttpComponent;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.Bus;
@@ -189,9 +185,16 @@ public class SOAPOverHTTPOutboundTransport extends HTTPOutboundTransport {
      *   The fix is to be rewritten if possible, because getProducerCache() is private method,
      *   and producers is private field,
      *   so there are no legal ways to manage them.
+     *
+     *  2026-04-02, KAG, During upgrade of:
+     *      - Spring Boot 2.7.18 to 3.3.13,
+     *      - Camel 2.20.4 to 4.4.15
+     *      - CXF 3.1.2 to 4.1.4
+     *  I decided to completely remove this fix and write a new one based on tests, if necessary.
+     *  Because Camel and CXF internal mechanics are changed significantly.
      */
-    private void fixNPE_clientNull(ProducerTemplate template, CxfEndpoint cxfEndpoint, CxfProducer cxfProducer)
-            throws Exception {
+    private void fixNPE_clientNull(ProducerTemplate template, CxfEndpoint cxfEndpoint, CxfProducer cxfProducer) {
+        /*
         Method method = template.getClass().getDeclaredMethod("getProducerCache");
         method.setAccessible(true);
         ProducerCache producerCache = (ProducerCache) (method.invoke(template));
@@ -199,6 +202,7 @@ public class SOAPOverHTTPOutboundTransport extends HTTPOutboundTransport {
         field.setAccessible(true);
         Map<String, Producer> producers = (Map<String, Producer>) (field.get(producerCache));
         producers.put(cxfEndpoint.getEndpointUri(), cxfProducer);
+         */
     }
 
     private void validate(Message message, String requestXsdPath) {

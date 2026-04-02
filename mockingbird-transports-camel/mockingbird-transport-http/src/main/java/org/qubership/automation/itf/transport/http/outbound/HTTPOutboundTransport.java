@@ -20,11 +20,11 @@ package org.qubership.automation.itf.transport.http.outbound;
 import static org.qubership.automation.itf.core.util.constants.PropertyConstants.Http.PROPERTIES;
 import static org.qubership.automation.itf.core.util.constants.PropertyConstants.Http.PROPERTIES_DESCRIPTION;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,19 +33,16 @@ import java.util.concurrent.TimeUnit;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.http.SSLContextParametersSecureProtocolSocketFactory;
-import org.apache.camel.component.http4.CompositeHttpConfigurer;
-import org.apache.camel.component.http4.HttpClientConfigurer;
-import org.apache.camel.component.http4.HttpComponent;
-import org.apache.camel.component.http4.ProxyHttpClientConfigurer;
-import org.apache.camel.http.common.HttpOperationFailedException;
-import org.apache.camel.impl.DefaultHeaderFilterStrategy;
-import org.apache.camel.util.jsse.KeyManagersParameters;
-import org.apache.camel.util.jsse.KeyStoreParameters;
-import org.apache.camel.util.jsse.SSLContextParameters;
-import org.apache.camel.util.jsse.TrustManagersParameters;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.apache.camel.component.http.CompositeHttpConfigurer;
+import org.apache.camel.component.http.HttpClientConfigurer;
+import org.apache.camel.component.http.HttpComponent;
+import org.apache.camel.component.http.ProxyHttpClientConfigurer;
+import org.apache.camel.http.base.HttpOperationFailedException;
+import org.apache.camel.support.DefaultHeaderFilterStrategy;
+import org.apache.camel.support.jsse.KeyManagersParameters;
+import org.apache.camel.support.jsse.KeyStoreParameters;
+import org.apache.camel.support.jsse.SSLContextParameters;
+import org.apache.camel.support.jsse.TrustManagersParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -79,8 +76,8 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                     .expireAfterAccess(1, TimeUnit.HOURS).build();
 
     static {
-        ITFHeaderFilterStrategy.setOutFilter(null);
-        ITFHeaderFilterStrategy.setInFilter(null);
+        ITFHeaderFilterStrategy.setOutFilter((String) null);
+        ITFHeaderFilterStrategy.setInFilter((String) null);
     }
 
     @Parameter(shortName = HTTPConstants.METHOD,
@@ -323,7 +320,7 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
     }
 
     private HttpComponent prepareHttpComponent(boolean isSecure, Message message) {
-        HttpComponent httpComponent = new org.apache.camel.component.http4.HttpComponent();
+        HttpComponent httpComponent = new org.apache.camel.component.http.HttpComponent();
         if (isSecure) {
             registerSecureComponent(httpComponent, message); // There must be parameters configured in the
             // config.properties file
@@ -395,16 +392,12 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
             int pos1 = pair.indexOf("=");
             if (pos1 > -1) {
                 String val = pair.substring(pos1 + 1);
-                try {
-                    encodedEndpoint.append(((count == 0)
-                            ? ""
-                            : "&")).append(pair, 0, pos1).append("=").append(URLEncoder.encode(val, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                }
+                encodedEndpoint.append(((count == 0) ? "" : "&"))
+                        .append(pair, 0, pos1)
+                        .append("=")
+                        .append(URLEncoder.encode(val, StandardCharsets.UTF_8));
             } else {
-                encodedEndpoint.append(((count == 0)
-                        ? ""
-                        : "&")).append(pair);
+                encodedEndpoint.append(((count == 0) ? "" : "&")).append(pair);
             }
             count++;
         }
@@ -477,7 +470,7 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                                                                       String username, String password, String domain,
                                                                       String ntHost, String key) {
         ProxyHttpClientConfigurer httpClientConfigurer = new ProxyHttpClientConfigurer(host, port, scheme, username,
-                password, domain, ntHost);
+                password, domain, ntHost, null);
         PROXY_HTTP_CLIENT_CONFIGURER_CACHE.put(key, httpClientConfigurer);
         return httpClientConfigurer;
     }
@@ -501,15 +494,20 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
         sslContext.setTrustManagers(trustManagersParameters);
         //set protocol
         sslContext.setSecureSocketProtocol(secProtocol);
-        //register http4 protocol
+
+        //register http component with these settings
         try {
-            ProtocolSocketFactory factory = new SSLContextParametersSecureProtocolSocketFactory(sslContext,
-                    CAMEL_CONTEXT);
-            Protocol.registerProtocol(HTTPConstants.HTTPS, new Protocol(HTTPConstants.HTTPS, factory, 6443));
+            // Create and configure the HTTP component with SSL
+            HttpComponent httpsComponent = new HttpComponent();
+            httpsComponent.setSslContextParameters(sslContext);
+
+            // Add the component to CamelContext with a unique name
+            CAMEL_CONTEXT.addComponent(key, httpsComponent);
+
             SSL_CONTEXT_PARAMETERS_CACHE.put(key, sslContext);
             return sslContext;
         } catch (Exception e) {
-            throw new RuntimeException("Error while register http4(https) protocol ", e);
+            throw new RuntimeException("Error while creating HTTPS component with SSL", e);
         }
     }
 

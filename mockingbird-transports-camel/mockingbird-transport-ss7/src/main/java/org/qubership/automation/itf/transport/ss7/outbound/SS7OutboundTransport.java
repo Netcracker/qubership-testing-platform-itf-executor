@@ -145,7 +145,7 @@ public class SS7OutboundTransport extends AbstractTransportImpl implements SS7Co
         HttpPost request = new HttpPost(uri);
         HttpEntity entity = new StringEntity(body);
         request.setEntity(entity);
-        return client.execute(request);
+        return (ClassicHttpResponse) client.execute(request);
     }
 
     private String parseHttpResponse(ClassicHttpResponse response) throws IOException {

@@ -53,8 +53,11 @@ public class JMSOutboundTransportTest {
         ProducerTemplate producer = context.createProducerTemplate();
         producer.start();
 
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.setComponent(component);
+        endpoint.setDestinationName("MB_Out_Queue");
+        endpoint.setDestinationType("queue");
 
-        JmsEndpoint endpoint = JmsEndpoint.newInstance(destination, component);
         Exchange passed = producer.send(endpoint, exchange -> exchange.getIn().setBody("Passed"));
         System.out.println(passed.isFailed());
 

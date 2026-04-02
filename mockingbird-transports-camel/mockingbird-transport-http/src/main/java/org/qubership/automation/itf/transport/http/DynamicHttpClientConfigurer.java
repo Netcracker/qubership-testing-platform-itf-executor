@@ -17,7 +17,7 @@
 
 package org.qubership.automation.itf.transport.http;
 
-import org.apache.camel.component.http4.HttpClientConfigurer;
+import org.apache.camel.component.http.HttpClientConfigurer;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 
 public class DynamicHttpClientConfigurer implements HttpClientConfigurer {
