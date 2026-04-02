@@ -29,7 +29,7 @@
                             <excludeTransitive>true</excludeTransitive>
                             <!-- <excludeGroupIds>
                                 org.springframework,org.apache.sshd,org.apache.httpcomponents,io.github.openfeign,
-                                io.zipkin.brave,io.zipkin.zipkin2,io.zipkin.reporter2,org.keycloak,io.undertow,org.jboss,io.netty,
+                                io.zipkin.brave,io.zipkin.zipkin2,io.zipkin.reporter2,io.undertow,org.jboss,io.netty,
                                 com.netflix.archaius,org.aspectj,com.squareup.okhttp3,com.squareup.okio,jakarta.annotation,org.glassfish,
                                 jakarta.validation,io.reactivex,com.nimbusds,com.netflix.hystrix,org.qubership.atp.auth,
                                 org.bouncycastle,org.hdrhistogram,org.synchronoss.cloud,com.github.ben-manes.caffeine,

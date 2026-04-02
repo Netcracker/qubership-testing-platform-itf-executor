@@ -22,8 +22,6 @@ import static org.qubership.atp.auth.springbootstarter.Constants.BEARER_TOKEN_TY
 
 import java.util.Optional;
 
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.KeycloakSecurityContext;
 import org.qubership.atp.adapter.common.utils.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +33,7 @@ import org.springframework.security.oauth2.client.token.AccessTokenProvider;
 import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -69,10 +68,10 @@ public class AuthTokenProvider {
         //noinspection unchecked
         Optional<String> relayToken = Optional.ofNullable(authentication)
                 .map(Authentication::getPrincipal)
-                .filter(principal -> principal instanceof KeycloakPrincipal)
-                .map(principal -> (KeycloakPrincipal<KeycloakSecurityContext>) principal)
-                .map(KeycloakPrincipal::getKeycloakSecurityContext)
-                .map(KeycloakSecurityContext::getTokenString);
+                .filter(principal -> principal instanceof Jwt)
+                .map(principal -> (Jwt) principal)
+                .map(Jwt::getTokenValue);
+
         if (relayToken.isPresent()) {
             return relayToken;
         }

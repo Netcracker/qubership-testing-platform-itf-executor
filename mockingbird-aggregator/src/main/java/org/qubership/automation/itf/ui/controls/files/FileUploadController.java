@@ -23,8 +23,6 @@ import java.math.BigInteger;
 import java.util.UUID;
 
 import org.bson.types.ObjectId;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.representations.AccessToken;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.atp.multitenancy.core.header.CustomHeader;
 import org.qubership.automation.itf.core.exceptions.operation.FileProcessingException;
@@ -39,6 +37,7 @@ import org.qubership.automation.itf.ui.messages.objects.UIResult;
 import org.qubership.automation.itf.ui.util.FileUploadHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -78,10 +77,10 @@ public class FileUploadController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = "Undefined";
         UUID userId = null;
-        if (principal instanceof KeycloakPrincipal keycloakPrincipal) {
-            AccessToken accessToken = keycloakPrincipal.getKeycloakSecurityContext().getToken();
-            userId = UUID.fromString(keycloakPrincipal.getName());
-            userName = accessToken.getName();
+        if (principal instanceof Jwt jwt) {
+            String id = jwt.getClaim("sub");
+            userId = id != null ? UUID.fromString(id) : null;
+            userName = jwt.getClaimAsString("preferred_username");
         }
         log.info("Upload files to: contentType '{}', filePath '{}', projectId '{}', by user [name: {}, id: {}]...",
                 contentType, filePath, projectId, userName, userId);

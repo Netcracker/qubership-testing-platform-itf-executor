@@ -62,7 +62,7 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
     }
 
     @Override
-    public Object getNaturalId() {
+    public BigInteger getNaturalId() {
         return getID();
     }
 
@@ -176,9 +176,10 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
         return repo;
     }
 
+    // TODO: Change of Object to BigInteger requires careful check and possible refactor.
     @Override
-    public Object getID() {
-        return id;
+    public BigInteger getID() {
+        return new BigInteger(id);
     }
 
     @Override
