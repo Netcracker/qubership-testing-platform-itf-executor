@@ -57,7 +57,7 @@ public class ItfJaversSpringDataJpaAuditableRepositoryAspect extends ItfAbstract
                                 + "so history commit is skipped.", storable.getProjectId());
                         return;
                     }
-                    deleteHistoryEntity(storable.getID(), deletedObject.getClass());
+                    deleteHistoryEntity(pjp, storable.getID(), deletedObject.getClass());
                 } catch (Exception e) {
                     log.error("An error occurred while object history processing for type {}.",
                             deletedObject.getClass(), e);

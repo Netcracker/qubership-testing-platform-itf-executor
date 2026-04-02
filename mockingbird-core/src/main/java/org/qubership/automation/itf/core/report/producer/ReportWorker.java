@@ -29,7 +29,6 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.commons.lang3.BooleanUtils;
-import org.javers.common.collections.Sets;
 import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
 import org.qubership.atp.integration.configuration.annotation.AtpSpanTag;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
@@ -180,7 +179,7 @@ public class ReportWorker {
     }
 
     private static SimpleBeanPropertyFilter reportWorkerFilterMessage() {
-        Set<String> properties = Sets.asSet("name", "parent", "prefix", "description", "file",
+        Set<String> properties = Set.of("name", "parent", "prefix", "description", "file",
                 "transportProperties", "failedMessage", "version", "storableProp", "extendsParameters",
                 "extensionsJson");
 
@@ -203,7 +202,7 @@ public class ReportWorker {
     }
 
     private static SimpleBeanPropertyFilter reportWorkerFilterTcContext() {
-        Set<String> properties = Sets.asSet("version", "history", "collectHistory", "prefix", "description",
+        Set<String> properties = Set.of("version", "history", "collectHistory", "prefix", "description",
                 "empty", "lastAccess", "needToReportToAtp", "validationFailed", "extendsParameters",
                 "natural_id", "runStepByStep", "running", "finished", "runnable", "parent", "partNum");
 
@@ -226,7 +225,7 @@ public class ReportWorker {
     }
 
     private static SimpleBeanPropertyFilter reportWorkerFilterSpContext() {
-        Set<String> properties = Sets.asSet("version", "history", "collectHistory", "prefix", "description",
+        Set<String> properties = Set.of("version", "history", "collectHistory", "prefix", "description",
                 "empty", "extendsParameters");
 
         return new SimpleBeanPropertyFilter.SerializeExceptFilter(properties) {
