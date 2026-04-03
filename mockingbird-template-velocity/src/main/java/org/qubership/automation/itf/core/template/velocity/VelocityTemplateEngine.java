@@ -172,21 +172,20 @@ public class VelocityTemplateEngine implements TemplateEngine {
         ToolboxConfiguration requestToolboxConfiguration = new ToolboxConfiguration();
         requestToolboxConfiguration.setScope("request");
         requestToolboxConfiguration.setTools(makeToolsList(
-                "org.apache.velocity.tools.view.CookieTool",
+                //"org.apache.velocity.tools.view.CookieTool",
                 "org.apache.velocity.tools.view.ImportTool",
-                "org.apache.velocity.tools.view.IncludeTool",
-                "org.apache.velocity.tools.view.LinkTool",
-                "org.apache.velocity.tools.view.PagerTool",
-                "org.apache.velocity.tools.view.ParameterTool",
-                "org.apache.velocity.tools.view.ViewContextTool",
+                //"org.apache.velocity.tools.view.IncludeTool",
+                //"org.apache.velocity.tools.view.LinkTool",
+                //"org.apache.velocity.tools.view.PagerTool",
+                //"org.apache.velocity.tools.view.ParameterTool",
+                //"org.apache.velocity.tools.view.ViewContextTool",
                 "org.apache.velocity.tools.generic.ResourceTool"));
         factoryConfiguration.addToolbox(requestToolboxConfiguration);
 
         ToolboxConfiguration sessionToolboxConfiguration = new ToolboxConfiguration();
         sessionToolboxConfiguration.setScope("session");
         sessionToolboxConfiguration.setProperty("createSession", "false");
-        sessionToolboxConfiguration.setTools(makeToolsList(
-                "org.apache.velocity.tools.view.BrowserTool"));
+        sessionToolboxConfiguration.setTools(makeToolsList(/*"org.apache.velocity.tools.view.BrowserTool"*/));
         factoryConfiguration.addToolbox(sessionToolboxConfiguration);
         return factoryConfiguration;
     }
