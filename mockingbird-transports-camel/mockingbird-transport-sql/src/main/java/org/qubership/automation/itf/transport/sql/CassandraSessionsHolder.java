@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 package org.qubership.automation.itf.transport.sql;
 
-import java.net.UnknownHostException;
+import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +27,8 @@ import java.util.concurrent.locks.Lock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.policies.ExponentialReconnectionPolicy;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalCause;
@@ -44,21 +44,15 @@ public class CassandraSessionsHolder {
     private static final long maxDelayMs = 51200L;
     private static final ScheduledExecutorService configCacheMaintenanceService =
             Executors.newSingleThreadScheduledExecutor();
-    private static CassandraSessionsHolder INSTANCE = new CassandraSessionsHolder();
+    private static final CassandraSessionsHolder INSTANCE = new CassandraSessionsHolder();
     private static boolean isCacheCleanupScheduled = false;
-    private volatile Cache<String, Session> sessionsHolder = CacheBuilder.newBuilder()
+    private final Cache<String, CqlSession> sessionsHolder = CacheBuilder.newBuilder()
             .expireAfterAccess(1, TimeUnit.HOURS)
-            .removalListener((RemovalListener<String, Session>) removalNotification -> {
+            .removalListener((RemovalListener<String, CqlSession>) removalNotification -> {
                 if (removalNotification.getCause().equals(RemovalCause.EXPIRED)) {
-                    Session session = removalNotification.getValue();
-                    if (session != null) {
-                        Cluster cluster = session.getCluster();
-                        if (!session.isClosed()) {
-                            session.close();
-                        }
-                        if (cluster != null && !cluster.isClosed()) {
-                            cluster.close();
-                        }
+                    CqlSession session = removalNotification.getValue();
+                    if (session != null && !session.isClosed()) {
+                        session.close();
                     }
                 }
             })
@@ -71,17 +65,13 @@ public class CassandraSessionsHolder {
         return INSTANCE;
     }
 
-    public Session getSession(String url, String user, String pass) throws UnknownHostException {
-        Session session;
+    public CqlSession getSession(String url, String user, String pass) throws URISyntaxException {
+        CqlSession session;
         synchronized (LOCK_STRIPED.get(url)) {
             session = sessionsHolder.getIfPresent(url);
             if (session != null) {
                 // Check if session is closed
                 if (session.isClosed()) {
-                    Cluster cluster = session.getCluster();
-                    if (cluster != null && !cluster.isClosed()) {
-                        cluster.close();
-                    }
                     session = createSession(url, user, pass);
                     sessionsHolder.put(url, session);
                 }
@@ -109,11 +99,31 @@ public class CassandraSessionsHolder {
         }
     }
 
-    private Session createSession(String url, String user, String pass) throws UnknownHostException {
-        CassandraClientURI uri = new CassandraClientURI(url, user, pass);
-        ExponentialReconnectionPolicy exponentialReconnectionPolicy = new ExponentialReconnectionPolicy(baseDelayMs,
-                maxDelayMs);
-        Cluster cluster = uri.createBuilder(exponentialReconnectionPolicy);
-        return cluster.connect(uri.getDatabase());
+    private CqlSession createSession(String url, String user, String pass) throws URISyntaxException {
+        //CassandraClientURI uri = new CassandraClientURI(url, user, pass);
+
+        // Parse URL format: "cassandra://host:port/keyspace"
+        // Example: "cassandra://localhost:9042/my_keyspace"
+        java.net.URI uri = new java.net.URI(url);
+        String host = uri.getHost();
+        int port = uri.getPort() > 0 ? uri.getPort() : 9042;
+        String keyspace = uri.getPath() != null && uri.getPath().length() > 1
+                ? uri.getPath().substring(1) : null;
+
+        CqlSessionBuilder builder = CqlSession.builder()
+                .addContactPoint(new InetSocketAddress(host, port))
+                .withLocalDatacenter("datacenter1"); // Adjust to your environment (will get it from options)
+
+        // Add authentication if provided
+        if (user != null && pass != null) {
+            builder = builder.withAuthCredentials(user, pass);
+        }
+
+        // Set keyspace if provided in URL
+        if (keyspace != null && !keyspace.isEmpty()) {
+            builder = builder.withKeyspace(keyspace);
+        }
+
+        return builder.build();
     }
 }

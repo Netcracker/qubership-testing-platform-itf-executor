@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 package org.qubership.automation.itf.transport.sql;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,17 +28,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.qubership.automation.itf.transport.sql.outbound.SqlOutboundTransport;
+import javax.net.ssl.SSLContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.policies.ConstantReconnectionPolicy;
-import com.datastax.driver.core.policies.DowngradingConsistencyRetryPolicy;
-import com.datastax.driver.core.policies.ReconnectionPolicy;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 
 public class CassandraClientURI {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SqlOutboundTransport.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CassandraClientURI.class);
 
     private static final String PREFIX = "jdbc:cassandra://";
     static Set<String> allKeys = new HashSet<>();
@@ -115,14 +115,12 @@ public class CassandraClientURI {
         warnOnUnsupportedOptions(optionsMap);
     }
 
-    public Cluster createBuilder() throws java.net.UnknownHostException {
-        return createBuilder(new ConstantReconnectionPolicy(100L));
-    }
-
-    public Cluster createBuilder(ReconnectionPolicy reconnectionPolicy) throws java.net.UnknownHostException {
-        Cluster.Builder builder = Cluster.builder();
+    public CqlSession createCqlSession() throws java.net.UnknownHostException, NoSuchAlgorithmException {
+        CqlSessionBuilder builder = CqlSession.builder();
         if (System.getProperty("javax.net.ssl.trustStore") != null) {
-            builder = builder.withSSL();
+            // Get the default SSLContext initialized with the JVM's system properties
+            SSLContext sslContext = SSLContext.getDefault();
+            builder = builder.withSslContext(sslContext);
         }
         int port = -1;
         for (String host : hosts) {
@@ -131,17 +129,12 @@ public class CassandraClientURI {
                 port = Integer.parseInt(host.substring(idx + 1).trim());
                 host = host.substring(0, idx).trim();
             }
-            builder.addContactPoints(InetAddress.getByName(host));
+            if (!host.isEmpty() && port > -1) {
+                builder.addContactPoint(new InetSocketAddress(host, port));
+            }
         }
-        if (port > -1) {
-            builder.withPort(port);
-        }
-        builder.withRetryPolicy(DowngradingConsistencyRetryPolicy.INSTANCE)
-                .withReconnectionPolicy((reconnectionPolicy == null)
-                        ? new ConstantReconnectionPolicy(100L)
-                        : reconnectionPolicy);
         if (userName != null) {
-            builder.withCredentials(userName, password);
+            builder.withAuthCredentials(userName, password);
             LOGGER.info("URI: {} - Using authentication as user '{}'", uri, userName);
         }
         return builder.build();

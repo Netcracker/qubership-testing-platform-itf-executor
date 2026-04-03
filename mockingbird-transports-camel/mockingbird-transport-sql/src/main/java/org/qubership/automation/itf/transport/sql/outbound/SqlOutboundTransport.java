@@ -17,6 +17,25 @@
 
 package org.qubership.automation.itf.transport.sql.outbound;
 
+import static com.datastax.oss.driver.api.core.type.DataTypes.ASCII;
+import static com.datastax.oss.driver.api.core.type.DataTypes.BIGINT;
+import static com.datastax.oss.driver.api.core.type.DataTypes.BOOLEAN;
+import static com.datastax.oss.driver.api.core.type.DataTypes.COUNTER;
+import static com.datastax.oss.driver.api.core.type.DataTypes.DATE;
+import static com.datastax.oss.driver.api.core.type.DataTypes.DECIMAL;
+import static com.datastax.oss.driver.api.core.type.DataTypes.DURATION;
+import static com.datastax.oss.driver.api.core.type.DataTypes.INET;
+import static com.datastax.oss.driver.api.core.type.DataTypes.TEXT;
+import static com.datastax.oss.driver.api.core.type.DataTypes.DOUBLE;
+import static com.datastax.oss.driver.api.core.type.DataTypes.FLOAT;
+import static com.datastax.oss.driver.api.core.type.DataTypes.INT;
+import static com.datastax.oss.driver.api.core.type.DataTypes.SMALLINT;
+import static com.datastax.oss.driver.api.core.type.DataTypes.TIME;
+import static com.datastax.oss.driver.api.core.type.DataTypes.TIMESTAMP;
+import static com.datastax.oss.driver.api.core.type.DataTypes.TIMEUUID;
+import static com.datastax.oss.driver.api.core.type.DataTypes.TINYINT;
+import static com.datastax.oss.driver.api.core.type.DataTypes.UUID;
+import static com.datastax.oss.driver.api.core.type.DataTypes.VARINT;
 import static org.qubership.automation.itf.transport.sql.SqlTransportConstants.APACHE_HIVE;
 import static org.qubership.automation.itf.transport.sql.SqlTransportConstants.APACHE_HIVE_DRIVER;
 import static org.qubership.automation.itf.transport.sql.SqlTransportConstants.CASANDRA_DRIVER;
@@ -63,12 +82,11 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.LoggingErrorHandlerBuilder;
 import org.apache.camel.component.cassandra.CassandraComponent;
 import org.apache.camel.component.cassandra.CassandraEndpoint;
 import org.apache.camel.component.jdbc.JdbcComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
@@ -84,13 +102,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.ColumnDefinitions;
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.UDTValue;
-import com.datastax.driver.core.exceptions.CodecNotFoundException;
+import com.datastax.oss.driver.api.core.CqlIdentifier;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ColumnDefinitions;
+import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.core.data.CqlDuration;
+import com.datastax.oss.driver.api.core.data.UdtValue;
+import com.datastax.oss.driver.api.core.type.DataType;
+import com.datastax.oss.driver.api.core.type.ListType;
+import com.datastax.oss.driver.api.core.type.MapType;
+import com.datastax.oss.driver.api.core.type.SetType;
+import com.datastax.oss.driver.api.core.type.UserDefinedType;
+import com.datastax.oss.driver.api.core.type.codec.CodecNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -460,17 +483,18 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private Message sendReceiveSyncLegacy(Message message, ConnectionProperties connectionProperties) throws Exception {
         DataSource dataSource = setupDataSource(connectionProperties);
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put(DATA_SOURCE, dataSource);
+        registry.bind(DATA_SOURCE, dataSource);
         CamelContext context = new DefaultCamelContext(registry);
         if (!context.getComponentNames().contains("jdbc")) {
-            JdbcComponent jdbcComponent = new JdbcComponent(context);
+            JdbcComponent jdbcComponent = new JdbcComponent();
+            jdbcComponent.setCamelContext(context);
             jdbcComponent.setDataSource(dataSource);
             context.addComponent("jdbc", jdbcComponent);
         }
         ProducerTemplate template = context.createProducerTemplate();
         String options = getStringOptionsForRouteBuilder(connectionProperties);
         SqlRouteBuilder sqlRoute = new SqlRouteBuilder(options);
-        sqlRoute.setContext(context);
+        sqlRoute.setCamelContext(context);
         context.addRoutes(sqlRoute);
         Endpoint endpoint = context.getEndpoint("direct:start");
         Exchange exchange = endpoint.createExchange();
@@ -498,19 +522,19 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private Message sendReceiveSyncCassandra(Message message, ConnectionProperties connectionProperties) throws Exception {
         String username = getAndCheckRequiredProperty(connectionProperties, USER, USER_DESCRIPTION);
         String password = getAndCheckRequiredProperty(connectionProperties, PASSWORD, PASSWORD_DESCRIPTION);
-        Session session = CassandraSessionsHolder.getInstance().getSession(
-                getAndCheckRequiredProperty(connectionProperties, JDBC_URL, JDBC_URL_STRING), username, password);
+        String url = getAndCheckRequiredProperty(connectionProperties, JDBC_URL, JDBC_URL_STRING);
+
+        // Very probably, url should be pre-processed firstly (cut jdbc: or jdbc:cassandra: prefix)
+        // It should be checked
+        CqlSession session = CassandraSessionsHolder.getInstance().getSession(url, username, password);
         CassandraComponent component = new CassandraComponent();
-        /*
-            Please be aware: if cluster parameter != null - a new session is created while endpoint.start()!!!
-         */
-        CassandraEndpoint endpoint = new CassandraEndpoint("", component, null, session, session.getLoggedKeyspace());
+        // Url and Keyspace parameters should be checked
+        CassandraEndpoint endpoint = new CassandraEndpoint(url, component, session, session.getKeyspace().toString());
         endpoint.setUsername(username);
         endpoint.setPassword(password);
         endpoint.setCql(message.getText()); // SQL Query text is here
         endpoint.start();
         CamelContext context = new DefaultCamelContext();
-        context.setErrorHandlerBuilder(new LoggingErrorHandlerBuilder(LOGGER));
         ProducerTemplate template = context.createProducerTemplate();
         endpoint.setCamelContext(context);
         Exchange exchange = endpoint.createExchange();
@@ -524,22 +548,24 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 throw out.getException();
             }
         } catch (Exception e) {
-            stop(context, session, session.getCluster());
+            stop(context, session);
             throw new Exception("Error sending SQL Message. Stacktrace: " + e);
         }
         Message response = new Message(convertToJson(processCassandraResponse(out.getOut().getBody())));
         exchange.getOut().getHeaders().put(OPTIONS_STRING, options);
         response.convertAndSetHeaders(exchange.getOut().getHeaders());
-        stop(context, session, session.getCluster());
+        stop(context, session);
         return response;
     }
 
-    private void stop(CamelContext context, Session session, Cluster cluster) throws Exception {
+    private void stop(CamelContext context, CqlSession session) throws Exception {
         context.stop();
-        // Session and Cluster remain opened until ITF is stopped
+        // Session remains opened until ITF is stopped.
+        //  If session is closed just after a query is executed, it greatly affects performance on
+        //  subsequent queries.
+        // May be, some scheduled closing should be added.
         /*
         if (!session.isClosed()) session.close();
-        if (!cluster.isClosed()) cluster.close();
         */
     }
 
@@ -598,188 +624,210 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
      * Duplicated (by sense) processing is in the 'getByName' method below.
      * It can't be combined due to different data types: Row vs. UDTValue
      */
-    private Object getColumnValue(Row row, int i, DataType.Name columnType) {
+    private Object getColumnValue(Row row, int i, DataType columnType) {
         if (row == null || row.isNull(i)) {
             return null;
         }
-        switch (columnType) {
-            case ASCII:
-            case VARCHAR:
-            case TEXT:
-                return row.getString(i);
-            case BIGINT:
-            case COUNTER:
-                return row.getLong(i);
-            case BOOLEAN:
-                return row.getBool(i);
-            case DECIMAL:
-                return row.getDecimal(i);
-            case DOUBLE:
-                return row.getDouble(i);
-            case FLOAT:
-                return row.getFloat(i);
-            case INET:
-                return row.getInet(i);
-            case INT:
-                return row.getInt(i);
-            case SMALLINT:
-                return (int) row.getShort(i);
-            case TINYINT:
-                return (int) row.getByte(i);
-            case UDT:
-                return udtValue2Object(row.getUDTValue(i));
-            case LIST:
+        if (columnType.equals(ASCII) || columnType.equals(TEXT)) {
+            return row.getString(i);
+        } else if (columnType.equals(BIGINT) || columnType.equals(COUNTER)) {
+            return row.getLong(i);
+        } else if (columnType.equals(BOOLEAN)) {
+            return row.getBoolean(i);
+        } else if (columnType.equals(DECIMAL)) {
+            return row.getBigDecimal(i);
+        } else if (columnType.equals(DOUBLE)) {
+            return row.getDouble(i);
+        } else if (columnType.equals(FLOAT)) {
+            return row.getFloat(i);
+        } else if (columnType.equals(INET)) {
+            return row.getInetAddress(i);
+        } else if (columnType.equals(INT)) {
+            return row.getInt(i);
+        } else if (columnType.equals(SMALLINT)) {
+            return (int) row.getShort(i);
+        } else if (columnType.equals(TINYINT)) {
+            return (int) row.getByte(i);
+        } else if (columnType.equals(TIMESTAMP) || columnType.equals(TIME)) {
+            return row.getLocalTime(i); // TODO: need to test
+        } else if (columnType.equals(TIMEUUID) || columnType.equals(UUID)) {
+            return row.getUuid(i);
+        } else if (columnType.equals(VARINT)) {
+            return row.getInt(i); // TODO: need to test
+        } else if (columnType.equals(DATE)) {
+            return row.getLocalDate(i); // TODO: need to test
+        } else if (columnType.equals(DURATION)) {
+            CqlDuration duration = row.getCqlDuration(i); // TODO: need to test
+            return duration == null ? 0 : duration.getNanoseconds();
+        } else if (columnType instanceof UserDefinedType) {
+            return udtValue2Object(row.getUdtValue(i));
+        } else if (columnType instanceof ListType) {
+            try {
+                return row.getList(i, String.class);
+            } catch (CodecNotFoundException ex) {
                 try {
-                    return row.getList(i, String.class);
-                } catch (CodecNotFoundException ex) {
-                    try {
-                        List<UDTValue> udtList = row.getList(i, UDTValue.class);
-                        List<Object> list = new ArrayList<>();
-                        for (UDTValue udtValue : udtList) {
+                    List<UdtValue> udtList = row.getList(i, UdtValue.class);
+                    List<Object> list = new ArrayList<>();
+                    if (udtList != null) {
+                        for (UdtValue udtValue : udtList) {
                             list.add(udtValue2Object(udtValue));
                         }
-                        return list;
-                    } catch (CodecNotFoundException ex1) {
-                        return row.getObject(i);
                     }
+                    return list;
+                } catch (CodecNotFoundException ex1) {
+                    return row.getObject(i);
                 }
-            case MAP:
-                try {
-                    return row.getMap(i, String.class, String.class);
-                } catch (CodecNotFoundException ex) {
-                    Map<String, UDTValue> udtMap = row.getMap(i, String.class, UDTValue.class);
-                    Map<String, Object> map = new HashMap<>();
-                    for (Map.Entry<String, UDTValue> entry : udtMap.entrySet()) {
+            }
+        } else if (columnType instanceof MapType) {
+            try {
+                return row.getMap(i, String.class, String.class);
+            } catch (CodecNotFoundException ex) {
+                Map<String, UdtValue> udtMap = row.getMap(i, String.class, UdtValue.class);
+                Map<String, Object> map = new HashMap<>();
+                if (udtMap != null) {
+                    for (Map.Entry<String, UdtValue> entry : udtMap.entrySet()) {
                         map.put(entry.getKey(), udtValue2Object(entry.getValue()));
                     }
-                    return map;
                 }
-            case SET:
+                return map;
+            }
+        } else if (columnType instanceof SetType) {
+            try {
+                return row.getSet(i, String.class);
+            } catch (CodecNotFoundException ex) {
                 try {
-                    return row.getSet(i, String.class);
-                } catch (CodecNotFoundException ex) {
-                    try {
-                        Set<UDTValue> udtSet = row.getSet(i, UDTValue.class);
-                        List<Object> list = new ArrayList<>();
-                        for (UDTValue value : udtSet) {
+                    Set<UdtValue> udtSet = row.getSet(i, UdtValue.class);
+                    List<Object> list = new ArrayList<>();
+                    if (udtSet != null) {
+                        for (UdtValue value : udtSet) {
                             list.add(udtValue2Object(value));
                         }
-                        return list;
-                    } catch (CodecNotFoundException ex1) {
-                        return row.getObject(i);
                     }
+                    return list;
+                } catch (CodecNotFoundException ex1) {
+                    return row.getObject(i);
                 }
-            case TIMESTAMP:
-                return row.getTimestamp(i); //row.getDate(i); // is not working at 3.7.1
-            case TIMEUUID:
-            case UUID:
-                return row.getUUID(i);
-            case VARINT:
-                return row.getVarint(i);
-            default:
-                //read as a varbinary
-                ByteBuffer bytesUnsafe = row.getBytesUnsafe(i);
-                byte[] b = new byte[bytesUnsafe.remaining()];
-                bytesUnsafe.get(b);
-                return b;
+            }
         }
+
+        //read as a varbinary
+        return getByteBuffer(row.getBytesUnsafe(i));
     }
 
-    private Object udtValue2Object(UDTValue udtValue) {
+    private Object udtValue2Object(UdtValue udtValue) {
         if (udtValue == null) {
             return null;
         }
         Map<String, Object> udtMap = new HashMap<>();
-        for (String fieldName : udtValue.getType().getFieldNames()) {
-            udtMap.put(fieldName, getByName(udtValue, fieldName));
+        List<CqlIdentifier> fieldNames = udtValue.getType().getFieldNames();
+        List<DataType> fieldTypes = udtValue.getType().getFieldTypes();
+        for (int i = 0; i < fieldNames.size(); i++) {
+            CqlIdentifier fieldIdentifier = fieldNames.get(i);
+            udtMap.put(
+                    fieldIdentifier.asInternal(),
+                    getByCqlIdentifier(udtValue, i, fieldTypes.get(i))
+            );
         }
         return udtMap;
     }
 
-    private Object getByName(UDTValue udtValue, String fieldName) {
-        if (udtValue.isNull(fieldName)) {
+    private Object getByCqlIdentifier(UdtValue udtValue,
+                                      int index,
+                                      DataType columnType) {
+        if (udtValue.isNull(index)) {
             return null;
         }
-        switch (udtValue.getType().getFieldType(fieldName).getName()) {
-            case ASCII:
-            case VARCHAR:
-            case TEXT:
-                return udtValue.getString(fieldName);
-            case BIGINT:
-            case COUNTER:
-                return udtValue.getLong(fieldName);
-            case BOOLEAN:
-                return udtValue.getBool(fieldName);
-            case DECIMAL:
-                return udtValue.getDecimal(fieldName);
-            case DOUBLE:
-                return udtValue.getDouble(fieldName);
-            case FLOAT:
-                return udtValue.getFloat(fieldName);
-            case INET:
-                return udtValue.getInet(fieldName);
-            case INT:
-                return udtValue.getInt(fieldName);
-            case SMALLINT:
-                return (int) udtValue.getShort(fieldName);
-            case TINYINT:
-                return (int) udtValue.getByte(fieldName);
-            case UDT:
-                return udtValue2Object(udtValue.getUDTValue(fieldName));
-            case LIST:
+        if (columnType instanceof UserDefinedType) {
+            return udtValue2Object(udtValue.getUdtValue(index));
+        } else if (columnType instanceof ListType) {
+            try {
+                return udtValue.getList(index, String.class);
+            } catch (CodecNotFoundException ex) {
                 try {
-                    return udtValue.getList(fieldName, String.class);
-                } catch (CodecNotFoundException ex) {
-                    try {
-                        List<UDTValue> udtList = udtValue.getList(fieldName, UDTValue.class);
-                        List<Object> list = new ArrayList<>();
-                        for (UDTValue value : udtList) {
+                    List<UdtValue> udtList = udtValue.getList(index, UdtValue.class);
+                    List<Object> list = new ArrayList<>();
+                    if (udtList != null) {
+                        for (UdtValue value : udtList) {
                             list.add(udtValue2Object(value));
                         }
-                        return list;
-                    } catch (CodecNotFoundException ex1) {
-                        return udtValue.getObject(fieldName);
                     }
+                    return list;
+                } catch (CodecNotFoundException ex1) {
+                    return udtValue.getObject(index);
                 }
-            case MAP:
-                try {
-                    return udtValue.getMap(fieldName, String.class, String.class);
-                } catch (CodecNotFoundException ex) {
-                    Map<String, UDTValue> udtMap = udtValue.getMap(fieldName, String.class, UDTValue.class);
-                    Map<String, Object> map = new HashMap<>();
-                    for (Map.Entry<String, UDTValue> entry : udtMap.entrySet()) {
+            }
+        } else if (columnType instanceof MapType) {
+            try {
+                return udtValue.getMap(index, String.class, String.class);
+            } catch (CodecNotFoundException ex) {
+                Map<String, UdtValue> udtMap = udtValue.getMap(index, String.class, UdtValue.class);
+                Map<String, Object> map = new HashMap<>();
+                if (udtMap != null) {
+                    for (Map.Entry<String, UdtValue> entry : udtMap.entrySet()) {
                         map.put(entry.getKey(), udtValue2Object(entry.getValue()));
                     }
-                    return map;
                 }
-            case SET:
+                return map;
+            }
+        } else if (columnType instanceof SetType) {
+            try {
+                return udtValue.getSet(index, String.class);
+            } catch (CodecNotFoundException ex) {
                 try {
-                    return udtValue.getSet(fieldName, String.class);
-                } catch (CodecNotFoundException ex) {
-                    try {
-                        Set<UDTValue> udtSet = udtValue.getSet(fieldName, UDTValue.class);
-                        List<Object> list = new ArrayList<>();
-                        for (UDTValue value : udtSet) {
+                    Set<UdtValue> udtSet = udtValue.getSet(index, UdtValue.class);
+                    List<Object> list = new ArrayList<>();
+                    if (udtSet != null) {
+                        for (UdtValue value : udtSet) {
                             list.add(udtValue2Object(value));
                         }
-                        return list;
-                    } catch (CodecNotFoundException ex1) {
-                        return udtValue.getObject(fieldName);
                     }
+                    return list;
+                } catch (CodecNotFoundException ex1) {
+                    return udtValue.getObject(index);
                 }
-            case TIMESTAMP:
-                return udtValue.getTimestamp(fieldName);
-            case TIMEUUID:
-            case UUID:
-                return udtValue.getUUID(fieldName);
-            case VARINT:
-                return udtValue.getVarint(fieldName);
-            default:
-                //read as a varbinary
-                ByteBuffer bytesUnsafe = udtValue.getBytesUnsafe(fieldName);
-                byte[] b = new byte[bytesUnsafe.remaining()];
-                bytesUnsafe.get(b);
-                return b;
+            }
+        } else if (columnType.equals(ASCII) || columnType.equals(TEXT)) {
+            return udtValue.getString(index);
+        } else if (columnType.equals(BIGINT) || columnType.equals(COUNTER)) {
+            return udtValue.getLong(index);
+        } else if (columnType.equals(BOOLEAN)) {
+            return udtValue.getBoolean(index);
+        } else if (columnType.equals(DECIMAL)) {
+            return udtValue.getBigDecimal(index);
+        } else if (columnType.equals(DOUBLE)) {
+            return udtValue.getDouble(index);
+        } else if (columnType.equals(FLOAT)) {
+            return udtValue.getFloat(index);
+        } else if (columnType.equals(INET)) {
+            return udtValue.getInetAddress(index);
+        } else if (columnType.equals(INT) || columnType.equals(VARINT)) {
+            return udtValue.getInt(index);
+        } else if (columnType.equals(SMALLINT)) {
+            return (int) udtValue.getShort(index);
+        } else if (columnType.equals(TINYINT)) {
+            return (int) udtValue.getByte(index);
+        } else if (columnType.equals(TIMESTAMP) || columnType.equals(TIME)) {
+            return udtValue.getLocalTime(index);
+        } else if (columnType.equals(TIMEUUID) || columnType.equals(UUID)) {
+            return udtValue.getUuid(index);
+        } else if (columnType.equals(DATE)) {
+            return udtValue.getLocalDate(index); // TODO: need to test
+        } else if (columnType.equals(DURATION)) {
+            CqlDuration duration = udtValue.getCqlDuration(index); // TODO: need to test
+            return duration == null ? 0 : duration.getNanoseconds();
+        }
+
+        //read as a varbinary
+        return getByteBuffer(udtValue.getBytesUnsafe(index));
+    }
+
+    private byte[] getByteBuffer(ByteBuffer byteBuffer) {
+        if (byteBuffer != null) {
+            byte[] b = new byte[byteBuffer.remaining()];
+            byteBuffer.get(b);
+            return b;
+        } else {
+            return null;
         }
     }
 
@@ -793,8 +841,8 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                     ColumnDefinitions columnDefinitions = row1.getColumnDefinitions();
                     LinkedHashMap<String, Object> rowValuesMap = new LinkedHashMap<>(columnDefinitions.size());
                     for (int i = 0; i < columnDefinitions.size(); i++) {
-                        Object value = getColumnValue(row1, i, columnDefinitions.getType(i).getName());
-                        rowValuesMap.put(columnDefinitions.getName(i), value);
+                        Object value = getColumnValue(row1, i, columnDefinitions.get(i).getType());
+                        rowValuesMap.put(columnDefinitions.get(i).getName().toString(), value);
                     }
                     array.add(rowValuesMap);
                 }
