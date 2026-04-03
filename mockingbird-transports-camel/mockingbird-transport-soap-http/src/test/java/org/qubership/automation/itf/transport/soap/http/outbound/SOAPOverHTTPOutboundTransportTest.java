@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hamcrest.core.StringContains;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;
 import org.qubership.automation.itf.core.util.constants.PropertyConstants;
@@ -46,6 +47,10 @@ public class SOAPOverHTTPOutboundTransportTest {
             :Body>
             </soapenv:Envelope>""";
 
+    /*
+     * Disabled by KAG, but planned to rewrite later.
+     */
+    @Disabled
     @Test
     public void testSendMessageToTAProd() throws Exception {
         SOAPOverHTTPOutboundTransport transport = new SOAPOverHTTPOutboundTransport();

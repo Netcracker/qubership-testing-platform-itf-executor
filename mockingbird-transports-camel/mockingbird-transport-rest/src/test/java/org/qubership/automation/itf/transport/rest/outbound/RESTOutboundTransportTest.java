@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;
+import org.qubership.automation.itf.transport.http.outbound.HTTPOutboundTransport;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -69,20 +70,20 @@ public class RESTOutboundTransportTest {
         RESTOutboundTransport transport = new RESTOutboundTransport();
         Message message = new Message();
         ConnectionProperties properties = (ConnectionProperties) message.getConnectionProperties();
-        properties.put(HTTPConstants.BASE_URL, "http://localhost:8081");
+        properties.put(HTTPConstants.BASE_URL, "http://localhost:8083");
         properties.put(HTTPConstants.ENDPOINT, "test/post/");
-        assertUri(transport, message);
+        assertUri(transport, message, "http://localhost:8083");
         properties.put(HTTPConstants.ENDPOINT, "/test/post/");
-        assertUri(transport, message);
-        properties.put(HTTPConstants.BASE_URL, "http://localhost:8081/");
-        assertUri(transport, message);
+        assertUri(transport, message, "http://localhost:8083");
+        properties.put(HTTPConstants.BASE_URL, "http://localhost:8083/");
+        assertUri(transport, message, "http://localhost:8083/");
     }
 
-    private void assertUri(RESTOutboundTransport transport, Message message) throws NoSuchMethodException,
+    private void assertUri(RESTOutboundTransport transport, Message message, String url) throws NoSuchMethodException,
             IllegalAccessException, InvocationTargetException {
-        Method resolveEndpoint = RESTOutboundTransport.class.getDeclaredMethod("resolveEndpoint", Message.class);
+        Method resolveEndpoint = HTTPOutboundTransport.class.getDeclaredMethod("resolveEndpoint", Message.class, String.class);
         resolveEndpoint.setAccessible(true);
-        Object endpoint = resolveEndpoint.invoke(transport, message);
-        assertEquals("http://localhost:8081/test/post/", endpoint);
+        Object endpoint = resolveEndpoint.invoke(transport, message, url);
+        assertEquals("http://localhost:8083/test/post/", endpoint);
     }
 }

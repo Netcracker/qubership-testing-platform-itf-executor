@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
@@ -134,7 +135,7 @@ public class CLIOutboundTransportTest {
         message.getConnectionProperties().put(PropertyConstants.Cli.REMOTE_PORT, 15596);
         message.getConnectionProperties().put(PropertyConstants.Cli.CONNECTION_TYPE, "tcp");
         message.setText("Test");
-        transport.send(message, "", UUID.randomUUID());
+        transport.sendReceiveSync(message, new BigInteger("123"));
         assertTrue(read > 0);
         assertEquals(message.getText(), this.requestMessage);
     }
