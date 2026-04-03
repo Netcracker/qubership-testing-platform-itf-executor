@@ -17,6 +17,7 @@
 
 package org.qubership.automation.itf;
 
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.catalogue.openapi.dto.ObjectOperationDto;
 import org.qubership.atp.catalogue.openapi.dto.ProjectDto;
 import org.qubership.atp.catalogue.openapi.dto.UserInfoDto;
+import org.qubership.automation.itf.core.util.OffsetDateTimeAdapter;
 import org.qubership.automation.itf.integration.catalogue.CatalogueProjectFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
@@ -50,6 +52,7 @@ import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @EnableFeignClients(clients = {CatalogueProjectFeignClient.class})
 @ExtendWith(PactConsumerTestExt.class)
@@ -86,6 +89,10 @@ public class CatalogueFeignClientPactUnitTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(OffsetDateTime.class, new OffsetDateTimeAdapter())
+                .create();
+
         PactDslResponse response = builder
                 .given("all ok")
                 .uponReceiving("GET /catalog/api/v1/projects/{uuid} OK")
@@ -93,7 +100,7 @@ public class CatalogueFeignClientPactUnitTest {
                 .method("GET")
                 .willRespondWith()
                 .headers(headers)
-                .body(new Gson().toJson(formProject()))
+                .body(gson.toJson(formProject()))
                 .status(200);
         return response.toPact();
     }

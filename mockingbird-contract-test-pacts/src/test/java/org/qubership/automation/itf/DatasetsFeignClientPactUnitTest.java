@@ -17,6 +17,7 @@
 
 package org.qubership.automation.itf;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.qubership.atp.datasets.dto.DataSetListCreatedModifiedViewDto;
 import org.qubership.atp.datasets.dto.DataSetTreeDto;
 import org.qubership.atp.datasets.dto.TestPlanCreatedModifiedViewDto;
 import org.qubership.atp.datasets.dto.VisibilityAreaFlatModelDto;
+import org.qubership.automation.itf.core.util.OffsetDateTimeAdapter;
 import org.qubership.automation.itf.core.util.feign.impl.DatasetsAttachmentFeignClient;
 import org.qubership.automation.itf.core.util.feign.impl.DatasetsAttributeFeignClient;
 import org.qubership.automation.itf.core.util.feign.impl.DatasetsDatasetFeignClient;
@@ -62,6 +64,7 @@ import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @EnableFeignClients(clients = {DatasetsDatasetFeignClient.class, DatasetsAttachmentFeignClient.class,
         DatasetsAttributeFeignClient.class, DatasetsDatasetListFeignClient.class,
@@ -336,7 +339,10 @@ public class DatasetsFeignClientPactUnitTest {
     }
 
     private String objectToString(Object obj) {
-        return new Gson().toJson(obj);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(OffsetDateTime.class, new OffsetDateTimeAdapter())
+                .create();
+        return gson.toJson(obj);
     }
 
     @Configuration
