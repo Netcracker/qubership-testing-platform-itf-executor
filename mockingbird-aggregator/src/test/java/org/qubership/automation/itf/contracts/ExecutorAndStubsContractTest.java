@@ -59,7 +59,7 @@ import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
 import lombok.extern.slf4j.Slf4j;
 
 @Provider("atp-itf-executor")
-@PactUrl(urls = {"classpath:pacts/atp-itf-stubs-atp-itf-executor.json"})
+@PactUrl(urls = {"file:src/test/resources/pacts/atp-itf-stubs-atp-itf-executor.json"})
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = {ItfStubsRequestsController.class})
 @SpringJUnitConfig(classes = {ExecutorAndStubsContractTest.TestApp.class})

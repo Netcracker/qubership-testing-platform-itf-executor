@@ -51,7 +51,7 @@ import au.com.dius.pact.provider.junitsupport.loader.PactUrl;
 import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
 
 @Provider("atp-itf-executor")
-@PactUrl(urls = {"classpath:pacts/atp-itf-lite-atp-itf-executor.json"})
+@PactUrl(urls = {"file:src/test/resources/pacts/atp-itf-lite-atp-itf-executor.json"})
 @AutoConfigureMockMvc(addFilters = false, webDriverEnabled = false)
 @WebMvcTest(controllers = {ContextController.class, VelocityController.class})
 @SpringJUnitConfig(classes = {ItfExecutorAndItfLiteContractTest.TestApp.class})
