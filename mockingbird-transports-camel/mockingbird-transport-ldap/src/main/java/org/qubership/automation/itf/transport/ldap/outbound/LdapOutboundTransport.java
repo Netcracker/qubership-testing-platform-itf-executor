@@ -58,7 +58,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -189,7 +189,7 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
         String outputFormat = (String) connectionProperties.getOrDefault(OUTPUT_FORMAT, DEFAULT_OUTPUT_FORMAT);
         String base = (String) props.getOrDefault("base", "ou=system");
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put(LDAP_DATASOURCE, new InitialLdapContext(props, null));
+        registry.bind(LDAP_DATASOURCE, new InitialLdapContext(props, null));
         CamelContext context = new DefaultCamelContext(registry);
         context.addRoutes(new RouteBuilder() {
             public void configure() {
