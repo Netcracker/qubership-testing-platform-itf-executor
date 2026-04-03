@@ -214,7 +214,7 @@ public class TestRunInfo {
         tcContextRamExtension.setRunContext(ramTestRunContext);
         TcContext tc = new TcContext();
         if (ramTestRunContext.getAtpCompaund() != null) {
-            tc.setID(ramTestRunContext.getAtpCompaund().getSectionId());
+            tc.setID(new BigInteger(ramTestRunContext.getAtpCompaund().getSectionId())); // TODO: need to check it
         }
         tc.setStartedFrom(startedFrom);
         tc.setProjectId(projectId);

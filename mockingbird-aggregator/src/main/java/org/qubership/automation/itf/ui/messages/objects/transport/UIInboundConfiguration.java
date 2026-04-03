@@ -17,6 +17,7 @@
 
 package org.qubership.automation.itf.ui.messages.objects.transport;
 
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
@@ -64,7 +65,10 @@ public class UIInboundConfiguration extends UIConfiguration {
         transport = new UIObject(configuration.getReferencedConfiguration());
         try {
             TriggerConfiguration someTrigger = new TriggerConfiguration(configuration);
-            someTrigger.setID(DUMB_ID);
+
+            // TODO: Need to check it
+            //someTrigger.setID(DUMB_ID);
+            someTrigger.setID(BigInteger.valueOf(0));
             etalonTrigger = new UITriggerConfiguration(someTrigger);
             etalonTrigger.defineProperties(someTrigger);
         } catch (RemoteException | TransportException ignored) {

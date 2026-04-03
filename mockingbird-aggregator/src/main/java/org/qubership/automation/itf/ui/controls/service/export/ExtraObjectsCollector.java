@@ -184,7 +184,7 @@ public class ExtraObjectsCollector {
 
     private Map<Object, Storable> getProjectSettingsFromProject(StubProject project) {
         Map<Object, Storable> extraObjects = Maps.newHashMap();
-        Object projectId = project.getID();
+        BigInteger projectId = project.getID();
         ProjectSettings settings = new ProjectSettings(projectSettingsService.getAll(projectId));
         settings.setID(projectId);
         extraObjects.put(projectId, settings);

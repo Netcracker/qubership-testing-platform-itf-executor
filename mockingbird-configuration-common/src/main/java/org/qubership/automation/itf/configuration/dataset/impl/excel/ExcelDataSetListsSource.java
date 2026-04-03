@@ -18,6 +18,7 @@
 package org.qubership.automation.itf.configuration.dataset.impl.excel;
 
 import java.beans.Transient;
+import java.math.BigInteger;
 import java.util.Set;
 
 import org.qubership.automation.itf.core.model.dataset.DataSetList;
@@ -39,9 +40,13 @@ public class ExcelDataSetListsSource extends AbstractStorable implements DataSet
             @Nonnull Object projectUuid) {
         this.repo = repo;
         setParent(parent);
-        setID(id);
-        setNaturalId(id);
         setName(name);
+
+        // TODO: Change of Object to BigInteger requires careful check and possible refactor.
+        BigInteger bid = new BigInteger(id);
+        setID(bid);
+        setNaturalId(bid);
+
         this.projectUuid = projectUuid;
     }
 

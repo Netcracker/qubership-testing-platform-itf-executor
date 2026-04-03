@@ -70,8 +70,9 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
             throw new IllegalStateException("dataset folder is not managed");
         }
 
+        // TDDO: Change from Object to BigInteger looks incorrect for this class. Need to re-think.
         @Override
-        public Object getID() {
+        public BigInteger getID() {
             return folderId;
         }
     };

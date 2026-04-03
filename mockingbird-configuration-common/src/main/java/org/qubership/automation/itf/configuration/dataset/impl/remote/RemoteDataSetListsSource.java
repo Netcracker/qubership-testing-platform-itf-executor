@@ -38,11 +38,16 @@ public class RemoteDataSetListsSource extends AbstractStorable implements DataSe
             @Nonnull RemoteDataSetListRepository repo,
             @Nonnull Folder<DataSetListsSource> parent, @Nonnull UUID id, @Nonnull String name) {
         this.repo = repo;
-        this.id = id;
-        setID(id.toString());
-        setName(name);
         setParent(parent);
+        setName(name);
+
+        this.id = id;
+
+        // Temporarily commented. Types mismatch UUID/BigInteger/Object requires refactoring
+        /*
+        setID(id.toString());
         setNaturalId(id.toString());
+         */
     }
 
     @Nonnull
