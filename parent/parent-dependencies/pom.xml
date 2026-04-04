@@ -51,6 +51,7 @@
 
         <httpclient5.version>5.4.4</httpclient5.version>
         <httpcore5.version>5.3.4</httpcore5.version>
+        <tomcat-embed.version>10.1.52</tomcat-embed.version>
     </properties>
 
     <dependencyManagement>
@@ -525,7 +526,7 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi</artifactId>
-                <version>3.14</version>
+                <version>3.17</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.xmlbeans</groupId>
@@ -536,7 +537,7 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
-                <version>3.14</version>
+                <version>3.17</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.xmlbeans</groupId>
@@ -663,7 +664,7 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml-schemas</artifactId>
-                <version>3.14</version>
+                <version>3.17</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.xmlbeans</groupId>
@@ -884,7 +885,7 @@
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>1.7.3</version>
+                <version>1.14.2</version>
             </dependency>
             <dependency>
                 <groupId>com.querydsl</groupId>
@@ -1064,21 +1065,21 @@
                 <artifactId>okio</artifactId>
                 <version>${com.squareup.okio.okio.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.apache.tomcat.embed</groupId>-->
-<!--                <artifactId>tomcat-embed-core</artifactId>-->
-<!--                <version>${org.apache.tomcat.embed.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.apache.tomcat.embed</groupId>-->
-<!--                <artifactId>tomcat-embed-websocket</artifactId>-->
-<!--                <version>${org.apache.tomcat.embed.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.apache.tomcat.embed</groupId>-->
-<!--                <artifactId>tomcat-embed-el</artifactId>-->
-<!--                <version>${org.apache.tomcat.embed.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>${tomcat-embed.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>${tomcat-embed.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-el</artifactId>
+                <version>${tomcat-embed.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
@@ -1224,6 +1225,16 @@
                 <groupId>org.apache.httpcomponents.core5</groupId>
                 <artifactId>httpclient5-fluent</artifactId>
                 <version>${httpclient5.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hazelcast</groupId>
+                <artifactId>hazelcast</artifactId>
+                <version>5.2.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.angus</groupId>
+                <artifactId>angus-mail</artifactId>
+                <version>2.0.4</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
