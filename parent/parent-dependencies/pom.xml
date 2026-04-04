@@ -52,6 +52,7 @@
         <httpclient5.version>5.4.4</httpclient5.version>
         <httpcore5.version>5.3.4</httpcore5.version>
         <tomcat-embed.version>10.1.52</tomcat-embed.version>
+        <querydsl.version>5.1.0</querydsl.version>
     </properties>
 
     <dependencyManagement>
@@ -103,6 +104,14 @@
                     <exclusion>
                         <groupId>org.qubership.atp</groupId>
                         <artifactId>atp-integration-spring-boot-starter</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.hazelcast</groupId>
+                        <artifactId>hazelcast-all</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.hazelcast</groupId>
+                        <artifactId>hazelcast-eureka-one</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -890,23 +899,13 @@
             <dependency>
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
-                <version>4.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.querydsl</groupId>
-                <artifactId>querydsl-collections</artifactId>
-                <version>4.0.0</version>
+                <version>${querydsl.version}</version>
+                <classifier>jakarta</classifier>
             </dependency>
             <dependency>
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-core</artifactId>
-                <version>4.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>uk.co.jemos.podam</groupId>
-                <artifactId>podam</artifactId>
-                <version>7.0.5.RELEASE</version>
-                <scope>test</scope>
+                <version>${querydsl.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.qubership.atp.ei</groupId>
