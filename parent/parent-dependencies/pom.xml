@@ -118,6 +118,20 @@
                 <groupId>org.qubership.atp</groupId>
                 <artifactId>atp-integration-spring-boot-starter</artifactId>
                 <version>${atp.integration.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-websocket</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-el</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!--Spring Configuration - Start-->
 
