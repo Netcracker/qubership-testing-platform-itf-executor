@@ -22,7 +22,7 @@
 -DITF_EXECUTOR_DB_PASSWORD=
 -DHTTP_PORT=
 -DKEYSTORE_PASSWORD=
--DSPRING_PROFILES=
+-DACTIVE_PROFILES_SPRING=
 -DKEYCLOAK_ENABLED=
 -DKEYCLOAK_CLIENT_NAME=
 -DKEYCLOAK_SECRET=
@@ -80,7 +80,7 @@
 | `ATP_SERVICE_PUBLIC`                                   | No        | true                                                                                                           | Enable or disable public integration with ATP                   |
 | `ATP_SERVICE_INTERNAL`                                 | No        | true                                                                                                           | Enable or disable internal integration with ATP                 |
 | `ATP_SERVICE_PATH`                                     | No        | /api/atp-itf-stubs/v1/**                                                                                       | Service path                                                    |
-| `SPRING_PROFILES`                                      | Yes       | default                                                                                                        | Spring active profiles                                          |
+| `ACTIVE_PROFILES_SPRING                                | Yes       | default                                                                                                        | Spring active profiles                                          |
 | `KEYCLOAK_ENABLED`                                     | Yes       | false                                                                                                          | Enable or disable Keycloak integration                          |
 | `KEYCLOAK_CLIENT_NAME`                                 | Yes       | atp2                                                                                                           | Keycloak resource name                                          |
 | `KEYCLOAK_SECRET`                                      | Yes       | f3e17149-94d0-47ed-a5b7-744c332fdf66                                                                           | keycloak secret value                                           |

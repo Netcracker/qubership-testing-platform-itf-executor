@@ -60,7 +60,7 @@ atp.service.public=${ATP_SERVICE_PUBLIC}
 atp.service.internal=${ATP_SERVICE_INTERNAL}
 atp.service.path=${ATP_SERVICE_PATH}
 ##==================atp-auth-spring-boot-starter=======================
-spring.profiles.active=${SPRING_PROFILES}
+spring.profiles.active=${ACTIVE_PROFILES_SPRING}
 keycloak.enabled=${KEYCLOAK_ENABLED}
 keycloak.resource=${KEYCLOAK_CLIENT_NAME}
 keycloak.credentials.secret=${KEYCLOAK_SECRET}
