@@ -149,6 +149,8 @@ public class VelocityTemplateEngine implements TemplateEngine {
 
     private static FactoryConfiguration makeStrutsFactoryConfig() {
         FactoryConfiguration factoryConfiguration = new FactoryConfiguration();
+        factoryConfiguration.addData(fillData("boolean", "STRUTS_TOOLS_AVAILABLE", "false"));
+        /*
         factoryConfiguration.addData(fillData("boolean", "STRUTS_TOOLS_AVAILABLE", "true"));
 
         ToolboxConfiguration requestToolboxConfiguration = new ToolboxConfiguration();
@@ -162,6 +164,7 @@ public class VelocityTemplateEngine implements TemplateEngine {
                 "org.apache.velocity.tools.struts.TilesTool",
                 "org.apache.velocity.tools.struts.ValidatorTool"));
         factoryConfiguration.addToolbox(requestToolboxConfiguration);
+        */
         return factoryConfiguration;
     }
 
