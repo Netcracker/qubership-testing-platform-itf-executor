@@ -83,4 +83,4 @@ if [ "${MULTI_TENANCY_HIBERNATE_ENABLED}" = "true" ]; then
     done <"${_javaoptions}"
 fi
 
-/usr/bin/java -Xverify:none -Xms128m -XX:MaxRAM="${MAX_RAM_SIZE:-4000m}" -XX:MaxRAMPercentage=75.0 ${JAVA_OPTIONS} -cp "./:./lib/*" org.qubership.automation.itf.Main
+/usr/bin/java --add-modules java.se --add-exports java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.management/sun.management=ALL-UNNAMED --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED -Xms128m -XX:MaxRAM="${MAX_RAM_SIZE:-4000m}" -XX:MaxRAMPercentage=75.0 ${JAVA_OPTIONS} -cp "./:./lib/*" org.qubership.automation.itf.Main
