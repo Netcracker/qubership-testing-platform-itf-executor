@@ -17,8 +17,19 @@
 
 package org.qubership.automation.itf.transport.http;
 
+import javax.net.ssl.SSLContext;
+
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.client5.http.ssl.TrustAllStrategy;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.apache.hc.core5.util.Timeout;
 
 public class PreconfiguredHttpClientHolder {
     private static final int HTTP_CLIENT_TIMEOUT_VALUE = 300000;
@@ -30,7 +41,35 @@ public class PreconfiguredHttpClientHolder {
 
     private static CloseableHttpClient configureClient() {
         try {
-            return HttpClients.custom().build();
+            // 1. Create an SSLContext that trusts all certificates
+            SSLContext sslContext = SSLContexts.custom()
+                    .loadTrustMaterial(null, TrustAllStrategy.INSTANCE)
+                    .build();
+
+            // 2. Create an SSLConnectionSocketFactory using the SSLContext
+            SSLConnectionSocketFactory sslSocketFactory = SSLConnectionSocketFactoryBuilder.create()
+                    .setSslContext(sslContext)
+                    .setHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                    .build();
+
+            // 3. Create a ConnectionManager and set the SSL socket factory on it
+            PoolingHttpClientConnectionManager connectionManager =
+                    PoolingHttpClientConnectionManagerBuilder.create()
+                            .setSSLSocketFactory(sslSocketFactory)
+                            .build();
+
+            RequestConfig config = RequestConfig.custom()
+                    .setConnectTimeout(Timeout.ofMilliseconds(HTTP_CLIENT_TIMEOUT_VALUE))
+                    .setConnectionRequestTimeout(Timeout.ofMilliseconds(HTTP_CLIENT_TIMEOUT_VALUE))
+                    .setResponseTimeout(Timeout.ofMilliseconds(HTTP_CLIENT_TIMEOUT_VALUE))
+                    .build();
+
+            // 4. Build the HttpClient and set the custom ConnectionManager
+            return HttpClients.custom()
+                    .setConnectionManager(connectionManager)
+                    .setConnectionManagerShared(true) // Important for resource management
+                    .setDefaultRequestConfig(config)
+                    .build();
         } catch (Exception e) {
             throw new IllegalStateException("Http client is not initialized", e);
         }
