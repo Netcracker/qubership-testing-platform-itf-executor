@@ -17,6 +17,7 @@
 
 package org.qubership.automation.itf.executor.cache.hazelcast;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,12 @@ import com.hazelcast.core.HazelcastInstance;
 @ConditionalOnProperty(value = "hazelcast.cache.enabled", havingValue = "false")
 public class LocalHazelcastConfig {
 
+    @Value("${hazelcast.cluster-name}")
+    private String clusterName;
+
+    @Value("${hazelcast.client.name}")
+    private String hazelcastClientName;
+
     /**
      * Create {@link HazelcastInstance} bean.
      *
@@ -39,8 +46,8 @@ public class LocalHazelcastConfig {
     @Bean(name = "hazelcastClient")
     public HazelcastInstance hazelcastInstance() {
         Config config = new Config();
-        config.setClusterName("local-itf-hazelcast-cluster");
-        config.setInstanceName("local-itf-hc-cache-instance");
+        config.setClusterName(clusterName);
+        config.setInstanceName(hazelcastClientName);
         HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
         CommonHazelcastConfig.tryToCreateMapConfigsIfNotExist(hazelcastInstance, false);
         return hazelcastInstance;
