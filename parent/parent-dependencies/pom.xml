@@ -13,7 +13,7 @@
         <spring.boot.version>3.3.13</spring.boot.version>
         <spring.cloud.version>2023.0.6</spring.cloud.version>
 
-        <atp.itf.core.version>5.0.7-SNAPSHOT</atp.itf.core.version>
+        <atp.itf.core.version>5.0.8-SNAPSHOT</atp.itf.core.version>
         <atp.auth.version>2.0.2-SNAPSHOT</atp.auth.version>
         <atp.common.version>1.0.0-SNAPSHOT</atp.common.version>
         <atp.integration.version>1.0.0-SNAPSHOT</atp.integration.version>
