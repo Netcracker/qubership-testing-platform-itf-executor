@@ -629,7 +629,7 @@
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
-                <version>0.9.12</version>
+                <version>0.9.10</version>
             </dependency>
             <dependency>
                 <groupId>cglib</groupId>
@@ -737,7 +737,7 @@
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections-maven</artifactId>
-                <version>0.9.12</version>
+                <version>0.9.8</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.jfrog.jade.plugins.common</groupId>
