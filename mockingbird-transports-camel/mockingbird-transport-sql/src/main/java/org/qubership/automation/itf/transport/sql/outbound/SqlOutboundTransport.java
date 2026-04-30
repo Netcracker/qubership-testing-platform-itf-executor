@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -47,15 +47,19 @@ import static org.qubership.automation.itf.transport.sql.SqlTransportConstants.U
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -72,6 +76,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.SimpleRegistry;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.util.annotation.Options;
@@ -100,8 +105,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
-import com.google.common.cache.RemovalCause;
-import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalListeners;
 import lombok.Getter;
 
 @UserName("Outbound SQL Synchronous")
@@ -131,6 +135,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     private static final int dataSourcesCacheExpireMinutes;
     private static final boolean dataSourcesCacheRecordStats;
     private static final boolean dataSourcesCacheLogDetailedConnectionsInfo;
+    private static final int closeDataSourceTimeoutSeconds;
 
     /**
      * If getting from cache is longer than getFromCacheTooSlowThreshold (millis), log warn message.
@@ -162,50 +167,54 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
 
-        defaultQueryTimeout = Config.getConfig()
+        Config config = Config.getConfig();
+        defaultQueryTimeout = config
                 .getIntOrDefault("sql.transport.dataSource.defaultQueryTimeout", 360);
-        initialSize = Config.getConfig()
+        initialSize = config
                 .getIntOrDefault("sql.transport.dataSource.initialSize", 2);
-        maxTotal = Config.getConfig()
+        maxTotal = config
                 .getIntOrDefault("sql.transport.dataSource.maxTotal", 100);
-        maxIdle = Config.getConfig()
+        maxIdle = config
                 .getIntOrDefault("sql.transport.dataSource.maxIdle", 10);
-        minIdle = Config.getConfig()
+        minIdle = config
                 .getIntOrDefault("sql.transport.dataSource.minIdle", 0);
 
-        testWhileIdle = Boolean.parseBoolean(Config.getConfig()
+        testWhileIdle = Boolean.parseBoolean(config
                 .getStringOrDefault("sql.transport.dataSource.testWhileIdle", "false"));
-        fastFailValidation = Boolean.parseBoolean(Config.getConfig()
+        fastFailValidation = Boolean.parseBoolean(config
                 .getStringOrDefault("sql.transport.dataSource.fastFailValidation", "false"));
-        removeAbandonedOnMaintenance = Boolean.parseBoolean(Config.getConfig()
+        removeAbandonedOnMaintenance = Boolean.parseBoolean(config
                 .getStringOrDefault("sql.transport.dataSource.removeAbandonedOnMaintenance", "false"));
-        removeAbandonedOnBorrow = Boolean.parseBoolean(Config.getConfig()
+        removeAbandonedOnBorrow = Boolean.parseBoolean(config
                 .getStringOrDefault("sql.transport.dataSource.removeAbandonedOnBorrow", "false"));
 
-        maxWaitMillis = Config.getConfig()
+        maxWaitMillis = config
                 .getIntOrDefault("sql.transport.dataSource.maxWaitMillis", 10000);
-        minEvictableIdleTimeMillis = Config.getConfig()
+        minEvictableIdleTimeMillis = config
                 .getIntOrDefault("sql.transport.dataSource.minEvictableIdleTimeMillis", 900000);
-        timeBetweenEvictionRunsMillis = Config.getConfig()
+        timeBetweenEvictionRunsMillis = config
                 .getIntOrDefault("sql.transport.dataSource.timeBetweenEvictionRunsMillis", 600000);
-        maxConnLifetimeMillis = Config.getConfig()
+        maxConnLifetimeMillis = config
                 .getIntOrDefault("sql.transport.dataSource.maxConnLifetimeMillis", 1800000);
 
-        ojdbcReadTimeout = Config.getConfig()
+        ojdbcReadTimeout = config
                 .getIntOrDefault("sql.transport.dataSource.ojdbc.ReadTimeout", -1);
-        ojdbcConnectTimeout = Config.getConfig()
+        ojdbcConnectTimeout = config
                 .getIntOrDefault("sql.transport.dataSource.ojdbc.ConnectTimeout", -1);
-        ojdbcOutboundConnectTimeout = Config.getConfig()
+        ojdbcOutboundConnectTimeout = config
                 .getIntOrDefault("sql.transport.dataSource.ojdbc.OutboundConnectTimeout", -1);
 
-        dataSourcesCacheEnable = Boolean.parseBoolean(Config.getConfig()
+        dataSourcesCacheEnable = Boolean.parseBoolean(config
                 .getStringOrDefault("sql.transport.dataSourcesCache.enable", "true"));
-        dataSourcesCacheExpireMinutes = Config.getConfig()
-                .getIntOrDefault("sql.transport.dataSourcesCache.expireMinutes", 1380);
-        dataSourcesCacheRecordStats = Boolean.parseBoolean(Config.getConfig()
+        dataSourcesCacheExpireMinutes = config
+                .getIntOrDefault("sql.transport.dataSourcesCache.expireMinutes", 240);
+        dataSourcesCacheRecordStats = Boolean.parseBoolean(config
                 .getStringOrDefault("sql.transport.dataSourcesCache.recordStats", "false"));
-        dataSourcesCacheLogDetailedConnectionsInfo = Boolean.parseBoolean(Config.getConfig()
+        dataSourcesCacheLogDetailedConnectionsInfo = Boolean.parseBoolean(config
                 .getStringOrDefault("sql.transport.dataSourcesCache.logDetailedConnectionsInfo", "false"));
+
+        closeDataSourceTimeoutSeconds = config
+                .getIntOrDefault("sql.transport.dataSourcesCache.closeDataSourceTimeoutSeconds", 60);
 
         if (dataSourcesCacheEnable) {
             CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
@@ -216,22 +225,14 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 builder.recordStats();
             }
             configCache = builder
-                    .removalListener((RemovalListener<ConnectionProperties, SqlConfig>) removalNotification -> {
-                        if (removalNotification.getCause().equals(RemovalCause.EXPIRED)) {
-                            SqlConfig sqlConfig = removalNotification.getValue();
-                            if (sqlConfig != null) {
-                                BasicDataSource ds = sqlConfig.getDataSource();
-                                if (ds != null && !ds.isClosed()) {
-                                    try {
-                                        ds.close();
-                                    } catch (SQLException e) {
-                                        // Silently do nothing
-                                    }
-                                }
-                            }
-                        }
-                    })
+                    .removalListener(RemovalListeners.asynchronous(notification -> {
+                                        closeDataSourceSafely((SqlConfig) notification.getValue());
+                                    },
+                                    // Dedicated executor to close dataSources
+                                    Executors.newSingleThreadExecutor())
+                    )
                     .build(new CacheLoader<ConnectionProperties, SqlConfig>() {
+                        @NotNull
                         @Override
                         public SqlConfig load(@Nonnull ConnectionProperties id) {
                             BasicDataSource dataSource = (BasicDataSource) setupDataSource(id);
@@ -330,6 +331,39 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         return reqProperty;
     }
 
+    private static void closeDataSourceSafely(SqlConfig config) {
+        if (config == null) {
+            return;
+        }
+        BasicDataSource ds = config.getDataSource();
+        if (ds == null) {
+            return;
+        }
+        try {
+            // Close dataSource async way; set timeout.
+            CompletableFuture.runAsync(() -> {
+                try {
+                    if (!ds.isClosed()) {
+                        // BasicDataSource could hang if there are active connections.
+                        // It's better to set timeout and extra properties prior to invoke close() method.
+                        ds.setMaxWait(Duration.ofSeconds(5)); // Set maximum wait
+                        ds.setRemoveAbandonedTimeout(Duration.ofSeconds(20));
+                        ds.setRemoveAbandonedOnBorrow(true);
+                        ds.setRemoveAbandonedOnMaintenance(true);
+                        ds.close();
+                    }
+                } catch (SQLException e) {
+                    LOGGER.warn("Failed to close DataSource", e);
+                }
+            }).get(closeDataSourceTimeoutSeconds, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            // May be, extra actions are necessary to force closing of dataSource
+            LOGGER.error("DataSource close timeout for {}", ds);
+        } catch (Exception e) {
+            LOGGER.error("Unexpected error closing DataSource {}", ds, e);
+        }
+    }
+
     @Override
     public String getShortName() {
         return "SQL Outbound";
@@ -373,9 +407,11 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         // ~ Camel-less implementation for SVT
         connectionProperties.remove("ContextId");
         connectionProperties.remove("transportId");
+
         long startTime = System.currentTimeMillis();
-        SqlConfig sqlConfig = configCache.get(connectionProperties);
+        SqlConfig sqlConfig = getFromCacheAndCheck(connectionProperties);
         warnIfTooSlow(startTime, getFromCacheTooSlowThreshold, getFromCacheTooSlowMessage);
+
         Message response;
         startTime = System.currentTimeMillis();
         JdbcTemplate jdbcTemplate = sqlConfig.getJdbcTemplate();
@@ -424,6 +460,36 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
                 isCacheCleanupScheduled = true;
             }
         }
+    }
+
+    /**
+     * Gets SqlConfig from cache and validates that its DataSource is open.
+     * <p>
+     * Note: Due to known Guava Cache concurrency limitations (issue #1881),
+     * there is a theoretical race condition where invalidated entry might
+     * still be returned to concurrent threads. If this occurs, we log a warning
+     * and throw an exception rather than attempting automatic recovery.
+     * <p>
+     * TODO: Migrate to Caffeine (com.github.ben-manes.caffeine) which properly
+     *       handles concurrent invalidate() + get() operations.
+     */
+    private SqlConfig getFromCacheAndCheck(ConnectionProperties connectionProperties) throws ExecutionException {
+        if (configCache == null) {
+            // Actually, it's impossible because such check is performed in the caller method.
+            throw new RuntimeException("Cache of DataSources isn't initialized yet");
+        }
+        SqlConfig config = configCache.get(connectionProperties);
+
+        // Check if DataSource is closed... May be, it's exceptional check.
+        BasicDataSource ds = config.getDataSource();
+        if (ds == null || ds.isClosed()) {
+            LOGGER.error("DataSource is got from cache for properties {} - but it's null or already closed! "
+                    + "Further processing is impossible.", connectionProperties);
+            // Invalidate cache entry
+            configCache.invalidate(connectionProperties);
+            throw new RuntimeException("DataSource from cache is null or already closed!");
+        }
+        return config;
     }
 
     private static void warnIfTooSlow(long startTime, long threshold, String message) {
