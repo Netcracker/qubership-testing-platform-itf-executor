@@ -204,7 +204,7 @@ public class FileManagerService {
             if (EdsContentType.KEYSTORE.getStringValue().equals(contentType)) {
                 filesInfo = externalDataManagementService.getExternalStorageService().getKeyStoreFileInfo();
             } else {
-                Map<String, Object> map = new HashMap();
+                Map<String, Object> map = new HashMap<>();
                 map.put(EdsMetaInfo.FILE_PATH.getStringValue(),
                         StringUtils.isBlank(filePath)
                                 ? filePath
