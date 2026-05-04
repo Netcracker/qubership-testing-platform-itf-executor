@@ -331,7 +331,7 @@ public class HistoryRetrieveService {
                                                     Shadow<Object> entity, Long revision) {
         Object object = entity.get();
         if (Objects.isNull(object)) {
-            throw new EntityNotFoundException(String.format("Shadow object is null with id: %s.", objectId));
+            throw new EntityNotFoundException("Shadow object is null with id: %s.".formatted(objectId));
         }
         HistoryCompareEntity historyCompareEntity = new HistoryCompareEntity();
         historyCompareEntity.setRevision(revision.toString());

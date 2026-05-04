@@ -93,7 +93,7 @@ public class UIConfiguration extends UITypedObject {
         try {
             Class<?> aClass = Class.forName(configuration.getTypeName());
             if (PropertyProvider.class.isAssignableFrom(aClass)) {
-                defineProperties(configuration, Extractor.extractProperties((PropertyProvider) aClass.newInstance()));
+                defineProperties(configuration, Extractor.extractProperties((PropertyProvider) aClass.getDeclaredConstructor().newInstance()));
             }
         } catch (Exception e) {
             LOGGER.error("Can't extract properties from %s for configuration %s".formatted(

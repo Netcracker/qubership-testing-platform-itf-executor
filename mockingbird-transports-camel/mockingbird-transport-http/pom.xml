@@ -39,7 +39,16 @@
                     <groupId>org.hibernate.orm</groupId>
                     <artifactId>hibernate-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate.orm</groupId>
+                    <artifactId>hibernate-*</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>

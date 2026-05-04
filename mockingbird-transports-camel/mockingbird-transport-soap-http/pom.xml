@@ -57,6 +57,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.neethi</groupId>
             <artifactId>neethi</artifactId>
             <scope>compile</scope>

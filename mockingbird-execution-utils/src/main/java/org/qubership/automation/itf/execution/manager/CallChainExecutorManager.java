@@ -83,7 +83,7 @@ public class CallChainExecutorManager extends AbstractExecutorManager implements
             Object datasetName = tcContext.get("DATASET_NAME");
             if (Objects.nonNull(datasetName)) {
                 executionData.setDatasetName(datasetName.toString());
-                tcContext.setName(String.format("%s [%s]", instance.getName(), executionData.getDatasetName()));
+                tcContext.setName("%s [%s]".formatted(instance.getName(), executionData.getDatasetName()));
             }
         }
         instance.setCallchainExecutionData(GSON.toJson(executionData));

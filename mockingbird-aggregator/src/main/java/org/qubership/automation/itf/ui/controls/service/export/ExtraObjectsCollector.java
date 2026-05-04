@@ -397,7 +397,7 @@ public class ExtraObjectsCollector {
                     .loadClass(transport.getTypeName()).getClassLoader();
             return Extractor.extractProperties(
                     (PropertyProvider) Class.forName(transport.getTypeName(), false, classLoader)
-                            .newInstance()
+                            .getDeclaredConstructor().newInstance()
             );
         } catch (Exception e) {
             log.error("Can't define transport properties '{}' while objects export", transport.getTypeName(), e);

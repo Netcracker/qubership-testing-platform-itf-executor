@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
@@ -188,7 +187,7 @@ public class FileManagerService {
                     TreeNode childTreeNode = new TreeNode();
                     childTreeNode.setText(pathObj.getFileName().toString());
                     childTreeNode.setFilePath(
-                            Paths.get(rootTreeNode.getFilePath(), pathObj.getFileName().toString()).toString());
+                            Path.of(rootTreeNode.getFilePath(), pathObj.getFileName().toString()).toString());
                     childTreeNode.setContentType(contentType);
                     rootTreeNode.getNodes().add(childTreeNode);
                     buildTree(childTreeNode, childTreeNode.getFilePath(), contentType, projectUuid);
