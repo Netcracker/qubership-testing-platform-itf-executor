@@ -19,6 +19,8 @@ package org.qubership.automation.itf.executor.context;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
@@ -87,7 +89,8 @@ public class ContextTest {
             """;
 
     @Test
-    public void testMerge() throws ParseException, IllegalAccessException, InstantiationException {
+    public void testMerge() throws ParseException, IllegalAccessException, InstantiationException,
+            InvocationTargetException, NoSuchMethodException {
         JsonContext toContext = JsonContext.fromJson(JSON_STRING_1, JsonStorable.class);
         JsonContext fromContext = JsonContext.fromJson(JSON_STRING_2, JsonStorable.class);
         toContext.merge(fromContext);

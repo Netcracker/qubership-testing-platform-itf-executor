@@ -83,7 +83,7 @@ public class AuthTokenProvider {
     }
 
     private void registerHttpClientInterceptors() {
-        RequestUtils.registerHttpInterceptor((httpRequest, httpContext) -> {
+        RequestUtils.registerHttpInterceptor((httpRequest, entity, httpContext) -> {
             log.debug("Getting a token. Process [httpRequest={}]", httpRequest);
             Optional<String> bearerToken = getAuthToken();
             if (bearerToken.isPresent()) {

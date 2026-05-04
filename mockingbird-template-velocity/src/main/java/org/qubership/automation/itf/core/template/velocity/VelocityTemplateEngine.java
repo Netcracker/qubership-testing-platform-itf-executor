@@ -73,8 +73,9 @@ public class VelocityTemplateEngine implements TemplateEngine {
             engine = new VelocityEngine();
         }
         engine.setProperty(RuntimeConstants.VM_PERM_ALLOW_INLINE_REPLACE_GLOBAL, "true");
+        /* Commented; it looks to be deleted:
         engine.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                "org.qubership.automation.itf.core.template.velocity.log.Slf4jLogChute");
+                "org.qubership.automation.itf.core.template.velocity.log.Slf4jLogChute");*/
         engine.setProperty("console.logsystem.max.level", "WARN");
         engine.setProperty("runtime.log.logsystem.max.level", "WARN");
         engine.init();
