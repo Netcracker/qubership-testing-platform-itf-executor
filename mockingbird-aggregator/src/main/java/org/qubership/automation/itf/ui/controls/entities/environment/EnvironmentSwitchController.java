@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.assertj.core.util.Lists;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.EnvironmentManager;
 import org.qubership.automation.itf.core.hibernate.spring.managers.executor.EnvironmentObjectManager;
 import org.qubership.automation.itf.core.model.jpa.environment.Environment;
@@ -103,13 +102,13 @@ public class EnvironmentSwitchController extends ControllerHelper {
 
             UIServerInbound serverInbound = new UIServerInbound();
             serverInbound.setName(inboundInfo.getSystemServer());
-            List<UIInboundConfiguration> uiInboundConfigurations = Lists.newArrayList();
+            List<UIInboundConfiguration> uiInboundConfigurations = new ArrayList<>();
             for (TransportInfo transportInfo : inboundInfo.getTransports()) {
                 UIInboundConfiguration uiInboundConfiguration = new UIInboundConfiguration();
                 UIObject uiTransport = new UIObject();
                 uiTransport.setName(transportInfo.getTransportName());
                 uiInboundConfiguration.setTransport(uiTransport);
-                List<UITriggerConfiguration> triggerConfigurations = Lists.newArrayList();
+                List<UITriggerConfiguration> triggerConfigurations = new ArrayList<>();
                 transportInfo.getTriggers().stream().filter(uiTriggerInfo -> uiTriggerInfo.getTriggerId() != null)
                         .forEach(uiTriggerInfo -> {
                             UITriggerConfiguration triggerConfiguration = new UITriggerConfiguration();

@@ -17,6 +17,7 @@
 
 package org.qubership.automation.itf.integration.reports;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,7 +28,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.assertj.core.util.Sets;
 import org.qubership.automation.itf.executor.service.TCContextService;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +68,8 @@ public class ReportsService {
     }
 
     public Set<String> getKeys(String contextId, UUID projectUuid) {
-        return Sets.newHashSet(reportsFeignClient.getKeys(contextId, projectUuid).getBody());
+        Set<String> keys = reportsFeignClient.getKeys(contextId, projectUuid).getBody();
+        return keys == null ? new HashSet<>() : new HashSet<>(keys);
     }
 
     public Map<String, Integer> getCurrentPartitionNumbers() {
