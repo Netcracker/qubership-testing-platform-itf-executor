@@ -41,7 +41,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.5</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8 -Dconfig.file=${maven.multiModuleProjectDirectory}/common/application.properties -Dspring.config.location=${maven.multiModuleProjectDirectory}/common/application.properties -Dlogging.config=${maven.multiModuleProjectDirectory}/common/logback-spring.xml</argLine>
                 </configuration>
