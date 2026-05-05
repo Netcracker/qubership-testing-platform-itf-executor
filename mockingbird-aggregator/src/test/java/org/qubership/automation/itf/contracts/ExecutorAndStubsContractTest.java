@@ -79,6 +79,8 @@ public class ExecutorAndStubsContractTest {
     private ItfStubsRequestsController itfStubsRequestsController;
 
     public void beforeAll() {
+        System.setProperty("pact_do_not_track", "true");
+
         log.info("ExecutorAndStubsContractTest tests started");
         when(itfStubsRequestsController.getAllActiveTriggers()).thenReturn(getResponseBody1());
         when(itfStubsRequestsController.getTriggerById(any(BigInteger.class))).thenReturn(getResponseBody2());

@@ -72,6 +72,8 @@ public class ItfExecutorAndItfLiteContractTest {
     private VelocityController velocityController;
 
     public void beforeAll() throws ParseException, IllegalAccessException, InstantiationException {
+        System.setProperty("pact_do_not_track", "true");
+
         when(contextController.get(any(String.class), any(UUID.class))).thenReturn(getContextResponse());
         when(velocityController.parseContent(any(UIVelocityRequestBody.class), any(), any(UUID.class)))
                 .thenReturn(getResponse());

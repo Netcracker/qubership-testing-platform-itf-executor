@@ -68,6 +68,20 @@ public class ItfExecutorAndCatalogueContractTest {
     private AtpExportImportController atpExportImportController;
 
     private void beforeAll() {
+        // Turn OFF sending of anonymous Pact metrics due to inconsistent versions of httpclient5
+        // used in Pact 4.6.15 library (httpclient5:5.3.x) and in the entire project (httpclient5:5.4.4)
+        // Error doesn't fail tests but spams logs with such errors:
+        //     Exception in thread "Thread-5"
+        //         java.lang.NoClassDefFoundError: org/apache/hc/client5/http/impl/compat/ClassicToAsyncAdaptor
+        //     at org.apache.hc.client5.http.fluent.Request.execute(Request.java:206)
+        //     at au.com.dius.pact.core.support.Metrics.sendMetrics$lambda$2(Metrics.kt:128)
+        //     at java.base/java.lang.Thread.run(Thread.java:1583)
+        //     Caused by: java.lang.ClassNotFoundException: org.apache.hc.client5.http.impl.compat.ClassicToAsyncAdaptor
+        //     at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+        //     at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+        //     at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+        System.setProperty("pact_do_not_track", "true");
+
         when(atpExportImportController.getRootCallchainFolderByAtpExport(any(UUID.class)))
                 .thenReturn(getResponseSimpleItfEntity());
         when(atpExportImportController.getCallchainSubFoldersByAtpExport(any(UUID.class)))
