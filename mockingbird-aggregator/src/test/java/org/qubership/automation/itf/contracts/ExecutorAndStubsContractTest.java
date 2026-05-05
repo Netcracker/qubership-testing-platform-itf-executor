@@ -43,10 +43,10 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConf
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -75,7 +75,7 @@ public class ExecutorAndStubsContractTest {
     private final String xProjectId = "3d6a138d-057b-4e35-8348-17aee2f2b0f8";
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @MockitoBean
     private ItfStubsRequestsController itfStubsRequestsController;
 
     public void beforeAll() {
