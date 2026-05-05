@@ -24,6 +24,7 @@ import org.qubership.atp.common.probes.controllers.DeploymentController;
 import org.qubership.atp.integration.configuration.annotation.EnableAtpJaegerLog;
 import org.qubership.atp.multitenancy.hibernate.annotation.EnableMultiTenantDataSource;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.hazelcast.HazelcastAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -55,7 +56,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 HibernateJpaAutoConfiguration.class,
                 MongoAutoConfiguration.class,
                 HazelcastAutoConfiguration.class,
-                LiquibaseAutoConfiguration.class
+                LiquibaseAutoConfiguration.class,
+                CacheAutoConfiguration.class
         }
 )
 @ServletComponentScan(basePackages = "org.qubership.automation.itf.ui.config.servlets")
