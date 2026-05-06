@@ -107,6 +107,7 @@ public class CommonHazelcastConfig {
      */
     @Bean(name = "hazelcastCacheManager")
     public CacheManager hazelcastCacheManager(@Qualifier("hazelcastClient") HazelcastInstance hazelcastClient) {
+        log.info("hazelcastCacheManager: Configuring is started");
         List<Cache> caches = new ArrayList<>();
 
         IMap<Object, Object> tcContexts = hazelcastClient.getMap(CacheNames.ATP_ITF_TC_CONTEXTS);
@@ -140,6 +141,7 @@ public class CommonHazelcastConfig {
         caches.add(new ConcurrentMapCache(CacheNames.ATP_ITF_RESPONSE_MESSAGES, responseMessages, false));
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);
+        log.info("hazelcastCacheManager: Configuring is completed");
         return cacheManager;
     }
 }
