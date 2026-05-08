@@ -20,6 +20,7 @@ package org.qubership.automation.itf.core.report;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.ContextManager;
 import org.qubership.automation.itf.core.model.event.CallChainEvent;
@@ -161,16 +162,24 @@ public class LoggerSubscriber {
     public void onChainStart(CallChainEvent.Start event) {
         // For Start event, do NOT send CallChainInstance to ITF reporting.
         // If it's initiator, it will be attached to TcContext message.
-        CallChainInstance chainInstance = event.getInstance();
-        if (chainInstance.getContext().tc().isNeedToReportToAtp()) {
-            Report.openSection(chainInstance, "Call chain [" + chainInstance.getStepContainer().getName() + "]");
-            if (chainInstance.stepsIsDisabled()) {
-                Report.warn(chainInstance,
-                        "Steps in Call Chain [" + chainInstance.getStepContainer().getName() + "] " + "are disabled",
-                        "All steps are disabled");
-            } else {
-                Report.reportCallChainInfo(chainInstance);
+        try {
+            CallChainInstance chainInstance = event.getInstance();
+            if (chainInstance.getContext().tc().isNeedToReportToAtp()) {
+                String sectionName = chainInstance.getName();
+                if (StringUtils.isEmpty(sectionName) && chainInstance.getStepContainer() != null) {
+                    sectionName = chainInstance.getStepContainer().getName();
+                }
+                Report.openSection(chainInstance, "Call chain [" + sectionName + "]");
+                if (chainInstance.stepsIsDisabled()) {
+                    Report.warn(chainInstance,
+                            "Steps in Call Chain [" + sectionName + "] " + "are disabled",
+                            "All steps are disabled");
+                } else {
+                    Report.reportCallChainInfo(chainInstance);
+                }
             }
+        } catch (Exception ex) {
+            LOGGER.error("Error while 'onChainStart' processing. May be, reporting is not performed properly", ex);
         }
     }
 
@@ -187,12 +196,20 @@ public class LoggerSubscriber {
     @Subscribe
     @AllowConcurrentEvents
     public void onChainTerminate(CallChainEvent.Terminate event) {
-        CallChainInstance chainInstance = submitCallChainInstance(event.getInstance(), "Terminate chain ",
-                event.getDate());
-        if (chainInstance.getContext().tc().isNeedToReportToAtp()) {
-            Report.terminated(chainInstance,
-                    "Call Chain [" + chainInstance.getStepContainer().getName() + "] " + "Terminated",
-                    "Execution of chain terminated", chainInstance.getError());
+        try {
+            CallChainInstance chainInstance = submitCallChainInstance(event.getInstance(), "Terminate chain ",
+                    event.getDate());
+            if (chainInstance.getContext().tc().isNeedToReportToAtp()) {
+                String sectionName = chainInstance.getName();
+                if (StringUtils.isEmpty(sectionName) && chainInstance.getStepContainer() != null) {
+                    sectionName = chainInstance.getStepContainer().getName();
+                }
+                Report.terminated(chainInstance,
+                        "Call Chain [" + sectionName + "] " + "Terminated",
+                        "Execution of chain terminated", chainInstance.getError());
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Error while 'onChainTerminate' processing. May be, reporting is not performed properly", ex);
         }
     }
 
