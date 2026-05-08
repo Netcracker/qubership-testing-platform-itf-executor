@@ -54,6 +54,9 @@ public class ExecutorIntegrationConfig {
     private String useAsyncSend;
     @Value("${message-broker.queuePrefetch}")
     private int queuePrefetch;
+    @Value("${message-broker.connectionCloseTimeoutMillis}")
+    private int connectionCloseTimeoutMillis;
+
     @Value("${message-broker.reports.useCompression}")
     private String reportsUseCompression;
     @Value("${message-broker.reports.useAsyncSend}")
@@ -62,6 +65,15 @@ public class ExecutorIntegrationConfig {
     private int maxThreadPoolSize;
     @Value("${message-broker.reports.connectionsPoolSize}")
     private int connectionsPoolSize;
+
+    @Value("${message-broker.reports.connectionCloseTimeoutMillis}")
+    private int reportsConnectionCloseTimeoutMillis;
+    @Value("${message-broker.reports.connectionExpiryTimeoutMillis}")
+    private int reportsConnectionExpiryTimeoutMillis;
+    @Value("${message-broker.reports.connectionIdleTimeoutMillis}")
+    private int reportsConnectionIdleTimeoutMillis;
+    @Value("${message-broker.reports.timeBetweenExpirationCheckMillis}")
+    private int reportsTimeBetweenExpirationCheckMillis;
 
     private static TransactionDefinition initTransactionDefinition() {
         int timeoutSeconds = 0;
@@ -101,6 +113,10 @@ public class ExecutorIntegrationConfig {
         ActiveMQPrefetchPolicy prefetchPolicy = new ActiveMQPrefetchPolicy();
         prefetchPolicy.setQueuePrefetch(queuePrefetch);
         activeMQConnectionFactory.setPrefetchPolicy(prefetchPolicy);
+
+        // Close connection timeout, to avoid hanging while connection closing (due to broker and/or network failures).
+        activeMQConnectionFactory.setCloseTimeout(connectionCloseTimeoutMillis); // 15000 ms = 15 sec default
+
         return activeMQConnectionFactory;
     }
 
@@ -118,6 +134,9 @@ public class ExecutorIntegrationConfig {
         activeMQConnectionFactory.setUseCompression(Boolean.parseBoolean(reportsUseCompression));
         activeMQConnectionFactory.setUseAsyncSend(Boolean.parseBoolean(reportsUseAsyncSend));
         activeMQConnectionFactory.setAlwaysSyncSend(!activeMQConnectionFactory.isUseAsyncSend());
+
+        // Close connection timeout, to avoid hanging while connection closing (due to broker and/or network failures).
+        activeMQConnectionFactory.setCloseTimeout(reportsConnectionCloseTimeoutMillis); // 15000 ms = 15 sec default
         return activeMQConnectionFactory;
     }
 
@@ -128,6 +147,26 @@ public class ExecutorIntegrationConfig {
         pooledConnectionFactory.setConnectionFactory(reportsActiveMQConnectionFactory);
         pooledConnectionFactory.setMaxConnections(connectionsPoolSize);
         pooledConnectionFactory.setCreateConnectionOnStartup(true);
+
+        // Management of connection lifecycle in the pool
+
+        // 1. Maximum of a connection lifetime. After it expired, connection will be re-created.
+        // It's key setting for recovering after network failures.
+        // For example, 3600000 ms = 1 hour
+        pooledConnectionFactory.setExpiryTimeout(reportsConnectionExpiryTimeoutMillis);
+
+        // 2. How much time can an idle connection stay in the pool?
+        // Should be less than ExpiryTimeout.
+        // If set to 0, we fully rely on ExpiryTimeout.
+        // For example, 1800000 ms = 30 minutes = 1/2 of ExpiryTimeout
+        pooledConnectionFactory.setIdleTimeout(reportsConnectionIdleTimeoutMillis);
+
+        // 3. Interval between expired/idle connection checks performed by background thread.
+        // Should be less than IdleTimeout.
+        // By default, this value is set to -1 and no expiration thread ever runs.
+        // For example, 120000 ms = 2 minutes
+        pooledConnectionFactory.setTimeBetweenExpirationCheckMillis(reportsTimeBetweenExpirationCheckMillis);
+
         return pooledConnectionFactory;
     }
 
