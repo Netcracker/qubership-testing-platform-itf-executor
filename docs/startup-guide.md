@@ -26,8 +26,10 @@ spring.datasource.username=${ITF_EXECUTOR_DB_USER}
 spring.datasource.password=${ITF_EXECUTOR_DB_PASSWORD}
 spring.datasource.hikari.minimum-idle=${SPRING_DATASOURCE_MINIDLE}
 spring.datasource.hikari.maximum-pool-size=${SPRING_DATASOURCE_MAXTOTAL}
-spring.datasource.hikari.idle-timeout=${SPRING_DATASOURCE_HIKARI_IDLE_TIMEOUT}
 spring.datasource.hikari.max-lifetime=${SPRING_DATASOURCE_HIKARI_MAX_LIFETIME}
+spring.datasource.hikari.idle-timeout=${SPRING_DATASOURCE_HIKARI_IDLE_TIMEOUT}
+spring.datasource.hikari.keepalive-time=${SPRING_DATASOURCE_HIKARI_KEEPALIVE_TIME:55000}
+spring.datasource.hikari.connection-timeout=${SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT:25000}
 ##==============================Undertow===============================
 server.port=${HTTP_PORT}
 embedded.https.enabled=${EMBEDDED_HTTPS_ENABLED}
