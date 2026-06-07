@@ -18,7 +18,7 @@
         <activemq.version>5.16.8</activemq.version>
         <aspectj.version>1.8.10</aspectj.version>
 
-        <atp.itf.core.version>4.4.116-SNAPSHOT</atp.itf.core.version>
+        <atp.itf.core.version>4.4.117-SNAPSHOT</atp.itf.core.version>
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <atp.auth.version>1.2.80</atp.auth.version>
         <atp.common.version>0.0.47</atp.common.version>
