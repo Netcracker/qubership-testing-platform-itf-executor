@@ -15,10 +15,10 @@
  *
  */
 
-package org.qubership.automation.itf.report.items;
+package org.qubership.automation.itf.integration.report.items;
 
 public class HtmlBuilder {
-    private static String bvHighlighterBulkValidatorStyles = " .IDENTICAL { color:black;  background-color: "
+    private static final String bvHighlighterBulkValidatorStyles = " .IDENTICAL { color:black;  background-color: "
             + "lightgreen; } .SIMILAR { color: #000000; background-color: #FFFF77; } .NORMAL { color:blue; } .CHANGED {"
             + " color:#ff9999; } .MODIFIED { background-color:#ff9999; } .EXTRA { background-color: orange; } .MISSED {"
             + " background-color: #C7EDFC; } .ERROR { background-color:yellow; color:red } .highlight-container "

@@ -15,7 +15,7 @@
  *
  */
 
-package org.qubership.automation.itf.report.items;
+package org.qubership.automation.itf.integration.report.items;
 
 import java.util.Collection;
 import java.util.List;

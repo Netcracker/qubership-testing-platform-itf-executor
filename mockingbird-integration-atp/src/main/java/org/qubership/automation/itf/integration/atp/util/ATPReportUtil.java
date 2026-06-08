@@ -15,7 +15,7 @@
  *
  */
 
-package org.qubership.automation.itf.report.util;
+package org.qubership.automation.itf.integration.atp.util;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -15,7 +15,7 @@
  *
  */
 
-package org.qubership.automation.itf.report;
+package org.qubership.automation.itf.integration.atp2;
 
 import static org.qubership.automation.itf.core.instance.situation.TCContextDiffCache.TC_CONTEXT_DIFF_CACHE;
 
@@ -77,10 +77,10 @@ import org.qubership.automation.itf.core.util.engine.TemplateEngineFactory;
 import org.qubership.automation.itf.core.util.manager.ExtensionManager;
 import org.qubership.automation.itf.core.util.transport.service.report.ReportAdapter;
 import org.qubership.automation.itf.executor.transports.holder.TransportHolder;
+import org.qubership.automation.itf.integration.atp.util.ATPReportUtil;
 import org.qubership.automation.itf.report.extension.InstanceRam2Extension;
 import org.qubership.automation.itf.report.extension.TCContextRamExtension;
-import org.qubership.automation.itf.report.items.ATPReportMessage;
-import org.qubership.automation.itf.report.util.ATPReportUtil;
+import org.qubership.automation.itf.integration.report.items.ATPReportMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

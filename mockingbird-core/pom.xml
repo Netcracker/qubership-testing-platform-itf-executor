@@ -183,6 +183,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.qubership.atp.adapter.robot</groupId>
+            <artifactId>qubership-atp-adapter-common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>

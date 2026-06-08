@@ -377,17 +377,6 @@
         </dependency>
         <dependency>
             <groupId>org.qubership.mockingbird</groupId>
-            <artifactId>mockingbird-report-atp</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>javers-spring-boot-starter-mongo</artifactId>
-                    <groupId>org.javers</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.qubership.mockingbird</groupId>
             <artifactId>mockingbird-template-velocity</artifactId>
             <version>${project.version}</version>
         </dependency>

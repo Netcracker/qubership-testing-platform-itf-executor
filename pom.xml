@@ -99,9 +99,6 @@
         <!--Modules for storage-->
         <module>mockingbird-configuration-common</module>
 
-        <!--Modules for reporting some info-->
-        <module>mockingbird-report-atp</module>
-
         <!--module for execution of velocity code-->
         <module>mockingbird-template-velocity</module>
         <!--module interceptor. mostly encryption -->
