@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.core.util.constants.Status;
-import org.qubership.automation.itf.integration.atp.exector.AtpCallchainExecutor;
+import org.qubership.automation.itf.integration.atp.executor.AtpCallchainExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -15,7 +15,7 @@
  *
  */
 
-package org.qubership.automation.itf.integration.atp.exector;
+package org.qubership.automation.itf.integration.atp.executor;
 
 import static org.qubership.automation.itf.Constants.ENV_INFO_KEY;
 
