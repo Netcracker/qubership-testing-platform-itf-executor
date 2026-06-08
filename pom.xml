@@ -114,7 +114,6 @@
         <!--Modules for integration with other tools-->
         <module>mockingbird-integration-atp</module>
         <module>mockingbird-integration-bv</module>
-        <module>mockingbird-integration-atp2</module>
         <module>mockingbird-integration-envconf</module>
 
         <!--The module is aggregator-->

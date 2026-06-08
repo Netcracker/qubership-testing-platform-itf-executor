@@ -18,5 +18,5 @@
 package org.qubership.automation.itf.integration.atp2.kafka.dto.messages.response;
 
 public enum ResponseStatus {
-    Done, Error;
+    Done, Error
 }

@@ -49,7 +49,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -85,8 +84,7 @@ public class ItfLiteExportServiceImpl {
      * @param itfLiteEvent - data message with type Rest or Soap
      */
     @Transactional
-    public void createTemplateFromRestSoapTransportType(String event, ItfLiteEventRestSoap itfLiteEvent)
-            throws JsonProcessingException {
+    public void createTemplateFromRestSoapTransportType(String event, ItfLiteEventRestSoap itfLiteEvent) {
         log.info("'Create Template' Event is received: {}", event);
         RestSoapRequestData request = itfLiteEvent.getRequest();
         ResponseData response = new ResponseData();
