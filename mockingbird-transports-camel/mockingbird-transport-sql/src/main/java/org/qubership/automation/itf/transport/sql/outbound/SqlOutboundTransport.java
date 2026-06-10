@@ -536,7 +536,7 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
     }
 
     private static int determineType(String sqlCommand) {
-        String startString = sqlCommand.substring(0, 6).toLowerCase();
+        String startString = StringUtils.left(sqlCommand.trim(), 6).toLowerCase();
         return ((startString.equals("select")) ? 1
                 : (startString.equals("insert") || startString.equals("update") || startString.equals("delete")) ? 2
                 : (startString.equals("create") || startString.startsWith("alter")
