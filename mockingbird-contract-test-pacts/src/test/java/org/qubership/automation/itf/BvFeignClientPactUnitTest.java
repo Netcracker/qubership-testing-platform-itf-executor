@@ -400,7 +400,7 @@ public class BvFeignClientPactUnitTest {
     }
 
     private String getResponseBody10() {
-        return "{\"statusCode\":20000,\"statusMessage\":\"NTT Project Name or NTT Test Plan must be defined\"}";
+        return "{\"statusCode\":20000,\"statusMessage\":\"Project Name or Test Plan must be defined\"}";
     }
 
     private String objectToString(Object obj) {

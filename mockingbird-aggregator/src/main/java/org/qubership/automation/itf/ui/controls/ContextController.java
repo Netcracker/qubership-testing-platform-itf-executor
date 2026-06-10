@@ -82,7 +82,11 @@ public class ContextController {
     private final ReportsService reportsService;
     private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
     private final ProjectSettingsService projectSettingsService;
-    // The following 4 methods are used by NTT (REST API). Do NOT delete
+
+    /*
+        The following 4 methods are used by Executor (they implement Itf-executor REST API for Executor).
+        Do NOT delete!
+    */
 
     /*  Based on native 'InstanceContextRepository#getTcContextInfo' query:
      *       select ctx.id, ctx.name, ctx.initiator_id, ctx.enviroment_id, ctx.status, ctx.start_time, ctx.end_time,
@@ -197,7 +201,11 @@ public class ContextController {
         properties.put("isFinished", String.valueOf(isContextFinished(status)));
         return properties;
     }
-    //END - The following 4 methods are used by NTT (REST API). Do NOT delete, and check contract in case changes
+
+    /*
+        END - The above 4 methods are used by Executor (REST API).
+        Do NOT delete, and check contract in case changes.
+     */
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"EXECUTE\")")

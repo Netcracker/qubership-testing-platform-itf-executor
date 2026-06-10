@@ -273,12 +273,13 @@ public class ExecutorController extends ControllerHelper {
         }
     }
 
-    /*  It's permitted to execute a callchain via REST API by means of a minimal json request like:
-     *   {"environment": "ITF Environment name", "name": "ITF callchain name"}
-     *   It's described here: "REST API for NTT/Executor integration"
+    /*
+     *   It's permitted to execute a callchain via REST API by means of a minimal json request like:
+     *      {"environment": "ITF Environment name", "name": "ITF callchain name"}
+     *   It's described here: "REST API for Executor integration".
      *
-     *   So, both dataSetList and datasetName can be empty
-     * */
+     *   So, both dataSetList and datasetName can be empty.
+     */
     // TODO: dataSetList and datasetMap must be combined into one parameter; one- or two- levels strict limitation
     //  must be changed
     // TODO: datasetName processing must be improved for values like "Visibility area|DSL name|DS name"
