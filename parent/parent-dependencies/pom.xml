@@ -18,12 +18,12 @@
         <activemq.version>5.16.8</activemq.version>
         <aspectj.version>1.8.10</aspectj.version>
 
-        <atp.itf.core.version>4.4.114</atp.itf.core.version>
+        <atp.itf.core.version>4.4.115</atp.itf.core.version>
         <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
         <atp.auth.version>1.2.80</atp.auth.version>
         <atp.common.version>0.0.47</atp.common.version>
         <atp.integration.version>0.2.42</atp.integration.version>
-        <atp.multitenancy.version>0.0.13</atp.multitenancy.version>
+        <atp.multitenancy.version>0.0.14</atp.multitenancy.version>
         <atp.ei.lib.version>0.2.46</atp.ei.lib.version>
         <atp.crypt.version>0.0.24</atp.crypt.version>
         <atp.adapter.common.version>4.5.71</atp.adapter.common.version>
@@ -441,10 +441,18 @@
                 <artifactId>neethi</artifactId>
                 <version>3.1.0</version>
             </dependency>
+            <!-- Manage 2 below dependencies explicitly,
+                because commons-dbcp2:2.9.0 and commons-pool2:2.11.1
+                are used via Spring Boot BOM -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-dbcp2</artifactId>
                 <version>2.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>2.12.0</version>
             </dependency>
             <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>

@@ -316,8 +316,12 @@ public class CallChainExecutorService {
             }, TxExecutor.readOnlyTransaction());
         } catch (Throwable t) {
             log.error(errorMessage, instance, t);
-            reportErrorThenStop(instance, tcContext, "Errors while callchain startup or execution",
-                    t.getMessage(), t.getMessage(), t);
+            reportErrorThenStop(instance,
+                    tcContext,
+                    "Errors while callchain startup or execution",
+                    org.qubership.automation.itf.core.util.exception.Exceptions.getExceptionSummary(t),
+                    org.qubership.automation.itf.core.util.exception.Exceptions.getMessagesOnly(t),
+                    t);
         } finally {
             if (!tcContext.isNotified()) {
                 ExecutionServices.getTCContextService().notifyATP(tcContext);
