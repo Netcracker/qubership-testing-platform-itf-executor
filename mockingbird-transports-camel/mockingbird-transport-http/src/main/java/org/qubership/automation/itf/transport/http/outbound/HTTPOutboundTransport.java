@@ -470,7 +470,7 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                                                                       String username, String password, String domain,
                                                                       String ntHost, String key) {
         ProxyHttpClientConfigurer httpClientConfigurer = new ProxyHttpClientConfigurer(host, port, scheme, username,
-                password, domain, ntHost, null);
+                password, domain, ntHost, null, null);
         PROXY_HTTP_CLIENT_CONFIGURER_CACHE.put(key, httpClientConfigurer);
         return httpClientConfigurer;
     }
