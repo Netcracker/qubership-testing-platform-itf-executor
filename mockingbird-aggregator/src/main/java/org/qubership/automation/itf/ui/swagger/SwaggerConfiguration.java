@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-
 
 @Configuration
 @ConditionalOnProperty(name = "springdoc.api-docs.enabled", havingValue = "true")
@@ -82,7 +81,10 @@ public class SwaggerConfiguration {
                         .addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
                 .info(new Info().title("ITF Executor API")
                         .version(API_VERSION)
-                        .license(new License().name("(C) Copyright Qubership")));
+                        .license(new License()
+                                .name("Apache-2.0")
+                                .url("https://www.apache.org/licenses/LICENSE-2.0")
+                        ));
     }
 
     private SecurityScheme createAPIKeyScheme() {

@@ -1,7 +1,8 @@
 openapi: 3.0.0
 info:
   license:
-    name: Proprietary
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
   title: ATP-Users-backend
   version: 0.1.7
 paths:
