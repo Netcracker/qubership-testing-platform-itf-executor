@@ -22,7 +22,7 @@
         <atp.crypt.version>1.0.0</atp.crypt.version>
         <atp.adapter.common.version>5.0.1-SNAPSHOT</atp.adapter.common.version>
 
-        <atp.itf.diameter.lib.version>2.2.7</atp.itf.diameter.lib.version>
+        <atp.itf.diameter.lib.version>2.2.9-SNAPSHOT</atp.itf.diameter.lib.version>
 
         <org.bouncycastle.version>1.84</org.bouncycastle.version>
         <io.undertow.version>2.3.21.Final</io.undertow.version>
