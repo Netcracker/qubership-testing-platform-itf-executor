@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>parent-java</artifactId>
-        <version>5.0.5-SNAPSHOT</version>
+        <version>5.0.6-SNAPSHOT</version>
         <relativePath>../parent/parent-java/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -489,7 +489,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.qubership.atp.auth</groupId>
+            <groupId>com.netcracker.atp.auth</groupId>
             <artifactId>atp-auth-impl</artifactId>
         </dependency>
         <dependency>

@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: fix_natural_id_type
+      author: Dmitrii Churbanov
+      comment: Change "natural_id type" column of service DataBase tables.
+      changes:
+        - sqlFile:
+            path: fix_natural_id_type.sql
+            relativeToChangelogFile: true
+            splitStatements: false
