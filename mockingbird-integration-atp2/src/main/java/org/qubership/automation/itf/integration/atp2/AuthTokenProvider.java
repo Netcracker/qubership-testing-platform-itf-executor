@@ -25,14 +25,13 @@ import java.util.Optional;
 import org.qubership.atp.adapter.common.utils.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.AccessTokenProvider;
-import org.springframework.security.oauth2.client.token.AccessTokenRequest;
-import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
@@ -41,20 +40,18 @@ import org.springframework.stereotype.Component;
 public class AuthTokenProvider {
     private static final Logger log = LoggerFactory.getLogger(AuthTokenProvider.class);
 
-    private final AccessTokenProvider accessTokenProvider;
-    private final OAuth2ProtectedResourceDetails protectedResourceDetails;
-    private final AccessTokenRequest accessTokenRequest = new DefaultAccessTokenRequest();
+    @Value("${atp-auth.m2m.registration-id:keycloak}")
+    private String registrationId;
+
+    private final OAuth2AuthorizedClientManager authorizedClientManager;
 
     /**
      * RamAdapterConfiguration constructor.
      *
-     * @param accessTokenProvider      access token provider
-     * @param protectedResourceDetails protected resource details
+     * @param authorizedClientManager      authorized client manager
      */
-    public AuthTokenProvider(AccessTokenProvider accessTokenProvider,
-                             OAuth2ProtectedResourceDetails protectedResourceDetails) {
-        this.accessTokenProvider = accessTokenProvider;
-        this.protectedResourceDetails = protectedResourceDetails;
+    public AuthTokenProvider(OAuth2AuthorizedClientManager authorizedClientManager) {
+        this.authorizedClientManager = authorizedClientManager;
         registerHttpClientInterceptors();
     }
 
@@ -75,11 +72,20 @@ public class AuthTokenProvider {
         if (relayToken.isPresent()) {
             return relayToken;
         }
-        OAuth2AccessToken accessToken = accessTokenProvider.obtainAccessToken(
-                protectedResourceDetails,
-                accessTokenRequest
-        );
-        return Optional.ofNullable(accessToken.getValue());
+
+        OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
+                .withClientRegistrationId(registrationId)
+                .principal(registrationId)
+                .build();
+
+        OAuth2AuthorizedClient client = authorizedClientManager.authorize(authorizeRequest);
+
+        if (client == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(
+                client.getAccessToken().getTokenValue());
     }
 
     private void registerHttpClientInterceptors() {
