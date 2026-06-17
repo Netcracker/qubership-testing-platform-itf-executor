@@ -21,7 +21,7 @@ import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.users.clients.api.ProjectsApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
-@FeignClient(name = "${feign.atp.users.name}", url = "${feign.atp.users.url}", path = "${feign.atp.users.route}",
+@FeignClient(name = "${feign.atp.users.name}", contextId = "usersProjectFeignClient", url = "${feign.atp.users.url}", path = "${feign.atp.users.route}",
         configuration = FeignConfiguration.class)
 public interface UsersProjectFeignClient extends ProjectsApi {
 
