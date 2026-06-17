@@ -22,7 +22,10 @@
         <atp.crypt.version>1.0.0</atp.crypt.version>
         <atp.adapter.common.version>5.0.1-SNAPSHOT</atp.adapter.common.version>
 
-        <atp.itf.diameter.lib.version>2.2.9-SNAPSHOT</atp.itf.diameter.lib.version>
+        <atp.itf.diameter.lib.version>3.0.0-SNAPSHOT</atp.itf.diameter.lib.version>
+        <atp.ss7.lib.version>2.0.0-SNAPSHOT</atp.ss7.lib.version>
+        <atp.configuration.dataset.excel.lib.version>4.0.0-SNAPSHOT</atp.configuration.dataset.excel.lib.version>
+        <apache.poi.version>5.2.5</apache.poi.version>
 
         <org.bouncycastle.version>1.84</org.bouncycastle.version>
         <io.undertow.version>2.3.21.Final</io.undertow.version>
@@ -475,7 +478,7 @@
             <dependency>
                 <groupId>org.qubership.automation</groupId>
                 <artifactId>ss7-lib</artifactId>
-                <version>1.0.6</version>
+                <version>${atp.ss7.lib.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
@@ -572,7 +575,7 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi</artifactId>
-                <version>3.17</version>
+                <version>${apache.poi.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.xmlbeans</groupId>
@@ -583,7 +586,7 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
-                <version>3.17</version>
+                <version>${apache.poi.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.xmlbeans</groupId>
@@ -739,17 +742,6 @@
                 <version>3.0.0</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi-ooxml-schemas</artifactId>
-                <version>3.17</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.xmlbeans</groupId>
-                        <artifactId>xmlbeans</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
@@ -793,13 +785,7 @@
             <dependency>
                 <groupId>org.qubership.atp</groupId>
                 <artifactId>configuration-dataset-excel</artifactId>
-                <version>3.5.0</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-log4j12</artifactId>
-                    </exclusion>
-                </exclusions>
+                <version>${atp.configuration.dataset.excel.lib.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>

@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.qubership.automation.configuration.dataset.excel.core.DS;
 import org.qubership.automation.itf.core.model.dataset.IDataSet;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
@@ -66,7 +66,7 @@ public class ExcelDataSet implements IDataSet {
             //So, if we found param, and replace it, let's remove it
             //for avoid duplication in merge plain params which not in DataSet.
             Object overrideParam = overriddenValues.get(convertedParam);
-            if (value.getCellType() == Cell.CELL_TYPE_FORMULA) {
+            if (value.getCellType() == CellType.FORMULA) {
                 // Text values (in case of formulas) should be enclosed by "" - 20180606, Alexander Kapustin,
                 // Alexander Kolosov
                 value.setCellValue("\"" + overrideParam.toString() + "\"");
