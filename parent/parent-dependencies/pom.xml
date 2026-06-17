@@ -14,7 +14,7 @@
         <spring.cloud.version>2025.0.2</spring.cloud.version>
 
         <atp.itf.core.version>5.1.16-SNAPSHOT</atp.itf.core.version>
-        <atp.auth.version>2.0.11</atp.auth.version>
+        <atp.auth.version>2.0.1-SNAPSHOT</atp.auth.version>
         <atp.common.version>1.0.0</atp.common.version>
         <atp.integration.version>1.0.0</atp.integration.version>
         <atp.multitenancy.version>1.0.0</atp.multitenancy.version>
@@ -69,7 +69,7 @@
             </dependency>
 
             <dependency>
-                <groupId>com.netcracker.atp.auth</groupId>
+                <groupId>org.qubership.atp.auth</groupId>
                 <artifactId>atp-auth-impl</artifactId>
                 <version>${atp.auth.version}</version>
             </dependency>

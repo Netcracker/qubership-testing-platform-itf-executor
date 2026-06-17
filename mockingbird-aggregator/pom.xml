@@ -489,7 +489,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.netcracker.atp.auth</groupId>
+            <groupId>org.qubership.atp.auth</groupId>
             <artifactId>atp-auth-impl</artifactId>
         </dependency>
         <dependency>
