@@ -17,15 +17,18 @@
 
 package org.qubership.automation.itf.integration;
 
+import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
 import javax.jms.JMSException;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
+import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.atp.multitenancy.core.header.CustomHeader;
 import org.qubership.automation.itf.core.model.communication.message.CommonTriggerExecutionMessage;
 import org.qubership.automation.itf.core.model.communication.message.EventTriggerBulkActivationRequest;
@@ -33,13 +36,15 @@ import org.qubership.automation.itf.core.model.communication.message.EventTrigge
 import org.qubership.automation.itf.core.model.communication.message.EventTriggerSyncActivationRequest;
 import org.qubership.automation.itf.core.model.event.SituationEvent;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
+import org.qubership.automation.itf.core.model.jpa.instance.SituationInstance;
+import org.qubership.automation.itf.core.util.config.ApplicationConfig;
 import org.qubership.automation.itf.core.util.descriptor.StorableDescriptor;
 import org.qubership.automation.itf.core.util.eds.ExternalDataManagementService;
 import org.qubership.automation.itf.core.util.eds.model.FileInfo;
 import org.qubership.automation.itf.core.util.exception.EngineIntegrationException;
 import org.qubership.automation.itf.core.util.mdc.MdcField;
-import org.qubership.automation.itf.executor.cache.service.CacheServices;
 import org.qubership.automation.itf.executor.provider.EventBusProvider;
+import org.qubership.automation.itf.executor.service.ExecutionServices;
 import org.qubership.automation.itf.executor.service.SecurityHelper;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +75,9 @@ public class StubJMSListeners {
 
     @Value("${atp-itf-executor.sse-reconnect-time}")
     private Long sseReconnectTime;
+
+    @Value("${atp.multi-tenancy.enabled}")
+    private Boolean multiTenancyEnabled;
 
     /**
      * JMSListener to process messages from stubs-executor-incoming-request queue
@@ -240,19 +248,50 @@ public class StubJMSListeners {
                     .readValue(activeMqTextMessage.getText(), SituationEvent.EndExceptionalSituationFinish.class);
             JSONObject json = new JSONObject(activeMqTextMessage.getText());
             String tcContextId = json.getJSONObject("situationInstance").getJSONObject("context").getString("tc");
-            MdcUtils.put(MdcField.CONTEXT_ID.toString(), tcContextId);
-            TcContext tcContext = CacheServices.getTcContextCacheService().getById(tcContextId);
-            if (tcContext == null) {
+            if (StringUtils.isEmpty(tcContextId)) {
+                log.info("'End/Exceptional Situation Finish' event received but tcContextId is empty. "
+                        + "Processing is skipped.");
                 return;
             }
-            event.getSituationInstance().getContext().setTC(tcContext);
-            event.getSituationInstance().setParentContext(tcContext);
+            MdcUtils.put(MdcField.CONTEXT_ID.toString(), tcContextId);
+
+            /*
+                Check local running TcContexts cache in order to continue processing only in case
+                this context was started on this pod of service.
+             */
+            TcContext tcContext = ExecutionServices.getTCContextService()
+                    .getLocalRunningContext(new BigInteger(tcContextId));
+            if (tcContext == null) {
+                log.info("Context {} was initiated on another pod. 'End/Exceptional Situation Finish' event "
+                        + "processing is skipped on this pod.", tcContextId);
+                return;
+            }
+
+            String projectUuid = tcContext.getProjectUuid().toString();
+            MdcUtils.put(MdcField.PROJECT_ID.toString(), projectUuid);
+
+            if (multiTenancyEnabled == null) {
+                multiTenancyEnabled = ApplicationConfig.env.getProperty("atp.multi-tenancy.enabled", Boolean.class);
+            }
+            if (Boolean.TRUE.equals(multiTenancyEnabled)) {
+                TenantContext.setTenantInfo(projectUuid);
+            }
+
+            // TODO: 1) Check that event has all fields populated properly
+            // May be, 2) Change processing async way, like TCContextEntryExpiredListener#entryExpired
+
+            SituationInstance instance = event.getSituationInstance();
+            instance.getSituationById();
+            instance.iterator();
+            instance.getContext().setTC(tcContext);
+            instance.setParentContext(tcContext);
             eventBusProvider.post(event);
         } catch (Exception e) {
             log.error("Error while posting finish event to EventBus after getting it "
                     + "from 'end_exceptional_situations_events' topic: {}", e.getMessage());
         } finally {
             MDC.clear();
+            TenantContext.setDefaultTenantInfo();
         }
     }
 
