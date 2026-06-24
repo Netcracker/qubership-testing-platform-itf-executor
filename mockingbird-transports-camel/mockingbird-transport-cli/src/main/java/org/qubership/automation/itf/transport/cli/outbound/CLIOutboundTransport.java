@@ -134,7 +134,14 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         Exchange exchange = cliEndPoint.createExchange();
         exchange.getIn().setBody(message.getText());
         exchange = PRODUCER_TEMPLATE.send(cliEndPoint, exchange); // If needed, future with timeout can be used.
-        if (!exchange.hasOut() || exchange.getOut().isFault()) {
+
+        /*
+            Overabundant check: may be, exchange itself is null?
+            It sounds strange, but it really faced sometimes in case very durable command execution...
+        */
+        if (exchange == null) {
+            return makeCamelExchangeBrokenMessage();
+        } else if (exchange.isFailed()) {
             return makeExceptionMessage(exchange);
         } else {
             Message response = getResponseMessage(exchange);
@@ -143,29 +150,35 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         }
     }
 
+    private static Message makeCamelExchangeBrokenMessage() {
+        Message message = new Message("");
+        message.setFailedMessage("Internal Camel processing error is occurred (Exchange is null).");
+        return message;
+    }
+
     @NotNull
     private static Message getResponseMessage(Exchange exchange) {
-        Message response;
-        Object answerObject = exchange.getOut().getBody();
-        if (answerObject == null) {
-            response = new Message();
-        } else if (answerObject instanceof ByteArrayInputStream) {
-            ByteArrayInputStream answer = (ByteArrayInputStream) answerObject;
-            int n = answer.available();
-            if (n > 0) {
-                byte[] bytes = new byte[n];
-                int cnt = answer.read(bytes, 0, n);
-                response = new Message(new String(bytes, 0, cnt, StandardCharsets.UTF_8));
-            } else {
-                response = new Message();
-            }
+        if (!exchange.hasOut()) {
+            return new Message();
         } else {
-            response = new Message(answerObject.toString());
+            org.apache.camel.Message camelResponse = exchange.getOut();
+            if (camelResponse == null) {
+                 /*
+                    Overabundant check: Exchange interface contract ensures that getOut():
+                        - Returns the outbound message, lazily creating one if one has not already been associated
+                          with this exchange.
+                    So, exchange.getOut() should not return null anyway.
+                    Let's remove this check after investigation is completed.
+                  */
+                return new Message();
+            } else {
+                Message response = new Message(processResponseBody(camelResponse));
+                if (camelResponse.hasHeaders()) {
+                    response.convertAndSetHeaders(camelResponse.getHeaders());
+                }
+                return response;
+            }
         }
-        if (exchange.getOut().hasHeaders()) {
-            response.convertAndSetHeaders(exchange.getOut().getHeaders());
-        }
-        return response;
     }
 
     private String buildLockKey(Map<String, Object> connectionProperties) {
@@ -191,25 +204,74 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         }
     }
 
-    private Message makeExceptionMessage(Exchange exchange) {
+    private static Message makeExceptionMessage(Exchange exchange) {
         Message message = new Message();
+        String exceptionMessage = "";
         Exception ex = exchange.getException();
         if (ex != null) {
-            String exceptionMessage = ex.getMessage();
-            if (exceptionMessage == null || exceptionMessage.trim().isEmpty()) {
-                exceptionMessage = ex.getClass().getSimpleName();
+            String errorMessage = ex.getMessage();
+            if (errorMessage == null || errorMessage.trim().isEmpty()) {
+                errorMessage = ex.getClass().getSimpleName();
             }
-            message.setFailedMessage(
-                    exceptionMessage + ((exceptionMessage.contains("Caused by:") || ex.getCause() == null)
-                            ? "" : "Caused by: " + ex.getCause().getMessage())
-            );
+            Throwable cause = ex.getCause();
+            if (cause != null && ex != cause) {
+                exceptionMessage = errorMessage + ", Caused by: " + cause;
+            } else {
+                exceptionMessage = errorMessage;
+            }
+        }
+        String responseMessage = "";
+        if (!exchange.hasOut()) {
+            responseMessage = "No response is received!";
         } else {
-            message.setFailedMessage("Unknown exception is occurred");
+             org.apache.camel.Message camelResponse = exchange.getOut();
+             if (camelResponse == null) {
+                 /*
+                    Overabundant check: Exchange interface contract ensures that getOut():
+                        - Returns the outbound message, lazily creating one if one has not already been associated
+                          with this exchange.
+                    So, exchange.getOut() should not return null anyway.
+                    Let's remove this check after investigation is completed.
+                  */
+                 responseMessage = "NULL response is received!";
+             } else {
+                 if (camelResponse.isFault()) {
+                     responseMessage = processResponseBody(camelResponse);
+                 } else {
+                     // We should never visit this point, because it contradicts input conditions
+                     responseMessage = "Internal Camel processing error is occurred:\n"
+                             + "Exchange is failed but response is marked as 'normal'.\n"
+                             + "Response body:\n" + processResponseBody(camelResponse);
+                 }
+
+                 if (camelResponse.hasHeaders()) {
+                     message.convertAndSetHeaders(camelResponse.getHeaders());
+                 }
+             }
         }
-        if (exchange.hasOut() && exchange.getOut().hasHeaders()) {
-            message.convertAndSetHeaders(exchange.getOut().getHeaders());
-        }
+        message.setFailedMessage(exceptionMessage
+                + (exceptionMessage.isEmpty() ? "" : "\n")
+                + responseMessage);
         return message;
+    }
+
+    private static String processResponseBody(org.apache.camel.Message camelResponse) {
+        Object bodyObject = camelResponse.getBody();
+        if (bodyObject == null) {
+            return "";
+        } else if (bodyObject instanceof ByteArrayInputStream) {
+            ByteArrayInputStream answer = (ByteArrayInputStream) bodyObject;
+            int n = answer.available();
+            if (n > 0) {
+                byte[] bytes = new byte[n];
+                int cnt = answer.read(bytes, 0, n);
+                return new String(bytes, 0, cnt, StandardCharsets.UTF_8);
+            } else {
+                return "";
+            }
+        } else {
+            return bodyObject.toString();
+        }
     }
 
     @Override
