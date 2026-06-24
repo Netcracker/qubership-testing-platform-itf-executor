@@ -57,7 +57,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 MongoAutoConfiguration.class,
                 HazelcastAutoConfiguration.class,
                 LiquibaseAutoConfiguration.class,
-                CacheAutoConfiguration.class
+                CacheAutoConfiguration.class,
+                HazelcastAutoConfiguration.class
         }
 )
 @ServletComponentScan(basePackages = "org.qubership.automation.itf.ui.config.servlets")
