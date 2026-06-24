@@ -23,7 +23,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.23/community/" >/etc/apk/repo
         jq=1.8.1-r0 \
         libpng=1.6.58-r1 \
         libcrypto3=3.5.7-r0 \
-        libexpat=2.7.5-r0 \
+        libexpat=2.8.1-r0 \
         libssl3=3.5.7-r0 \
         musl=1.2.5-r23 \
         musl-utils=1.2.5-r23 \
@@ -40,6 +40,11 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.23/community/" >/etc/apk/repo
         zlib=1.3.2-r0 && \
       rm -rf /var/cache/apk/*
 
+
+  libexpat-2.8.1-r0:
+#7 0.630     breaks: world[libexpat=2.7.5-r0]
+#7 0.630     satisfies: fontconfig-2.17.1-r0[so:libexpat.so.1]
+#7 0.630                git-2.52.0-r0[so:libexpat.so.1]
 COPY deployments/install deployments/install
 COPY deployments/atp-common-scripts deployments/atp-common-scripts
 COPY build-context/common/target/ /tmp/
