@@ -23,26 +23,30 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
-@Configuration
-@ImportResource({"classpath:META-INF/cxf/cxf.xml"})
-public class CxfConfiguration {
 
-    /**
-     * @return instance of {@link CustomEditorConfigurer} with {@link SoapVersionRegistrar}.
-     */
-    @Bean
-    public CustomEditorConfigurer customEditorConfigurer() {
-        CustomEditorConfigurer customEditorConfigurer = new CustomEditorConfigurer();
-        customEditorConfigurer.setPropertyEditorRegistrars(
-                new SoapVersionRegistrar[]{
-                        getSoapVersionRegistrar()
-                });
-        return new CustomEditorConfigurer();
-    }
-
-    @Bean
-    public SoapVersionRegistrar getSoapVersionRegistrar() {
-        return new SoapVersionRegistrar();
-    }
-
-}
+/*
+ #ToDO need to refactor. May be this class don`t use ?
+ */
+//@Configuration
+//@ImportResource({"classpath:META-INF/cxf/cxf.xml"})
+//public class CxfConfiguration {
+//
+//    /**
+//     * @return instance of {@link CustomEditorConfigurer} with {@link SoapVersionRegistrar}.
+//     */
+//    @Bean
+//    public CustomEditorConfigurer customEditorConfigurer() {
+//        CustomEditorConfigurer customEditorConfigurer = new CustomEditorConfigurer();
+//        customEditorConfigurer.setPropertyEditorRegistrars(
+//                new SoapVersionRegistrar[]{
+//                        getSoapVersionRegistrar()
+//                });
+//        return new CustomEditorConfigurer();
+//    }
+//
+//    @Bean
+//    public SoapVersionRegistrar getSoapVersionRegistrar() {
+//        return new SoapVersionRegistrar();
+//    }
+//
+//}
