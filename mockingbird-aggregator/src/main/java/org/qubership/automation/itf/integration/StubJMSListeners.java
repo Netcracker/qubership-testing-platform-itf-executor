@@ -30,6 +30,7 @@ import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.atp.multitenancy.core.header.CustomHeader;
+import org.qubership.automation.itf.core.execution.ExecutorServiceProviderFactory;
 import org.qubership.automation.itf.core.model.communication.message.CommonTriggerExecutionMessage;
 import org.qubership.automation.itf.core.model.communication.message.EventTriggerBulkActivationRequest;
 import org.qubership.automation.itf.core.model.communication.message.EventTriggerSingleActivationRequest;
@@ -267,25 +268,24 @@ public class StubJMSListeners {
                 return;
             }
 
-            String projectUuid = tcContext.getProjectUuid().toString();
-            MdcUtils.put(MdcField.PROJECT_ID.toString(), projectUuid);
-
             if (multiTenancyEnabled == null) {
                 multiTenancyEnabled = ApplicationConfig.env.getProperty("atp.multi-tenancy.enabled", Boolean.class);
             }
-            if (Boolean.TRUE.equals(multiTenancyEnabled)) {
-                TenantContext.setTenantInfo(projectUuid);
-            }
 
-            // TODO: 1) Check that event has all fields populated properly
-            // May be, 2) Change processing async way, like TCContextEntryExpiredListener#entryExpired
+            ExecutorServiceProviderFactory.get().requestForRegular().submit(
+                    () -> {
+                        String projectUuid = tcContext.getProjectUuid().toString();
+                        MdcUtils.put(MdcField.CONTEXT_ID.toString(), tcContextId);
+                        MdcUtils.put(MdcField.PROJECT_ID.toString(), projectUuid);
+                        if (Boolean.TRUE.equals(multiTenancyEnabled)) {
+                            TenantContext.setTenantInfo(projectUuid);
+                        }
+                        SituationInstance instance = event.getSituationInstance();
+                        instance.getContext().setTC(tcContext);
+                        instance.setParentContext(tcContext);
+                        eventBusProvider.post(event);
+                    });
 
-            SituationInstance instance = event.getSituationInstance();
-            instance.getSituationById();
-            instance.iterator();
-            instance.getContext().setTC(tcContext);
-            instance.setParentContext(tcContext);
-            eventBusProvider.post(event);
         } catch (Exception e) {
             log.error("Error while posting finish event to EventBus after getting it "
                     + "from 'end_exceptional_situations_events' topic: {}", e.getMessage());

@@ -29,10 +29,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.LazyInitializationException;
+import org.hibernate.Session;
 import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
 import org.qubership.atp.integration.configuration.annotation.AtpSpanTag;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
@@ -101,6 +104,9 @@ public class SituationExecutorService {
     private final EventBusProvider eventBusProvider;
     private final StepExecutorFactory stepExecutorFactory;
     private final ProjectSettingsService projectSettingsService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public void executeInstance(final SituationInstance instance,
                                 Storable source,
@@ -780,10 +786,24 @@ public class SituationExecutorService {
      */
     public void execute(Situation situation, InstanceContext context,
                         @Nullable Storable source, NextCallChainEvent event) throws Exception {
+        situation = ensureAttached(situation);
         if (Objects.nonNull(situation)) {
             SituationInstance instance = prepare(situation, context);
             executeInstance(instance, source, context.sp(), event, situation);
         }
+    }
+
+    private Situation ensureAttached(Situation situation) {
+        if (situation == null) {
+            return null;
+        }
+
+        // If the object doesn't attached to the current Hibernate session - re-read it.
+        if (!((Session) this.entityManager.getDelegate()).contains(situation)) {
+            log.warn("Situation {} is detached, reloading from DB...", situation.getID());
+            return CoreObjectManager.getInstance().getManager(Situation.class).getById(situation.getID());
+        }
+        return situation;
     }
 
     private StepInstance createInbound(final SituationInstance instance,
