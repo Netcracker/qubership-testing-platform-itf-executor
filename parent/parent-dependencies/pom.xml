@@ -13,7 +13,7 @@
         <spring.boot.version>3.5.14</spring.boot.version>
         <spring.cloud.version>2025.0.2</spring.cloud.version>
 
-        <atp.itf.core.version>5.1.18-SNAPSHOT</atp.itf.core.version>
+        <atp.itf.core.version>5.1.19-SNAPSHOT</atp.itf.core.version>
         <atp.auth.version>2.0.1-SNAPSHOT</atp.auth.version>
         <atp.common.version>1.0.0</atp.common.version>
         <atp.integration.version>1.0.0</atp.integration.version>
@@ -1306,12 +1306,6 @@
                 <artifactId>hibernate-core</artifactId>
                 <version>6.5.3.Final</version>
             </dependency>
-            <dependency>
-                <groupId>org.hibernate.orm</groupId>
-                <artifactId>hibernate-jcache</artifactId>
-                <version>6.5.3.Final</version>
-            </dependency>
-            <!-- JCache API -->
             <dependency>
                 <groupId>javax.cache</groupId>
                 <artifactId>cache-api</artifactId>
