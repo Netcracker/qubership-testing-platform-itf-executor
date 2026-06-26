@@ -780,10 +780,10 @@ public class SituationExecutorService {
      */
     public void execute(Situation situation, InstanceContext context,
                         @Nullable Storable source, NextCallChainEvent event) throws Exception {
-        situation = ensureAttached(situation);
-        if (Objects.nonNull(situation)) {
-            SituationInstance instance = prepare(situation, context);
-            executeInstance(instance, source, context.sp(), event, situation);
+        Situation ensuredAttachedSituation = ensureAttached(situation);
+        if (Objects.nonNull(ensuredAttachedSituation)) {
+            SituationInstance instance = prepare(ensuredAttachedSituation, context);
+            executeInstance(instance, source, context.sp(), event, ensuredAttachedSituation);
         }
     }
 

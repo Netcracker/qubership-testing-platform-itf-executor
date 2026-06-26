@@ -30,7 +30,6 @@ import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.atp.multitenancy.core.header.CustomHeader;
-import org.qubership.automation.itf.core.execution.ExecutorServiceProviderFactory;
 import org.qubership.automation.itf.core.model.communication.message.CommonTriggerExecutionMessage;
 import org.qubership.automation.itf.core.model.communication.message.EventTriggerBulkActivationRequest;
 import org.qubership.automation.itf.core.model.communication.message.EventTriggerSingleActivationRequest;
@@ -272,19 +271,12 @@ public class StubJMSListeners {
                 multiTenancyEnabled = ApplicationConfig.env.getProperty("atp.multi-tenancy.enabled", Boolean.class);
             }
 
+            // Submit to thread pool executor - commented temporarily. Synchronous processing is used instead.
+            /*
             ExecutorServiceProviderFactory.get().requestForRegular().submit(
-                    () -> {
-                        String projectUuid = tcContext.getProjectUuid().toString();
-                        MdcUtils.put(MdcField.CONTEXT_ID.toString(), tcContextId);
-                        MdcUtils.put(MdcField.PROJECT_ID.toString(), projectUuid);
-                        if (Boolean.TRUE.equals(multiTenancyEnabled)) {
-                            TenantContext.setTenantInfo(projectUuid);
-                        }
-                        SituationInstance instance = event.getSituationInstance();
-                        instance.getContext().setTC(tcContext);
-                        instance.setParentContext(tcContext);
-                        eventBusProvider.post(event);
-                    });
+                    () -> prepareAndPostEvent(tcContextId, tcContext, event));
+             */
+            prepareAndPostEvent(tcContextId, tcContext, event);
 
         } catch (Exception e) {
             log.error("Error while posting finish event to EventBus after getting it "
@@ -293,6 +285,21 @@ public class StubJMSListeners {
             MDC.clear();
             TenantContext.setDefaultTenantInfo();
         }
+    }
+
+    private void prepareAndPostEvent(String tcContextId,
+                                     TcContext tcContext,
+                                     SituationEvent.EndExceptionalSituationFinish event) {
+        String projectUuid = tcContext.getProjectUuid().toString();
+        MdcUtils.put(MdcField.CONTEXT_ID.toString(), tcContextId);
+        MdcUtils.put(MdcField.PROJECT_ID.toString(), projectUuid);
+        if (Boolean.TRUE.equals(multiTenancyEnabled)) {
+            TenantContext.setTenantInfo(projectUuid);
+        }
+        SituationInstance instance = event.getSituationInstance();
+        instance.getContext().setTC(tcContext);
+        instance.setParentContext(tcContext);
+        eventBusProvider.post(event);
     }
 
     /**
