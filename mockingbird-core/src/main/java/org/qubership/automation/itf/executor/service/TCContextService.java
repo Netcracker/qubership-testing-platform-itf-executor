@@ -87,6 +87,10 @@ public class TCContextService {
         return localRunningContexts.getIfPresent(id);
     }
 
+    public void refreshLocalRunningContext(TcContext tcContext) {
+        localRunningContexts.put((BigInteger) tcContext.getID(), tcContext);
+    }
+
     public static void localRunningContextsCacheCleanUp() {
         localRunningContexts.cleanUp();
     }
