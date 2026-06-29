@@ -38,7 +38,7 @@ public class TCContextRamExtension implements Extension, Serializable {
     private Boolean async = true;
     private StartedFrom startedFrom;
 
-    private transient TestRunContext runContext;
+    private /*transient*/ TestRunContext runContext;
 
     public BigInteger getRunId() {
         return runId;
