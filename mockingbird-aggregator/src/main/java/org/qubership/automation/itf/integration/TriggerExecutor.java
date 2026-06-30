@@ -58,6 +58,7 @@ import org.qubership.automation.itf.core.model.jpa.system.operation.Operation;
 import org.qubership.automation.itf.core.model.jpa.system.stub.Situation;
 import org.qubership.automation.itf.core.model.jpa.transport.TransportConfiguration;
 import org.qubership.automation.itf.core.util.IDiameterEventProducer;
+import org.qubership.automation.itf.core.util.config.Config;
 import org.qubership.automation.itf.core.util.constants.StartedFrom;
 import org.qubership.automation.itf.core.util.constants.Status;
 import org.qubership.automation.itf.core.util.converter.PropertiesConverter;
@@ -78,6 +79,7 @@ import org.qubership.automation.itf.executor.service.ExecutionServices;
 import org.qubership.automation.itf.executor.service.ExecutorToMessageBrokerSender;
 import org.qubership.automation.itf.executor.service.TCContextService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +87,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class TriggerExecutor implements IDiameterEventProducer {
+
+    @Value("${process.stub.on.initial.context.pod:false}")
+    private boolean processStubOnInitialContextPod;
 
     private static final String TECH_SITUATION_STEP_FORMAT = "Step was passed with Technical Situation because the "
             + "suitable situation for incoming message was NOT found on system: '%s', operation: '%s'";
@@ -304,6 +309,20 @@ public class TriggerExecutor implements IDiameterEventProducer {
         String contextKey = incomingHelper.getContextKey(instanceContext, system, operation, false);
         TcContext tcContext = incomingHelper.findOrCreateTcContextByKeys(contextKey, transport.get("isStub"),
                 projectId, projectUuid);
+        if (tcContext != null
+                && tcContext.getStartedByAtp()
+                && !Config.getConfig().getRunningHostname().equals(tcContext.getPodName())) {
+            // Depending on configuration, stop the current processing
+            // and transfer it to another pod, where this tcContext was created and executed.
+            if (processStubOnInitialContextPod) {
+                return transferProcessingToInitialContextPod(message,
+                        triggerConfiguration,
+                        sessionId,
+                        brokerMessageSelectorValue,
+                        projectUuid,
+                        tcContext.getPodName());
+            }
+        }
         fillTcContextParams(instanceContext, message, triggerConfiguration, started, tcContext);
         MdcUtils.put(MdcField.CONTEXT_ID.toString(), tcContext.getID().toString());
         Thread.currentThread().setName(Thread.currentThread().getName() + "/" + tcContext.getID());
@@ -313,6 +332,31 @@ public class TriggerExecutor implements IDiameterEventProducer {
             return prepareAndExecuteSituation(instanceContext, tcContext, instanceContext.getSP(), message, operation,
                     system, sessionId, brokerMessageSelectorValue, server.getName());
         }
+    }
+
+    private boolean transferProcessingToInitialContextPod(Message message,
+                                                          TriggerConfiguration triggerConfiguration,
+                                                          String sessionId,
+                                                          String brokerMessageSelectorValue,
+                                                          UUID projectUuid,
+                                                          String originalPodName) {
+        executorToMessageBrokerSender.sendMessageToStubsExecutorIncomingRequestQueueWithSelector(
+                new CommonTriggerExecutionMessage(
+                        triggerConfiguration.getTypeName(),
+                        message,
+                        new StorableDescriptor(
+                                triggerConfiguration.getID(),
+                                triggerConfiguration.getName(),
+                                projectUuid,
+                                triggerConfiguration.getProjectId()),
+                        sessionId,
+                        brokerMessageSelectorValue
+                ),
+                projectUuid.toString(),
+                originalPodName
+        );
+
+        return true;
     }
 
     private String computeEndpointTagValue(Object uriParams, String typeName, Object triggerId) {

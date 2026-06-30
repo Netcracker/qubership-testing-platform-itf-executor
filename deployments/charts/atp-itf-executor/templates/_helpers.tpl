@@ -192,6 +192,7 @@ SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: "{{ .Values.SPRING_SERVLET_MULTIPART_
 STUBS_CONFIGURATOR_TOPIC: "{{ include "env.default" (dict "ctx" . "val" .Values.STUBS_CONFIGURATOR_TOPIC "def" "stubs_configurator") }}"
 STUBS_EXECUTOR_CONCURRENCY: "{{ .Values.STUBS_EXECUTOR_CONCURRENCY }}"
 STUBS_EXECUTOR_INCOMING_QUEUE: "{{ include "env.default" (dict "ctx" . "val" .Values.STUBS_EXECUTOR_INCOMING_QUEUE "def" "stubs_executor_incoming_request") }}"
+STUBS_EXECUTOR_INCOMING_QUEUE_WITH_SELECTOR: "{{ include "env.default" (dict "ctx" . "val" .Values.STUBS_EXECUTOR_INCOMING_QUEUE_WITH_SELECTOR "def" "stubs_executor_incoming_request_with_selector") }}"
 STUBS_EXECUTOR_MAX_MESSAGES_PER_TASK: "{{ .Values.STUBS_EXECUTOR_MAX_MESSAGES_PER_TASK }}"
 SWAGGER_ENABLED: "{{ .Values.SWAGGER_ENABLED }}"
 TRANSPORT_CUSTOM_LIB_FOLDER: "{{ .Values.TRANSPORT_CUSTOM_LIB_FOLDER }}"

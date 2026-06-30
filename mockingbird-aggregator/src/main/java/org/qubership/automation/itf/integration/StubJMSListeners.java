@@ -82,6 +82,10 @@ public class StubJMSListeners {
     @Value("${atp.multi-tenancy.enabled}")
     private Boolean multiTenancyEnabled;
 
+    private final String executorSelectorKey = "hostname";
+    private final String executorSelectorValue = "'${hostname}'";
+    private final String executorSelectorData = executorSelectorKey + "=" + executorSelectorValue;
+
     /**
      * JMSListener to process messages from stubs-executor-incoming-request queue
      * and produce event to trigger executor.
@@ -94,6 +98,10 @@ public class StubJMSListeners {
      */
     @JmsListener(destination = "${message-broker.stubs-executor-incoming-request.queue}",
             containerFactory = "stubDefaultJmsListenerQueueContainerFactory")
+    @JmsListener(destination = "${message-broker.stubs-executor-incoming-request.queue.with-selector}",
+            containerFactory = "stubDefaultJmsListenerQueueContainerFactory",
+            selector = executorSelectorData
+    )
     @AtpJaegerLog()
     public void onExecutorStubsSyncMessage(ActiveMQTextMessage activeMqTextMessage) {
         try {

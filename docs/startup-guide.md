@@ -151,6 +151,7 @@ message-broker.executor-disabling-stepbystep.topic=${EXECUTOR_DISABLING_STEPBYST
 message-broker.executor-sync-reload-dictionary.topic=${EXECUTOR_SYNC_RELOAD_DICTIONARY_TOPIC}
 message-broker.eds-update.topic=${EDS_UPDATE_TOPIC}
 message-broker.stubs-executor-incoming-request.queue=${STUBS_EXECUTOR_INCOMING_QUEUE}
+message-broker.stubs-executor-incoming-request.queue.with-selector=${STUBS_EXECUTOR_INCOMING_QUEUE_WITH_SELECTOR}
 message-broker.executor-stubs-outgoing-response.queue=${EXECUTOR_STUBS_OUTGOING_QUEUE}
 message-broker.reports.queue=${REPORT_QUEUE}
 message-broker.end-exceptional-situations-events.message-time-to-live=${END_EXCEPTIONAL_SITUATIONS_EVENTS_MESSAGES_TTL}

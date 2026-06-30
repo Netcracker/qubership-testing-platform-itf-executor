@@ -59,8 +59,13 @@ public class MetricsAggregateService {
     private final Counter.Builder executorContextSizeCounter;
     @Value("#{${exclude.registry.metrics.tags}}")
     private Map<String, List<String>> excludeRegistryMetricsTags;
+
     @Value("${message-broker.stubs-executor-incoming-request.queue}")
     private String destinationQueueName;
+
+    @Value("${message-broker.stubs-executor-incoming-request.queue.with-selector}")
+    private String destinationWithSelectorQueueName;
+
     private final ApplicationContext applicationContext;
     private DefaultMessageListenerContainer defaultMessageListenerContainer;
     private final JmsListenerEndpointRegistry jmsListenerEndpointRegistry;
@@ -173,7 +178,9 @@ public class MetricsAggregateService {
 
     private void contextInitialized() {
         for (MessageListenerContainer messageListenerContainer : jmsListenerEndpointRegistry.getListenerContainers()) {
-            if (destinationQueueName.equals(((DefaultMessageListenerContainer) messageListenerContainer).getDestinationName())) {
+            String destination = ((DefaultMessageListenerContainer) messageListenerContainer).getDestinationName();
+            if (destinationQueueName.equals(destination)
+                    || destinationWithSelectorQueueName.equals(destination)) {
                 defaultMessageListenerContainer = (DefaultMessageListenerContainer) messageListenerContainer;
                 break;
             }

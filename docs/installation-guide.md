@@ -41,6 +41,7 @@
 -DEXECUTOR_SYNC_RELOAD_DICTIONARY_TOPIC=
 -DEDS_UPDATE_TOPIC=
 -DSTUBS_EXECUTOR_INCOMING_QUEUE=
+-DSTUBS_EXECUTOR_INCOMING_QUEUE_WITH_SELECTOR=
 -DEXECUTOR_STUBS_OUTGOING_QUEUE=
 -DREPORT_QUEUE=
 ```
@@ -156,6 +157,7 @@
 | `EXECUTOR_SYNC_RELOAD_DICTIONARY_TOPIC`                | Yes       | executor_sync_reload_dictionary                                                                                | Executor sync reload dictionary topic name                        |
 | `EDS_UPDATE_TOPIC`                                     | Yes       | eds_update                                                                                                     | Eds update topic name                                             |
 | `STUBS_EXECUTOR_INCOMING_QUEUE`                        | Yes       | stubs_executor_incoming_request                                                                                | Stubs executor incoming request queue name                        |
+| `STUBS_EXECUTOR_INCOMING_QUEUE_WITH_SELECTOR`          | Yes       | stubs_executor_incoming_request_with_selector                                                                  | Stubs executor incoming request queue (with selector) name        |
 | `EXECUTOR_STUBS_OUTGOING_QUEUE`                        | Yes       | executor_stubs_outgoing_response                                                                               | Executor stubs outgoing response queue name                       |
 | `REPORT_QUEUE`                                         | Yes       | ReportExecution                                                                                                | Reports queue name                                                |
 | `END_EXCEPTIONAL_SITUATIONS_EVENTS_MESSAGES_TTL`       | No        | 180000                                                                                                         | End exceptional situations events message time-to-live value      |

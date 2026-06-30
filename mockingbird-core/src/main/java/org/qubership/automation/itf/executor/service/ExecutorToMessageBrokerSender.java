@@ -29,6 +29,7 @@ import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
 import org.qubership.atp.integration.configuration.mdc.MdcUtils;
 import org.qubership.atp.multitenancy.core.header.CustomHeader;
 import org.qubership.atp.multitenancy.interceptor.jms.AtpJmsTemplate;
+import org.qubership.automation.itf.core.model.communication.message.CommonTriggerExecutionMessage;
 import org.qubership.automation.itf.core.model.communication.message.EventTriggerStateResponse;
 import org.qubership.automation.itf.core.model.communication.message.TriggerExecutionMessage;
 import org.qubership.automation.itf.core.util.mdc.MdcField;
@@ -72,6 +73,9 @@ public class ExecutorToMessageBrokerSender {
     @Value("${message-broker.reports.queue}")
     String reportsIntegrationQueue;
 
+    @Value("${message-broker.stubs-executor-incoming-request.queue.with-selector}")
+    String stubsExecutorIncomingRequestQueueWithSelector;
+
     @PostConstruct
     public void init() {
         jmsTemplateMap.put("topic", topicJmsTemplate);
@@ -98,6 +102,26 @@ public class ExecutorToMessageBrokerSender {
         queueJmsTemplate.convertAndSend(executorStubsOutgoingResponseQueue, triggerExecutionMessage, properties);
         log.info("SessionId: {}, Broker Message Selector Value: {}. Response is sent to stubs",
                 triggerExecutionMessage.getSessionId(), triggerExecutionMessage.getBrokerMessageSelectorValue());
+    }
+
+    public void sendMessageToStubsExecutorIncomingRequestQueueWithSelector(
+            CommonTriggerExecutionMessage triggerExecutionMessage,
+            String tenantId,
+            String executorPodSelectorValue) {
+        if (StringUtils.isEmpty(executorPodSelectorValue)) {
+            log.error("SessionId: {}, Request is NOT transferred to another executor pod, due to empty selector!",
+                    triggerExecutionMessage.getSessionId());
+            return;
+        }
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(CustomHeader.X_PROJECT_ID, tenantId);
+        properties.put("traceId", MDC.get("traceId"));
+        properties.put(HOSTNAME_MESSAGE_PROPERTY, executorPodSelectorValue);
+        queueJmsTemplate.convertAndSend(stubsExecutorIncomingRequestQueueWithSelector,
+                triggerExecutionMessage,
+                properties);
+        log.info("SessionId: {}, Broker Message Selector Value: {}. Request is transferred to another executor pod",
+                triggerExecutionMessage.getSessionId(), executorPodSelectorValue);
     }
 
     public void sendMessageExecutorConfiguratorEventTriggersTopic(EventTriggerStateResponse message, String tenantId) {
