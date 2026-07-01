@@ -309,20 +309,37 @@ public class TriggerExecutor implements IDiameterEventProducer {
         String contextKey = incomingHelper.getContextKey(instanceContext, system, operation, false);
         TcContext tcContext = incomingHelper.findOrCreateTcContextByKeys(contextKey, transport.get("isStub"),
                 projectId, projectUuid);
-        if (tcContext != null
-                && tcContext.getStartedByAtp()
-                && !Config.getConfig().getRunningHostname().equals(tcContext.getPodName())) {
-            // Depending on configuration, stop the current processing
-            // and transfer it to another pod, where this tcContext was created and executed.
-            if (processStubOnInitialContextPod) {
+
+        if (tcContext == null) {
+            // In normal situation, we never visit this place
+            throw new IllegalStateException("TcContext is suddenly null. Processing is terminated");
+        } else if (tcContext.getStartedByAtp()) {
+            if (Config.getConfig().getRunningHostname().equals(tcContext.getPodName())) {
+                // Get TcContext from the local cache and use it in further execution
+                TcContext localTcContext = ExecutionServices.getTCContextService()
+                        .getLocalRunningContext((BigInteger) tcContext.getID());
+                if (localTcContext != null) {
+                    tcContext = localTcContext;
+                }
+            } else if (processStubOnInitialContextPod) {
                 return transferProcessingToInitialContextPod(message,
                         triggerConfiguration,
                         sessionId,
                         brokerMessageSelectorValue,
                         projectUuid,
                         tcContext.getPodName());
+            } else {
+                /*
+                    The original TcContext is executing on another pod, but we didn't transfer
+                    processing to it due to processStubOnInitialContextPod == false.
+                    So, we continue processing on this pod, and the supposed result is:
+                        - execution is normal, but reporting to RAM is failed with exception:
+                        "TestRunContext should not be null".
+                    After testing, may be, processStubOnInitialContextPod = true will become default setting.
+                */
             }
         }
+
         fillTcContextParams(instanceContext, message, triggerConfiguration, started, tcContext);
         MdcUtils.put(MdcField.CONTEXT_ID.toString(), tcContext.getID().toString());
         Thread.currentThread().setName(Thread.currentThread().getName() + "/" + tcContext.getID());
