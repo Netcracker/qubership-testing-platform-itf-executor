@@ -103,7 +103,7 @@ public class MultiReplicaJMSListeners {
             }
             ExecutorServiceProviderFactory.get().requestForRegular().submit(
                     () -> progressingTcContext(tcContext, Status.valueOf(newState), contextId));
-        } catch (JMSException | JsonProcessingException e) {
+        } catch (JMSException | JsonProcessingException | IllegalArgumentException e) {
             log.error("Error while 'TcContext Operations' message processing: {}", e.getMessage());
         } finally {
             MDC.clear();
@@ -120,7 +120,7 @@ public class MultiReplicaJMSListeners {
             }
             MdcUtils.put(MdcField.CONTEXT_ID.toString(), contextId);
             tcContextService.disableStepByStepOnCurrentServiceInstance(new BigInteger(contextId));
-        } catch (JMSException e) {
+        } catch (JMSException | IllegalArgumentException e) {
             log.error("Error while 'Disable step-by-step mode' message processing: {}", e.getMessage());
         } finally {
             MDC.clear();
@@ -130,8 +130,8 @@ public class MultiReplicaJMSListeners {
     private void progressingTcContext(TcContext tcContext, Status newStatus, BigInteger contextId) {
         /*  There may be attempts to perform incorrect state changes - via pressing Pause/Resume buttons
             in the in actual context popups.
-            Currently we check the correctness of the transfer from the currentState to newState here.
-            May be we must check it in the methods invoked.
+            Currently, we check the correctness of the transfer from the currentState to newState here.
+            May be, we must check it in the methods invoked.
         */
         switch (newStatus) {
             case PAUSED:
