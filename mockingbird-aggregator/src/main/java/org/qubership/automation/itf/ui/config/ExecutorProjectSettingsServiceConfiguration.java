@@ -17,7 +17,6 @@
 
 package org.qubership.automation.itf.ui.config;
 
-import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.executor.service.ProjectSettingsService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +29,7 @@ public class ExecutorProjectSettingsServiceConfiguration {
 
     @Bean
     public ProjectSettingsService projectSettingsService(
-            @Qualifier("hazelcastClient") HazelcastInstance hazelcastClient,
-            CoreObjectManager coreObjectManager) {
-        return new ProjectSettingsService(hazelcastClient, coreObjectManager);
+            @Qualifier("hazelcastClient") HazelcastInstance hazelcastClient) {
+        return new ProjectSettingsService(hazelcastClient);
     }
 }

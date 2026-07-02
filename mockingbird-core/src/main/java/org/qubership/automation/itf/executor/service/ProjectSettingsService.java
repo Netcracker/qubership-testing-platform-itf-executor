@@ -42,7 +42,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ProjectSettingsService extends AbstractProjectSettingsService {
 
     private final HazelcastInstance hazelcastClient;
-    private final CoreObjectManager coreObjectManager;
 
     @Value("${hazelcast.project-settings.cache.refill.time.seconds}")
     private long projectSettingsCacheRefillTime;
@@ -252,7 +251,7 @@ public class ProjectSettingsService extends AbstractProjectSettingsService {
 
     private void updateDataBase(BigInteger projectId, String shortName, String value) {
         //noinspection unchecked
-        coreObjectManager.getSpecialManager(StubProject.class, SearchManager.class)
+        CoreObjectManager.getInstance().getSpecialManager(StubProject.class, SearchManager.class)
                 .updateProjectSetting(projectId, shortName, value);
     }
 
@@ -266,7 +265,8 @@ public class ProjectSettingsService extends AbstractProjectSettingsService {
     private Map<String, String> getAllFromDataBase(BigInteger projectId) {
         try {
             //noinspection unchecked
-            return (Map<String, String>) coreObjectManager.getSpecialManager(StubProject.class, SearchManager.class)
+            return (Map<String, String>) CoreObjectManager.getInstance()
+                    .getSpecialManager(StubProject.class, SearchManager.class)
                     .getAllProjectSettingsByProjectId(projectId);
         } catch (Exception e) {
             throw new RuntimeException("Error getting project settings from db for projectId " + projectId, e);
