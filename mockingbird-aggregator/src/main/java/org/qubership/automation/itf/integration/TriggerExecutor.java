@@ -380,16 +380,9 @@ public class TriggerExecutor implements IDiameterEventProducer {
         return uriParams == null ? typeName + " / trigger " + triggerId : uriParams.toString();
     }
 
-    private Exception prepareException(String errorDescription, Exception e) {
+    private Exception prepareException(String errorDescription, Exception exception) {
         log.error(errorDescription);
-        return processException(e, errorDescription);
-    }
-
-    private Exception processException(Exception exception, String description) {
-        Class<? extends Exception> exceptionClass = exception.getClass();
-        return exceptionClass.isAssignableFrom(IncomingValidationException.class)
-                ? exception
-                : new Exception(description);
+        return exception instanceof IncomingValidationException ? exception : new Exception(errorDescription);
     }
 
     private String calculateContextName(Message message, String typename) {

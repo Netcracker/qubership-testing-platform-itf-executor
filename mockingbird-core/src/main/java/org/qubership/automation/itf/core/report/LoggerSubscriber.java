@@ -277,8 +277,8 @@ public class LoggerSubscriber {
     @AllowConcurrentEvents
     public void onStepTerminate(StepEvent.Terminate event) {
         StepInstance stepInstance = submitStepInstance(event.getStepInstance(), "Terminate step ", event.getDate());
-        if (stepInstance.getContext().tc().isNeedToReportToAtp() && !(stepInstance.getContext().tc().getStartedFrom()
-                .equals(StartedFrom.RAM2))) {
+        if (stepInstance.getContext().tc().isNeedToReportToAtp()
+                && !(StartedFrom.RAM2.equals(stepInstance.getContext().tc().getStartedFrom()))) {
             Report.error(stepInstance, "[" + stepInstance.getStep().getName() + "] Terminated",
                     stepInstance.getContext().sp(), stepInstance.getError());
             Report.closeSection(stepInstance.getParent());
@@ -315,7 +315,7 @@ public class LoggerSubscriber {
             LOGGER.debug("Context is {}: {}", status.toString(), event.getContext());
             Report.stopRun(InstanceContext.from(tcContext, new SpContext()), status);
         }
-        if (!(tcContext.getStartedFrom().equals(StartedFrom.RAM2))) {
+        if (!(StartedFrom.RAM2.equals(tcContext.getStartedFrom()))) {
             CacheServices.getTcContextCacheService().evict(tcContext);
         }
     }
@@ -380,7 +380,7 @@ public class LoggerSubscriber {
         if (multiTenancyEnabled) {
             TenantContext.setTenantInfo(projectUuid);
         }
-        LOGGER.debug(logMessage + callChainInstance);
+        LOGGER.debug("{} {}", logMessage, callChainInstance);
         if (callChainInstance.getContext().tc().isNeedToReportToItf()) {
             worker.submit(callChainInstance, eventDate, callChainInstance.getContext().tc().getProjectId(),
                     projectUuid);
@@ -394,7 +394,7 @@ public class LoggerSubscriber {
         if (multiTenancyEnabled) {
             TenantContext.setTenantInfo(projectUuid);
         }
-        LOGGER.debug(logMessage + stepInstance);
+        LOGGER.debug("{} {}", logMessage, stepInstance);
         if (stepInstance.getContext().tc().isNeedToReportToItf()) {
             worker.submit(stepInstance, eventDate, stepInstance.getContext().tc().getProjectId(), projectUuid);
         }
@@ -407,7 +407,7 @@ public class LoggerSubscriber {
         if (multiTenancyEnabled) {
             TenantContext.setTenantInfo(projectUuid);
         }
-        LOGGER.debug(logMessage + situationInstance);
+        LOGGER.debug("{} {}", logMessage, situationInstance);
         if (situationInstance.getContext().tc().isNeedToReportToItf()) {
             worker.submit(situationInstance, eventDate, situationInstance.getContext().tc().getProjectId(),
                     projectUuid);
