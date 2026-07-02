@@ -69,6 +69,7 @@ import org.qubership.automation.itf.core.util.registry.EngineIntegrationRegistry
 import org.qubership.automation.itf.core.util.report.ReportLinkCollector;
 import org.qubership.automation.itf.execution.data.CallchainExecutionData;
 import org.qubership.automation.itf.execution.manager.CallChainExecutorManager;
+import org.qubership.automation.itf.executor.cache.service.CacheServices;
 import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.qubership.automation.itf.executor.service.ExecutionServices;
 import org.qubership.automation.itf.executor.service.TCContextService;
@@ -346,6 +347,12 @@ public class RunCallChainController extends ExecutorControllerHelper {
     public void terminateContext(@RequestParam(value = "contextId") BigInteger contextId,
                                  @RequestParam(value = "projectUuid") UUID projectUuid,
                                  @RequestHeader(value = CustomHeader.X_PROJECT_ID) String tenantId) {
+        TcContext tcContext = CacheServices.getTcContextCacheService().getById(contextId);
+        if (tcContext == null) {
+            throw new IllegalArgumentException(String.format(
+                    "Context isn't found by id %s in Running Contexts Cache. "
+                    + "Terminate operation is cancelled for it", contextId));
+        }
         ExecutionServices.getTCContextService().stop(contextId, tenantId);
     }
 

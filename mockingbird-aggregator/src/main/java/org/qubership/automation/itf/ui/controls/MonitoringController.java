@@ -148,7 +148,14 @@ public class MonitoringController {
                           @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid,
                           @SuppressWarnings("unused") @RequestHeader(value = CustomHeader.X_PROJECT_ID) String tenantId) {
         for (String id : ids.getIds()) {
-            ExecutionServices.getTCContextService().stop(new BigInteger(id), tenantId);
+            BigInteger contextId = new BigInteger(id);
+            TcContext tcContext = CacheServices.getTcContextCacheService().getById(contextId);
+            if (tcContext == null) {
+                log.warn("Context isn't found by id {} in Running Contexts Cache. "
+                        + "Terminate operation is cancelled for it", id);
+                continue;
+            }
+            ExecutionServices.getTCContextService().stop(contextId, tenantId);
         }
     }
 
@@ -174,15 +181,17 @@ public class MonitoringController {
         }
         UIGetReportList result = new UIGetReportList();
 
-        /* Currently we:
-             1. Stop at the 1st exception (maybe we should continue processing?)
-             2. Silently do nothing on the context if it doesn't suit the conditions (maybe we should log it?)
-         */
         for (String id : uiIds.getIds()) {
+            BigInteger contextId = new BigInteger(id);
+            TcContext tcContext = CacheServices.getTcContextCacheService().getById(contextId);
+            if (tcContext == null) {
+                log.warn("Context isn't found by id {} in Running Contexts Cache. "
+                        + "Pause/Resume operation is cancelled for it", id);
+                continue;
+            }
             executorToMessageBrokerSender.sendMessageToTcContextOperationsTopic(
-                    new TcContextOperationMessage(newStatus.name(), new BigInteger(id)), tenantId);
-            result.getReportItems().add(buildUIReportItem(CacheServices.getTcContextCacheService()
-                    .getById(new BigInteger(id))));
+                    new TcContextOperationMessage(newStatus.name(), contextId), tenantId);
+            result.getReportItems().add(buildUIReportItem(tcContext));
         }
         return result;
     }

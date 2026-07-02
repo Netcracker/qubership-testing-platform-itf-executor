@@ -26,6 +26,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.atp.multitenancy.core.header.CustomHeader;
 import org.qubership.automation.itf.core.execution.DebugExecutor;
@@ -217,17 +218,37 @@ public class ContextController {
     @AuditAction(auditAction = "Fail tc-context id {{#contextId}} in the project {{#projectUuid}}")
     public void fail(@RequestBody Properties request,
                      @RequestParam(value = "projectUuid") UUID projectUuid) {
-        String contextId = request.getProperty("id");
-        if (contextId == null) {
-            throw new IllegalArgumentException("Parameter 'id' (Context id) is null or missed");
-        }
-        TcContext tcContext = CacheServices.getTcContextCacheService().getById(contextId);
-        if (tcContext == null) {
-            throw new IllegalArgumentException(String.format("Context isn't found by id '%s'", contextId));
-        }
+        String contextId = getPropertyOrThrow(request, "id", "Parameter 'id' (Context id) is null or missed");
+        TcContext tcContext = getTcContextOrThrow(contextId);
         failTc(request, tcContext);
     }
 
+    private String getPropertyOrThrow(Properties request, String propertyName, String message) {
+        String value = request.getProperty(propertyName);
+        if (StringUtils.isEmpty(value)) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+
+    private TcContext getTcContextOrThrow(String contextId) {
+        TcContext tcContext = CacheServices.getTcContextCacheService().getById(contextId);
+        if (tcContext == null) {
+            throw new IllegalArgumentException(
+                    String.format("Context isn't found by id '%s' in Running Contexts Cache", contextId));
+        }
+        return tcContext;
+    }
+
+    /**
+     * Change state of TcContext identified by 'contextId' property inside RequestBody.
+     * Please note:
+     *  - Only currently executing contexts (which are present in TcContextCacheService) are processed.
+     *
+     * @param request Properties object containing at least 'state' and 'contextId' properties
+     * @param projectUuid Project UUID
+     * @param tenantId String tenant ID.
+     */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"EXECUTE\")")
     @RequestMapping(value = "/context/setstate", method = RequestMethod.POST)
@@ -237,9 +258,13 @@ public class ContextController {
     public void setState(@RequestBody Properties request,
                          @RequestParam(value = "projectUuid") UUID projectUuid,
                          @RequestHeader(value = CustomHeader.X_PROJECT_ID) String tenantId) {
+        String state = getPropertyOrThrow(request, "state", "Parameter 'state' is null or missed");
+        String contextId = getPropertyOrThrow(request, "contextId", "Parameter 'contextId' is null or missed");
+
+        // Check if the context is present in the cache. If not present, it's senseless to go further.
+        TcContext tcContext = getTcContextOrThrow(contextId);
         executorToMessageBrokerSender.sendMessageToTcContextOperationsTopic(
-                new TcContextOperationMessage(request.getProperty("state"),
-                        new BigInteger(request.getProperty("contextId"))), tenantId);
+                new TcContextOperationMessage(state, new BigInteger(contextId)), tenantId);
     }
 
     @Transactional
