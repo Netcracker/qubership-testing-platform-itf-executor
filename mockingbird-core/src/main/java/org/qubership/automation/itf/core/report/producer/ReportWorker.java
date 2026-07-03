@@ -54,6 +54,7 @@ import org.qubership.automation.itf.core.model.jpa.message.parser.MessageParamet
 import org.qubership.automation.itf.core.util.config.Config;
 import org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants;
 import org.qubership.automation.itf.core.util.generator.id.UniqueIdGenerator;
+import org.qubership.automation.itf.core.util.manager.MonitorManager;
 import org.qubership.automation.itf.core.util.mdc.MdcField;
 import org.qubership.automation.itf.executor.service.ExecutorToMessageBrokerSender;
 import org.slf4j.Logger;
@@ -112,14 +113,10 @@ public class ReportWorker {
     }
 
     private static String objectDescription(Storable object) {
-        if (object instanceof AbstractInstance) {
-            return object.getClass().getSimpleName() + " id=" + object.getID()
-                    + ", name '" + object.getName() + "'"
-                    + " of " + objectDescription(((AbstractInstance) object).getContext().getTC());
-        } else {
-            return object.getClass().getSimpleName() + " id=" + object.getID()
-                    + ", name '" + object.getName() + "'";
-        }
+        String str = object.getClass().getSimpleName() + " id=" + object.getID() + ", name '" + object.getName() + "'";
+        return object instanceof AbstractInstance
+                ? str + " of " + objectDescription(((AbstractInstance) object).getContext().getTC())
+                : str;
     }
 
     private static boolean isReportExecutionEnabled(BigInteger projectId) {
@@ -133,19 +130,24 @@ public class ReportWorker {
         if (isReportExecutionEnabled(projectId)) {
             ObjectMapper mapper = ReportUtilsCache.getInstance().getMapper(projectId);
             if (mapper == null) {
-                synchronized (projectId) {
-                    SimpleModule module = new SimpleModule("mb") {
-                        @Override
-                        public void setupModule(SetupContext context) {
-                            super.setupModule(context);
-                            context.appendAnnotationIntrospector(new JacksonAnnotationIntrospector());
-                        }
-                    };
-                    mapper = new ObjectMapper();
-                    mapper.registerModule(module);
-                    mapper.disable(SerializationFeature.INDENT_OUTPUT);
-                    mapper.setFilterProvider(configureFilterProvider());
-                    ReportUtilsCache.getInstance().addMapper(projectId, mapper);
+                String lockKey = "ProjectMapper:" + projectId;
+                Object lock = MonitorManager.getInstance().get(lockKey);
+                synchronized (lock) {
+                    mapper = ReportUtilsCache.getInstance().getMapper(projectId);
+                    if (mapper == null) {
+                        SimpleModule module = new SimpleModule("mb") {
+                            @Override
+                            public void setupModule(SetupContext context) {
+                                super.setupModule(context);
+                                context.appendAnnotationIntrospector(new JacksonAnnotationIntrospector());
+                            }
+                        };
+                        mapper = new ObjectMapper();
+                        mapper.registerModule(module);
+                        mapper.disable(SerializationFeature.INDENT_OUTPUT);
+                        mapper.setFilterProvider(configureFilterProvider());
+                        ReportUtilsCache.getInstance().addMapper(projectId, mapper);
+                    }
                 }
             }
             return mapper;
@@ -482,10 +484,16 @@ public class ReportWorker {
         if (isReportExecutionEnabled(projectId)) {
             ExecutorService executorService = ReportUtilsCache.getInstance().getExecutorService(projectId);
             if (executorService == null) {
-                executorService =
-                        DaemonThreadPoolFactory.cachedThreadPool(getReportExecutionSenderThreadPoolSize(projectId),
-                                "ReportWorker - ");
-                ReportUtilsCache.getInstance().addExecutorService(projectId, executorService);
+                String lockKey = "ProjectExecutor:" + projectId;
+                Object lock = MonitorManager.getInstance().get(lockKey);
+                synchronized (lock) {
+                    executorService = ReportUtilsCache.getInstance().getExecutorService(projectId);
+                    if (executorService == null) {
+                        executorService = DaemonThreadPoolFactory.cachedThreadPool(
+                                getReportExecutionSenderThreadPoolSize(projectId), "ReportWorker - ");
+                        ReportUtilsCache.getInstance().addExecutorService(projectId, executorService);
+                    }
+                }
             }
             return executorService;
         } else {

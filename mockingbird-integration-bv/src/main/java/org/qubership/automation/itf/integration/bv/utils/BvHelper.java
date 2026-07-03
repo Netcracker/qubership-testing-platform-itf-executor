@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.automation.itf.core.model.common.Storable;
@@ -103,7 +102,7 @@ public class BvHelper {
                 extension = new BvInstanceExtension();
                 instance.extend(extension);
             }
-            extension.validate = validateTestcase && !Strings.isNullOrEmpty(bvCaseId); // Run validation after
+            extension.validate = validateTestcase; // Run validation after
             // callchain execution
             extension.bvCaseId = bvCaseId;
             extension.bvAction = bvAction;
@@ -141,15 +140,12 @@ public class BvHelper {
     }
 
     public static String getProjectUUID(BigInteger projectId) {
-        String uuid;
-        synchronized (projectId) {
-            UUID uuidFromDB =
-                    CoreObjectManager.getInstance().getManager(StubProject.class).getById(projectId).getUuid();
-            if (Objects.isNull(uuidFromDB)) {
-                throw new EngineIntegrationException("BulkValidator Project UUID not found!");
-            }
-            uuid = uuidFromDB.toString();
+        StubProject project = CoreObjectManager.getInstance().getManager(StubProject.class).getById(projectId);
+        if (project == null) {
+            throw new EngineIntegrationException(String.format("Project not found by id %s!", projectId));
+        } else if (Objects.isNull(project.getUuid())) {
+            throw new EngineIntegrationException("BulkValidator Project UUID is not set!");
         }
-        return uuid;
+        return project.getUuid().toString();
     }
 }

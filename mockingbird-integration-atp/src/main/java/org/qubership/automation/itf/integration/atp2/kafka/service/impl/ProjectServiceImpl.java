@@ -30,6 +30,7 @@ import org.qubership.automation.itf.core.hibernate.spring.managers.custom.Search
 import org.qubership.automation.itf.core.model.jpa.project.StubProject;
 import org.qubership.automation.itf.core.util.descriptor.ProjectSettingsDescriptor;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManagerService;
+import org.qubership.automation.itf.core.util.manager.MonitorManager;
 import org.qubership.automation.itf.executor.service.ProjectSettingsService;
 import org.qubership.automation.itf.integration.atp2.kafka.dto.ProjectEvent;
 import org.qubership.automation.itf.integration.atp2.kafka.service.ProjectService;
@@ -81,10 +82,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void update(ProjectEvent projectEvent) {
         UUID projectUuid = projectEvent.getProjectId();
-        //noinspection unchecked
-        BigInteger projectId = coreObjectManagerService.getSpecialManager(StubProject.class, SearchManager.class)
-                .getEntityInternalIdByUuid(projectUuid);
-        synchronized (projectUuid) {
+        String lockKey = "ProjectEvent:" + projectUuid;
+        Object lock = MonitorManager.getInstance().get(lockKey);
+        synchronized (lock) {
+            //noinspection unchecked
+            BigInteger projectId = coreObjectManagerService.getSpecialManager(StubProject.class, SearchManager.class)
+                    .getEntityInternalIdByUuid(projectUuid);
             if (projectId == null) {
                 log.info("Create non-existent project {}, {}", projectUuid, projectEvent.getProjectName());
                 createProject(projectEvent);
