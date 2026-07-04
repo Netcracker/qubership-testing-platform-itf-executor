@@ -195,7 +195,9 @@ public class TCContextService {
             localRunningContexts.invalidate((BigInteger) tcContext.getID());
         }
         if (!tcContext.isFinishEventSent()) {
-            synchronized (tcContext) {
+            String lockKey = "TcContext:finalize:" + tcContext.getID();
+            Object lock = MonitorManager.getInstance().get(lockKey);
+            synchronized (lock) {
                 if (!tcContext.isFinishEventSent()) {
                     eventBusProvider.post(new TcContextEvent.Finish(tcContext));
                     tcContext.setFinishEventAsSent();
@@ -219,7 +221,9 @@ public class TCContextService {
             localRunningContexts.invalidate((BigInteger) tcContext.getID());
         }
         if (!tcContext.isFailEventSent()) {
-            synchronized (tcContext) {
+            String lockKey = "TcContext:finalize:" + tcContext.getID();
+            Object lock = MonitorManager.getInstance().get(lockKey);
+            synchronized (lock) {
                 if (!tcContext.isFailEventSent()) {
                     eventBusProvider.post(new TcContextEvent.Fail(tcContext));
                     tcContext.setFailEventAsSent();
