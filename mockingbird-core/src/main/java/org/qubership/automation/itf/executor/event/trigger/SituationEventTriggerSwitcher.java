@@ -29,6 +29,7 @@ import org.qubership.automation.itf.core.util.config.Config;
 import org.qubership.automation.itf.core.util.exception.TriggerException;
 import org.qubership.automation.itf.core.util.holder.EventTriggerHolder;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
+import org.qubership.automation.itf.core.util.manager.MonitorManager;
 import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,9 @@ public class SituationEventTriggerSwitcher extends EventTriggerSwitcher {
     }
 
     protected void _deactivate(EventTrigger eventTrigger) {
-        synchronized (eventTrigger.getID()) {
+        String lockKey = "EventTrigger:" + eventTrigger.getID();
+        Object lock = MonitorManager.getInstance().get(lockKey);
+        synchronized (lock) {
             listener = EventTriggerHolder.getInstance().get(eventTrigger.getID());
             // Check for null. It is possible if the trigger was not activated due to some errors (i.e.
             // misconfiguration)
@@ -82,9 +85,12 @@ public class SituationEventTriggerSwitcher extends EventTriggerSwitcher {
         }
     }
 
-    private void deactivateOldThenActivateNew(Object triggerId, SituationEventTrigger.On onEvent, Object situationId)
-            throws TriggerException {
-        synchronized (triggerId) {
+    private void deactivateOldThenActivateNew(Object triggerId,
+                                              SituationEventTrigger.On onEvent,
+                                              Object situationId) throws TriggerException {
+        String lockKey = "EventTrigger:" + triggerId;
+        Object lock = MonitorManager.getInstance().get(lockKey);
+        synchronized (lock) {
             boolean isStartListener = false;
             if (SituationEventTrigger.On.FINISH.equals(onEvent)) {
                 listener = new SituationEventTriggerSwitcher.EndListener(triggerId, situationId);
