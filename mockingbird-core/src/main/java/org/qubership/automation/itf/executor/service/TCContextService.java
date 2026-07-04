@@ -398,7 +398,7 @@ public class TCContextService {
         NextCallChainEventSubscriberHolder.getInstance().remove(tcContext.getID());
         DiameterSessionHolder.getInstance().remove(tcContext.getID());
         List<NextCallChainSubscriber> subscribers = CacheServices.getCallchainSubscriberCacheService()
-                .unregisterAllSubscribers(tcContext.getID());
+                .unregisterAllSubscribers(tcContext.getID().toString());
         if (subscribers != null) {
             for (NextCallChainSubscriber subscriber : subscribers) {
                 eventBusProvider.unregister(subscriber);

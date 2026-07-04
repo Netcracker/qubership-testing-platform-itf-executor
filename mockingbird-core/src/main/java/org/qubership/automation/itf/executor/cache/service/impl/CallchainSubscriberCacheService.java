@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 import javax.annotation.Nonnull;
 
 import org.qubership.automation.itf.core.instance.testcase.execution.subscriber.NextCallChainSubscriber;
+import org.qubership.automation.itf.core.util.manager.MonitorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ import com.google.common.cache.LoadingCache;
 @Service
 public class CallchainSubscriberCacheService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CallchainSubscriberCacheService.class);
-    private static final LoadingCache<Object, List<NextCallChainSubscriber>> TC_CONTEXT_SUBSCRIBERS_CACHE
+    private static final LoadingCache<String, List<NextCallChainSubscriber>> TC_CONTEXT_SUBSCRIBERS_CACHE
             = CacheBuilder.newBuilder().build(new CacheLoader<Object, List<NextCallChainSubscriber>>() {
         @Override
         public List<NextCallChainSubscriber> load(@Nonnull Object id) {
@@ -49,12 +50,15 @@ public class CallchainSubscriberCacheService {
 
     public void registerSubscriber(Object subscriber) {
         if (subscriber instanceof NextCallChainSubscriber) {
-            Object tcId = ((NextCallChainSubscriber) subscriber).getInstance().getContext().tc().getID();
-            synchronized (tcId) {
+            NextCallChainSubscriber nextCallChainSubscriber = (NextCallChainSubscriber) subscriber;
+            String tcId = nextCallChainSubscriber.getInstance().getContext().tc().getID().toString();
+            String lockKey = "Subscriber:TcContext:" + tcId;
+            Object lock = MonitorManager.getInstance().get(lockKey);
+            synchronized (lock) {
                 try {
-                    TC_CONTEXT_SUBSCRIBERS_CACHE.get(tcId).add((NextCallChainSubscriber) subscriber);
+                    TC_CONTEXT_SUBSCRIBERS_CACHE.get(tcId).add(nextCallChainSubscriber);
                 } catch (ExecutionException e) {
-                    LOGGER.error("Exception adding {} for tcId {}", subscriber, tcId, e.getMessage());
+                    LOGGER.error("Exception adding {} for tcId {}: {}", subscriber, tcId, e.getMessage());
                 }
             }
         }
@@ -62,11 +66,14 @@ public class CallchainSubscriberCacheService {
 
     public void unregisterSubscriber(Object subscriber) {
         if (subscriber instanceof NextCallChainSubscriber) {
-            Object tcId = ((NextCallChainSubscriber) subscriber).getInstance().getContext().tc().getID();
-            synchronized (tcId) {
+            NextCallChainSubscriber nextCallChainSubscriber = (NextCallChainSubscriber) subscriber;
+            String tcId = nextCallChainSubscriber.getInstance().getContext().tc().getID().toString();
+            String lockKey = "Subscriber:TcContext:" + tcId;
+            Object lock = MonitorManager.getInstance().get(lockKey);
+            synchronized (lock) {
                 List<NextCallChainSubscriber> list = TC_CONTEXT_SUBSCRIBERS_CACHE.getIfPresent(tcId);
                 if (list != null) {
-                    list.remove((NextCallChainSubscriber) subscriber);
+                    list.remove(nextCallChainSubscriber);
                     if (list.isEmpty()) {
                         TC_CONTEXT_SUBSCRIBERS_CACHE.invalidate(tcId);
                     }
@@ -75,8 +82,10 @@ public class CallchainSubscriberCacheService {
         }
     }
 
-    public List<NextCallChainSubscriber> unregisterAllSubscribers(Object tcId) {
-        synchronized (tcId) {
+    public List<NextCallChainSubscriber> unregisterAllSubscribers(String tcId) {
+        String lockKey = "Subscriber:TcContext:" + tcId;
+        Object lock = MonitorManager.getInstance().get(lockKey);
+        synchronized (lock) {
             List<NextCallChainSubscriber> list = TC_CONTEXT_SUBSCRIBERS_CACHE.getIfPresent(tcId);
             TC_CONTEXT_SUBSCRIBERS_CACHE.invalidate(tcId);
             return list;
