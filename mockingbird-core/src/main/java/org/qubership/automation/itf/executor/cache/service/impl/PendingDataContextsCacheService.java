@@ -48,7 +48,7 @@ public class PendingDataContextsCacheService {
 
     public void addContext(TcContext tcContext, String key) {
         Object contextId = tcContext.getID();
-        Object locObject = MonitorManager.getInstance().get("$id=" + contextId);
+        Object locObject = MonitorManager.getInstance().get("AddPendingContext:TcContext:" + contextId);
         synchronized (locObject) {
             Map<Object, TcContext> pendingContext = pendingDataContextsCacheService.getContextById(contextId);
             pendingContext.put(key, tcContext);
@@ -58,9 +58,7 @@ public class PendingDataContextsCacheService {
 
     public Map<Object, TcContext> getContextById(Object contextId) {
         Map<Object, TcContext> map = getPendingDataContexts().get(contextId);
-        return map == null
-                ? new HashMap<>()
-                : map;
+        return map == null ? new HashMap<>() : map;
     }
 
     public void clearPendingDataContext(Object contextId) {

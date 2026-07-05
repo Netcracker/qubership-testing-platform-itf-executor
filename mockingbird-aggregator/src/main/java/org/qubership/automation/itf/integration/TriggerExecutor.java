@@ -274,7 +274,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
         transport = operation.getTransport();
         instanceContext.setTransport(transport); // Contrary to our common behavior, transport from operation is used
         Thread.currentThread().setName(Thread.currentThread().getName() + "/" + tcContext.getID());
-        Object locObject = MonitorManager.getInstance().get("$tcid=" + tcContext.getID());
+        Object locObject = MonitorManager.getInstance().get("ProcessStubRequest:TcContext:" + tcContext.getID());
         synchronized (locObject) {
             return prepareAndExecuteSituation(instanceContext, tcContext, instanceContext.getSP(), message, operation,
                     system, sessionId, null, transport.getName());
@@ -343,7 +343,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
         fillTcContextParams(instanceContext, message, triggerConfiguration, started, tcContext);
         MdcUtils.put(MdcField.CONTEXT_ID.toString(), tcContext.getID().toString());
         Thread.currentThread().setName(Thread.currentThread().getName() + "/" + tcContext.getID());
-        Object locObject = MonitorManager.getInstance().get("$tcid=" + tcContext.getID());
+        Object locObject = MonitorManager.getInstance().get("ProcessStubRequest:TcContext:" + tcContext.getID());
         synchronized (locObject) {
             prepareEnv(tcContext, system, server);
             return prepareAndExecuteSituation(instanceContext, tcContext, instanceContext.getSP(), message, operation,
