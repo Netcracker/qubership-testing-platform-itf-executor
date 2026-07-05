@@ -26,7 +26,6 @@ import javax.annotation.PreDestroy;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.multitenancy.core.context.TenantContext;
-import org.qubership.automation.itf.core.hibernate.spring.managers.custom.ContextManager;
 import org.qubership.automation.itf.core.model.event.CallChainEvent;
 import org.qubership.automation.itf.core.model.event.SituationEvent;
 import org.qubership.automation.itf.core.model.event.StepEvent;
@@ -41,8 +40,6 @@ import org.qubership.automation.itf.core.model.jpa.instance.step.StepInstance;
 import org.qubership.automation.itf.core.report.producer.ReportWorker;
 import org.qubership.automation.itf.core.util.constants.StartedFrom;
 import org.qubership.automation.itf.core.util.constants.Status;
-import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
-import org.qubership.automation.itf.core.util.manager.MonitorManager;
 import org.qubership.automation.itf.core.util.report.ReportLinkCollector;
 import org.qubership.automation.itf.core.util.transport.service.report.Report;
 import org.qubership.automation.itf.executor.cache.service.CacheServices;
@@ -61,20 +58,17 @@ import com.google.common.eventbus.Subscribe;
 public class LoggerSubscriber {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(LoggerSubscriber.class);
-    public static final String CLIENT_IP = "clientIP";
     @Value("${atp.multi-tenancy.enabled}")
     private Boolean multiTenancyEnabled;
     private final ReportWorker worker;
-    private final RunSubscriberInterface runSubscriber;
     private final ReportLinkCollector reportLinkCollector;
     private final EventBusProvider eventBusProvider;
 
     @Autowired
-    public LoggerSubscriber(ReportWorker worker, RunSubscriberInterface runSubscriber,
+    public LoggerSubscriber(ReportWorker worker,
                             ReportLinkCollector reportLinkCollector,
                             EventBusProvider eventBusProvider) {
         this.worker = worker;
-        this.runSubscriber = runSubscriber;
         this.reportLinkCollector = reportLinkCollector;
         this.eventBusProvider = eventBusProvider;
     }
@@ -327,22 +321,6 @@ public class LoggerSubscriber {
         }
     }
     //endregion
-
-    private void sendNotification(String message, TcContext tcContext) {
-        Object object = MonitorManager.getInstance().get(tcContext.getID().toString());
-        synchronized (object) {
-            try {
-                object.wait();
-                TcContext context = CoreObjectManager.getInstance()
-                        .getSpecialManager(TcContext.class, ContextManager.class).getById(tcContext.getID());
-                if (context.containsKey(CLIENT_IP)) {
-                    runSubscriber.send(message, context.get(CLIENT_IP).toString());
-                }
-            } catch (InterruptedException e) {
-                LOGGER.error("Failed while waiting notification", e);
-            }
-        }
-    }
 
     private void fillReportLinks(TcContext context, boolean standalone) {
         try {
