@@ -172,7 +172,8 @@ public class TriggerExecutor implements IDiameterEventProducer {
             String triggerTypeName = triggerConfiguration.getTypeName();
             String errorMessage = createErrorMessage(ex, triggerDescriptor, message, sessionId, triggerTypeName);
             sendFailedMessageToBroker(sessionId, brokerMessageSelectorValue, errorMessage, projectUuid);
-            Exception exception = prepareException(errorMessage, ex);
+            log.error(errorMessage);
+            Exception exception = ex instanceof IncomingValidationException ? ex : new Exception(errorMessage);
             doCallChainCrash(exception, instanceContext, calculateContextName(message, triggerTypeName),
                     !(ex instanceof IncomingValidationException || ex instanceof SituationDefinitionException),
                     projectId, projectUuid);
@@ -380,11 +381,6 @@ public class TriggerExecutor implements IDiameterEventProducer {
         return uriParams == null ? typeName + " / trigger " + triggerId : uriParams.toString();
     }
 
-    private Exception prepareException(String errorDescription, Exception exception) {
-        log.error(errorDescription);
-        return exception instanceof IncomingValidationException ? exception : new Exception(errorDescription);
-    }
-
     private String calculateContextName(Message message, String typename) {
         // Begin - transport specific part.
         // TODO: May be this code should be moved to transport modules
@@ -421,9 +417,13 @@ public class TriggerExecutor implements IDiameterEventProducer {
                 + "<soap:Body>\n<soap:Fault>\n<faultcode>soap:Server</faultcode>\n<faultstring>"
                 : "");
         builder.append("Exception while processing incoming message received by the trigger: ");
-        builder.append(triggerConfigurationDescriptor.getName()).append("\nSession id: ").append(sessionId);
-        // Begin - transport specific part.
-        // TODO: May be this code should be moved to transport modules
+        if (!StringUtils.isEmpty(triggerConfigurationDescriptor.getName())) {
+            builder.append(triggerConfigurationDescriptor.getName()).append(' ');
+        }
+        builder.append("[").append(triggerConfigurationDescriptor.getId()).append("]");
+        builder.append("\nSession id: ").append(sessionId);
+
+        // Begin - transport specific part. May be, this code should be moved to transport modules.
         if (isRest || isSoap) {
             builder.append("\nSome important message headers: ");
             appendHeader(builder, message, "CamelHttpUrl");
@@ -435,8 +435,9 @@ public class TriggerExecutor implements IDiameterEventProducer {
             appendHeader(builder, message, "user-agent");
         }
         // End - transport specific part.
+
         builder.append("\nException: ").append(ex.getMessage());
-        if (ex.getCause() != null) {
+        if (ex.getCause() != null && !ex.equals(ex.getCause())) {
             builder.append("\nCaused by: ").append(isSoap
                     ? StringEscapeUtils.escapeXml10(ex.getCause().toString()) : ex.getCause());
         }
