@@ -308,38 +308,41 @@ public class StubJMSListeners {
             TenantContext.setTenantInfo(projectUuid);
         }
 
-        // Get TcContext from Hazelcast cache, to use actual context in further execution
-        TcContext actualTcContext = CacheServices.getTcContextCacheService().getById(tcContextId);
-        if (actualTcContext == null) {
-            log.warn("No TcContext is found in HazelCast by id {}. Continue using local context.", tcContextId);
-            actualTcContext = tcContext;
-        } else {
-            /*
-                Both TcContexts are present: local and from Hazelcast.
-                There is a problem currently:
-                    - TcContextRamExtension.TestRunContext is present in local context,
-                    - But it's null in the context from HazelCast, due to 'transient' field.
-                So, we should use the context from HazelCast, but replace
-                TcContextRamExtension.TestRunContext in it(!?).
-                It looks strange decision, but... removing 'transient' modifier looks dangerous due to
-                unknown growth of data sent/received to/from Hazelcast. At least, it should be tested 1st.
-             */
-            TCContextRamExtension actualRamExtension = ExtensionManager.getInstance()
-                    .getExtension(actualTcContext, TCContextRamExtension.class);
-            TCContextRamExtension localRamExtension = ExtensionManager.getInstance()
-                    .getExtension(tcContext, TCContextRamExtension.class);
-            if (localRamExtension != null && localRamExtension.getRunContext() != null
-                    && actualRamExtension.getRunContext() == null) {
-                actualRamExtension.setRunContext(localRamExtension.getRunContext());
-            }
+        // Temporarily turned OFF, need to re-think
+        if (false) {
+            // Get TcContext from Hazelcast cache, to use actual context in further execution
+            TcContext actualTcContext = CacheServices.getTcContextCacheService().getById(tcContextId);
+            if (actualTcContext == null) {
+                log.warn("No TcContext is found in HazelCast by id {}. Continue using local context.", tcContextId);
+                actualTcContext = tcContext;
+            } else {
+                /*
+                    Both TcContexts are present: local and from Hazelcast.
+                    There is a problem currently:
+                        - TcContextRamExtension.TestRunContext is present in local context,
+                        - But it's null in the context from HazelCast, due to 'transient' field.
+                    So, we should use the context from HazelCast, but replace
+                    TcContextRamExtension.TestRunContext in it(!?).
+                    It looks strange decision, but... removing 'transient' modifier looks dangerous due to
+                    unknown growth of data sent/received to/from Hazelcast. At least, it should be tested 1st.
+                 */
+                TCContextRamExtension actualRamExtension = ExtensionManager.getInstance()
+                        .getExtension(actualTcContext, TCContextRamExtension.class);
+                TCContextRamExtension localRamExtension = ExtensionManager.getInstance()
+                        .getExtension(tcContext, TCContextRamExtension.class);
+                if (localRamExtension != null && localRamExtension.getRunContext() != null
+                        && actualRamExtension.getRunContext() == null) {
+                    actualRamExtension.setRunContext(localRamExtension.getRunContext());
+                }
 
-            // And, once we go to execution with replaced context, we should refresh localRunningContexts cache
-            ExecutionServices.getTCContextService().refreshLocalRunningContext(actualTcContext);
+                // And, once we go to execution with replaced context, we should refresh localRunningContexts cache
+                ExecutionServices.getTCContextService().refreshLocalRunningContext(actualTcContext);
+            }
         }
 
         SituationInstance instance = event.getSituationInstance();
-        instance.getContext().setTC(actualTcContext);
-        instance.setParentContext(actualTcContext);
+        instance.getContext().setTC(tcContext); // actualTcContext
+        instance.setParentContext(tcContext); // actualTcContext
         eventBusProvider.post(event);
     }
 

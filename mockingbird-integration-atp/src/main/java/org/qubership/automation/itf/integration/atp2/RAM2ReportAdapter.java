@@ -768,10 +768,12 @@ public class RAM2ReportAdapter implements ReportAdapter {
     public void stopRun(InstanceContext context, Status status) {
         AtpRamAdapter adapter = getAdapter(context.getTC().getID());
         TestRunContext testRunContext = adapter.getContext();
-        while (!StringUtils.isBlank(testRunContext.getCurrentSectionId())) {
-            testRunContext.getCurrentSection().setName(TemplateEngineFactory.process(null,
-                    testRunContext.getCurrentSection().getName(), context));
-            adapter.setContext(adapter.closeSection());
+        if (testRunContext != null) {
+            while (!StringUtils.isBlank(testRunContext.getCurrentSectionId())) {
+                testRunContext.getCurrentSection().setName(TemplateEngineFactory.process(null,
+                        testRunContext.getCurrentSection().getName(), context));
+                adapter.setContext(adapter.closeSection());
+            }
         }
         adapters.remove(context.getTC().getID());
     }

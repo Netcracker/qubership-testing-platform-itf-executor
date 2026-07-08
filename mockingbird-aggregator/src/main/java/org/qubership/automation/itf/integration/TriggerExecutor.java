@@ -159,8 +159,11 @@ public class TriggerExecutor implements IDiameterEventProducer {
                               String threadName, String brokerMessageSelectorValue, OffsetDateTime started) {
         UUID projectUuid = triggerDescriptor.getProjectUuid();
         BigInteger projectId = triggerDescriptor.getProjectId();
-        final InstanceContext instanceContext = initInstanceContext(transport, message, triggerDescriptor.getName(),
-                projectId, projectUuid);
+        final InstanceContext instanceContext = initInstanceContext(transport,
+                message,
+                displayTriggerName(triggerDescriptor.getName(), triggerDescriptor.getId()),
+                projectId,
+                projectUuid);
         try {
             boolean isConfiguredSituation = doCallChain(instanceContext, message, triggerConfiguration, transport,
                     sessionId, brokerMessageSelectorValue, projectId, projectUuid, started);
@@ -180,6 +183,10 @@ public class TriggerExecutor implements IDiameterEventProducer {
         } finally {
             Thread.currentThread().setName(threadName);
         }
+    }
+
+    private String displayTriggerName(String name, Object id) {
+        return (StringUtils.isEmpty(name) ? "" : name + " ") + "[" + id + "]";
     }
 
     private void sendFailedMessageToBroker(String sessionId, String brokerMessageSelectorValue, String description,
@@ -232,8 +239,11 @@ public class TriggerExecutor implements IDiameterEventProducer {
                     throw new RuntimeException("Transport isn't found by id " + transportId + "Diameter message "
                             + "processing is impossible. tcContextId: " + tcContextId + " sessionId: " + sessionId);
                 }
-                InstanceContext instanceContext = initInstanceContext(transport, message, transport.getName(),
-                        projectId, projectUuid);
+                InstanceContext instanceContext = initInstanceContext(transport,
+                        message,
+                        displayTriggerName(transport.getName(), transport.getID()),
+                        projectId,
+                        projectUuid);
                 try {
                     boolean isConfiguredSituation = doCallChain(tcContext, instanceContext, message,
                             sessionId, transport);
@@ -408,7 +418,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
         return null;
     }
 
-    private String createErrorMessage(Exception ex, StorableDescriptor triggerConfigurationDescriptor, Message message,
+    private String createErrorMessage(Exception ex, StorableDescriptor triggerDescriptor, Message message,
                                       String sessionId, String typename) {
         boolean isRest = typename.endsWith(".RESTInboundTransport");
         boolean isSoap = !isRest && typename.endsWith(".SOAPOverHTTPInboundTransport");
@@ -417,10 +427,7 @@ public class TriggerExecutor implements IDiameterEventProducer {
                 + "<soap:Body>\n<soap:Fault>\n<faultcode>soap:Server</faultcode>\n<faultstring>"
                 : "");
         builder.append("Exception while processing incoming message received by the trigger: ");
-        if (!StringUtils.isEmpty(triggerConfigurationDescriptor.getName())) {
-            builder.append(triggerConfigurationDescriptor.getName()).append(' ');
-        }
-        builder.append("[").append(triggerConfigurationDescriptor.getId()).append("]");
+        builder.append(displayTriggerName(triggerDescriptor.getName(), triggerDescriptor.getId()));
         builder.append("\nSession id: ").append(sessionId);
 
         // Begin - transport specific part. May be, this code should be moved to transport modules.
