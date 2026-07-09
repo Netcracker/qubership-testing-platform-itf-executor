@@ -42,12 +42,8 @@ public class RemoteDataSetListsSource extends AbstractStorable implements DataSe
         setName(name);
 
         this.id = id;
-
-        // Temporarily commented. Types mismatch UUID/BigInteger/Object requires refactoring
-        /*
-        setID(id.toString());
+        //setID(id.toString());
         setNaturalId(id.toString());
-         */
     }
 
     @Nonnull
