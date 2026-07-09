@@ -37,7 +37,9 @@ import java.util.stream.Collectors;
 
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.SearchManager;
+import org.qubership.automation.itf.core.hibernate.spring.managers.executor.EnvironmentObjectManager;
 import org.qubership.automation.itf.core.hibernate.spring.managers.executor.TriggerConfigurationObjectManager;
+import org.qubership.automation.itf.core.model.projection.IdNameCouple;
 import org.qubership.automation.itf.core.model.communication.EnvironmentSample;
 import org.qubership.automation.itf.core.model.communication.TriggerSample;
 import org.qubership.automation.itf.core.model.jpa.environment.Environment;
@@ -106,6 +108,7 @@ public class ItfStubsRequestsService {
         triggerSample.setTransportType(getTransportType(trigger.getTypeName()));
         triggerSample.setProjectUuid(projectUuid);
         triggerSample.setProjectId(trigger.getParent().getParent().getProjectId());
+        setEnvIdAndNameToTriggerSample(trigger, triggerSample);
         return triggerSample;
     }
 
@@ -114,6 +117,17 @@ public class ItfStubsRequestsService {
                 .getManager(StubProject.class)
                 .getById(server.getProjectId())
                 .getUuid();
+    }
+
+    private void setEnvIdAndNameToTriggerSample(TriggerConfiguration trigger, TriggerSample triggerSample) {
+        List<IdNameCouple> envIdNameCouples = CoreObjectManager.getInstance()
+                .getSpecialManager(Environment.class, EnvironmentObjectManager.class)
+                .getIdNamePairEnvByTriggerId((BigInteger) trigger.getID());
+        if (!envIdNameCouples.isEmpty()) {
+            IdNameCouple envIdNameCouple = envIdNameCouples.get(0);
+            triggerSample.setEnvId(envIdNameCouple.getId());
+            triggerSample.setEnvName(envIdNameCouple.getName());
+        }
     }
 
     /**
