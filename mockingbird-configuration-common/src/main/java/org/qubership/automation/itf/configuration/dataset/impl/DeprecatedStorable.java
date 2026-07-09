@@ -144,7 +144,7 @@ public abstract class DeprecatedStorable implements Storable {
 
     // TODO: Change of Object to BigInteger requires careful check and possible refactor.
     @Override
-    public void setNaturalId(BigInteger id) {
+    public void setNaturalId(String id) {
         throw new UnsupportedOperationException("Designed as immutable instance");
     }
 

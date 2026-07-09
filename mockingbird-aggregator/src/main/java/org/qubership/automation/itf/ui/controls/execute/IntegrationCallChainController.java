@@ -217,7 +217,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
             HashSet<CallChain> callChains =
                     new HashSet<>(Collector.collectCallChainsFromCallChainsAndFolders(initObjects(objects)));
             for (CallChain callChain : callChains) {
-                CallChain callChainNatural = getManager(CallChain.class).getById(callChain.getNaturalId());
+                CallChain callChainNatural = getManager(CallChain.class).getById(toBigInt(callChain.getNaturalId()));
                 if (callChainNatural == null) {
                     log.warn("No natural parent found for callchain with id {}, so "
                             + "skipping BulkValidator links regeneration", callChain.getID());

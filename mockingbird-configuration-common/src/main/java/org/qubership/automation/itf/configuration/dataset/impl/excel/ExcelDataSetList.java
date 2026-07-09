@@ -46,7 +46,7 @@ public class ExcelDataSetList extends AbstractStorable implements DataSetList {
         // TODO: Change of Object to BigInteger requires careful check and possible refactor.
         BigInteger bid = new BigInteger(id);
         setID(bid);
-        setNaturalId(bid);
+        setNaturalId(id);
     }
 
     @Override

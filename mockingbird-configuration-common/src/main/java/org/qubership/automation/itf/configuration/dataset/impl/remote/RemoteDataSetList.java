@@ -62,8 +62,8 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
     }
 
     @Override
-    public BigInteger getNaturalId() {
-        return getID();
+    public String getNaturalId() {
+        return getID().toString();
     }
 
     @Override

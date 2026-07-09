@@ -126,7 +126,7 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
     }
 
     @Override
-    public List<? extends DataSetList> getByNatureId(@Nonnull BigInteger id, Object projectId) {
+    public List<? extends DataSetList> getByNatureId(@Nonnull String id, Object projectId) {
         ArrayList<DataSetList> ds = new ArrayList<>();
         if (isUuid(id)) {
             ds.add(remoteRepo.map(repo -> repo.getByNatureId(id, projectId)).orElse(null));
@@ -187,11 +187,11 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
 
     @Override
     public DataSetList getById(@Nonnull Object id) {
-        return getByNatureId((BigInteger) id, null).getFirst();
+        return getByNatureId(id.toString(), null).getFirst();
     }
 
     public DataSetList getById(@Nonnull Object id, Object projectId) {
-        return getByNatureId((BigInteger) id, projectId).getFirst();
+        return getByNatureId(id.toString(), projectId).getFirst();
     }
 
     @Override

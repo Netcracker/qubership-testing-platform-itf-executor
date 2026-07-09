@@ -32,8 +32,8 @@ public class RemoteDataSetListRepositoryTest {
         Stopwatch started = Stopwatch.createStarted();
         RemoteDataSetListRepository repository = new RemoteDataSetListRepository(null);
         DataSetList list;
-        list = repository.getByNatureId("50eb69ee-5051-433c-83eb-60b5dfe2eb20_5c868909-55de-4e8d-bb80"
-                + "-bd300eff06b9", null);
+        list = repository.getByNatureId(
+                "50eb69ee-5051-433c-83eb-60b5dfe2eb20_5c868909-55de-4e8d-bb80-bd300eff06b9", null);
         System.out.println(list);
         System.out.println(started.stop());
 //        }
