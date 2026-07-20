@@ -196,8 +196,8 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
         if (!(this.getClass().isInstance(o))) {
             return false;
         }
-        if (getNaturalId() != null) {
-            return Objects.equals(getNaturalId(), ((Storable) o).getNaturalId());
+        if (this.getNaturalId() != null) {
+            return Objects.equals(this.getNaturalId(), ((Storable) o).getNaturalId());
         } else {
             return false;
         }
@@ -205,12 +205,17 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
 
     @Override
     public int hashCode() {
-        return Objects.hash(getNaturalId());
+        return Objects.hash(this.getNaturalId());
     }
 
     @Override
     public String toString() {
-        return "Name: '" + getName() + "', ID: '" + getNaturalId() + '\'';
+        return "Name: '" + getName() + "', ID: '" + this.getNaturalId() + '\'';
+    }
+
+    @Override
+    public String returnDisplayId() {
+        return this.getNaturalId();
     }
 
 }

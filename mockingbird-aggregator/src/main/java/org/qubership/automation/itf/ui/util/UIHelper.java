@@ -152,20 +152,25 @@ public class UIHelper {
         ObjectManager<Operation> operationObjectManager = CoreObjectManager.getInstance().getManager(Operation.class);
         List<Step> situationSteps = new LinkedList<>();
         for (UIStep entry : steps) {
-            Step step = stepObjectManager.create(null, IntegrationStep.TYPE);
+            IntegrationStep step = stepObjectManager.create(null, IntegrationStep.TYPE);
             step.setName(entry.getName());
             step.setDelay(entry.getDelay());
             step.setUnit(entry.getUnit());
             step.setEnabled(!"No".equalsIgnoreCase(entry.getEnabled()));
             step.setManual(!"No".equalsIgnoreCase(entry.getManual()));
+
             String objectId = (entry.getSender() == null) ? null : entry.getSender().getId();
-            ((IntegrationStep) step).setSender((objectId == null) ? null : systemObjectManager.getById(objectId));
+            step.setSender((objectId == null) ? null : systemObjectManager.getById(objectId));
+
             objectId = (entry.getReceiver() == null) ? null : entry.getReceiver().getId();
-            ((IntegrationStep) step).setReceiver((objectId == null) ? null : systemObjectManager.getById(objectId));
+            step.setReceiver((objectId == null) ? null : systemObjectManager.getById(objectId));
+
             objectId = (entry.getOperation() == null) ? null : entry.getOperation().getId();
-            ((IntegrationStep) step).setOperation((objectId == null) ? null : operationObjectManager.getById(objectId));
+            step.setOperation((objectId == null) ? null : operationObjectManager.getById(objectId));
+
             objectId = (entry.getTemplate() == null) ? null : entry.getTemplate().getId();
-            ((IntegrationStep) step).setTemplate((objectId == null) ? null : TemplateHelper.getById(objectId));
+            step.setTemplate((objectId == null) ? null : TemplateHelper.getById(objectId));
+
             situationSteps.add(step);
         }
         Situation situation = CoreObjectManager.getInstance().getManager(Situation.class).getById(id);
@@ -201,10 +206,10 @@ public class UIHelper {
     }
 
     /**
-     * Creates UIObjectList with provided storables.
+     * Create UIObjectList with provided storables.
      *
      * @param from storables
-     * @return created UIObjectList with storables
+     * @return created UIObjectList with storables.
      */
     @Nonnull
     public static UIObjectList getObjectList(@Nonnull Collection<? extends Storable> from) {
@@ -212,11 +217,11 @@ public class UIHelper {
     }
 
     /**
-     * Appends storables into existing UIObjectList.
+     * Append storables into existing UIObjectList.
      *
      * @param from storables
      * @param to   existing UIObjectList
-     * @return the same UIObjectList
+     * @return the same UIObjectList.
      */
     @Nonnull
     public static UIObjectList fillObjectList(@Nonnull Collection<? extends Storable> from, @Nonnull UIObjectList to) {
@@ -225,10 +230,10 @@ public class UIHelper {
     }
 
     /**
-     * Creates UITreeElementList with provided storables.
+     * Create UITreeElementList with provided storables.
      *
      * @param from storables
-     * @return created UITreeElementList with storables
+     * @return created UITreeElementList with storables.
      */
     @Nonnull
     public static UITreeElementList getTreeElementList(@Nonnull Collection<? extends Storable> from) {
@@ -236,11 +241,11 @@ public class UIHelper {
     }
 
     /**
-     * Apappends storables into existing UITreeElementList.
+     * Append storables into existing UITreeElementList.
      *
      * @param from storables
      * @param to   existing UITreeElementList
-     * @return the same UITreeElementList
+     * @return the same UITreeElementList.
      */
     @Nonnull
     protected static UITreeElementList fillTreeElementList(
@@ -250,26 +255,25 @@ public class UIHelper {
     }
 
     /**
-     * Creates UIList with provided content using func to transform values.
+     * Create UIList with provided content using func to transform values.
      *
-     * @see #fillUIList(Collection, UIList, Function)
+     * @see #fillUIList(Collection, UIList, Function).
      */
     @Nonnull
-    protected static <I extends Storable, O extends UIObject> UIList<O> getUIList(
+    public static <I extends Storable, O extends UIObject> UIList<O> getUIList(
             @Nonnull Collection<I> from, @Nonnull Function<? super I, O> func) {
         return fillUIList(from, new UIListImpl<>(), func);
     }
 
     /**
-     * puts storables from collection into UIList.
-     * transforms storables using provided func;
+     * Put storables from collection into UIList, transforming storables into UI-objects using provided function.
      *
      * @param from collection of storables or its subclasses
      * @param to   UIList of UIObjects or its subclasses
      * @param func transforms provided storables into UIObjects
      * @param <I>  actual type of storables
      * @param <O>  actual type of UIObjects
-     * @return
+     * @return UIObjectList created and populated.
      */
     @Nonnull
     protected static <I extends Storable, O extends UIObject> UIList<O> fillUIList(
@@ -293,16 +297,18 @@ public class UIHelper {
     private static UIObject toUIObj(@Nonnull Storable input) {
         UIObject uiObject = new UIObject(input);
         uiObject.setClassName(null);
-        // We should send to UI the information about parent object (if any) but... we should be aware of the amount
-        // of data sent,
-        //  which can be very big in case when we place the whole object here
+
+        /*
+            We should send to UI the information about parent object (if any) but... we should be aware
+            about the amount of data sent, which can be very big in case we place the whole object here.
+         */
         if (input.getParent() == null) {
             uiObject.setParent(null);
         } else {
             UIObject uiParentObject = new UIObject();
             uiParentObject.setName(input.getParent().getName());
             uiParentObject.setClassName(input.getParent().getClass().getName());
-            uiParentObject.setId(input.getParent().getID().toString());
+            uiParentObject.setId(input.getParent().returnDisplayId());
             uiObject.setParent(uiParentObject);
         }
         return uiObject;
@@ -350,10 +356,10 @@ public class UIHelper {
     }
 
     /**
-     * Update basic field on Storable.
+     * Update basic fields on Storable.
      *
-     * @param object   has current fields
-     * @param storable in which you want to update the fields
+     * @param object   UIObject with changed fields' values
+     * @param storable Storable in which to update the corresponding fields.
      */
     public static void updateObject(UIObject object, Storable storable) {
         storable.setDescription(object.getDescription());
@@ -370,7 +376,7 @@ public class UIHelper {
      * Convert map to UITypeList.
      *
      * @param map target map
-     * @return UITypeList
+     * @return UITypeList.
      */
     public static UITypeList convertMapOfTypeToUITypeList(Map<String, String> map) {
         UITypeList uiTypeList = new UITypeList();
@@ -388,10 +394,10 @@ public class UIHelper {
     }
 
     /**
-     * Initializes objects from UI views.
+     * Initialize objects from UI views.
      *
      * @param sources UI objects
-     * @return list of storables
+     * @return list of storables.
      */
     public static List<Storable> initializeObjects(Collection<UIObject> sources) throws Exception {
         List<Storable> result = new ArrayList<>();
@@ -411,16 +417,19 @@ public class UIHelper {
         if (groups == null) {
             return null;
         }
-        // This method should be modified if we implement support of:
-        //  1) parameters without groups
-        //  2) nested groups
-        //  and extra: currently we add one group programmatically in the
-        //  /org/qubership/automation/itf/ui/controls/DatasetController.java#readDataset
-        //      this group name is "Autogenerated_No_Group". It is needed to UI purposes (Run callchain window,
-        //      pencil button)
-        //  may be it should be modified too and/or this group should be removed here
-        //
-        //  Alexander Kapustin, 2017-12-27
+
+        /*
+            Aleksandr Kapustin, 2017-12-27:
+                This method should be modified if we implement support of:
+                    1) parameters without groups,
+                    2) nested groups.
+                And extra: currently we add one group programmatically in the
+                    /org/qubership/automation/itf/ui/controls/DatasetController.java#readDataset
+                This group name is "Autogenerated_No_Group". It is needed for UI purposes (Run callchain window,
+                'Edit Dataset' button).
+                May be, it should be modified too and/or this group should be removed here.
+         */
+
         groups.forEach(group -> {
             if (!StringUtils.isBlank(group.getName())) {
                 context.put(group.getName().trim(), new JsonContext());

@@ -61,13 +61,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class DatasetController extends UIHelper {
 
     private static final Function<DataSetList, UIDataSetList> UI_DS_LIST_FUNC = UIDataSetList::new;
-    private static ConcurrentHashMap<String, Set<DataSetList>> dataSetListsHolder = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Set<DataSetList>> dataSetListsHolder = new ConcurrentHashMap<>();
 
     /**
-     * Get DSL from atp-datasets and Excel file.
+     * Get DSL from atp-datasets service or Excel file.
      *
      * @param projectUuid ITF project UUID
-     * @return collection with object {@code {@link UIList<UIObject>}}
+     * @return collection with object {@code {@link UIList<UIObject>}}.
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
@@ -85,12 +85,12 @@ public class DatasetController extends UIHelper {
     }
 
     /**
-     * Get DS from atp-datasets and Excel file.
+     * Get DS from atp-datasets service or Excel file.
      *
      * @param id          source ID
      * @param projectUuid ITF project UUID
-     * @return collection with object {@code {@link UIList<UIDataSetList>}}.
-     * @throws Exception may occur when receiving data
+     * @return collection with object {@code {@link UIList<UIDataSetList>}}
+     * @throws Exception may occur when receiving data.
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
@@ -165,7 +165,7 @@ public class DatasetController extends UIHelper {
         dataSetListsSources.forEach(dataSetListsSource -> {
             datasets.add(new JSONObject() {
                 {
-                put("naturalId", dataSetListsSource.getNaturalId().toString());
+                put("naturalId", dataSetListsSource.getNaturalId());
                 put("name", dataSetListsSource.getName());
                 }
             });

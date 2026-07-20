@@ -102,4 +102,8 @@ public class RemoteDataSetListsSource extends AbstractStorable implements DataSe
         return "Name: '" + this.getName() + "', ID: '" + this.getNaturalId() + '\'';
     }
 
+    @Override
+    public String returnDisplayId() {
+        return this.getNaturalId();
+    }
 }
