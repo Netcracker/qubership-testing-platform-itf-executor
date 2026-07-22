@@ -25,7 +25,27 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib/${project.build.finalName}</outputDirectory>
-                            <excludeTransitive>true</excludeTransitive>
+<!--                            <excludeTransitive>true</excludeTransitive>-->
+                            <excludeGroupIds>
+                                org.springframework,
+                                org.springframework.boot,
+                                org.springframework.cloud,
+                                org.springdoc,
+                                org.hibernate.orm,
+                                org.hibernate.validator,
+                                org.qubership.atp.auth,
+                                org.qubership.atp.common,
+                                org.javers,
+                                org.liquibase,
+                                io.github.openfeign,
+                                io.micrometer,
+                                io.prometheus,
+                                io.undertow,
+                                io.swagger.core.v3,
+                                org.webjars,
+                                net.javacrumbs.shedlock,
+                                net.bytebuddy,
+                                org.bouncycastle</excludeGroupIds>
                             <!--if you have NoClassFoundException for this transport then  include needed dependency here-->
                             <includeScope>runtime</includeScope>
                         </configuration>
