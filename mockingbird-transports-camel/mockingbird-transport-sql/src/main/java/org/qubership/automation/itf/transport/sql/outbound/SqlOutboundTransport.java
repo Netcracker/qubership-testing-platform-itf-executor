@@ -68,6 +68,7 @@ import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -86,8 +87,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.cassandra.CassandraComponent;
-import org.apache.camel.component.cassandra.CassandraEndpoint;
 import org.apache.camel.component.jdbc.JdbcComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.support.SimpleRegistry;
@@ -109,7 +108,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ColumnDefinitions;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder;
 import com.datastax.oss.driver.api.core.data.CqlDuration;
 import com.datastax.oss.driver.api.core.data.UdtValue;
 import com.datastax.oss.driver.api.core.type.DataType;
@@ -588,49 +590,53 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
         String password = getAndCheckRequiredProperty(connectionProperties, PASSWORD, PASSWORD_DESCRIPTION);
         String url = getAndCheckRequiredProperty(connectionProperties, JDBC_URL, JDBC_URL_STRING);
 
-        // Very probably, url should be pre-processed firstly (cut jdbc: or jdbc:cassandra: prefix)
-        // It should be checked
         CqlSession session = CassandraSessionsHolder.getInstance().getSession(url, username, password);
-        CassandraComponent component = new CassandraComponent();
-        // Url and Keyspace parameters should be checked
-        CassandraEndpoint endpoint = new CassandraEndpoint(url, component, session, session.getKeyspace().toString());
-        endpoint.setUsername(username);
-        endpoint.setPassword(password);
-        endpoint.setCql(message.getText()); // SQL Query text is here
-        endpoint.start();
-        CamelContext context = new DefaultCamelContext();
-        ProducerTemplate template = context.createProducerTemplate();
-        endpoint.setCamelContext(context);
-        Exchange exchange = endpoint.createExchange();
-        Exchange out;
-        context.start();
+
         try {
+            // Execute query; warn if too slow
             long startTime = System.currentTimeMillis();
-            out = template.send(endpoint, exchange);
+            Object queryResult = executeCassandraQuery(session, message.getText());
             warnIfTooSlow(startTime, executeQueryTooSlowThreshold, executeQueryTooSlowMessage);
-            if (out.isFailed()) {
-                throw out.getException();
-            }
+
+            // Process query results
+            Message response = new Message(convertToJson(processCassandraResponse(queryResult)));
+
+            // In old implementation, some headers were retrieved from Camel Exchange.
+            // Should be checked if we can get the same info without Camel.
+            return response;
         } catch (Exception e) {
-            stop(context, session);
             throw new Exception("Error sending SQL Message. Stacktrace: " + e);
         }
-        Message response = new Message(convertToJson(processCassandraResponse(out.getOut().getBody())));
-        exchange.getOut().getHeaders().put(OPTIONS_STRING, options);
-        response.convertAndSetHeaders(exchange.getOut().getHeaders());
-        stop(context, session);
-        return response;
     }
 
-    private void stop(CamelContext context, CqlSession session) throws Exception {
-        context.stop();
-        // Session remains opened until ITF is stopped.
-        //  If session is closed just after a query is executed, it greatly affects performance on
-        //  subsequent queries.
-        // May be, some scheduled closing should be added.
-        /*
-        if (!session.isClosed()) session.close();
-        */
+    private Object executeCassandraQuery(CqlSession session, String cql, Object... params) {
+        try {
+            // Create statement with params (if any)
+            SimpleStatementBuilder builder = SimpleStatement.builder(cql)
+                    .setExecutionProfile(session.getContext().getConfig().getDefaultProfile());
+            if (params != null && params.length > 0) {
+                builder.addPositionalValues(params);
+            }
+            SimpleStatement statement = builder.build();
+
+            // Execute query, get ResultSet
+            ResultSet resultSet = session.execute(statement);
+
+            // Determine query type by the 1st word
+            String trimmedCql = cql.trim().toUpperCase();
+            if (trimmedCql.startsWith("SELECT")) {
+                List<Row> rows = resultSet.all();
+                LOGGER.debug("SELECT returned {} rows", rows.size());
+                return rows; // Rows processing is outside the method
+            } else {
+                String dmlQueryResult = "Mutation executed successfully";
+                LOGGER.info(dmlQueryResult);
+                return dmlQueryResult;
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error executing CQL: {} with params: {}", cql, Arrays.toString(params), e);
+            throw new RuntimeException("Failed to execute Cassandra query", e);
+        }
     }
 
     private String getStringOptionsForRouteBuilder(ConnectionProperties connectionProperties) {

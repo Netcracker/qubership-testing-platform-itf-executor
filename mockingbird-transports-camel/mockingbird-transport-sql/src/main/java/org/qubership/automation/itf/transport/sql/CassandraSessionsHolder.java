@@ -36,6 +36,7 @@ import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.config.ProgrammaticDriverConfigLoaderBuilder;
+import com.datastax.oss.driver.internal.core.loadbalancing.DcInferringLoadBalancingPolicy;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalCause;
@@ -108,7 +109,7 @@ public class CassandraSessionsHolder {
 
     private CqlSession createSession(String url, String user, String pass) throws URISyntaxException {
         // Parse URL format: "cassandra://host:port/keyspace". Example: "cassandra://localhost:9042/my_keyspace"
-        java.net.URI uri = new java.net.URI(url);
+        java.net.URI uri = new java.net.URI(url.replaceFirst("jdbc:", ""));
         String host = uri.getHost();
         int port = uri.getPort() > 0 ? uri.getPort() : 9042;
         String keyspace = uri.getPath() != null && uri.getPath().length() > 1
@@ -127,7 +128,9 @@ public class CassandraSessionsHolder {
                 .withBoolean(DefaultDriverOption.RECONNECT_ON_INIT, true)
                 // Change connection timeouts' defaults (for safety)
                 .withDuration(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT, Duration.ofSeconds(30))
-                .withDuration(DefaultDriverOption.CONNECTION_INIT_QUERY_TIMEOUT, Duration.ofSeconds(30));
+                .withDuration(DefaultDriverOption.CONNECTION_INIT_QUERY_TIMEOUT, Duration.ofSeconds(30))
+                // Add policy to determine local_datacenter automatically
+                .withClass(DefaultDriverOption.LOAD_BALANCING_POLICY_CLASS, DcInferringLoadBalancingPolicy.class);
 
         CqlSessionBuilder builder = CqlSession.builder()
                 .addContactPoint(new InetSocketAddress(host, port))
