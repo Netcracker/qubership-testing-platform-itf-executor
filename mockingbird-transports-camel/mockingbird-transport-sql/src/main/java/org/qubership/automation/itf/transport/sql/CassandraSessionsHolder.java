@@ -126,6 +126,8 @@ public class CassandraSessionsHolder {
                 .withDuration(DefaultDriverOption.RECONNECTION_MAX_DELAY, Duration.ofMillis(maxDelayMs))
                 // Enable reconnect on init, if all contact points are unreachable
                 .withBoolean(DefaultDriverOption.RECONNECT_ON_INIT, true)
+                // Turn OFF sending schema metadata queries via control connection
+                .withBoolean(DefaultDriverOption.METADATA_SCHEMA_ENABLED, false)
                 // Change connection timeouts' defaults (for safety)
                 .withDuration(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT, Duration.ofSeconds(30))
                 .withDuration(DefaultDriverOption.CONNECTION_INIT_QUERY_TIMEOUT, Duration.ofSeconds(30))
@@ -157,8 +159,8 @@ public class CassandraSessionsHolder {
             }
         }
 
-        LOGGER.info("Connecting to Cassandra at {}:{} with ExponentialReconnectionPolicy (baseDelay={}ms, "
-                        + "maxDelay={}ms)", host, port, baseDelayMs, maxDelayMs);
+        LOGGER.info("Connecting to Cassandra at {}:{}/{} with ExponentialReconnectionPolicy (baseDelay={}ms, "
+                        + "maxDelay={}ms)", host, port, keyspace, baseDelayMs, maxDelayMs);
         return builder.build();
     }
 }
