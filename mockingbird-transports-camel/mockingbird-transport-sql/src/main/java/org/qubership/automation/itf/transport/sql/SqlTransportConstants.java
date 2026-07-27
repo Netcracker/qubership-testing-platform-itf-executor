@@ -29,7 +29,7 @@ public interface SqlTransportConstants {
     String TRINO = "Trino";
     String APACHE_HIVE = "Hive";
 
-    String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
+    String ORACLE_DRIVER = "oracle.jdbc.OracleDriver";
     String SQL_SERVER_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     String CASANDRA_DRIVER = "com.dbschema.CassandraJdbcDriver";
     String POSTGRESQL_DRIVER = "org.postgresql.Driver";

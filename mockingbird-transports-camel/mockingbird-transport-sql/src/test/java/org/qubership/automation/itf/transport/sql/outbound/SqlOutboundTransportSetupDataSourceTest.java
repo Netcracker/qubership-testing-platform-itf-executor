@@ -90,7 +90,7 @@ class SqlOutboundTransportSetupDataSourceTest {
 
         assertNotNull(ds);
         BasicDataSource bds = (BasicDataSource) ds;
-        assertEquals("oracle.jdbc.driver.OracleDriver", bds.getDriverClassName());
+        assertEquals("oracle.jdbc.OracleDriver", bds.getDriverClassName());
         assertEquals("oracle_user", bds.getUsername());
         assertEquals("oracle_pass", bds.getPassword());
     }
@@ -211,7 +211,7 @@ class SqlOutboundTransportSetupDataSourceTest {
 
     @ParameterizedTest
     @CsvSource({
-            "Oracle, oracle.jdbc.driver.OracleDriver",
+            "Oracle, oracle.jdbc.OracleDriver",
             "PostgreSQL, org.postgresql.Driver",
             "SQLServer, com.microsoft.sqlserver.jdbc.SQLServerDriver",
             "Trino, io.trino.jdbc.TrinoDriver",
