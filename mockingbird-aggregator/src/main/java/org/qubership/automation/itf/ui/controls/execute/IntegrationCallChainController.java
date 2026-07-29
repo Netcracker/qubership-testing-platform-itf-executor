@@ -17,6 +17,7 @@
 
 package org.qubership.automation.itf.ui.controls.execute;
 
+import static org.qubership.automation.itf.core.util.converter.IdConverter.toBigInt;
 import static org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants.BV_DEFAULT_ACTION;
 import static org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants.BV_DEFAULT_ACTION_DEFAULT_VALUE;
 import static org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants.BV_DEFAULT_ACTION_OPTIONS_VALUE;
@@ -217,7 +218,7 @@ public class IntegrationCallChainController extends ExecutorControllerHelper {
             HashSet<CallChain> callChains =
                     new HashSet<>(Collector.collectCallChainsFromCallChainsAndFolders(initObjects(objects)));
             for (CallChain callChain : callChains) {
-                CallChain callChainNatural = getManager(CallChain.class).getById(callChain.getNaturalId());
+                CallChain callChainNatural = getManager(CallChain.class).getById(toBigInt(callChain.getNaturalId()));
                 if (callChainNatural == null) {
                     log.warn("No natural parent found for callchain with id {}, so "
                             + "skipping BulkValidator links regeneration", callChain.getID());

@@ -20,6 +20,7 @@ package org.qubership.automation.itf.configuration.dataset.impl.remote;
 import java.beans.Transient;
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -62,8 +63,8 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
     }
 
     @Override
-    public BigInteger getNaturalId() {
-        return getID();
+    public String getNaturalId() {
+        return id;
     }
 
     @Override
@@ -186,4 +187,35 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
     public String getName() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(this.getClass().isInstance(o))) {
+            return false;
+        }
+        if (this.getNaturalId() != null) {
+            return Objects.equals(this.getNaturalId(), ((Storable) o).getNaturalId());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getNaturalId());
+    }
+
+    @Override
+    public String toString() {
+        return "Name: '" + getName() + "', ID: '" + this.getNaturalId() + '\'';
+    }
+
+    @Override
+    public String returnDisplayId() {
+        return this.getNaturalId();
+    }
+
 }

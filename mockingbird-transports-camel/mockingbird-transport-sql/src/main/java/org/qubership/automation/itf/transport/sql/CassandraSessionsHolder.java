@@ -19,16 +19,24 @@ package org.qubership.automation.itf.transport.sql;
 
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
+
+import javax.net.ssl.SSLContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
+import com.datastax.oss.driver.api.core.config.ProgrammaticDriverConfigLoaderBuilder;
+import com.datastax.oss.driver.internal.core.loadbalancing.DcInferringLoadBalancingPolicy;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalCause;
@@ -100,19 +108,35 @@ public class CassandraSessionsHolder {
     }
 
     private CqlSession createSession(String url, String user, String pass) throws URISyntaxException {
-        //CassandraClientURI uri = new CassandraClientURI(url, user, pass);
-
-        // Parse URL format: "cassandra://host:port/keyspace"
-        // Example: "cassandra://localhost:9042/my_keyspace"
-        java.net.URI uri = new java.net.URI(url);
+        // Parse URL format: "cassandra://host:port/keyspace". Example: "cassandra://localhost:9042/my_keyspace"
+        java.net.URI uri = new java.net.URI(url.replaceFirst("jdbc:", ""));
         String host = uri.getHost();
         int port = uri.getPort() > 0 ? uri.getPort() : 9042;
         String keyspace = uri.getPath() != null && uri.getPath().length() > 1
                 ? uri.getPath().substring(1) : null;
 
+        // Configure ReconnectionPolicy via programmatic configurer;
+        // Protocol version isn't set - it's determined automatically.
+        ProgrammaticDriverConfigLoaderBuilder configBuilder = DriverConfigLoader.programmaticBuilder()
+                .withString(DefaultDriverOption.RECONNECTION_POLICY_CLASS,
+                        "com.datastax.oss.driver.internal.core.connection.ExponentialReconnectionPolicy")
+                // Base interval between attempts
+                .withDuration(DefaultDriverOption.RECONNECTION_BASE_DELAY, Duration.ofMillis(baseDelayMs))
+                // Maximum interval between attempts
+                .withDuration(DefaultDriverOption.RECONNECTION_MAX_DELAY, Duration.ofMillis(maxDelayMs))
+                // Enable reconnect on init, if all contact points are unreachable
+                .withBoolean(DefaultDriverOption.RECONNECT_ON_INIT, true)
+                // Turn OFF sending schema metadata queries via control connection
+                .withBoolean(DefaultDriverOption.METADATA_SCHEMA_ENABLED, false)
+                // Change connection timeouts' defaults (for safety)
+                .withDuration(DefaultDriverOption.CONNECTION_CONNECT_TIMEOUT, Duration.ofSeconds(30))
+                .withDuration(DefaultDriverOption.CONNECTION_INIT_QUERY_TIMEOUT, Duration.ofSeconds(30))
+                // Add policy to determine local_datacenter automatically
+                .withClass(DefaultDriverOption.LOAD_BALANCING_POLICY_CLASS, DcInferringLoadBalancingPolicy.class);
+
         CqlSessionBuilder builder = CqlSession.builder()
                 .addContactPoint(new InetSocketAddress(host, port))
-                .withLocalDatacenter("datacenter1"); // Adjust to your environment (will get it from options)
+                .withConfigLoader(configBuilder.build());
 
         // Add authentication if provided
         if (user != null && pass != null) {
@@ -124,6 +148,19 @@ public class CassandraSessionsHolder {
             builder = builder.withKeyspace(keyspace);
         }
 
+        // SSL via System properties (if set)
+        if (System.getProperty("javax.net.ssl.trustStore") != null) {
+            try {
+                SSLContext sslContext = SSLContext.getDefault();
+                builder = builder.withSslContext(sslContext);
+                LOGGER.info("SSL enabled for Cassandra connection");
+            } catch (NoSuchAlgorithmException e) {
+                LOGGER.warn("Failed to get default SSLContext", e);
+            }
+        }
+
+        LOGGER.info("Connecting to Cassandra at {}:{}/{} with ExponentialReconnectionPolicy (baseDelay={}ms, "
+                        + "maxDelay={}ms)", host, port, keyspace, baseDelayMs, maxDelayMs);
         return builder.build();
     }
 }

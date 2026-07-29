@@ -54,6 +54,7 @@ import org.qubership.automation.itf.core.util.constants.StartedFrom;
 import org.qubership.automation.itf.core.util.constants.Status;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.core.util.transport.service.report.Report;
+import org.qubership.automation.itf.executor.service.ExecutionServices;
 import org.qubership.automation.itf.integration.atp.action.ATPActionFactory;
 import org.qubership.automation.itf.integration.atp.action.model.impl.AbstractAtpAction;
 import org.qubership.automation.itf.integration.atp.model.ActionEntity;
@@ -212,17 +213,18 @@ public class TestRunInfo {
         tcContextRamExtension.setAsync(false);
         tcContextRamExtension.setRunId(getTestRunId());
         tcContextRamExtension.setRunContext(ramTestRunContext);
-        TcContext tc = new TcContext();
+
+        TcContext tc = ExecutionServices.getTCContextService().createInMemory(projectId, projectUuid);
         if (ramTestRunContext.getAtpCompaund() != null) {
-            tc.setID(new BigInteger(ramTestRunContext.getAtpCompaund().getSectionId())); // TODO: need to check it
+            tc.setNaturalId(ramTestRunContext.getAtpCompaund().getSectionId());
         }
         tc.setStartedFrom(startedFrom);
-        tc.setProjectId(projectId);
-        tc.setProjectUuid(projectUuid);
         tc.setNeedToReportToAtp(true);
         tc.extend(tcContextRamExtension);
+
         InstanceRamExtension extension = new InstanceRamExtension();
         extension.setSectionId(getLogRecordId());
+
         CallChainInstance instance = new CallChainInstance();
         instance.setName("Errors");
         instance.setID(BigInteger.valueOf(1000 + (int) (ThreadLocalRandom.current().nextDouble() * (999001))));

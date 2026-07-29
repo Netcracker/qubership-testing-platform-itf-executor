@@ -19,6 +19,8 @@ package org.qubership.automation.itf.configuration.dataset.impl.excel;
 
 import java.beans.Transient;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Set;
 
 import org.qubership.automation.itf.core.model.common.Storable;
@@ -43,10 +45,8 @@ public class ExcelDataSetList extends AbstractStorable implements DataSetList {
         setParent(parent);
         setName(name);
 
-        // TODO: Change of Object to BigInteger requires careful check and possible refactor.
-        BigInteger bid = new BigInteger(id);
-        setID(bid);
-        setNaturalId(bid);
+        setID(generateId(id));
+        setNaturalId(id);
     }
 
     @Override
@@ -112,5 +112,21 @@ public class ExcelDataSetList extends AbstractStorable implements DataSetList {
     @Transient
     public ExcelDataSetListRepository repo() {
         return repo;
+    }
+
+    private static final String ALGORITHM = "SHA-256";
+
+    private static BigInteger generateId(String stringId) {
+        try {
+            MessageDigest md = MessageDigest.getInstance(ALGORITHM);
+            byte[] digest = md.digest(stringId.getBytes(StandardCharsets.UTF_8));
+
+            // signum = 1 ensures positive value
+            return new BigInteger(1, digest);
+
+        } catch (Exception e) {
+            // Fallback: use hashCode as 32-bit unsigned
+            return BigInteger.valueOf(((long) stringId.hashCode()) & 0xffffffffL);
+        }
     }
 }

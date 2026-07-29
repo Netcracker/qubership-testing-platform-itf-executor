@@ -35,7 +35,7 @@ public class UIDataSetList extends UIObject {
 
     public UIDataSetList(@Nonnull DataSetList list) {
         super(list);
-        setFileName(Objects.toString(list.getParent().getID()));
+        setFileName(Objects.toString(list.getParent().returnDisplayId()));
     }
 
     public String getFileName() {

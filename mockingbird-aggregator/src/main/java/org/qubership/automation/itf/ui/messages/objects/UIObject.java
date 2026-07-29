@@ -77,7 +77,7 @@ public class UIObject extends UIIdentifiedObject {
     }
 
     public void defineObjectParam(Storable storable, boolean isFullWithParent) {
-        setId(storable.getID().toString());
+        setId(storable.returnDisplayId());
         setName(storable.getName());
         if (storable.getParent() != null) {
             if (isFullWithParent || !(storable.getParent() instanceof Folder)) {

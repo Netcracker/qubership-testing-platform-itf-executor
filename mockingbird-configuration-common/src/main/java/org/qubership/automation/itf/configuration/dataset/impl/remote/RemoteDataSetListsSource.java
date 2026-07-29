@@ -18,9 +18,11 @@
 package org.qubership.automation.itf.configuration.dataset.impl.remote;
 
 import java.beans.Transient;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.dataset.DataSetList;
 import org.qubership.automation.itf.core.model.dataset.DataSetListsSource;
 import org.qubership.automation.itf.core.model.jpa.folder.Folder;
@@ -42,12 +44,7 @@ public class RemoteDataSetListsSource extends AbstractStorable implements DataSe
         setName(name);
 
         this.id = id;
-
-        // Temporarily commented. Types mismatch UUID/BigInteger/Object requires refactoring
-        /*
-        setID(id.toString());
         setNaturalId(id.toString());
-         */
     }
 
     @Nonnull
@@ -85,5 +82,28 @@ public class RemoteDataSetListsSource extends AbstractStorable implements DataSe
     @Override
     public Object getProjectUuid() {
         return null;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (!this.getClass().isInstance(o)) {
+            return false;
+        } else {
+            return this.getNaturalId() != null && Objects.equals(this.getNaturalId(), ((Storable) o).getNaturalId());
+        }
+    }
+
+    public int hashCode() {
+        return Objects.hash(this.getNaturalId());
+    }
+
+    public String toString() {
+        return "Name: '" + this.getName() + "', ID: '" + this.getNaturalId() + '\'';
+    }
+
+    @Override
+    public String returnDisplayId() {
+        return this.getNaturalId();
     }
 }

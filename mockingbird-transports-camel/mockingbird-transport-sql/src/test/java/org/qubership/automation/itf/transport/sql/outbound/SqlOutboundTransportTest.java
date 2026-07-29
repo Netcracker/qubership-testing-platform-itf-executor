@@ -75,7 +75,7 @@ class SqlOutboundTransportTest {
     @Test
     void selectDataBaseDriver_SupportedTypes_ReturnsCorrectDriver() throws Exception {
         Method method = getPrivateStaticMethod("selectDataBaseDriver", String.class);
-        assertEquals("oracle.jdbc.driver.OracleDriver", method.invoke(null, "Oracle"));
+        assertEquals("oracle.jdbc.OracleDriver", method.invoke(null, "Oracle"));
         assertEquals("org.postgresql.Driver", method.invoke(null, "PostgreSQL"));
         assertEquals("com.microsoft.sqlserver.jdbc.SQLServerDriver", method.invoke(null, "SQLServer"));
         assertEquals("io.trino.jdbc.TrinoDriver", method.invoke(null, "Trino"));

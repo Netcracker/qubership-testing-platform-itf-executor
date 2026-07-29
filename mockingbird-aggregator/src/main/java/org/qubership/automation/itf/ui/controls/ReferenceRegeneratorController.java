@@ -152,7 +152,7 @@ public class ReferenceRegeneratorController extends ControllerHelper {
             UIReplacement uiReplacement = new UIReplacement(system);
             //add other systems
             getManager(System.class)
-                    .getByNatureId(system.getID(), null)
+                    .getByNatureId(system.getID().toString(), null)
                     .forEach(s -> {
                         if (!s.getID().equals(system.getID())) {
                             uiReplacement.addCompatibleSystem(s);

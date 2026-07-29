@@ -90,7 +90,7 @@ class SqlOutboundTransportSetupDataSourceTest {
 
         assertNotNull(ds);
         BasicDataSource bds = (BasicDataSource) ds;
-        assertEquals("oracle.jdbc.driver.OracleDriver", bds.getDriverClassName());
+        assertEquals("oracle.jdbc.OracleDriver", bds.getDriverClassName());
         assertEquals("oracle_user", bds.getUsername());
         assertEquals("oracle_pass", bds.getPassword());
     }
@@ -155,7 +155,7 @@ class SqlOutboundTransportSetupDataSourceTest {
         assertEquals("com.dbschema.CassandraJdbcDriver", bds.getDriverClassName());
     }
 
-    // ==================== 2. Тесты валидации обязательных полей ====================
+    // ==================== 2. Tests of mandatory fields validation ====================
 
     @Test
     void setupDataSource_MissingTypeDB_ThrowsException() {
@@ -211,7 +211,7 @@ class SqlOutboundTransportSetupDataSourceTest {
 
     @ParameterizedTest
     @CsvSource({
-            "Oracle, oracle.jdbc.driver.OracleDriver",
+            "Oracle, oracle.jdbc.OracleDriver",
             "PostgreSQL, org.postgresql.Driver",
             "SQLServer, com.microsoft.sqlserver.jdbc.SQLServerDriver",
             "Trino, io.trino.jdbc.TrinoDriver",
@@ -231,15 +231,15 @@ class SqlOutboundTransportSetupDataSourceTest {
         assertEquals(expectedDriver, bds.getDriverClassName());
     }
 
-    // ==================== 4. Тесты настроек пула соединений ====================
+    // ==================== 4. Tests of connection pool settings ====================
 
     @Test
     void setupDataSource_SetsAllPoolConfigurationParameters() throws Exception {
         DataSource ds = invokeSetupDataSourceAndTrack(validProperties);
         BasicDataSource bds = (BasicDataSource) ds;
 
-        // Проверяем, что значения установлены (фактические значения берутся из Config)
-        // Эти тесты проверяют, что методы setXXX вызываются (значения могут быть любыми)
+        // Test that config values are set (real values are from Config)
+        // These tests check that 'setXXX' methods are invoked (values are arbitrary)
         assertNotNull(bds.getDefaultQueryTimeout());
         assertTrue(bds.getInitialSize() >= 0);
         assertTrue(bds.getMaxTotal() >= 0);
@@ -247,13 +247,13 @@ class SqlOutboundTransportSetupDataSourceTest {
         assertTrue(bds.getMinIdle() >= 0);
         assertTrue(bds.getMaxWaitMillis() >= 0);
 
-        // eviction параметры
+        // eviction parameters
         assertNotNull(bds.getMinEvictableIdleTimeMillis());
         assertNotNull(bds.getTimeBetweenEvictionRunsMillis());
         assertNotNull(bds.getMaxConnLifetimeMillis());
     }
 
-    // ==================== 5. Тесты для неизвестного типа БД ====================
+    // ==================== 5. Tests of unknown DB type ====================
 
     @ParameterizedTest
     @ValueSource(strings = {"mysql", "mongodb", "unknown", ""})
@@ -267,11 +267,11 @@ class SqlOutboundTransportSetupDataSourceTest {
         DataSource ds = invokeSetupDataSourceAndTrack(props);
         BasicDataSource bds = (BasicDataSource) ds;
 
-        // selectDataBaseDriver вернёт null для неизвестного типа
+        // selectDataBaseDriver returns null in case unknown DB type
         assertNull(bds.getDriverClassName());
     }
 
-    // ==================== 6. Тест безопасности: экранирование специальных символов ====================
+    // ==================== 6. Safety test: masking of special characters ====================
 
     @Test
     void setupDataSource_WithSpecialCharactersInCredentials_HandlesCorrectly() throws Exception {
@@ -288,15 +288,13 @@ class SqlOutboundTransportSetupDataSourceTest {
         assertEquals("p@ssw0rd!;'\"", bds.getPassword());
     }
 
-    // ==================== 7. Тест, который выявил бы вашу проблему с версиями ====================
+    // ==================== 7. Test to identify libraries versions mismatch ====================
 
     @Test
     void setupDataSource_ShouldNotThrowNoSuchFieldError() throws Exception {
-        // Этот тест проверяет, что при создании DataSource не возникает
-        // NoSuchFieldError из-за несовместимости версий библиотек
-
-        // Если есть несовместимость commons-dbcp2 и commons-pool2,
-        // то при вызове сеттеров (например, setMaxWaitMillis) может упасть.
+        // Check that there is no error thrown while DataSource creation.
+        // NoSuchFieldError could be due to libraries versions mismatch.
+        // Especially it's about commons-dbcp2 and commons-pool2 versions.
 
         assertDoesNotThrow(() -> {
             DataSource ds = invokeSetupDataSourceAndTrack(validProperties);

@@ -108,7 +108,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
     private static String makeErrorMessage(String message, String endpoint, long startTime) {
         long duration = System.currentTimeMillis() - startTime;
         String serviceRoute = ApplicationConfig.env.getProperty("feign.atp.datasets.url")
-                + "/" + ApplicationConfig.env.getProperty("feign.atp.datasets.route");
+                + ApplicationConfig.env.getProperty("feign.atp.datasets.route");
         return message + "\nURL: " + serviceRoute + ", endpoint: " + endpoint + ", duration: " + duration + "(ms)";
     }
 
@@ -216,9 +216,9 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
     @Override
     public Set<DataSetList> getDataSetLists(@Nonnull DataSetListsSource source) {
         long startTime = System.currentTimeMillis();
-        String endpoint = "/dsl/va/".concat(source.getID().toString());
+        String endpoint = "/dsl/va/".concat(source.getNaturalId());
         try {
-            UUID vaId = UUID.fromString(source.getID().toString());
+            UUID vaId = UUID.fromString(source.getNaturalId());
             ResponseEntity<List<DataSetListCreatedModifiedViewDto>> response
                     = HttpClientFactory.getDatasetsDatasetListFeignClient().getDataSetListsByVaId(vaId, null);
             if (!response.hasBody()) {
@@ -245,7 +245,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
     @Override
     public Set<IDataSet> getDataSetsWithLabel(@Nonnull DataSetList list, String label, @Nonnull Object projectId) {
         long startTime = System.currentTimeMillis();
-        String dslId = list.getNaturalId().toString().split("_")[1];
+        String dslId = list.getNaturalId().split("_")[1];
         String endpoint = StringUtils.isNotBlank(label) ? "/dsl/%s/ds?label=%s".formatted(dslId, label) :
                 "/dsl/%s/ds".formatted(dslId);
         try {
@@ -279,7 +279,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
     @Nonnull
     Set<String> getVariables(@Nonnull DataSetList list) {
         long startTime = System.currentTimeMillis();
-        String dslId = list.getNaturalId().toString().split("_")[1];
+        String dslId = list.getNaturalId().split("_")[1];
         String endpoint = "/attribute/dsl/%s/itf".formatted(dslId);
         try {
             UUID vaId = UUID.fromString(dslId);
@@ -342,7 +342,7 @@ public class RemoteDataSetListRepository implements DataSetListRepository {
 
     @Nonnull
     private DataSetList create(@Nonnull DataSetListsSource source, @Nonnull UUID id, @Nonnull String name) {
-        String idStr = source.getNaturalId().toString() + DS_LIST_NATURAL_ID_SEPARATOR + id;
+        String idStr = source.getNaturalId() + DS_LIST_NATURAL_ID_SEPARATOR + id;
         return new RemoteDataSetList(this, source, idStr, name);
     }
 
