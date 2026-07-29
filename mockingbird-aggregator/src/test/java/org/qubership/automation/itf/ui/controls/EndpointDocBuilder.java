@@ -61,18 +61,18 @@ public class EndpointDocBuilder {
     public void printRequestMethodsForClass(Class<?> clazz) {
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(RequestMapping.class)) {
-                getOut().println("======================================");
+                getOutStream().println("======================================");
                 RequestMapping annotation = method.getAnnotation(RequestMapping.class);
-                getOut().printf("Endpoint %s, method %s. Java method: %s\n", Arrays.toString(annotation.value()),
+                getOutStream().printf("Endpoint %s, method %s. Java method: %s\n", Arrays.toString(annotation.value()),
                         Arrays.toString(annotation.method()), method.getName());
-                getOut().printf("Params: %s\n", getParmTypesAsString(method));
-                getOut().printf("Returns: %s\n", method.getReturnType().getSimpleName());
-                getOut().println("======================================\n");
+                getOutStream().printf("Params: %s\n", getParmTypesAsString(method));
+                getOutStream().printf("Returns: %s\n", method.getReturnType().getSimpleName());
+                getOutStream().println("======================================\n");
             }
         }
     }
 
-    private PrintStream getOut() {
+    private PrintStream getOutStream() {
         return out;
     }
 

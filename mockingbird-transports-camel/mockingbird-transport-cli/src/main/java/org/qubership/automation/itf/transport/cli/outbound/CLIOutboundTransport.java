@@ -41,6 +41,7 @@ import org.apache.camel.component.netty.NettyComponent;
 import org.apache.camel.component.netty.NettyEndpoint;
 import org.apache.camel.component.ssh.SshComponent;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.util.annotation.Async;
@@ -179,29 +180,38 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         Exchange exchange = cliEndPoint.createExchange();
         exchange.getIn().setBody(message.getText());
         exchange = producerTemplate.send(cliEndPoint, exchange);
-        if (!exchange.hasOut() || exchange.isFailed()) {
+
+        /*
+            Overabundant check: may be, exchange itself is null?
+            It sounds strange, but it really faced sometimes in case very durable command execution...
+        */
+        if (exchange == null) {
+            return makeCamelExchangeBrokenMessage();
+        } else if (exchange.isFailed()) {
             return makeExceptionMessage(exchange);
         } else {
-            Message response;
-            Object answerObject = exchange.getOut().getBody();
-            if (answerObject == null) {
-                response = new Message();
-            } else if (answerObject instanceof ByteArrayInputStream answer) {
-                int n = answer.available();
-                if (n > 0) {
-                    byte[] bytes = new byte[n];
-                    int cnt = answer.read(bytes, 0, n);
-                    response = new Message(new String(bytes, 0, cnt, StandardCharsets.UTF_8));
-                } else {
-                    response = new Message();
-                }
-            } else {
-                response = new Message(answerObject.toString());
-            }
-            if (exchange.getOut().hasHeaders()) {
-                response.convertAndSetHeaders(exchange.getOut().getHeaders());
-            }
+            Message response = getResponseMessage(exchange);
             log.debug("Response from {} is: {}", cliEndPoint, response.getText());
+            return response;
+        }
+    }
+
+    private static Message makeCamelExchangeBrokenMessage() {
+        Message message = new Message("");
+        message.setFailedMessage("Internal Camel processing error is occurred (Exchange is null).");
+        return message;
+    }
+
+    @NotNull
+    private static Message getResponseMessage(Exchange exchange) {
+        org.apache.camel.Message camelResponse = exchange.getMessage();
+        if (camelResponse == null) {
+            return new Message();
+        } else {
+            Message response = new Message(processResponseBody(camelResponse));
+            if (camelResponse.hasHeaders()) {
+                response.convertAndSetHeaders(camelResponse.getHeaders());
+            }
             return response;
         }
     }
@@ -222,21 +232,55 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         }
     }
 
-    private Message makeExceptionMessage(Exchange exchange) {
+    private static Message makeExceptionMessage(Exchange exchange) {
         Message message = new Message();
+        String exceptionMessage = "";
         Exception ex = exchange.getException();
         if (ex != null) {
-            message.setFailedMessage(
-                    ex.getMessage() + ((ex.getMessage().contains("Caused by:") || ex.getCause() == null)
-                            ? "" : "Caused by: " + ex.getCause().getMessage())
-            );
+            String errorMessage = ex.getMessage();
+            if (errorMessage == null || errorMessage.trim().isEmpty()) {
+                errorMessage = ex.getClass().getSimpleName();
+            }
+            Throwable cause = ex.getCause();
+            if (cause != null && ex != cause) {
+                exceptionMessage = errorMessage + ", Caused by: " + cause;
+            } else {
+                exceptionMessage = errorMessage;
+            }
+        }
+        String responseMessage = "";
+        org.apache.camel.Message camelResponse = exchange.getMessage();
+        if (camelResponse == null) {
+            responseMessage = "No response is received!";
         } else {
-            message.setFailedMessage("Unknown exception is occurred");
+            responseMessage = processResponseBody(camelResponse);
+            if (camelResponse.hasHeaders()) {
+                message.convertAndSetHeaders(camelResponse.getHeaders());
+            }
         }
-        if (exchange.hasOut() && exchange.getOut().hasHeaders()) {
-            message.convertAndSetHeaders(exchange.getOut().getHeaders());
-        }
+
+        message.setFailedMessage(exceptionMessage
+                + (exceptionMessage.isEmpty() ? "" : "\n")
+                + responseMessage);
         return message;
+    }
+
+    private static String processResponseBody(org.apache.camel.Message camelResponse) {
+        Object bodyObject = camelResponse.getBody();
+        if (bodyObject == null) {
+            return "";
+        } else if (bodyObject instanceof ByteArrayInputStream answer) {
+            int n = answer.available();
+            if (n > 0) {
+                byte[] bytes = new byte[n];
+                int cnt = answer.read(bytes, 0, n);
+                return new String(bytes, 0, cnt, StandardCharsets.UTF_8);
+            } else {
+                return "";
+            }
+        } else {
+            return bodyObject.toString();
+        }
     }
 
     private String buildUri(ConnectionProperties properties, boolean isSsh) throws IOException {

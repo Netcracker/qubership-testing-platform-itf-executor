@@ -93,7 +93,7 @@ public class CLIOutboundTransportTest {
     @Nonnull
     private static Message getMessageFromBytes(Exchange exchange) {
         Message response;
-        Object answerObject = exchange.getOut().getBody();
+        Object answerObject = exchange.getMessage().getBody();
         ByteArrayInputStream answer = (ByteArrayInputStream) answerObject;
         int n = answer.available();
         if (n > 0) {
