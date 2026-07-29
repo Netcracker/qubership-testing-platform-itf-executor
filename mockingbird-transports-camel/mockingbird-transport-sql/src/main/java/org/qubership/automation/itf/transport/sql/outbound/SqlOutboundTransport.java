@@ -578,9 +578,9 @@ public class SqlOutboundTransport extends AbstractOutboundTransportImpl {
             context.stop();
             throw new Exception("Error sending SQL Message. Stacktrace: " + e);
         }
-        Message response = new Message(convertToJson(out.getOut().getBody()));
-        exchange.getOut().getHeaders().put(OPTIONS_STRING, options);
-        response.convertAndSetHeaders(exchange.getOut().getHeaders());
+        Message response = new Message(convertToJson(out.getMessage().getBody()));
+        out.getMessage().getHeaders().put(OPTIONS_STRING, options);
+        response.convertAndSetHeaders(out.getMessage().getHeaders());
         context.stop();
         return response;
     }
