@@ -212,9 +212,9 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
             context.stop();
             throw new Exception("Error sending/processing of LDAP search request", e);
         }
-        Collection<SearchResult> data = out.getOut().getBody(Collection.class);
+        Collection<SearchResult> data = out.getMessage().getBody(Collection.class);
         Message response = new Message(dataToString(data, outputFormat)); // will be changed
-        response.convertAndSetHeaders(exchange.getOut().getHeaders());
+        response.convertAndSetHeaders(exchange.getMessage().getHeaders());
         context.stop();
         return response;
     }

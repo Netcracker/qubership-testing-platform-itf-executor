@@ -418,8 +418,9 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
     protected Message buildMessage(Exchange exchange,
                                    int responseHttpCode,
                                    boolean codeAllowed) {
-        Message message = new Message(exchange.getOut().getBody(String.class));
-        message.convertAndSetHeaders(exchange.getOut().getHeaders());
+        org.apache.camel.Message responseCamelMessage = exchange.getMessage();
+        Message message = new Message(responseCamelMessage.getBody(String.class));
+        message.convertAndSetHeaders(responseCamelMessage.getHeaders());
         if (codeAllowed) {
             /* Special case... I'm not sure that it's correct behaviour but
                 - if there is an empty message in case of success (due to code is in the allowed range),
@@ -447,8 +448,9 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
      *       - otherwise step is Passed.
      */
     protected Message buildMessage(Exchange exchange) {
-        Message message = new Message(exchange.getOut().getBody(String.class));
-        message.convertAndSetHeaders(exchange.getOut().getHeaders());
+        org.apache.camel.Message responseCamelMessage = exchange.getMessage();
+        Message message = new Message(responseCamelMessage.getBody(String.class));
+        message.convertAndSetHeaders(responseCamelMessage.getHeaders());
         if (exchange.isFailed()) {
             exchangeExceptionProcess(exchange, message);
         } else {
@@ -600,9 +602,10 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
     }
 
     private int getResponseCode(Exchange exchange) {
-        if (exchange.hasOut()) {
-            if (exchange.getOut().hasHeaders()) {
-                Object strResponseCode = exchange.getOut().getHeader("CamelHttpResponseCode");
+        org.apache.camel.Message responseCamelMessage = exchange.getMessage();
+        if (responseCamelMessage != null) {
+            if (responseCamelMessage.hasHeaders()) {
+                Object strResponseCode = responseCamelMessage.getHeader("CamelHttpResponseCode");
                 if (strResponseCode instanceof Integer integer) {
                     return integer;
                 } else {
