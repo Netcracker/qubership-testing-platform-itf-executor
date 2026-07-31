@@ -336,8 +336,9 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
 
                 HttpComponent secureHttpsComponent = new HttpComponent();
                 secureHttpsComponent.setSslContextParameters(sslContextParameters);
-                CAMEL_CONTEXT.addComponent(sslContextCacheKey, secureHttpsComponent);
-
+                if (CAMEL_CONTEXT.hasComponent(sslContextCacheKey) == null) {
+                    CAMEL_CONTEXT.addComponent(sslContextCacheKey, secureHttpsComponent);
+                }
                 return sslContextParameters;
             });
         } catch (Exception e) {
