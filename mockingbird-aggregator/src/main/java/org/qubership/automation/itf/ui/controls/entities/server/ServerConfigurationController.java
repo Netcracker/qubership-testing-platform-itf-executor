@@ -41,6 +41,7 @@ import org.qubership.automation.itf.core.model.jpa.environment.TriggerConfigurat
 import org.qubership.automation.itf.core.model.jpa.server.Server;
 import org.qubership.automation.itf.core.model.jpa.system.System;
 import org.qubership.automation.itf.core.model.jpa.transport.Configuration;
+import org.qubership.automation.itf.core.util.Pair;
 import org.qubership.automation.itf.core.util.constants.TriggerState;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.ui.controls.entities.util.ConfigurationControllerHelper;
@@ -152,10 +153,15 @@ public class ServerConfigurationController {
         String operation = "set outbound for system by server id, system id";
         Server server = (Server) getAndCheckObject(serverId, Server.class, operation);
         System system = (System) getAndCheckObject(systemId, System.class, operation);
-        server.setUrl(serverOutbound.getUrl());
+        List<Pair<UIConfiguration, Configuration>> pairs = new ArrayList<>();
         if (serverOutbound.getConfigurations() != null) {
             for (UIConfiguration uiConfiguration : serverOutbound.getConfigurations()) {
                 Configuration configuration = server.getOutbound(system, uiConfiguration.getType());
+                pairs.add(new Pair<>(uiConfiguration, configuration));
+            }
+            for(Pair<UIConfiguration, Configuration> pair : pairs) {
+                UIConfiguration uiConfiguration = pair.getKey();
+                Configuration configuration = pair.getValue();
                 if ("Outbound REST Synchronous".equals(uiConfiguration.getUserTypeName())
                         || "Outbound SOAP Over HTTP Synchronous".equals(uiConfiguration.getUserTypeName())) {
                     ResponseCacheHelper.beforeUpdatedForRestAndSoapTransport(configuration, uiConfiguration, projectId);
@@ -165,6 +171,7 @@ public class ServerConfigurationController {
                 }
             }
         }
+        server.setUrl(serverOutbound.getUrl());
         server.store();
     }
 
@@ -186,7 +193,6 @@ public class ServerConfigurationController {
         String operation = "set inbound for system by server id, system id";
         Server server = (Server) getAndCheckObject(serverId, Server.class, operation);
         System system = (System) getAndCheckObject(systemId, System.class, operation);
-        server.setUrl(serverInbound.getUrl());
         Collection<InboundTransportConfiguration> inbound = server.getInbounds(system);
         if (serverInbound.getConfigurations() != null) {
             for (UIInboundConfiguration configuration : serverInbound.getConfigurations()) {
@@ -207,6 +213,7 @@ public class ServerConfigurationController {
                 }
             }
         }
+        server.setUrl(serverInbound.getUrl());
         server.store();
         return serverTriggerSyncRequest;
     }
@@ -229,7 +236,7 @@ public class ServerConfigurationController {
                         .getByProjectId(projectId);
         for (Environment env1 : environments) {
             for (Environment env2 : environments) {
-                if (env1.getID() != env2.getID()) {
+                if (!Objects.equals(env1.getID(), env2.getID())) {
                     res.append(findDuplications(env1, env2, INBOUND));
                     res.append(findDuplications(env1, env2, OUTBOUND));
                 }
