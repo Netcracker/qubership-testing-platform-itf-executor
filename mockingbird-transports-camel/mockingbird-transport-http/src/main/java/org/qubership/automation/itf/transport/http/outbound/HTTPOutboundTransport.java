@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.camel.Exchange;
@@ -263,12 +264,10 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
         if (!disableRedirects && !trustAll) {
             return;
         }
-        String key = getCacheKey(String.valueOf(disableRedirects), String.valueOf(trustAll));
+
         DynamicHttpClientConfigurer dynamicHttpClientConfigurer =
-                DYNAMIC_HTTP_CLIENT_CONFIGURER_CACHE.getIfPresent(key);
-        if (dynamicHttpClientConfigurer == null) {
-            dynamicHttpClientConfigurer = createDynamicHttpClientConfigurer(disableRedirects, trustAll, key);
-        }
+                getOrCreateDynamicHttpClientConfigurer(disableRedirects, trustAll);
+
         HttpClientConfigurer httpClientConfigurer = httpComponent.getHttpClientConfigurer();
         if (httpClientConfigurer == null) {
             httpComponent.setHttpClientConfigurer(dynamicHttpClientConfigurer);
@@ -300,16 +299,9 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                 String domain = properties.get("proxyAuthDomain");
                 String ntHost = properties.get("proxyAuthNtHost");
                 String portString = properties.get("proxyAuthPort");
-                int port = (StringUtils.isBlank(portString))
-                        ? -1
-                        : Integer.parseInt(portString);
-                String key = getCacheKey(host, String.valueOf(port), scheme, username, password, domain, ntHost);
-                ProxyHttpClientConfigurer proxyHttpClientConfigurer =
-                        PROXY_HTTP_CLIENT_CONFIGURER_CACHE.getIfPresent(key);
-                if (proxyHttpClientConfigurer == null) {
-                    proxyHttpClientConfigurer = createProxyHttpClientConfigurer(host, port, scheme, username, password,
-                            domain, ntHost, key);
-                }
+                int port = (StringUtils.isBlank(portString)) ? -1 : Integer.parseInt(portString);
+                ProxyHttpClientConfigurer proxyHttpClientConfigurer = getOrCreateProxyHttpClientConfigurer(host, port,
+                        scheme, username, password, domain, ntHost);
                 httpComponent.setHttpClientConfigurer(proxyHttpClientConfigurer);
             }
         }
@@ -320,10 +312,10 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
     }
 
     private HttpComponent prepareHttpComponent(boolean isSecure, Message message) {
-        HttpComponent httpComponent = new org.apache.camel.component.http.HttpComponent();
+        HttpComponent httpComponent = new HttpComponent();
         if (isSecure) {
-            registerSecureComponent(httpComponent, message); // There must be parameters configured in the
-            // config.properties file
+            // There should be parameters configured in application.properties file
+            registerSecureComponent(httpComponent, message);
         }
         return httpComponent;
     }
@@ -334,10 +326,22 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                         "/keystore/keystore.jks");
         String keyStorePassword = ApplicationConfig.env.getProperty("keystore.password");
         String secProtocol = (String) message.getConnectionProperties().get(HTTPConstants.SECURE_PROTOCOL);
-        String sslContextCacheKey = getCacheKey(keyStoreFile, keyStorePassword, secProtocol);
-        SSLContextParameters sslContext = SSL_CONTEXT_PARAMETERS_CACHE.getIfPresent(sslContextCacheKey);
-        if (sslContext == null) {
-            sslContext = createSSLContextParameters(keyStoreFile, keyStorePassword, secProtocol, sslContextCacheKey);
+        String sslContextCacheKey = getCacheKey(keyStoreFile, secProtocol);
+
+        SSLContextParameters sslContext;
+        try {
+            sslContext = SSL_CONTEXT_PARAMETERS_CACHE.get(sslContextCacheKey, () -> {
+                SSLContextParameters sslContextParameters =
+                        createSSLContextParameters(keyStoreFile, keyStorePassword, secProtocol);
+
+                HttpComponent secureHttpsComponent = new HttpComponent();
+                secureHttpsComponent.setSslContextParameters(sslContextParameters);
+                CAMEL_CONTEXT.addComponent(sslContextCacheKey, secureHttpsComponent);
+
+                return sslContextParameters;
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating HTTPS component with SSL", e);
         }
         httpComponent.setSslContextParameters(sslContext);
     }
@@ -459,26 +463,39 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
         return message;
     }
 
-    private DynamicHttpClientConfigurer createDynamicHttpClientConfigurer(boolean disableRedirects, boolean trustAll,
-                                                                          String key) {
-        DynamicHttpClientConfigurer dynamicHttpClientConfigurer = new DynamicHttpClientConfigurer();
-        dynamicHttpClientConfigurer.setDisableRedirects(disableRedirects);
-        dynamicHttpClientConfigurer.setTrustAll(trustAll);
-        DYNAMIC_HTTP_CLIENT_CONFIGURER_CACHE.put(key, dynamicHttpClientConfigurer);
-        return dynamicHttpClientConfigurer;
+    private DynamicHttpClientConfigurer getOrCreateDynamicHttpClientConfigurer(boolean disableRedirects,
+                                                                               boolean trustAll) {
+        String key = getCacheKey(String.valueOf(disableRedirects), String.valueOf(trustAll));
+        try {
+            return DYNAMIC_HTTP_CLIENT_CONFIGURER_CACHE.get(key, () -> {
+                DynamicHttpClientConfigurer dynamicHttpClientConfigurer = new DynamicHttpClientConfigurer();
+                dynamicHttpClientConfigurer.setDisableRedirects(disableRedirects);
+                dynamicHttpClientConfigurer.setTrustAll(trustAll);
+                return dynamicHttpClientConfigurer;
+            });
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Failed to create dynamic http configurer for key: " + key, e.getCause());
+        }
     }
 
-    private ProxyHttpClientConfigurer createProxyHttpClientConfigurer(String host, Integer port, String scheme,
-                                                                      String username, String password, String domain,
-                                                                      String ntHost, String key) {
-        ProxyHttpClientConfigurer httpClientConfigurer = new ProxyHttpClientConfigurer(host, port, scheme, username,
-                password, domain, ntHost, null, null);
-        PROXY_HTTP_CLIENT_CONFIGURER_CACHE.put(key, httpClientConfigurer);
-        return httpClientConfigurer;
+    private ProxyHttpClientConfigurer getOrCreateProxyHttpClientConfigurer(String host, Integer port,
+                                                                           String scheme, String username,
+                                                                           String password, String domain,
+                                                                           String ntHost) {
+        String key = getCacheKey(host, String.valueOf(port), scheme, username, domain, ntHost);
+        try {
+            return PROXY_HTTP_CLIENT_CONFIGURER_CACHE.get(key, () ->
+                    new ProxyHttpClientConfigurer(host, port, scheme, username,
+                            password, domain, ntHost, null, null)
+            );
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Failed to create proxy configurer for key: " + key, e.getCause());
+        }
     }
 
-    private SSLContextParameters createSSLContextParameters(String keyStoreFile, String keyStorePassword,
-                                                            String secProtocol, String key) {
+    private SSLContextParameters createSSLContextParameters(String keyStoreFile,
+                                                            String keyStorePassword,
+                                                            String secProtocol) {
         KeyStoreParameters keyStoreParameters = new KeyStoreParameters();
         if (!StringUtils.isBlank(keyStoreFile)) {
             keyStoreParameters.setResource(keyStoreFile);
@@ -497,20 +514,7 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
         //set protocol
         sslContext.setSecureSocketProtocol(secProtocol);
 
-        //register http component with these settings
-        try {
-            // Create and configure the HTTP component with SSL
-            HttpComponent httpsComponent = new HttpComponent();
-            httpsComponent.setSslContextParameters(sslContext);
-
-            // Add the component to CamelContext with a unique name
-            CAMEL_CONTEXT.addComponent(key, httpsComponent);
-
-            SSL_CONTEXT_PARAMETERS_CACHE.put(key, sslContext);
-            return sslContext;
-        } catch (Exception e) {
-            throw new RuntimeException("Error while creating HTTPS component with SSL", e);
-        }
+        return sslContext;
     }
 
     private String getCacheKey(String... keys) {
