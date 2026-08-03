@@ -32,17 +32,20 @@ import java.util.UUID;
 import org.json.simple.JSONObject;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.SearchByProjectIdManager;
+import org.qubership.automation.itf.core.hibernate.spring.managers.executor.ServerObjectManager;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.communication.TriggerSample;
 import org.qubership.automation.itf.core.model.communication.message.ServerTriggerSyncRequest;
 import org.qubership.automation.itf.core.model.jpa.environment.Environment;
 import org.qubership.automation.itf.core.model.jpa.environment.InboundTransportConfiguration;
+import org.qubership.automation.itf.core.model.jpa.environment.OutboundTransportConfiguration;
 import org.qubership.automation.itf.core.model.jpa.environment.TriggerConfiguration;
 import org.qubership.automation.itf.core.model.jpa.server.Server;
 import org.qubership.automation.itf.core.model.jpa.system.System;
 import org.qubership.automation.itf.core.model.jpa.transport.Configuration;
 import org.qubership.automation.itf.core.util.Pair;
 import org.qubership.automation.itf.core.util.constants.TriggerState;
+import org.qubership.automation.itf.core.util.helper.ServerUtils;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.ui.controls.entities.util.ConfigurationControllerHelper;
 import org.qubership.automation.itf.ui.controls.entities.util.ResponseCacheHelper;
@@ -138,13 +141,13 @@ public class ServerConfigurationController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @PutMapping("/server/outbound")
+    @PutMapping("/server/outbound_old")
     @Operation(summary = "SetOutbound",
             description = "Set outbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_COMMAND_API})
     @AuditAction(auditAction = "Setup Outbounds for System id {{#systemId}} and Server id {{#serverId}} in the "
             + "project {{#projectUuid}}")
-    public void setupOutbound(
+    public void setupOutboundOld(
             @RequestParam(value = "serverId", defaultValue = "0") String serverId,
             @RequestParam(value = "systemId", defaultValue = "0") String systemId,
             @RequestBody UIServerOutbound serverOutbound,
@@ -168,6 +171,46 @@ public class ServerConfigurationController {
                 }
                 for (UIProperty uiProperty : uiConfiguration.getProperties()) {
                     configurationControllerHelper.setProperty(configuration, uiProperty, projectUuid);
+                }
+            }
+        }
+        server.setUrl(serverOutbound.getUrl());
+        server.store();
+    }
+
+    @Transactional
+    @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
+    @PutMapping("/server/outbound")
+    @Operation(summary = "SetOutbound",
+            description = "Set outbound for system by server id, system id",
+            tags = {SwaggerConstants.SERVER_CONFIGURATION_COMMAND_API})
+    @AuditAction(auditAction = "Setup Outbounds for System id {{#systemId}} and Server id {{#serverId}} in the "
+            + "project {{#projectUuid}}")
+    public void setupOutbound(
+            @RequestParam(value = "serverId", defaultValue = "0") String serverId,
+            @RequestParam(value = "systemId", defaultValue = "0") String systemId,
+            @RequestBody UIServerOutbound serverOutbound,
+            @RequestParam(value = "projectId") BigInteger projectId,
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
+        String operation = "set outbound for system by server id, system id";
+        System system = (System) getAndCheckObject(systemId, System.class, operation);
+        Server server = (Server) getAndCheckObject(serverId, Server.class, operation);
+        server = ServerUtils.syncOutbounds(server, system);
+        Iterable<OutboundTransportConfiguration> configurations = ServerObjectManager.INSTANCE
+                .getOutbounds(server, system);
+        if (configurations != null) {
+            for (OutboundTransportConfiguration conf : configurations) {
+                for (UIConfiguration uiConfiguration : serverOutbound.getConfigurations()) {
+                    if (conf.getTypeName().equals(uiConfiguration.getType())) {
+                        if ("Outbound REST Synchronous".equals(uiConfiguration.getUserTypeName())
+                                || "Outbound SOAP Over HTTP Synchronous".equals(uiConfiguration.getUserTypeName())) {
+                            ResponseCacheHelper.beforeUpdatedForRestAndSoapTransport(conf, uiConfiguration, projectId);
+                        }
+                        for (UIProperty uiProperty : uiConfiguration.getProperties()) {
+                            configurationControllerHelper.setProperty(conf, uiProperty, projectUuid);
+                        }
+                        break;
+                    }
                 }
             }
         }
