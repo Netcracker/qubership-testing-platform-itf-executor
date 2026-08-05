@@ -85,6 +85,11 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
             resp = template.request(endpoint, fillOutputExchange(message, headers));
         } else {
             String randomUuid = "out" + UUID.randomUUID();
+            boolean disableRedirects = getBooleanValue(headers.get("disableRedirects"));
+            if (disableRedirects) {
+                httpComponent.setFollowRedirects(false);
+                httpComponent.setRedirectHandlingDisabled(true);
+            }
             CAMEL_CONTEXT.addComponent(randomUuid, httpComponent);
             HttpEndpoint endpointObj;
             try {
@@ -95,6 +100,9 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
                 endpointObj.setHeaderFilterStrategy(httpComponent.getHeaderFilterStrategy());
                 if (endpoint.contains("deleteWithBody=true")) {
                     endpointObj.setDeleteWithBody(true);
+                }
+                if (disableRedirects) {
+                    endpointObj.setThrowExceptionOnFailure(false);
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);

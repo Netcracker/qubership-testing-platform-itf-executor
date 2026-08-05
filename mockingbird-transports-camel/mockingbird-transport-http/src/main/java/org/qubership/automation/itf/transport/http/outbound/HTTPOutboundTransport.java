@@ -246,7 +246,7 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                                                             org.qubership.automation.itf.core.model.jpa.message.Message itfMessage)
             throws Exception;
 
-    private boolean getBooleanValue(Object obj) {
+    protected boolean getBooleanValue(Object obj) {
         if (obj == null) {
             return false;
         }
