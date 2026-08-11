@@ -22,9 +22,9 @@
         <atp.crypt.version>1.0.0</atp.crypt.version>
         <atp.adapter.common.version>5.0.0</atp.adapter.common.version>
         <atp.ram.model.version>3.0.1</atp.ram.model.version>
-        <atp.itf.diameter.lib.version>3.0.0-SNAPSHOT</atp.itf.diameter.lib.version>
-        <atp.ss7.lib.version>2.0.0-SNAPSHOT</atp.ss7.lib.version>
-        <atp.configuration.dataset.excel.lib.version>4.0.0-SNAPSHOT</atp.configuration.dataset.excel.lib.version>
+        <atp.itf.diameter.lib.version>3.0.0</atp.itf.diameter.lib.version>
+        <atp.ss7.lib.version>2.0.0</atp.ss7.lib.version>
+        <atp.configuration.dataset.excel.lib.version>4.0.0</atp.configuration.dataset.excel.lib.version>
 
         <apache.poi.version>5.2.5</apache.poi.version>
 
