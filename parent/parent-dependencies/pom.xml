@@ -13,7 +13,7 @@
         <spring.boot.version>3.5.14</spring.boot.version>
         <spring.cloud.version>2025.0.2</spring.cloud.version>
 
-        <atp.itf.core.version>5.0.0-SNAPSHOT</atp.itf.core.version>
+        <atp.itf.core.version>5.0.0</atp.itf.core.version>
         <atp.auth.version>2.0.1</atp.auth.version>
         <atp.common.version>1.0.0</atp.common.version>
         <atp.integration.version>1.0.0</atp.integration.version>
@@ -29,7 +29,7 @@
         <apache.poi.version>5.2.5</apache.poi.version>
 
         <org.bouncycastle.version>1.84</org.bouncycastle.version>
-        <io.undertow.version>2.3.21.Final</io.undertow.version>
+        <io.undertow.version>2.3.24.Final</io.undertow.version>
         <org.jetbrains.kotlin.kotlin-stdlib.version>1.9.25</org.jetbrains.kotlin.kotlin-stdlib.version>
         <jackson.version>2.18.6</jackson.version>
         <camel.version>4.18.0</camel.version>
@@ -53,7 +53,7 @@
 
         <httpclient5.version>5.5.2</httpclient5.version>
         <httpcore5.version>5.3.6</httpcore5.version>
-        <tomcat-embed.version>10.1.52</tomcat-embed.version>
+        <tomcat-embed.version>10.1.54</tomcat-embed.version>
         <querydsl.version>5.1.0</querydsl.version>
         <io.github.openfeign.version>13.5</io.github.openfeign.version>
         <mockito.version>5.23.0</mockito.version>
@@ -190,9 +190,6 @@
             </dependency>
             <!-- org.springframework.boot configuration - end -->
 
-            <!-- org.springframework.security.oauth configuration - start -->
-
-            <!-- org.springframework.security.oauth configuration - end -->
             <!--Spring Configuration - End-->
             <dependency>
                 <groupId>org.apache.camel</groupId>
@@ -370,17 +367,6 @@
                 <version>4.5.2</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.jax-ws-commons.spring</groupId>
-                <artifactId>jaxws-spring</artifactId>
-                <version>1.9</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.xbean</groupId>
-                        <artifactId>xbean-spring</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
                 <version>1.6.0</version>
@@ -508,7 +494,7 @@
             <dependency>
                 <groupId>jakarta.jms</groupId>
                 <artifactId>jakarta.jms-api</artifactId>
-                <version>3.1.0</version> <!-- Use 3.1.0 for Spring Boot 3.x -->
+                <version>3.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -597,7 +583,7 @@
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.10.1</version>
+                <version>2.13.2</version>
             </dependency>
             <dependency>
                 <groupId>com.netflix.rxjava</groupId>
