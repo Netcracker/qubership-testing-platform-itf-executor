@@ -44,7 +44,7 @@ jobs:
         id: maven_build
         uses: netcracker/qubership-workflow-hub/actions/maven-snapshot-deploy@b6bee6f61fdc8b367777c1173fc852a58878a6a7 # v2.5.0
         with:
-          java-version: "8"
+          java-version: "21"
           additional-mvn-args: ${{ env.additional-mvn-args }}
           target-store: "github"
           upload-artifact: 'true'

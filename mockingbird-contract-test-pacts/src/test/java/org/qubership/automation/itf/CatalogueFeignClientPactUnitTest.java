@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,19 +17,21 @@
 
 package org.qubership.automation.itf;
 
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.catalogue.openapi.dto.ObjectOperationDto;
 import org.qubership.atp.catalogue.openapi.dto.ProjectDto;
 import org.qubership.atp.catalogue.openapi.dto.UserInfoDto;
+import org.qubership.automation.itf.core.util.OffsetDateTimeAdapter;
 import org.qubership.automation.itf.integration.catalogue.CatalogueProjectFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
@@ -39,21 +41,22 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import au.com.dius.pact.consumer.dsl.PactDslResponse;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.consumer.junit.PactProviderRule;
-import au.com.dius.pact.consumer.junit.PactVerification;
+import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
+import au.com.dius.pact.consumer.junit5.PactTestFor;
+import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-@RunWith(SpringRunner.class)
 @EnableFeignClients(clients = {CatalogueProjectFeignClient.class})
-@ContextConfiguration(classes = {CatalogueFeignClientPactUnitTest.TestApp.class})
+@ExtendWith(PactConsumerTestExt.class)
+@SpringJUnitConfig(classes = {CatalogueFeignClientPactUnitTest.TestApp.class})
 @Import({JacksonAutoConfiguration.class,
         HttpMessageConvertersAutoConfiguration.class,
         FeignConfiguration.class,
@@ -63,29 +66,32 @@ import com.google.gson.Gson;
         "feign.atp.catalogue.route=",
         "feign.atp.catalogue.url=http://localhost:8888",
         "feign.httpclient.enabled=false"})
+@PactTestFor(providerName = "atp-catalogue-backend", port = "8888", pactVersion = PactSpecVersion.V3)
 public class CatalogueFeignClientPactUnitTest {
 
     private final UUID projectUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9701");
-    @Rule
-    public PactProviderRule mockProvider
-            = new PactProviderRule("atp-catalogue-backend", "localhost", 8888, this);
 
     @Autowired
     private CatalogueProjectFeignClient catalogueProjectFeignClient;
 
     @Test
-    @PactVerification()
+    @PactTestFor(pactMethod = "createPact")
     public void allPass() {
         ResponseEntity<ProjectDto> result = catalogueProjectFeignClient.getProjectById(projectUuid);
-        Assert.assertEquals(200, result.getStatusCode().value());
-        Assert.assertTrue(result.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(formProject(), result.getBody());
+        Assertions.assertEquals(200, result.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(formProject(), result.getBody());
     }
 
     @Pact(consumer = "atp-itf-executor")
     public RequestResponsePact createPact(PactDslWithProvider builder) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(OffsetDateTime.class, new OffsetDateTimeAdapter())
+                .create();
 
         PactDslResponse response = builder
                 .given("all ok")
@@ -94,7 +100,7 @@ public class CatalogueFeignClientPactUnitTest {
                 .method("GET")
                 .willRespondWith()
                 .headers(headers)
-                .body(new Gson().toJson(formProject()))
+                .body(gson.toJson(formProject()))
                 .status(200);
         return response.toPact();
     }

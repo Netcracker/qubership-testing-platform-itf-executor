@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.environment.Environment;
 import org.qubership.automation.itf.core.model.jpa.folder.EnvFolder;
 import org.qubership.automation.itf.core.model.jpa.server.Server;
@@ -78,7 +78,7 @@ public class ExportMapSerializerTest {
 
         ObjectMapper objectMapper = new ObjectMapper().configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         String entityAR = objectMapper.writeValueAsString(environment);
-        Assert.assertEquals(entityER, entityAR);
+        Assertions.assertEquals(entityER, entityAR);
     }
 
 }

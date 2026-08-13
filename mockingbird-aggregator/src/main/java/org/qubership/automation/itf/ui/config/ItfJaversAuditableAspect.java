@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -40,8 +40,7 @@ public class ItfJaversAuditableAspect extends ItfAbstractSpringAuditableReposito
             argNames = "pjp,storable"
     )
     public void onReplicateExecuted(JoinPoint pjp, Storable storable) {
-        if (storable instanceof System) {
-            System system = (System) storable;
+        if (storable instanceof System system) {
             system.getSystemParsingRules().forEach(parsingRule -> onReplicateExecuted(pjp, parsingRule));
             system.getOperations().forEach(operation -> onReplicateExecuted(pjp, operation));
             system.getSystemTemplates().forEach(template -> onReplicateExecuted(pjp, template));

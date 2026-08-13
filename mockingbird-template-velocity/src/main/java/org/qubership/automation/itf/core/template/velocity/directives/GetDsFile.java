@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ public class GetDsFile extends Directive {
                 .getAttachmentByParameterId(dataSetUuid);
 
         if (!responseEntity.hasBody()) {
-            throw new IOException(String.format("Response body is null for '%s', http status %s.",
+            throw new IOException("Response body is null for '%s', http status %s.".formatted(
                     filePath, responseEntity.getStatusCode()));
         }
         writer.append(IOUtils.toString(responseEntity.getBody().getInputStream(), encoding));

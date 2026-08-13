@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.qubership.automation.itf.ui.messages.objects.UIEventbusSubscribers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,9 +36,8 @@ import com.google.common.eventbus.EventBus;
 @RestController
 public class EventbusSubscribersController {
 
-    private EventBusProvider eventBusProvider;
+    private final EventBusProvider eventBusProvider;
 
-    @Autowired
     public EventbusSubscribersController(EventBusProvider eventBusProvider) {
         this.eventBusProvider = eventBusProvider;
     }

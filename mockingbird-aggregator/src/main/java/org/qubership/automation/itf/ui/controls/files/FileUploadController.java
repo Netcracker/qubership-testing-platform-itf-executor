@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ import java.math.BigInteger;
 import java.util.UUID;
 
 import org.bson.types.ObjectId;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.representations.AccessToken;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.atp.multitenancy.core.header.CustomHeader;
 import org.qubership.automation.itf.core.exceptions.operation.FileProcessingException;
@@ -37,13 +35,12 @@ import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.executor.service.ExecutorToMessageBrokerSender;
 import org.qubership.automation.itf.ui.messages.objects.UIResult;
 import org.qubership.automation.itf.ui.util.FileUploadHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,7 +54,6 @@ public class FileUploadController {
     private final ExternalDataManagementService externalDataManagementService;
     private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
 
-    @Autowired
     public FileUploadController(ExternalDataManagementService externalDataManagementService,
                                 ExecutorToMessageBrokerSender executorToMessageBrokerSender) {
         this.externalDataManagementService = externalDataManagementService;
@@ -69,7 +65,7 @@ public class FileUploadController {
             + "!T(org.qubership.automation.itf.core.util.eds.service.EdsContentType).KEYSTORE.equals(#contentType) and "
             + "!T(org.qubership.automation.itf.core.util.eds.service.EdsContentType).FAST_STUB.equals(#contentType)) "
             + "or (@entityAccess.isSupport() or @entityAccess.isAdmin())")
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @PostMapping("/upload")
     @AuditAction(auditAction = "Upload files with {{#contentType}} contentType, {{#filePath}} filePath for project "
             + "{{#projectId}}")
     public UIResult uploadAttachments(@RequestParam(value = "contentType") EdsContentType contentType,
@@ -77,14 +73,14 @@ public class FileUploadController {
                                       @RequestParam(value = "projectId") BigInteger projectId,
                                       @RequestParam(value = "projectUuid") UUID projectUuid,
                                       @RequestHeader(value = CustomHeader.X_PROJECT_ID) String tenantId,
-                                      @RequestParam(value = "file") MultipartFile[] files) throws IOException {
+                                      @RequestParam(value = "file") MultipartFile[] files) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = "Undefined";
         UUID userId = null;
-        if (principal instanceof KeycloakPrincipal) {
-            AccessToken accessToken = ((KeycloakPrincipal) principal).getKeycloakSecurityContext().getToken();
-            userId = UUID.fromString(((KeycloakPrincipal) principal).getName());
-            userName = accessToken.getName();
+        if (principal instanceof Jwt jwt) {
+            String id = jwt.getClaim("sub");
+            userId = id != null ? UUID.fromString(id) : null;
+            userName = jwt.getClaimAsString("preferred_username");
         }
         log.info("Upload files to: contentType '{}', filePath '{}', projectId '{}', by user [name: {}, id: {}]...",
                 contentType, filePath, projectId, userName, userId);
@@ -104,12 +100,12 @@ public class FileUploadController {
                             predefinedFileName, userName, userId);
                 } else {
                     log.error("Project with id = {} is not found", projectId);
-                    return new UIResult(false, String.format("Project with id = %s is not found", projectId));
+                    return new UIResult(false, "Project with id = %s is not found".formatted(projectId));
                 }
             }
         } else {
             log.error("Content type = {} is not supported", contentType);
-            return new UIResult(false, String.format("Content type=%s is not supported", contentType));
+            return new UIResult(false, "Content type=%s is not supported".formatted(contentType));
         }
     }
 

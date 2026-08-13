@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,12 +17,11 @@
 
 package org.qubership.automation.itf.ui.messages.objects.transport;
 
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nonnull;
 
 import org.qubership.automation.itf.core.model.jpa.environment.InboundTransportConfiguration;
 import org.qubership.automation.itf.core.model.jpa.environment.TriggerConfiguration;
@@ -37,24 +36,22 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 
 public class UIInboundConfiguration extends UIConfiguration {
 
     private static final String DUMB_ID = "from " + UIInboundConfiguration.class.getSimpleName();
     private static final Function<TriggerConfiguration, UITriggerConfiguration> TO_UI_TRIGGER_CONF =
-            new Function<TriggerConfiguration, UITriggerConfiguration>() {
-                @Override
-                public UITriggerConfiguration apply(TriggerConfiguration input) {
-                    UITriggerConfiguration uiTriggerConfiguration = new UITriggerConfiguration(input);
-                    try {
-                        uiTriggerConfiguration.defineProperties(input);
-                    } catch (RemoteException | TransportException e) {
-                        throw new RuntimeException(e.getMessage(), e);
-                    }
-                    uiTriggerConfiguration.setState(input.getState().toString());
-                    uiTriggerConfiguration.setError(input.getActivationErrorMessage());
-                    return uiTriggerConfiguration;
+            input -> {
+                UITriggerConfiguration uiTriggerConfiguration = new UITriggerConfiguration(input);
+                try {
+                    uiTriggerConfiguration.defineProperties(input);
+                } catch (RemoteException | TransportException e) {
+                    throw new RuntimeException(e.getMessage(), e);
                 }
+                uiTriggerConfiguration.setState(input.getState().toString());
+                uiTriggerConfiguration.setError(input.getActivationErrorMessage());
+                return uiTriggerConfiguration;
             };
     private ImmutableList<UITriggerConfiguration> triggers;
     private UIObject transport;
@@ -68,7 +65,10 @@ public class UIInboundConfiguration extends UIConfiguration {
         transport = new UIObject(configuration.getReferencedConfiguration());
         try {
             TriggerConfiguration someTrigger = new TriggerConfiguration(configuration);
-            someTrigger.setID(DUMB_ID);
+
+            // TODO: Need to check it
+            //someTrigger.setID(DUMB_ID);
+            someTrigger.setID(BigInteger.valueOf(0));
             etalonTrigger = new UITriggerConfiguration(someTrigger);
             etalonTrigger.defineProperties(someTrigger);
         } catch (RemoteException | TransportException ignored) {
@@ -77,7 +77,7 @@ public class UIInboundConfiguration extends UIConfiguration {
 
     @Nonnull
     static List<UIProperty> define(Collection<PropertyDescriptor> descriptors, Configuration parent,
-                                   Configuration configuration) throws RemoteException {
+                                   Configuration configuration) {
         List<UIProperty> uiProperties = Lists.newArrayListWithExpectedSize(descriptors.size());
         for (PropertyDescriptor descriptor : descriptors) {
             if (descriptor.isForServer()) {

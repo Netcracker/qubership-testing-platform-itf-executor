@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -32,17 +32,16 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import javax.annotation.Nonnull;
-
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.netty4.NettyComponent;
-import org.apache.camel.component.netty4.NettyEndpoint;
+import org.apache.camel.component.netty.NettyComponent;
+import org.apache.camel.component.netty.NettyEndpoint;
 import org.apache.camel.component.ssh.SshComponent;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.NotNull;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.util.annotation.Async;
@@ -56,6 +55,7 @@ import org.qubership.automation.itf.transport.camel.outbound.AbstractCamelOutbou
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,14 +65,16 @@ import lombok.extern.slf4j.Slf4j;
 public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
 
     private static final String SSH_COMPONENT_KEY = "ssh";
-    private static final String NETTY_COMPONENT_KEY = "netty4";
+    private static final String NETTY_COMPONENT_KEY = "netty";
     private static final Cache<ConfiguredTransport, CLIConfig> CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(5, MINUTES)
             .removalListener((RemovalListener<ConfiguredTransport, CLIConfig>) notification -> {
                 CLIConfig cliConfig = notification.getValue();
                 try {
-                    CAMEL_CONTEXT.removeEndpoint(cliConfig.getEndpoint());
-                    cliConfig.getEndpoint().stop();
+                    if (cliConfig != null) {
+                        CAMEL_CONTEXT.removeEndpoint(cliConfig.getEndpoint());
+                        cliConfig.getEndpoint().stop();
+                    }
                 } catch (Throwable t) {
                     log.error("Error while Camel Context cleaning up", t);
                 }
@@ -158,7 +160,7 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
                             ((NettyEndpoint) cliEndPoint).setExchangePattern(ExchangePattern.InOut);
                             ((NettyEndpoint) cliEndPoint).getConfiguration().setSync(true);
                         } else {
-                            ((NettyEndpoint) cliEndPoint).setExchangePattern(ExchangePattern.OutOnly);
+                            ((NettyEndpoint) cliEndPoint).setExchangePattern(ExchangePattern.InOnly);
                             ((NettyEndpoint) cliEndPoint).getConfiguration().setSync(false);
                         }
                     }
@@ -178,30 +180,38 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         Exchange exchange = cliEndPoint.createExchange();
         exchange.getIn().setBody(message.getText());
         exchange = producerTemplate.send(cliEndPoint, exchange);
-        if (!exchange.hasOut() || exchange.getOut().isFault()) {
+
+        /*
+            Overabundant check: may be, exchange itself is null?
+            It sounds strange, but it really faced sometimes in case very durable command execution...
+        */
+        if (exchange == null) {
+            return makeCamelExchangeBrokenMessage();
+        } else if (exchange.isFailed()) {
             return makeExceptionMessage(exchange);
         } else {
-            Message response;
-            Object answerObject = exchange.getOut().getBody();
-            if (answerObject == null) {
-                response = new Message();
-            } else if (answerObject instanceof ByteArrayInputStream) {
-                ByteArrayInputStream answer = (ByteArrayInputStream) answerObject;
-                int n = answer.available();
-                if (n > 0) {
-                    byte[] bytes = new byte[n];
-                    int cnt = answer.read(bytes, 0, n);
-                    response = new Message(new String(bytes, 0, cnt, StandardCharsets.UTF_8));
-                } else {
-                    response = new Message();
-                }
-            } else {
-                response = new Message(answerObject.toString());
-            }
-            if (exchange.getOut().hasHeaders()) {
-                response.convertAndSetHeaders(exchange.getOut().getHeaders());
-            }
+            Message response = getResponseMessage(exchange);
             log.debug("Response from {} is: {}", cliEndPoint, response.getText());
+            return response;
+        }
+    }
+
+    private static Message makeCamelExchangeBrokenMessage() {
+        Message message = new Message("");
+        message.setFailedMessage("Internal Camel processing error is occurred (Exchange is null).");
+        return message;
+    }
+
+    @NotNull
+    private static Message getResponseMessage(Exchange exchange) {
+        org.apache.camel.Message camelResponse = exchange.getMessage();
+        if (camelResponse == null) {
+            return new Message();
+        } else {
+            Message response = new Message(processResponseBody(camelResponse));
+            if (camelResponse.hasHeaders()) {
+                response.convertAndSetHeaders(camelResponse.getHeaders());
+            }
             return response;
         }
     }
@@ -222,21 +232,55 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
         }
     }
 
-    private Message makeExceptionMessage(Exchange exchange) {
+    private static Message makeExceptionMessage(Exchange exchange) {
         Message message = new Message();
+        String exceptionMessage = "";
         Exception ex = exchange.getException();
         if (ex != null) {
-            message.setFailedMessage(
-                    ex.getMessage() + ((ex.getMessage().contains("Caused by:") || ex.getCause() == null)
-                            ? "" : "Caused by: " + ex.getCause().getMessage())
-            );
+            String errorMessage = ex.getMessage();
+            if (errorMessage == null || errorMessage.trim().isEmpty()) {
+                errorMessage = ex.getClass().getSimpleName();
+            }
+            Throwable cause = ex.getCause();
+            if (cause != null && ex != cause) {
+                exceptionMessage = errorMessage + ", Caused by: " + cause;
+            } else {
+                exceptionMessage = errorMessage;
+            }
+        }
+        String responseMessage = "";
+        org.apache.camel.Message camelResponse = exchange.getMessage();
+        if (camelResponse == null) {
+            responseMessage = "No response is received!";
         } else {
-            message.setFailedMessage("Unknown exception is occurred");
+            responseMessage = processResponseBody(camelResponse);
+            if (camelResponse.hasHeaders()) {
+                message.convertAndSetHeaders(camelResponse.getHeaders());
+            }
         }
-        if (exchange.hasOut() && exchange.getOut().hasHeaders()) {
-            message.convertAndSetHeaders(exchange.getOut().getHeaders());
-        }
+
+        message.setFailedMessage(exceptionMessage
+                + (exceptionMessage.isEmpty() ? "" : "\n")
+                + responseMessage);
         return message;
+    }
+
+    private static String processResponseBody(org.apache.camel.Message camelResponse) {
+        Object bodyObject = camelResponse.getBody();
+        if (bodyObject == null) {
+            return "";
+        } else if (bodyObject instanceof ByteArrayInputStream answer) {
+            int n = answer.available();
+            if (n > 0) {
+                byte[] bytes = new byte[n];
+                int cnt = answer.read(bytes, 0, n);
+                return new String(bytes, 0, cnt, StandardCharsets.UTF_8);
+            } else {
+                return "";
+            }
+        } else {
+            return bodyObject.toString();
+        }
     }
 
     private String buildUri(ConnectionProperties properties, boolean isSsh) throws IOException {
@@ -245,7 +289,7 @@ public class CLIOutboundTransport extends AbstractCamelOutboundTransport {
             composeSshUri(properties, uri);
             return uri.toString();
         }
-        return uri.append("netty4:")
+        return uri.append("netty:")
                 .append(properties.get(PropertyConstants.Cli.CONNECTION_TYPE))
                 .append("://").append(properties.get(PropertyConstants.Cli.REMOTE_IP))
                 .append(':').append(properties.get(PropertyConstants.Cli.REMOTE_PORT))

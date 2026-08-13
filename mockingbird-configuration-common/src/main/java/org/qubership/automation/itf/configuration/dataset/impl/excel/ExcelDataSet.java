@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,15 +20,14 @@ package org.qubership.automation.itf.configuration.dataset.impl.excel;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.qubership.automation.configuration.dataset.excel.core.DS;
 import org.qubership.automation.itf.core.model.dataset.IDataSet;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
 
 import com.google.common.base.Supplier;
+import jakarta.annotation.Nonnull;
 
 public class ExcelDataSet implements IDataSet {
 
@@ -67,7 +66,7 @@ public class ExcelDataSet implements IDataSet {
             //So, if we found param, and replace it, let's remove it
             //for avoid duplication in merge plain params which not in DataSet.
             Object overrideParam = overriddenValues.get(convertedParam);
-            if (value.getCellType() == Cell.CELL_TYPE_FORMULA) {
+            if (value.getCellType() == CellType.FORMULA) {
                 // Text values (in case of formulas) should be enclosed by "" - 20180606, Alexander Kapustin,
                 // Alexander Kolosov
                 value.setCellValue("\"" + overrideParam.toString() + "\"");

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 
 package org.qubership.automation.itf.core.instance.testcase.execution.subscriber;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.itf.core.model.event.NextCallChainEvent;
 import org.qubership.automation.itf.core.model.event.SituationEvent;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
@@ -27,6 +25,7 @@ import org.qubership.automation.itf.executor.provider.EventBusServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,8 +53,8 @@ public abstract class AbstractSituationSubscriber {
         EventBusServiceProvider.getStaticReference().post(event);
         EventBusServiceProvider.getStaticReference().unregister(this);
         CacheServices.getAwaitingContextsCacheService()
-                .evict(String.format("%s_%s", finishEvent.getSituationInstance().getContext().tc().getID(),
-                        finishEvent.getSituationInstance().getSituationId()));
+                .evict("%s_%s".formatted(finishEvent.getSituationInstance().getContext().tc().getID(),
+                finishEvent.getSituationInstance().getSituationId()));
     }
 
     protected abstract NextCallChainEvent createEvent();

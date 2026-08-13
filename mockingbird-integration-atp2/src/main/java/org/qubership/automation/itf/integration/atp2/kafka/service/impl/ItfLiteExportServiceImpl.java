@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -44,12 +44,10 @@ import org.qubership.automation.itf.integration.atp2.kafka.dto.messages.request.
 import org.qubership.automation.itf.integration.atp2.kafka.dto.messages.request.RestSoapRequestData;
 import org.qubership.automation.itf.integration.atp2.kafka.dto.messages.response.ResponseData;
 import org.qubership.automation.itf.integration.atp2.kafka.dto.messages.response.ResponseStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -70,7 +68,6 @@ public class ItfLiteExportServiceImpl {
     private final Environment environment;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
     public ItfLiteExportServiceImpl(KafkaProducerService kafkaProducerService,
                                     Environment environment) {
         this.kafkaProducerService = kafkaProducerService;
@@ -85,8 +82,7 @@ public class ItfLiteExportServiceImpl {
      * @param itfLiteEvent - data message with type Rest or Soap
      */
     @Transactional
-    public void createTemplateFromRestSoapTransportType(String event, ItfLiteEventRestSoap itfLiteEvent)
-            throws JsonProcessingException {
+    public void createTemplateFromRestSoapTransportType(String event, ItfLiteEventRestSoap itfLiteEvent) {
         log.info("'Create Template' Event is received: {}", event);
         RestSoapRequestData request = itfLiteEvent.getRequest();
         ResponseData response = new ResponseData();
@@ -146,7 +142,7 @@ public class ItfLiteExportServiceImpl {
     private void processException(UUID itfLiteEventId, Exception exception, ResponseData response) {
         String msg = exception instanceof IllegalArgumentException
                 ? "Request has an inappropriate Transport"
-                : String.format("Unexpected exception when create Template with eventId '%s'", itfLiteEventId);
+                : "Unexpected exception when create Template with eventId '%s'".formatted(itfLiteEventId);
         log.error(msg, exception);
         response.setStatus(ResponseStatus.Error);
         response.setErrorMessage(msg);
@@ -169,10 +165,10 @@ public class ItfLiteExportServiceImpl {
     private OperationTemplate createTemplate(ItfLiteEvent event) {
         Operation parentOperation = getOperation(event.getOperationId(), "create Template under it");
         String requestTransport;
-        if (event instanceof ItfLiteEventRestSoap) {
-            requestTransport = ((ItfLiteEventRestSoap) event).getRequest().getTransportType();
-        } else if (event instanceof ItfLiteEventDiameter) {
-            requestTransport = ((ItfLiteEventDiameter) event).getRequest().getTransportType();
+        if (event instanceof ItfLiteEventRestSoap soap) {
+            requestTransport = soap.getRequest().getTransportType();
+        } else if (event instanceof ItfLiteEventDiameter diameter) {
+            requestTransport = diameter.getRequest().getTransportType();
         } else {
             requestTransport = StringUtils.EMPTY;
         }

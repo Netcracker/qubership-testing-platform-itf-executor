@@ -5,8 +5,8 @@
 //import static org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants.SCHEDULED_CLEANUP_ENABLED;
 //import static org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants.SCHEDULED_CLEANUP_HOURS_TO_DELETE;
 //import static org.qubership.automation.itf.core.util.constants.ProjectSettingsConstants.SCHEDULED_CLEANUP_INITIAL_DELAY_MINUTES;
-//import static org.mockito.Matchers.any;
-//import static org.mockito.Matchers.eq;
+//import static org.mockito.ArgumentMatchers.any;
+//import static org.mockito.ArgumentMatchers.eq;
 //import static org.mockito.Mockito.doAnswer;
 //import static org.mockito.Mockito.mock;
 //import static org.mockito.Mockito.never;

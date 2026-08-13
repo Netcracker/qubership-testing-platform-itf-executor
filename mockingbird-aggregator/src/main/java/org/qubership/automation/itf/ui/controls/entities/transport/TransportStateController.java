@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -33,8 +33,7 @@ import org.qubership.automation.itf.core.util.transport.manager.TransportRegistr
 import org.qubership.automation.itf.ui.messages.objects.transport.UITransportState;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +47,7 @@ public class TransportStateController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/transport/check", method = RequestMethod.GET)
+    @GetMapping("/transport/check")
     @AuditAction(auditAction = "Check Transports Deploy summary state for project {{#projectId}}/{{#projectUuid}}")
     public String checkDeploy(@RequestParam(value = "projectId") BigInteger projectId,
                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -83,7 +82,7 @@ public class TransportStateController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/transport/state", method = RequestMethod.GET)
+    @GetMapping("/transport/state")
     @AuditAction(auditAction = "Get Transport states for project {{#projectId}}/{{#projectUuid}}")
     public List<UITransportState> getStates(
             @RequestParam(value = "projectId") BigInteger projectId,

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.qubership.atp.common.probes.controllers.DeploymentController;
 import org.qubership.atp.integration.configuration.annotation.EnableAtpJaegerLog;
 import org.qubership.atp.multitenancy.hibernate.annotation.EnableMultiTenantDataSource;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.hazelcast.HazelcastAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -39,13 +40,14 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(
@@ -54,7 +56,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 HibernateJpaAutoConfiguration.class,
                 MongoAutoConfiguration.class,
                 HazelcastAutoConfiguration.class,
-                LiquibaseAutoConfiguration.class
+                LiquibaseAutoConfiguration.class,
+                CacheAutoConfiguration.class
         }
 )
 @ServletComponentScan(basePackages = "org.qubership.automation.itf.ui.config.servlets")
@@ -66,6 +69,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 @ComponentScan.Filter(type = FilterType.REGEX,
                         pattern = "org.qubership.automation.itf.core.hibernate.spring.managers.reports.*")
         })
+@Configuration
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableDiscoveryClient
 @EnableJpaRepositories(basePackages = {"org.qubership.automation.itf.core.hibernate.spring.repositories.executor"})
@@ -78,7 +82,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "org.qubership.atp.integration.configuration.feign",
         "org.qubership.automation.itf.integration.catalogue"})
 @EnableOauth2FeignClientInterceptor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 @EnableAtpLockManager
 @Import({
         WebMvcAutoConfiguration.class,

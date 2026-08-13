@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import org.qubership.automation.itf.core.util.transport.service.report.Report;
 import org.qubership.automation.itf.executor.provider.EventBusProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,7 +43,6 @@ public class IntegrationStepExecutor implements StepExecutor {
     private final EventBusProvider eventBusProvider;
     private final IntegrationStepHelper integrationStepHelper;
 
-    @Autowired
     public IntegrationStepExecutor(EventBusProvider eventBusProvider,
                                    IntegrationStepHelper integrationStepHelper) {
         this.eventBusProvider = eventBusProvider;
@@ -54,8 +52,8 @@ public class IntegrationStepExecutor implements StepExecutor {
     public void execute(AbstractInstance abstractInstance) throws Exception {
         final StepInstance stepInstance = (StepInstance) abstractInstance;
         IntegrationStep step = (IntegrationStep) stepInstance.getStep();
-        String stepIdentity = String
-                .format("Step '%s' in '%s'", stepInstance.getStep().getName(), stepInstance.getParent());
+        String stepIdentity = "Step '%s' in '%s'"
+                .formatted(stepInstance.getStep().getName(), stepInstance.getParent());
         if (!step.isEnabled()) {
             eventBusProvider.post(new StepEvent.Skip(stepInstance));
             LOGGER.info("{} - disabled ==> skipped", stepIdentity);
@@ -65,12 +63,12 @@ public class IntegrationStepExecutor implements StepExecutor {
         if (step.getUnit() != null && step.getDelay() > 0) {
             String timeUnit = step.getUnit().toLowerCase();
             LOGGER.info("{}: waiting for timeout '{}' {}...", stepIdentity, step.getDelay(), step.getUnit());
-            Report.info(stepInstance.getParent(), String.format("Timeout for [%s]", step.getName()),
-                    String.format("Waiting for [%d] %s", step.getDelay(), timeUnit));
+            Report.info(stepInstance.getParent(), "Timeout for [%s]".formatted(step.getName()),
+                    "Waiting for [%d] %s".formatted(step.getDelay(), timeUnit));
             Thread.sleep(step.retrieveUnit().toMillis(step.getDelay()));
             LOGGER.info("{}: timeout '{}' {} is elapsed", stepIdentity, step.getDelay(), step.getUnit());
-            Report.info(stepInstance.getParent(), String.format("Timeout for [%s]", step.getName()),
-                    String.format("Timeout is elapsed: [%d] %s", step.getDelay(), timeUnit));
+            Report.info(stepInstance.getParent(), "Timeout for [%s]".formatted(step.getName()),
+                    "Timeout is elapsed: [%d] %s".formatted(step.getDelay(), timeUnit));
         }
         if (stepInstance.getContext().sp() == null) {
             stepInstance.getContext().setSP(new SpContext(stepInstance));

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package org.qubership.automation.itf.executor.config.jms.listener;
 
 import java.math.BigInteger;
 import java.util.Objects;
-
-import javax.jms.JMSException;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.commons.lang3.EnumUtils;
@@ -44,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.jms.JMSException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,16 +86,16 @@ public class MultiReplicaJMSListeners {
             String newState = message.getStatus();
             if (newState == null) {
                 throw new IllegalArgumentException(
-                        String.format("Context ID=%s: Parameter 'state' (Context state) is null or missed", contextId));
+                        "Context ID=%s: Parameter 'state' (Context state) is null or missed".formatted(contextId));
             } else if (!EnumUtils.isValidEnum(Status.class, newState)) {
                 throw new IllegalArgumentException(
-                        String.format("Context ID=%s: Parameter 'state' (Context state) value is incorrect: '%s'",
+                        "Context ID=%s: Parameter 'state' (Context state) value is incorrect: '%s'".formatted(
                                 contextId, newState));
             }
             TcContext tcContext = CacheServices.getTcContextCacheService().getById(contextId);
             if (Objects.isNull(tcContext)) {
                 throw new IllegalArgumentException(
-                        String.format("Context ID=%s: Context isn't found by id", contextId));
+                        "Context ID=%s: Context isn't found by id".formatted(contextId));
             }
             if (!tcContext.getPodName().equals(Config.getConfig().getRunningHostname())) {
                 return;
@@ -137,18 +136,18 @@ public class MultiReplicaJMSListeners {
             case PAUSED:
                 if (tcContext.getInitiator() == null || !(tcContext.getInitiator() instanceof CallChainInstance)) {
                     throw new IllegalArgumentException(
-                            String.format("Context ID=%s: initiator is NOT a callchain;  Pausing is cancelled",
+                            "Context ID=%s: initiator is NOT a callchain;  Pausing is cancelled".formatted(
                                     contextId));
                 } else if (Status.IN_PROGRESS.equals(tcContext.getStatus()) || tcContext.isRunStepByStep()) {
                     try {
                         tcContextService.pauseOnCurrentServiceInstance(tcContext);
                     } catch (Exception e) {
                         throw new IllegalArgumentException(
-                                String.format("Context ID=%s: Pausing is failed", contextId), e);
+                                "Context ID=%s: Pausing is failed".formatted(contextId), e);
                     }
                 } else {
                     throw new IllegalArgumentException(
-                            String.format("Context ID=%s is in the %s state; Pausing is cancelled", contextId,
+                            "Context ID=%s is in the %s state; Pausing is cancelled".formatted(contextId,
                                     tcContext.getStatus()));
                 }
                 break;
@@ -159,29 +158,29 @@ public class MultiReplicaJMSListeners {
                         tcContextService.stopOnCurrentServiceInstance(tcContext);
                     } catch (Exception e) {
                         throw new IllegalArgumentException(
-                                String.format("Context ID=%s: Stopping is failed", contextId), e);
+                                "Context ID=%s: Stopping is failed".formatted(contextId), e);
                     }
                 } else {
                     throw new IllegalArgumentException(
-                            String.format("Context ID=%s is in the %s state; Stopping is cancelled", contextId,
+                            "Context ID=%s is in the %s state; Stopping is cancelled".formatted(contextId,
                                     tcContext.getStatus()));
                 }
                 break;
             case IN_PROGRESS:
                 if (tcContext.getInitiator() == null || !(tcContext.getInitiator() instanceof CallChainInstance)) {
                     throw new IllegalArgumentException(
-                            String.format("Context ID=%s: initiator is NOT a callchain;  Resuming is cancelled",
+                            "Context ID=%s: initiator is NOT a callchain;  Resuming is cancelled".formatted(
                                     contextId));
                 } else if (Status.PAUSED.equals(tcContext.getStatus())) {
                     try {
                         tcContextService.resumeOnCurrentServiceInstance(tcContext);
                     } catch (Exception e) {
                         throw new IllegalArgumentException(
-                                String.format("Context ID=%s: Resuming is failed", contextId), e);
+                                "Context ID=%s: Resuming is failed".formatted(contextId), e);
                     }
                 } else {
                     throw new IllegalArgumentException(
-                            String.format("Context ID=%s is in the %s state; Resuming is cancelled", contextId,
+                            "Context ID=%s is in the %s state; Resuming is cancelled".formatted(contextId,
                                     tcContext.getStatus()));
                 }
                 break;

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -45,7 +45,6 @@ import org.qubership.automation.itf.executor.service.ExecutorToMessageBrokerSend
 import org.qubership.automation.itf.ui.util.EventTriggerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +55,6 @@ public class EventTriggerActivationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventTriggerActivationService.class);
     private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
 
-    @Autowired
     public EventTriggerActivationService(ExecutorToMessageBrokerSender executorToMessageBrokerSender) {
         this.executorToMessageBrokerSender = executorToMessageBrokerSender;
     }
@@ -190,8 +188,7 @@ public class EventTriggerActivationService {
                         trigger.remove();
                     }
                 } else if ((!trigger.getState().isOn() || force) && (turnOn == null || turnOn)) {
-                    if (trigger.getParent() instanceof Situation && trigger instanceof OperationEventTrigger) {
-                        Situation situation = (Situation) trigger.getParent();
+                    if (trigger.getParent() instanceof Situation situation && trigger instanceof OperationEventTrigger) {
                         if (conditionsParametersAreEmpty(situation.getOperationEventTriggers().iterator().next())) {
                             Storable alreadyActiveSituation = findAnotherActiveSituation(situation);
                             if (alreadyActiveSituation != null) {

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.qubership.atp.multitenancy.core.context.TenantContext;
 import org.qubership.automation.itf.core.hibernate.spring.managers.executor.StubProjectObjectManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -43,7 +42,6 @@ public class CleanUserData {
     @Value("${userdata.clean.leave_days.timeunit}")
     private TimeUnit leaveDaysTimeunit;
 
-    @Autowired
     public CleanUserData(StubProjectObjectManager stubProjectObjectManager) {
         this.stubProjectObjectManager = stubProjectObjectManager;
     }

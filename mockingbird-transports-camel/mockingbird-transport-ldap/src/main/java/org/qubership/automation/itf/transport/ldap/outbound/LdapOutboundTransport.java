@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -172,8 +172,8 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
         try {
             JSONParser parser = new JSONParser();
             jsonMessage = parser.parse(message.getText());
-            if (jsonMessage instanceof JSONObject) {
-                changeType = (String) ((JSONObject) jsonMessage).get("changetype");
+            if (jsonMessage instanceof JSONObject object) {
+                changeType = (String) object.get("changetype");
                 isSearchRequest = (changeType == null);
             } else {
                 isSearchRequest = true;
@@ -189,7 +189,7 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
         String outputFormat = (String) connectionProperties.getOrDefault(OUTPUT_FORMAT, DEFAULT_OUTPUT_FORMAT);
         String base = (String) props.getOrDefault("base", "ou=system");
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put(LDAP_DATASOURCE, new InitialLdapContext(props, null));
+        registry.bind(LDAP_DATASOURCE, new InitialLdapContext(props, null));
         CamelContext context = new DefaultCamelContext(registry);
         context.addRoutes(new RouteBuilder() {
             public void configure() {
@@ -212,9 +212,9 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
             context.stop();
             throw new Exception("Error sending/processing of LDAP search request", e);
         }
-        Collection<SearchResult> data = out.getOut().getBody(Collection.class);
+        Collection<SearchResult> data = out.getMessage().getBody(Collection.class);
         Message response = new Message(dataToString(data, outputFormat)); // will be changed
-        response.convertAndSetHeaders(exchange.getOut().getHeaders());
+        response.convertAndSetHeaders(exchange.getMessage().getHeaders());
         context.stop();
         return response;
     }
@@ -405,9 +405,9 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
             // So, I commented this attribute temporarily
             if (!(key.equals("changetype") || key.equals("dn") || key.equals("inet-bandwidth"))) {
                 BasicAttribute attr;
-                if (value instanceof List) {
+                if (value instanceof List list) {
                     attr = new BasicAttribute((String) key);
-                    ((List) value).forEach(attr::add);
+                    list.forEach(attr::add);
                 } else {
                     attr = new BasicAttribute((String) key, value);
                 }
@@ -444,7 +444,7 @@ public class LdapOutboundTransport extends AbstractTransportImpl implements Outb
                 }
                 if (!values.isEmpty()) {
                     if (values.size() == 1) {
-                        itemAttrs.put(attrId, values.get(0));
+                        itemAttrs.put(attrId, values.getFirst());
                     } else {
                         itemAttrs.put(attrId, values);
                     }

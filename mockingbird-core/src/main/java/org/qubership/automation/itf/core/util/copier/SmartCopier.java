@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -70,9 +70,8 @@ public class SmartCopier {
      */
     public static Storable setAllValuesOnCopyStorable(Storable copiedSource, Storable source, JSONObject jsonObject,
                                                       String projectId) {
-        if (copiedSource instanceof Environment) {
-            return setAllValuesOnCopyEnvironment((Environment) copiedSource, (Environment) source, jsonObject,
-                    projectId);
+        if (copiedSource instanceof Environment environment) {
+            return setAllValuesOnCopyEnvironment(environment, (Environment) source, jsonObject, projectId);
         }
         return copiedSource;
     }
@@ -114,7 +113,7 @@ public class SmartCopier {
                     setServerIfNeed(inboundServer, entry, systemMap, false, replacements);
                 }
             } else {
-                if (Boolean.valueOf(jsonObject.get(USE_STANDARD_TRIGGERS).toString())) {
+                if (Boolean.parseBoolean(jsonObject.get(USE_STANDARD_TRIGGERS).toString())) {
                     prepareTemplateTriggers(environment.getInbound().entrySet(), null,
                             new JSONObject((Map) jsonObject.get(TRIGGER_PROPERTIES)));
                 }
@@ -171,7 +170,7 @@ public class SmartCopier {
                                         ArrayList<LinkedHashMap<String, String>> replacements) {
         for (Map.Entry<String, String> systemStatus : systemMapStatus.entrySet()) {
             if (systemStatus.getKey().equals(entry.getKey().getID().toString())
-                    && Boolean.valueOf(systemStatus.getValue())) {
+                    && Boolean.parseBoolean(systemStatus.getValue())) {
                 if (isOutbound) {
                     Collection<OutboundTransportConfiguration> confs = entry.getValue().getOutbounds(entry.getKey());
                     Collection<OutboundTransportConfiguration> newConfs = new ArrayList<>();
@@ -294,7 +293,7 @@ public class SmartCopier {
 
                     // set parameters only for filtered triggers
                     for (Configuration in : newInboundTransportConfiguration.getTriggerConfigurations()) {
-                        if ((in.get(property) != null) && (in.get(property).toString().equals(propertyValue))) {
+                        if ((in.get(property) != null) && (in.get(property).equals(propertyValue))) {
                             fillParamsConfigIfTypeIsSame(in, triggerConfiguration);
                         }
                     }
@@ -357,7 +356,7 @@ public class SmartCopier {
                     key = option.getValue();
                 }
                 if (option.getKey().equals(nameValue)) {
-                    value = String.valueOf(option.getValue());
+                    value = option.getValue();
                 }
             }
         }
@@ -373,15 +372,12 @@ public class SmartCopier {
      * @return <tt>true</tt> if all fields exist for "smart copy" of Environment
      */
     private static boolean isJsonObjectValid(JSONObject jsonObject) {
-        if (jsonObject.containsKey(SYSTEMS)
+        return jsonObject.containsKey(SYSTEMS)
                 && jsonObject.containsKey(NEED_OTHER_SERVER)
                 && jsonObject.containsKey(USE_STANDARD_TRIGGERS)
                 && jsonObject.containsKey(STANDARD_TRIGGERS)
                 && jsonObject.containsKey(NEED_NEW_SERVER)
                 && jsonObject.containsKey(NAME)
-                && jsonObject.containsKey(SERVER)) {
-            return true;
-        }
-        return false;
+                && jsonObject.containsKey(SERVER);
     }
 }

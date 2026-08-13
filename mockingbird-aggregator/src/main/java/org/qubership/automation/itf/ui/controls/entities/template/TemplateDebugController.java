@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -50,9 +50,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,7 +67,7 @@ public class TemplateDebugController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/exists", method = RequestMethod.POST)
+    @PostMapping("/template/exists")
     @AuditAction(auditAction = "Get Templates by part of name '{{#name}}' in the project "
             + "{{#projectId}}/{{#projectUuid}}")
     public ResponseEntity getByName(
@@ -82,14 +82,14 @@ public class TemplateDebugController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TEMPLATE.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/template/parameters", method = RequestMethod.PUT)
+    @PutMapping("/template/parameters")
     @AuditAction(auditAction = "Get parameters of the Template with id {{#id}} in the project "
             + "{{#projectId}}/{{#projectUuid}}")
     public String getTemplateParameters(
             @RequestParam(value = "id", defaultValue = "0") String id,
             @RequestParam(value = "projectId") BigInteger projectId,
             @RequestBody String editRequest,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         Template template = TemplateHelper.getById(id);
         throwExceptionIfNull(template, "", id, Template.class, "get Template parameters");
         String templateContent =
@@ -109,12 +109,11 @@ public class TemplateDebugController extends ControllerHelper {
         Storable templateParent = template.getParent();
         Map<String, String> parentsMap = new HashMap<>();
         ObjectManager<? extends ParsingRule<? extends ParsingRuleProvider>> parsingRuleObjectManager;
-        if (templateParent instanceof System) {
+        if (templateParent instanceof System parentSystem) {
             parsingRuleObjectManager = CoreObjectManager.getInstance().getManager(SystemParsingRule.class);
-            System parentSystem = (System) templateParent;
             parentsMap.put(parentSystem.getName(), "System");
             for (Operation operation : parentSystem.getOperations()) {
-                if (operation.returnParsingRules().size() > 0) {
+                if (!operation.returnParsingRules().isEmpty()) {
                     parentsMap.put(operation.getName(), "Operation");
                 }
             }
@@ -166,16 +165,16 @@ public class TemplateDebugController extends ControllerHelper {
             String ruleParentName = parsingRule.getParent().getName();
             if (isStepRule) {
                 if (parentObjectNames.containsKey(ruleParentName)) {
-                    directParentNames.add(String.format("%s: %s", parentObjectNames.get(ruleParentName),
+                    directParentNames.add("%s: %s".formatted(parentObjectNames.get(ruleParentName),
                             ruleParentName));
                 }
             } else {
                 if (parentObjectNames.containsKey(ruleParentName)) {
-                    directParentNames.add(String.format("%s: %s", parentObjectNames.get(ruleParentName),
+                    directParentNames.add("%s: %s".formatted(parentObjectNames.get(ruleParentName),
                             ruleParentName));
                 } else {
                     String parentType = parsingRule.getParent() instanceof System ? "System" : "Operation";
-                    parentNames.add(String.format("%s: %s", parentType, ruleParentName));
+                    parentNames.add("%s: %s".formatted(parentType, ruleParentName));
                 }
             }
         }

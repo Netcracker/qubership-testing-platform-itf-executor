@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,38 +19,39 @@ package org.qubership.automation.itf.report;
 
 public class RAM2ReportAdapterTest {
 
-    private final String SIMPLESNAPSHOT = "<html><script type='application/javascript' src='/scripts/jquery" +
-            ".js'></script><style>table {\n" +
-            "    border-collapse: collapse;\n" +
-            "}\n" +
-            "\n" +
-            "table, th, td {\n" +
-            "    border: 1px solid black;\n" +
-            "}\n" +
-            "\n" +
-            "td {\n" +
-            "    white-space: pre-wrap;\n" +
-            "}\n" +
-            "</style><script type='application/javascript'>function toggle(root) {\n" +
-            "\tjQuery(root).parent().find('pre').toggle();\n" +
-            "\tjQuery(root).text(jQuery(root).text() == 'Collapse'?'Expand':'Collapse');\n" +
-            "}</script><div><h3>Properties</h3><br/><table><tr><th>Key</th><th>Value</th></tr><tr><td>Message</td><td" +
-            "><a href='#' onclick='toggle(this)'>Collapse</a><pre><pre></pre></td></tr><tr><td>Response " +
-            "Message</td><td><a href='#' onclick='toggle(this)" +
-            "'>Collapse</a><pre><pre>incomingMessage</pre></td></tr><tr><td>Response " +
-            "Headers</td><td><table></table></td></tr><tr><td>Step Context</td><td><pre>{\n" +
-            "  &quot;sp2&quot;: 2,\n" +
-            "  &quot;sp1&quot;: 1,\n" +
-            "  &quot;messageParam1&quot;: &quot;value1&quot;\n" +
-            "}</pre></td></tr><tr><td>Testcase Context</td><td><a href='#' onclick='toggle(this)" +
-            "'>Collapse</a><pre>{\n" +
-            "  &quot;portnumber&quot;: [\n" +
-            "    23,\n" +
-            "    24,\n" +
-            "    25,\n" +
-            "    26\n" +
-            "  ]\n" +
-            "}</pre></td></tr></table></div></html>";
+    private final String SIMPLESNAPSHOT = """
+            <html><script type='application/javascript' src='/scripts/jquery\
+            .js'></script><style>table {
+                border-collapse: collapse;
+            }
+            
+            table, th, td {
+                border: 1px solid black;
+            }
+            
+            td {
+                white-space: pre-wrap;
+            }
+            </style><script type='application/javascript'>function toggle(root) {
+            	jQuery(root).parent().find('pre').toggle();
+            	jQuery(root).text(jQuery(root).text() == 'Collapse'?'Expand':'Collapse');
+            }</script><div><h3>Properties</h3><br/><table><tr><th>Key</th><th>Value</th></tr><tr><td>Message</td><td\
+            ><a href='#' onclick='toggle(this)'>Collapse</a><pre><pre></pre></td></tr><tr><td>Response \
+            Message</td><td><a href='#' onclick='toggle(this)\
+            '>Collapse</a><pre><pre>incomingMessage</pre></td></tr><tr><td>Response \
+            Headers</td><td><table></table></td></tr><tr><td>Step Context</td><td><pre>{
+              &quot;sp2&quot;: 2,
+              &quot;sp1&quot;: 1,
+              &quot;messageParam1&quot;: &quot;value1&quot;
+            }</pre></td></tr><tr><td>Testcase Context</td><td><a href='#' onclick='toggle(this)\
+            '>Collapse</a><pre>{
+              &quot;portnumber&quot;: [
+                23,
+                24,
+                25,
+                26
+              ]
+            }</pre></td></tr></table></div></html>""";
 /*
     @Test
     public void createMapWithSnapshot_stringWithHtml_returnedMapHasFileWithExpectedHtml() throws IOException {

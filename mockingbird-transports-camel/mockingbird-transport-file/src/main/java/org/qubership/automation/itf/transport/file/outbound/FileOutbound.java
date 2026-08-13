@@ -101,6 +101,13 @@ public class FileOutbound extends AbstractFileOverOutboundTransportImpl {
          */
         Map<String, Object> extraProps = Helper.setExtraPropertiesMap(
                 properties.obtain(PropertyConstants.Commons.ENDPOINT_PROPERTIES));
+
+        //TODO: Need to check
+        if (CAMEL_CONTEXT.isStopped() || CAMEL_CONTEXT.isStopping()) {
+            // Restart the context or create a new one
+            CAMEL_CONTEXT.start();
+        }
+
         ProducerTemplate template = CAMEL_CONTEXT.createProducerTemplate();
         String uri = FileHelper.buildUri(properties, extraProps);
         Endpoint endpoint = template.getCamelContext().getEndpoint(uri);

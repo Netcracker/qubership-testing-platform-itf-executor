@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,11 +20,9 @@ package org.qubership.automation.itf.configuration.dataset.impl.remote;
 import java.beans.Transient;
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.qubership.automation.itf.configuration.dataset.impl.DeprecatedStorable;
@@ -35,6 +33,8 @@ import org.qubership.automation.itf.core.model.dataset.IDataSet;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
 
 import com.google.common.base.Strings;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RemoteDataSetList extends DeprecatedStorable implements DataSetList {
 
@@ -63,8 +63,8 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
     }
 
     @Override
-    public Object getNaturalId() {
-        return getID();
+    public String getNaturalId() {
+        return id;
     }
 
     @Override
@@ -177,13 +177,45 @@ public class RemoteDataSetList extends DeprecatedStorable implements DataSetList
         return repo;
     }
 
+    // TODO: Change of Object to BigInteger requires careful check and possible refactor.
     @Override
-    public Object getID() {
-        return id;
+    public BigInteger getID() {
+        return new BigInteger(id);
     }
 
     @Override
     public String getName() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(this.getClass().isInstance(o))) {
+            return false;
+        }
+        if (this.getNaturalId() != null) {
+            return Objects.equals(this.getNaturalId(), ((Storable) o).getNaturalId());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getNaturalId());
+    }
+
+    @Override
+    public String toString() {
+        return "Name: '" + getName() + "', ID: '" + this.getNaturalId() + '\'';
+    }
+
+    @Override
+    public String returnDisplayId() {
+        return this.getNaturalId();
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -37,10 +37,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Nonnull;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -74,6 +70,10 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalCause;
 import com.google.common.cache.RemovalListener;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Nonnull;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -92,7 +92,7 @@ public class JMSOutboundTransport extends AbstractCamelOutboundTransport {
                     removeComponentById(removalNotification.getKey());
                 }
             })
-            .build(new CacheLoader<ConfiguredTransport, JMSConfig>() {
+            .build(new CacheLoader<>() {
                 @Override
                 public JMSConfig load(@Nonnull ConfiguredTransport id) throws Exception {
                     try {
@@ -218,15 +218,20 @@ public class JMSOutboundTransport extends AbstractCamelOutboundTransport {
     private static Endpoint makeEndpoint(String id, String destinationType,
                                          String destinationName,
                                          JMSConfig jmsConfig,
-                                         CamelContext context) throws JMSException {
-        Endpoint endpoint;
+                                         CamelContext context) {
+        JmsEndpoint endpoint;
         //It's backport for destinationName format like
         // "NCJMSServer_clust1/NCJMSModule!SMF_PRODFULFILLMENT_RMK_RD_clust1"
         if (jmsConfig.getDestination() != null) {
             //So, let's take a destination from JNDI catalog (it can be QUEUE or TOPIC, we don't care about it).
-            endpoint = JmsEndpoint.newInstance(jmsConfig.getDestination(), jmsConfig.getComponent());
+
+            // TODO: Should be checked. Great changes from the old Camel (2.20.4) code
+            endpoint = new JmsEndpoint();
+            endpoint.setComponent(jmsConfig.getComponent());
+            endpoint.setDestinationName(destinationName);
+            endpoint.setDestinationType(destinationType);
         } else {
-            endpoint = context.getEndpoint(id + ':' + destinationType + ':' + destinationName);
+            endpoint = (JmsEndpoint) context.getEndpoint(id + ':' + destinationType + ':' + destinationName);
         }
         return endpoint;
     }
@@ -350,7 +355,7 @@ public class JMSOutboundTransport extends AbstractCamelOutboundTransport {
     @Getter
     private class ConfiguredTransport {
 
-        private TreeMap<String, Object> properties;
+        private final TreeMap<String, Object> properties;
         private String componentId;
         @Setter
         private String transportId;

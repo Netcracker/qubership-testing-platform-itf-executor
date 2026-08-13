@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +49,7 @@ public class TransportViewController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/transport/registry.js", method = RequestMethod.GET, produces = APPLICATION_JAVASCRIPT)
+    @GetMapping(value = "/transport/registry.js", produces = APPLICATION_JAVASCRIPT)
     @AuditAction(auditAction = "Get /transport/registry.js, project {{#projectUuid}}")
     public ResponseEntity<InputStreamResource> getTransportsJs(@RequestParam(value = "projectUuid") UUID projectUuid) {
         StringBuilder sb = new StringBuilder("function getTransportViews() {");
@@ -58,10 +57,14 @@ public class TransportViewController {
         try {
             for (Map.Entry<String, Pair<String, String>> entry :
                     TransportRegistryManager.getInstance().getViews().entrySet()) {
-                sb.append("            {\n"
-                        + "                name: '").append(entry.getKey()).append("',\n"
-                        + "                script: '").append(getView(entry.getValue().getLeft())).append("'\n"
-                        + "            },\n");
+                sb.append("""
+                                    {
+                                        name: '""").append(entry.getKey()).append("""
+                        ',
+                                        script: '""").append(getView(entry.getValue().getLeft())).append("""
+                        '
+                                    },
+                        """);
             }
         } catch (Exception e) {
             LOGGER_FOR_CHANGELOG.error("Error computing JS", e);
@@ -84,7 +87,7 @@ public class TransportViewController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/transport/required.js", method = RequestMethod.GET, produces = APPLICATION_JAVASCRIPT)
+    @GetMapping(value = "/transport/required.js", produces = APPLICATION_JAVASCRIPT)
     @AuditAction(auditAction = "Get /transport/required.js, project {{#projectUuid}}")
     public ResponseEntity<InputStreamResource> getRequired(@RequestParam(value = "projectUuid") UUID projectUuid)
             throws TransportException {
@@ -100,7 +103,7 @@ public class TransportViewController {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).TRANSPORT.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/transport/views", method = RequestMethod.GET)
+    @GetMapping("/transport/views")
     @AuditAction(auditAction = "Get /transport/views, project {{#projectUuid}}")
     public HashMap<String, String> getDeclaredViews(@RequestParam(value = "projectUuid") UUID projectUuid)
             throws TransportException {

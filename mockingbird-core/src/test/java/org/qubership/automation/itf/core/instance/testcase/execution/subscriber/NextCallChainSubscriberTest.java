@@ -23,24 +23,39 @@ import static org.mockito.Mockito.when;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.event.NextCallChainEvent;
+import org.qubership.automation.itf.core.model.jpa.context.InstanceContext;
+import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.core.model.jpa.instance.chain.CallChainInstance;
 import org.qubership.automation.itf.core.model.jpa.instance.step.StepInstance;
 import org.qubership.automation.itf.core.model.jpa.step.SituationStep;
 import org.qubership.automation.itf.core.util.iterator.CallChainStepIterator;
+import org.qubership.automation.itf.executor.cache.service.impl.CallchainSubscriberCacheService;
+import org.qubership.automation.itf.executor.provider.EventBusProvider;
+import org.qubership.automation.itf.executor.provider.EventBusServiceProvider;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+@SpringJUnitConfig(classes = {CallchainSubscriberCacheService.class,
+        EventBusProvider.class,
+        EventBusServiceProvider.class})
 public class NextCallChainSubscriberTest {
 
     private NextCallChainSubscriber subscriber;
 
     private CallChainInstance callChainInstance;
 
-    @Before
+    @BeforeEach
     public void before() {
+        InstanceContext instanceContext = new InstanceContext();
+        TcContext tcContext = new TcContext();
+        tcContext.setID(BigInteger.valueOf(11));
+        instanceContext.setTC(tcContext);
+
         callChainInstance = mock(CallChainInstance.class);
-        when(callChainInstance.getID()).thenReturn(1);
+        when(callChainInstance.getContext()).thenReturn(instanceContext);
+        when(callChainInstance.getID()).thenReturn(BigInteger.valueOf(1));
         when(this.callChainInstance.iterator()).thenReturn(mock(CallChainStepIterator.class));
         when(this.callChainInstance.iterator().hasNext()).thenReturn(true);
         when(this.callChainInstance.iterator().next()).thenReturn(getStepInstance());
@@ -93,7 +108,7 @@ public class NextCallChainSubscriberTest {
         step.setManual(false);
         step.setDelay(2000);
         step.setUnit(TimeUnit.MILLISECONDS.toString());
-        stepInstance.setStepId((BigInteger) step.getID());
+        stepInstance.setStepId(step.getID());
         return stepInstance;
     }
 }

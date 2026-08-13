@@ -22,6 +22,7 @@ import org.qubership.atp.environments.openapi.controllers.EnvironmentControllerA
 import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient(name = "${feign.atp.environments.name}",
+        contextId = "atpEnvironmentsEnvironmentFeignClient",
         url = "${feign.atp.environments.url}",
         path = "${feign.atp.environments.route}",
         configuration = FeignConfiguration.class)

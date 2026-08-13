@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 
 package org.qubership.automation.itf.executor.service;
 
-import javax.xml.bind.DatatypeConverter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
@@ -26,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.SerializationUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.xml.bind.DatatypeConverter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,8 +39,7 @@ public class SecurityHelper {
 
     private static Authentication deserialize(String authentication) {
         byte[] decoded = DatatypeConverter.parseBase64Binary(authentication);
-        Authentication auth = (Authentication) SerializationUtils.deserialize(decoded);
-        return auth;
+        return (Authentication) SerializationUtils.deserialize(decoded);
     }
 
     public static void addAuthContextToMessage(JSONObject message) {

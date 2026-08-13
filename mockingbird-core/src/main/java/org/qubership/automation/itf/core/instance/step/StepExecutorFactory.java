@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import org.qubership.automation.itf.core.model.jpa.instance.step.StepInstance;
 import org.qubership.automation.itf.core.model.jpa.step.IntegrationStep;
 import org.qubership.automation.itf.core.model.jpa.step.SituationStep;
 import org.qubership.automation.itf.core.model.jpa.step.Step;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Maps;
@@ -32,11 +31,10 @@ import com.google.common.collect.Maps;
 @Component
 public class StepExecutorFactory {
 
-    private static Map<Class<? extends Step>, StepExecutor> executorBindings = Maps.newHashMapWithExpectedSize(10);
-    private IntegrationStepExecutor integrationStepExecutor;
-    private SituationStepExecutor situationStepExecutor;
+    private static final Map<Class<? extends Step>, StepExecutor> executorBindings = Maps.newHashMapWithExpectedSize(4);
+    private final IntegrationStepExecutor integrationStepExecutor;
+    private final SituationStepExecutor situationStepExecutor;
 
-    @Autowired
     public StepExecutorFactory(IntegrationStepExecutor integrationStepExecutor,
                                SituationStepExecutor situationStepExecutor) {
         this.integrationStepExecutor = integrationStepExecutor;
@@ -50,13 +48,13 @@ public class StepExecutorFactory {
         getExecutor(stepInstance).execute(stepInstance);
     }
 
-    private static StepExecutor getExecutor(StepInstance stepInstance) throws Exception {
+    private static StepExecutor getExecutor(StepInstance stepInstance) {
         for (Map.Entry<Class<? extends Step>, StepExecutor> entry : executorBindings.entrySet()) {
             if (entry.getKey().isAssignableFrom(stepInstance.getStep().getClass())) {
                 return entry.getValue();
             }
         }
-        throw new IllegalArgumentException(String.format("No executor found for stepInstance [%s], type [%s]",
+        throw new IllegalArgumentException("No executor found for stepInstance [%s], type [%s]".formatted(
                 stepInstance.getStep(), stepInstance.getStep().getClass().getSimpleName()));
     }
 

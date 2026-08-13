@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -47,16 +47,17 @@ import org.qubership.automation.itf.ui.messages.objects.UIStubProject;
 import org.qubership.automation.itf.ui.messages.objects.transport.UIConfiguration;
 import org.qubership.automation.itf.ui.messages.objects.transport.UIProperty;
 import org.qubership.automation.itf.ui.messages.properties.UIProjectSettings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -77,7 +78,6 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
     @Value("${spring.profiles.active}")
     private String springProfile;
 
-    @Autowired
     public ProjectController(ProjectSettingsDescriptor projectSettings,
                              AtpUsersService atpUsersService,
                              PolicyEnforcement policyEnforcement,
@@ -89,7 +89,7 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
     }
 
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/project/all", method = RequestMethod.GET)
+    @GetMapping("/project/all")
     @AuditAction(auditAction = "Get Projects list")
     public List<UIStubProject> getAll() {
         Collection<StubProject> projects = getProjects();
@@ -113,14 +113,14 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(@securityHelper.getCurrentProjectUuid(#id), \"READ\")")
-    @RequestMapping(value = "/project", method = RequestMethod.GET)
+    @GetMapping("/project")
     @AuditAction(auditAction = "Get Project by id {{#id}}")
     public UIStubProject getById(@RequestParam(value = "id") final BigInteger id) {
         return super.getById(id.toString());
     }
 
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/project/uuid/{uuid}", method = RequestMethod.GET)
+    @GetMapping("/project/uuid/{uuid}")
     @AuditAction(auditAction = "Get Project by uuid {{#uuid}}")
     public UIStubProject getByUuid(@PathVariable String uuid) {
         SearchManager<StubProject> manager = CoreObjectManager.getInstance()
@@ -134,7 +134,7 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"CREATE\")")
-    @RequestMapping(value = "/project", method = RequestMethod.POST)
+    @PostMapping("/project")
     @AuditAction(auditAction = "Create Project with id {{#uiObject.id}} and uuid {{#projectUuid}}")
     public UIObject create(@RequestBody final UIObject uiObject,
                            @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
@@ -147,7 +147,7 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/project", method = RequestMethod.PUT)
+    @PutMapping("/project")
     @AuditAction(auditAction = "Update Project with id {{#uiProject.id}} and uuid {{#projectUuid}}")
     public UIStubProject update(@SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid,
                                 @RequestBody UIStubProject uiProject) {
@@ -156,7 +156,7 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"DELETE\")")
-    @RequestMapping(value = "/project", method = RequestMethod.DELETE)
+    @DeleteMapping("/project")
     @AuditAction(auditAction = "Delete Project with id {{#id}} and uuid {{#projectUuid}}")
     public void delete(@SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid,
                        @RequestParam(value = "id", defaultValue = "0") String id) {
@@ -169,7 +169,7 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/project/settings/get", method = RequestMethod.GET)
+    @GetMapping("/project/settings/get")
     @AuditAction(auditAction = "Get Settings of Project by id {{#projectId}} and uuid {{#projectUuid}}")
     public UIConfiguration getAllProjectSettings(@RequestParam(value = "projectId") BigInteger projectId,
                                                  @SuppressWarnings("unused")
@@ -182,7 +182,7 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/project/setting/get", method = RequestMethod.GET)
+    @GetMapping("/project/setting/get")
     @AuditAction(auditAction = "Get Setting of Project by property {{#property}} and id {{#projectId}} and uuid " +
             "{{#projectUuid}}")
     public UIConfig getProjectSetting(@RequestParam(value = "projectId") BigInteger projectId,
@@ -194,7 +194,7 @@ public class ProjectController extends AbstractController<UIStubProject, StubPro
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/project/settings/update", method = RequestMethod.PUT)
+    @PutMapping("/project/settings/update")
     @AuditAction(auditAction = "Update Settings of Project by id {{#projectId}}")
     public void updateProjectSettings(@RequestParam(value = "projectId") String projectId,
                                       @SuppressWarnings("unused") @RequestParam(value = "projectUuid") UUID projectUuid,

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -41,8 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,7 +55,7 @@ public class CommonController {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/common/ni", method = RequestMethod.GET)
+    @GetMapping("/common/ni")
     @AuditAction(auditAction = "Get all Network Interfaces, project {{#projectUuid}}")
     public UIList<UIObject> getAllNetworkInterfaces(@RequestParam(value = "projectUuid") UUID projectUuid) {
         MdcUtils.put(MdcField.PROJECT_ID.toString(), projectUuid);
@@ -88,7 +87,7 @@ public class CommonController {
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/common/filtered", method = RequestMethod.GET)
+    @GetMapping("/common/filtered")
     @AuditAction(auditAction = "Get all objects by name {{#name}} and entityType {{#entityType}} in the project "
             + "{{#projectId}}/{{#projectUuid}}")
     public List<? extends UIObject> getObjectsByFilteredName(

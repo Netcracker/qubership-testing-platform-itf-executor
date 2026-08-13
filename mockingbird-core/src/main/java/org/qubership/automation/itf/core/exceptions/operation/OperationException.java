@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -28,6 +28,6 @@ public class OperationException extends ItfExecutorException {
     public static final String DEFAULT_MESSAGE = "%s operation failed with error: %s";
 
     public OperationException(String operation, String errorMessage) {
-        super(String.format(DEFAULT_MESSAGE, operation, errorMessage));
+        super(DEFAULT_MESSAGE.formatted(operation, errorMessage));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -63,14 +63,14 @@ public class UIEventTrigger extends UIObject {
         super(eventTrigger, isFullWithParent);
         this.event = eventTrigger.getState().toString();
         this.state = eventTrigger.getState().toString();
-        if (eventTrigger instanceof SituationEventTrigger) {
-            if (((SituationEventTrigger) eventTrigger).getOn() == null) {
-                ((SituationEventTrigger) eventTrigger).setOn("Finish");
+        if (eventTrigger instanceof SituationEventTrigger trigger) {
+            if (trigger.getOn() == null) {
+                trigger.setOn("Finish");
             }
-            this.on = ((SituationEventTrigger) eventTrigger).getOn().toString();
-            if (((SituationEventTrigger) eventTrigger).getSituation() != null) {
+            this.on = trigger.getOn().toString();
+            if (trigger.getSituation() != null) {
                 try {
-                    this.listen = new UIListen(((SituationEventTrigger) eventTrigger).getSituation());
+                    this.listen = new UIListen(trigger.getSituation());
                 } catch (Exception e) {
                     this.listen = new UIListen();
                 }
@@ -86,17 +86,17 @@ public class UIEventTrigger extends UIObject {
 
     public void fillTrigger(EventTrigger trigger) {
         trigger.setName(getName());
-        if (trigger instanceof SituationEventTrigger) {
+        if (trigger instanceof SituationEventTrigger eventTrigger) {
             UIListen uiListen = getListen();
             if (getOn() != null) {
-                ((SituationEventTrigger) trigger).setOn(getOn());
+                eventTrigger.setOn(getOn());
             }
             if (uiListen != null) {
-                ((SituationEventTrigger) trigger).setSituation(
+                eventTrigger.setSituation(
                         CoreObjectManager.getInstance().getManager(Situation.class).getById(uiListen.getId())
                 );
             } else {
-                ((SituationEventTrigger) trigger).setSituation(null);
+                eventTrigger.setSituation(null);
             }
         }
         if (getCondition() != null) {

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -87,6 +84,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -153,7 +152,7 @@ public class SituationExecutorService {
                     failureOfSituationWithoutAtpReport(instance, e);
                 } else {
                     performPostCalculations(situation, instance,
-                            instance.getStepInstances().get(instance.getStepInstances().size() - 1).getContext(), true);
+                            instance.getStepInstances().getLast().getContext(), true);
                     computeContextDiff(leftFlatMap, instance.getContext().getTC(), instance.getID());
                     postStepEventFinishIfIsRetryStep(instance);
                     failureOfSituation(instance, e, "Failed message validation");
@@ -211,13 +210,13 @@ public class SituationExecutorService {
     }
 
     private void fillParentsInfo(SituationInstance instance, Situation situation, Operation parentOperation) {
-        instance.setSituationId((BigInteger) situation.getID());
+        instance.setSituationId(situation.getID());
         if (parentOperation != null) {
             // default auto created situations don't have parents...
             instance.setOperationName(parentOperation.getName());
-            instance.setOperationId((BigInteger) parentOperation.getID());
+            instance.setOperationId(parentOperation.getID());
             instance.setSystemName(parentOperation.getParent().getName());
-            instance.setSystemId((BigInteger) parentOperation.getParent().getID());
+            instance.setSystemId(parentOperation.getParent().getID());
         }
     }
 
@@ -361,7 +360,7 @@ public class SituationExecutorService {
         StepIterator iterator = instance.iterator();
         while (iterator.hasNext()) {
             StepInstance stepInstance = iterator.next();
-            stepInstance.setID(UniqueIdGenerator.generate());
+            stepInstance.setID((BigInteger)UniqueIdGenerator.generate());
             if (spContext != null) {
                 stepInstance.getContext().sp().putAll(spContext);
             }
@@ -415,7 +414,7 @@ public class SituationExecutorService {
         // May be it could be done easier?
         // Block to be reviewed - start
         List<StepInstance> listStepInstance = instance.getStepInstances();
-        StepInstance stepInstance = listStepInstance.get(listStepInstance.size() - 1);
+        StepInstance stepInstance = listStepInstance.getLast();
         if (isRetryOnFailStep(stepInstance)) {
             stepInstance.setName(reportValidationAttemptsCount(stepInstance));
         }
@@ -514,9 +513,8 @@ public class SituationExecutorService {
 
     private boolean checkNeedRetryIntegrationStep(final SituationInstance instance) {
         List<StepInstance> listStepInstance = instance.getStepInstances();
-        StepInstance stepInstance = listStepInstance.get(listStepInstance.size() - 1);
-        if (stepInstance.getStep() instanceof IntegrationStep) {
-            IntegrationStep integrationStep = (IntegrationStep) stepInstance.getStep();
+        StepInstance stepInstance = listStepInstance.getLast();
+        if (stepInstance.getStep() instanceof IntegrationStep integrationStep) {
             if (integrationStep.isRetryOnFail()) {
                 stepInstance.setEndTime(new Date());
                 if (integrationStep.getValidationMaxTime() != 0) {
@@ -551,12 +549,12 @@ public class SituationExecutorService {
      */
     private void addCurrentValidStepAttemptValueAndStartTime(SituationInstance instance) {
         List<StepInstance> listStepInstance = instance.getStepInstances();
-        StepInstance lastStepInstance = listStepInstance.get(listStepInstance.size() - 1);
+        StepInstance lastStepInstance = listStepInstance.getLast();
         if (listStepInstance.size() > 1) {
             StepInstance secondToLastStepInstance = listStepInstance.get(listStepInstance.size() - 2);
             lastStepInstance.setCurrentValidAttemptValue(secondToLastStepInstance.getCurrentValidAttemptValue() + 1);
             lastStepInstance.setStartTime(secondToLastStepInstance.getStartTime());
-            listStepInstance.remove(0);
+            listStepInstance.removeFirst();
         } else {
             lastStepInstance.setCurrentValidAttemptValue(lastStepInstance.getCurrentValidAttemptValue() + 1);
         }
@@ -564,8 +562,7 @@ public class SituationExecutorService {
 
     private boolean isRetryOnFailStep(StepInstance stepInstance) {
         boolean result = false;
-        if (stepInstance.getStep() instanceof IntegrationStep) {
-            IntegrationStep integrationStep = (IntegrationStep) stepInstance.getStep();
+        if (stepInstance.getStep() instanceof IntegrationStep integrationStep) {
             if (integrationStep.isRetryOnFail()) {
                 result = true;
             }
@@ -585,9 +582,9 @@ public class SituationExecutorService {
             String timeUnit = integrationStep.getRetryTimeoutUnit().toLowerCase();
             if (isLastRetry) {
                 Report.info(instance,
-                        String.format("Pause %d %s after each [%s] (count: %d)", retryTimeout, timeUnit,
+                        "Pause %d %s after each [%s] (count: %d)".formatted(retryTimeout, timeUnit,
                                 instance.getName(), stepInstance.getCurrentValidAttemptValue() - 1),
-                        String.format("Waiting for [%d] %s", retryTimeout, timeUnit));
+                        "Waiting for [%d] %s".formatted(retryTimeout, timeUnit));
             } else {
                 try {
                     log.info("{}: waiting for timeout '{}' {}...", instance, retryTimeout, timeUnit);
@@ -664,7 +661,7 @@ public class SituationExecutorService {
 
     private StepInstance getLastStepInstance(SituationInstance instance) {
         List<StepInstance> listStepInstance = instance.getStepInstances();
-        return listStepInstance.get(listStepInstance.size() - 1);
+        return listStepInstance.getLast();
     }
 
     private void postStepEventFinishIfIsRetryStep(SituationInstance instance) {
@@ -681,16 +678,14 @@ public class SituationExecutorService {
 
     private void failureOfSituationWithoutAtpReport(SituationInstance instance, Exception e) {
         log.warn("Failed message validation at the {}, Error: {}", instance,
-                (e instanceof EngineIntegrationException)
-                        ? ((EngineIntegrationException) e).getShortMessage() : e.getMessage());
+                (e instanceof EngineIntegrationException eie) ? eie.getShortMessage() : e.getMessage());
         instance.setStatus(Status.FAILED);
         instance.setEndTime(new Date());
     }
 
     private void failureInstance(SituationInstance instance, Exception e, String message) {
         log.error("{} at the {}, Error: {}", message, instance,
-                (e instanceof EngineIntegrationException)
-                        ? ((EngineIntegrationException) e).getShortMessage() : e.getMessage());
+                (e instanceof EngineIntegrationException eie) ? eie.getShortMessage() : e.getMessage());
         instance.setError(e);
         instance.setStatus(Status.FAILED);
         instance.setEndTime(new Date());
@@ -735,7 +730,7 @@ public class SituationExecutorService {
         log.info("Preparing instance for situation {}...", situation);
         SituationInstance instance = new SituationInstance();
         log.debug("UniqueIdGenerator.generate - started");
-        instance.setID(UniqueIdGenerator.generate());
+        instance.setID((BigInteger)UniqueIdGenerator.generate());
         log.debug("UniqueIdGenerator.generate - finished");
         instance.setStepContainer(situation);
         instance.setName(situation.getName());
@@ -792,10 +787,10 @@ public class SituationExecutorService {
         IntegrationStep step = new IntegrationStep();
         step.setOperation(parentOperation);
         step.setReceiver(parentOperation.getParent());
-        step.setName(String.format("[%s] receives [%s]", step.getReceiver().getName(), step.getOperation().getName()));
+        step.setName("[%s] receives [%s]".formatted(step.getReceiver().getName(), step.getOperation().getName()));
         StepInstance stepInstance = new StepInstance();
         stepInstance.setParent(null);
-        stepInstance.setID(UniqueIdGenerator.generate());
+        stepInstance.setID((BigInteger)UniqueIdGenerator.generate());
         stepInstance.init(step, instance.getContext(), spContext);
         stepInstance.getContext().setProjectId(stepInstance.getContext().tc().getProjectId());
         stepInstance.getContext().setProjectUuid(stepInstance.getContext().tc().getProjectUuid());
@@ -848,7 +843,7 @@ public class SituationExecutorService {
 
     private void sendEndExceptionalSituationFinishEvent(TcContext tcContext, SituationInstance situationInstance) {
         boolean isItEndSituationForSomeone = CacheServices.getAwaitingContextsCacheService()
-                .containsKey(String.format("%s_%s", tcContext.getID(), situationInstance.getSituationId()));
+                .containsKey("%s_%s".formatted(tcContext.getID(), situationInstance.getSituationId()));
         if (isItEndSituationForSomeone) {
             executorToMessageBrokerSender.sendEventToEndExceptionalSituationsTopic(
                     new SituationEvent.EndExceptionalSituationFinish(situationInstance),

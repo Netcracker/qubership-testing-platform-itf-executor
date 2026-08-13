@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import org.qubership.automation.itf.core.model.event.Event;
 import org.qubership.automation.itf.executor.cache.service.impl.CallchainSubscriberCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.eventbus.EventBus;
@@ -38,9 +37,8 @@ public class EventBusProvider {
             new EventBus(new LoggingSubscriberExceptionHandler("Normal priority bus"));
     private final EventBus highPriorityEventBus =
             new EventBus(new LoggingSubscriberExceptionHandler("High priority bus"));
-    private CallchainSubscriberCacheService callchainSubscriberCacheService;
+    private final CallchainSubscriberCacheService callchainSubscriberCacheService;
 
-    @Autowired
     public EventBusProvider(CallchainSubscriberCacheService callchainSubscriberCacheService) {
         this.callchainSubscriberCacheService = callchainSubscriberCacheService;
     }
@@ -112,7 +110,7 @@ public class EventBusProvider {
     }
 
     private static final class LoggingSubscriberExceptionHandler implements SubscriberExceptionHandler {
-        private String name;
+        private final String name;
 
         LoggingSubscriberExceptionHandler(String name) {
             this.name = name;

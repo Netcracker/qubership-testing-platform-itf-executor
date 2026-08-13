@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.automation.itf.core.instance.testcase.execution.holders.DefferedSituationInstanceHolder;
@@ -62,6 +60,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -116,7 +115,7 @@ public class TCContextService {
         if (StringUtils.isNotEmpty(dumpfilePath)) {
             tcContext.getReportLinks().put("Download TCPDump", dumpfilePath);
         }
-        localRunningContexts.put((BigInteger) tcContext.getID(), tcContext);
+        localRunningContexts.put(tcContext.getID(), tcContext);
         CacheServices.getTcContextCacheService().set(tcContext, true);
         long stTime = System.currentTimeMillis();
         eventBusProvider.post(new TcContextEvent.Start(tcContext));
@@ -133,7 +132,7 @@ public class TCContextService {
     }
 
     public void stop(TcContext tcContext) {
-        stop((BigInteger) tcContext.getID(), getTenantId(tcContext));
+        stop(tcContext.getID(), getTenantId(tcContext));
     }
 
     public void stop(BigInteger tcContextId, String tenantId) {
@@ -148,7 +147,7 @@ public class TCContextService {
             tcContext.setEndTime(new Date());
             tcContext.setStatus(Status.STOPPED);
             performExtraFinishActions(tcContext);
-            localRunningContexts.invalidate((BigInteger) tcContext.getID());
+            localRunningContexts.invalidate(tcContext.getID());
             eventBusProvider.post(new TcContextEvent.Stop(tcContext));
         }
     }
@@ -169,7 +168,7 @@ public class TCContextService {
             log.error("Error occurred while resuming the {} context: ", tcContext.getName(), exception);
             throw exception;
         }
-        localRunningContexts.put((BigInteger) tcContext.getID(), tcContext);
+        localRunningContexts.put(tcContext.getID(), tcContext);
         CacheServices.getTcBindingCacheService().bind(tcContext);
         updateInfo(tcContext);
         ExecutionServices.getExecutionProcessManagerService().resume(tcContext);
@@ -179,7 +178,7 @@ public class TCContextService {
         Status tcContextStatus = tcContext.getStatus();
         if (Status.FAILED.equals(tcContextStatus) || Status.STOPPED.equals(tcContextStatus)) {
             tcContext.setStatus(Status.IN_PROGRESS);
-            localRunningContexts.put((BigInteger) tcContext.getID(), tcContext);
+            localRunningContexts.put(tcContext.getID(), tcContext);
             eventBusProvider.post(new TcContextEvent.Continue(tcContext));
         }
     }
@@ -188,7 +187,7 @@ public class TCContextService {
         if (Status.IN_PROGRESS.equals(tcContext.getStatus()) || Status.PAUSED.equals(tcContext.getStatus())) {
             finalizeContext(tcContext, (tcContext.isValidationFailed()) ? Status.FAILED : Status.PASSED);
             performExtraFinishActions(tcContext);
-            localRunningContexts.invalidate((BigInteger) tcContext.getID());
+            localRunningContexts.invalidate(tcContext.getID());
         }
         if (!tcContext.isFinishEventSent()) {
             synchronized (tcContext) {
@@ -212,7 +211,7 @@ public class TCContextService {
                     ? Status.FAILED_BY_TIMEOUT
                     : Status.FAILED);
             performExtraFinishActions(tcContext);
-            localRunningContexts.invalidate((BigInteger) tcContext.getID());
+            localRunningContexts.invalidate(tcContext.getID());
         }
         if (!tcContext.isFailEventSent()) {
             synchronized (tcContext) {
@@ -236,7 +235,7 @@ public class TCContextService {
                 finish(tcContext);
                 log.debug("TC context (inbound) is terminated by timeout (old status: {})", tcContext.getStatus());
             } else {
-                String message = String.format("TC context [%s] '%s' is failed by timeout (old status: %s)",
+                String message = "TC context [%s] '%s' is failed by timeout (old status: %s)".formatted(
                         tcContext.getID(), tcContext.getName(), tcContext.getStatus());
                 log.error(message);
                 terminateCallChainContextByTimeout(tcContext.getID(), message);
@@ -280,7 +279,7 @@ public class TCContextService {
 
     public void pause(TcContext tcContext) {
         executorToMessageBrokerSender.sendMessageToTcContextOperationsTopic(
-                new TcContextOperationMessage(Status.PAUSED.name(), (BigInteger) tcContext.getID()),
+                new TcContextOperationMessage(Status.PAUSED.name(), tcContext.getID()),
                 getTenantId(tcContext));
     }
 
@@ -319,7 +318,7 @@ public class TCContextService {
         }
         for (MessageParameter parameter : messageParameters) {
             if (parameter.isAutosave()) {
-                tcContext.put(String.format("%s.%s", savedKey, parameter.getParamName()), (parameter.isMultiple())
+                tcContext.put("%s.%s".formatted(savedKey, parameter.getParamName()), (parameter.isMultiple())
                         ? parameter.getMultipleValue()
                         : parameter.getSingleValue());
             }
@@ -420,7 +419,7 @@ public class TCContextService {
     @Nonnull
     private TcContext createInMemory(Object id, BigInteger projectId, UUID projectUuid) {
         TcContext context = new TcContext();
-        context.setID(id);
+        context.setID((BigInteger)id);
         context.setProjectId(projectId);
         context.setProjectUuid(projectUuid);
         context.setPodName(Config.getConfig().getRunningHostname());

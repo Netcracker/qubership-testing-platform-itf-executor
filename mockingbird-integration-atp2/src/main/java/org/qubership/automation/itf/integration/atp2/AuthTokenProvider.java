@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -22,19 +22,17 @@ import static org.qubership.atp.auth.springbootstarter.Constants.BEARER_TOKEN_TY
 
 import java.util.Optional;
 
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.KeycloakSecurityContext;
 import org.qubership.atp.adapter.common.utils.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.AccessTokenProvider;
-import org.springframework.security.oauth2.client.token.AccessTokenRequest;
-import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,20 +40,18 @@ import org.springframework.stereotype.Component;
 public class AuthTokenProvider {
     private static final Logger log = LoggerFactory.getLogger(AuthTokenProvider.class);
 
-    private final AccessTokenProvider accessTokenProvider;
-    private final OAuth2ProtectedResourceDetails protectedResourceDetails;
-    private final AccessTokenRequest accessTokenRequest = new DefaultAccessTokenRequest();
+    @Value("${atp-auth.m2m.registration-id:keycloak}")
+    private String registrationId;
+
+    private final OAuth2AuthorizedClientManager authorizedClientManager;
 
     /**
      * RamAdapterConfiguration constructor.
      *
-     * @param accessTokenProvider      access token provider
-     * @param protectedResourceDetails protected resource details
+     * @param authorizedClientManager      authorized client manager
      */
-    public AuthTokenProvider(AccessTokenProvider accessTokenProvider,
-                             OAuth2ProtectedResourceDetails protectedResourceDetails) {
-        this.accessTokenProvider = accessTokenProvider;
-        this.protectedResourceDetails = protectedResourceDetails;
+    public AuthTokenProvider(OAuth2AuthorizedClientManager authorizedClientManager) {
+        this.authorizedClientManager = authorizedClientManager;
         registerHttpClientInterceptors();
     }
 
@@ -69,27 +65,36 @@ public class AuthTokenProvider {
         //noinspection unchecked
         Optional<String> relayToken = Optional.ofNullable(authentication)
                 .map(Authentication::getPrincipal)
-                .filter(principal -> principal instanceof KeycloakPrincipal)
-                .map(principal -> (KeycloakPrincipal<KeycloakSecurityContext>) principal)
-                .map(KeycloakPrincipal::getKeycloakSecurityContext)
-                .map(KeycloakSecurityContext::getTokenString);
+                .filter(principal -> principal instanceof Jwt)
+                .map(principal -> (Jwt) principal)
+                .map(Jwt::getTokenValue);
+
         if (relayToken.isPresent()) {
             return relayToken;
         }
-        OAuth2AccessToken accessToken = accessTokenProvider.obtainAccessToken(
-                protectedResourceDetails,
-                accessTokenRequest
-        );
-        return Optional.ofNullable(accessToken.getValue());
+
+        OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
+                .withClientRegistrationId(registrationId)
+                .principal(registrationId)
+                .build();
+
+        OAuth2AuthorizedClient client = authorizedClientManager.authorize(authorizeRequest);
+
+        if (client == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(
+                client.getAccessToken().getTokenValue());
     }
 
     private void registerHttpClientInterceptors() {
-        RequestUtils.registerHttpInterceptor((httpRequest, httpContext) -> {
+        RequestUtils.registerHttpInterceptor((httpRequest, entity, httpContext) -> {
             log.debug("Getting a token. Process [httpRequest={}]", httpRequest);
             Optional<String> bearerToken = getAuthToken();
             if (bearerToken.isPresent()) {
                 httpRequest.addHeader(AUTHORIZATION_HEADER_NAME,
-                        String.format("%s %s", BEARER_TOKEN_TYPE, bearerToken.get()));
+                        "%s %s".formatted(BEARER_TOKEN_TYPE, bearerToken.get()));
             } else {
                 log.warn("Token is empty.");
             }

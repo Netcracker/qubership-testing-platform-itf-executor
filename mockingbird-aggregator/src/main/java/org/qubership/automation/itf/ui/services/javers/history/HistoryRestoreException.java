@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -39,11 +39,11 @@ public class HistoryRestoreException extends AtpException {
     }
 
     public HistoryRestoreException(String errorMessage, String id, String type) {
-        super(String.format(DEFAULT_MESSAGE,
-                        StringUtils.isNotEmpty(id) ? String.format(ID_INSERT, id) : "",
-                        StringUtils.isNotEmpty(type) ? String.format(TYPE_INSERT, type) : "",
-                        StringUtils.isNotEmpty(errorMessage) ? String.format(ERROR_INSERT, errorMessage) : ""
-                )
+        super(DEFAULT_MESSAGE.formatted(
+                StringUtils.isNotEmpty(id) ? ID_INSERT.formatted(id) : "",
+                StringUtils.isNotEmpty(type) ? TYPE_INSERT.formatted(type) : "",
+                StringUtils.isNotEmpty(errorMessage) ? ERROR_INSERT.formatted(errorMessage) : ""
+        )
         );
     }
 }

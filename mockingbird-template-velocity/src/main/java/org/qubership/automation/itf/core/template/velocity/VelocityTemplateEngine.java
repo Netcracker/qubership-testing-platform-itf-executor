@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -73,8 +73,8 @@ public class VelocityTemplateEngine implements TemplateEngine {
             engine = new VelocityEngine();
         }
         engine.setProperty(RuntimeConstants.VM_PERM_ALLOW_INLINE_REPLACE_GLOBAL, "true");
-        engine.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                "org.qubership.automation.itf.core.template.velocity.log.Slf4jLogChute");
+        /* Commented; it looks to be deleted:
+        engine.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "full-path-to-class");*/
         engine.setProperty("console.logsystem.max.level", "WARN");
         engine.setProperty("runtime.log.logsystem.max.level", "WARN");
         engine.init();
@@ -149,6 +149,8 @@ public class VelocityTemplateEngine implements TemplateEngine {
 
     private static FactoryConfiguration makeStrutsFactoryConfig() {
         FactoryConfiguration factoryConfiguration = new FactoryConfiguration();
+        factoryConfiguration.addData(fillData("boolean", "STRUTS_TOOLS_AVAILABLE", "false"));
+        /*
         factoryConfiguration.addData(fillData("boolean", "STRUTS_TOOLS_AVAILABLE", "true"));
 
         ToolboxConfiguration requestToolboxConfiguration = new ToolboxConfiguration();
@@ -162,13 +164,16 @@ public class VelocityTemplateEngine implements TemplateEngine {
                 "org.apache.velocity.tools.struts.TilesTool",
                 "org.apache.velocity.tools.struts.ValidatorTool"));
         factoryConfiguration.addToolbox(requestToolboxConfiguration);
+        */
         return factoryConfiguration;
     }
 
     private static FactoryConfiguration makeViewFactoryConfig() {
         FactoryConfiguration factoryConfiguration = new FactoryConfiguration();
-        factoryConfiguration.addData(fillData("boolean", "VIEW_TOOLS_AVAILABLE", "true"));
+        factoryConfiguration.addData(fillData("boolean", "VIEW_TOOLS_AVAILABLE", "false"));
 
+        /*
+        factoryConfiguration.addData(fillData("boolean", "VIEW_TOOLS_AVAILABLE", "true"));
         ToolboxConfiguration requestToolboxConfiguration = new ToolboxConfiguration();
         requestToolboxConfiguration.setScope("request");
         requestToolboxConfiguration.setTools(makeToolsList(
@@ -181,12 +186,12 @@ public class VelocityTemplateEngine implements TemplateEngine {
                 "org.apache.velocity.tools.view.ViewContextTool",
                 "org.apache.velocity.tools.generic.ResourceTool"));
         factoryConfiguration.addToolbox(requestToolboxConfiguration);
+         */
 
         ToolboxConfiguration sessionToolboxConfiguration = new ToolboxConfiguration();
         sessionToolboxConfiguration.setScope("session");
         sessionToolboxConfiguration.setProperty("createSession", "false");
-        sessionToolboxConfiguration.setTools(makeToolsList(
-                "org.apache.velocity.tools.view.BrowserTool"));
+        sessionToolboxConfiguration.setTools(makeToolsList(/*"org.apache.velocity.tools.view.BrowserTool"*/));
         factoryConfiguration.addToolbox(sessionToolboxConfiguration);
         return factoryConfiguration;
     }
@@ -197,14 +202,14 @@ public class VelocityTemplateEngine implements TemplateEngine {
         }
         Object owner = internalContextAdapter.get(TemplateEngine.OWNER);
         if (Objects.nonNull(owner)) {
-            if (owner instanceof System) {
-                return ((System) owner).getProjectId();
-            } else if (owner instanceof Template) {
-                Object templateParent = ((Template) owner).getParent();
-                if (templateParent instanceof Operation) {
-                    return ((Operation) templateParent).getProjectId();
-                } else if (templateParent instanceof System) {
-                    return ((System) templateParent).getProjectId();
+            if (owner instanceof System system1) {
+                return system1.getProjectId();
+            } else if (owner instanceof Template template) {
+                Object templateParent = template.getParent();
+                if (templateParent instanceof Operation operation) {
+                    return operation.getProjectId();
+                } else if (templateParent instanceof System system) {
+                    return system.getProjectId();
                 }
             }
         }
@@ -274,7 +279,7 @@ public class VelocityTemplateEngine implements TemplateEngine {
             LOGGER.trace("String processed, result is: {}", string);
             return string;
         } catch (Exception e) {
-            throw new VelocityException(String.format("Error occurred while processing of %s: %s",
+            throw new VelocityException("Error occurred while processing of %s: %s".formatted(
                     StringUtils.isBlank(coords)
                             ? "template '" + (isOwnerNameNotNull ? owner.getName() : LOG_TAG) + "'" : coords,
                     e.getMessage()), e);

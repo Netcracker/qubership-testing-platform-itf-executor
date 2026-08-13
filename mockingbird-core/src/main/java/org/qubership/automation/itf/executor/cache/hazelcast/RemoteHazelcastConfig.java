@@ -45,9 +45,11 @@ public class RemoteHazelcastConfig {
      */
     @Bean(name = "hazelcastClient")
     public HazelcastInstance hazelcastClient(@Qualifier("clientConfig") ClientConfig clientConfig) {
+        log.info("RemoteHazelcastConfig#hazelcastClient: Configuring is started");
         HazelcastInstance hazelcastClient = HazelcastClient.getOrCreateHazelcastClient(clientConfig);
         CommonHazelcastConfig.tryToCreateMapConfigsIfNotExist(hazelcastClient, true);
         addProjectSettingsNearCacheConfig(clientConfig);
+        log.info("RemoteHazelcastConfig#hazelcastClient: Configuring is completed");
         return hazelcastClient;
     }
 

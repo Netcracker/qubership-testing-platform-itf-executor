@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Nonnull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -35,20 +34,21 @@ import org.xml.sax.SAXException;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import jakarta.annotation.Nonnull;
 
 public class XSDValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XSDValidator.class);
     private static final String SOAP_ENV = "http://schemas.xmlsoap.org/soap/envelope/";
-    private static SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    private static LoadingCache<String, Schema> schemaCache = CacheBuilder.newBuilder()
+    private static final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    private static final LoadingCache<String, Schema> schemaCache = CacheBuilder.newBuilder()
             .expireAfterAccess(30L, TimeUnit.MINUTES)
-            .build(new CacheLoader<String, Schema>() {
+            .build(new CacheLoader<>() {
                 @Override
                 public Schema load(@Nonnull String xsdPath) throws SAXException {
                     return schemaFactory.newSchema(new StreamSource[]{
                             new File(xsdPath).exists() ? new StreamSource(xsdPath) : null,
-                            //to be able validate soap
+                            //to be able to validate soap
                             new StreamSource(SOAP_ENV)
                     });
                 }

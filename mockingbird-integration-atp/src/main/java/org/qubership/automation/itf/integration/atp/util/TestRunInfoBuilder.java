@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ public class TestRunInfoBuilder {
             }
             testRunInfo.setCallchainsToExecute(callchainRunInfos);
         } catch (Exception ex) {
-            throw testRunInfo.reportException(String.format("Exception getting default dataset(s): %s %s",
+            throw testRunInfo.reportException("Exception getting default dataset(s): %s %s".formatted(
                     ex.getMessage(), (ex.getCause() == null) ? "" : "\nCaused by: " + ex.getCause().getMessage()));
         }
     }
@@ -140,7 +140,7 @@ public class TestRunInfoBuilder {
             }
             testRunInfo.setCallchainsToExecute(callchainRunInfos);
         } catch (Exception ex) {
-            throw testRunInfo.reportException(String.format("Exception getting datasets(s): %s %s", ex.getMessage(),
+            throw testRunInfo.reportException("Exception getting datasets(s): %s %s".formatted(ex.getMessage(),
                     (ex.getCause() == null) ? "" : "\nCaused by: " + ex.getCause().getMessage()));
         }
     }
@@ -199,7 +199,7 @@ public class TestRunInfoBuilder {
     }
 
     public static String getCallchainNotFoundErrorMessage(String idOrName) {
-        return String.format("Can't find a callchain with %s: %s", idOrName.startsWith("~") ? "id" : "name", idOrName);
+        return "Can't find a callchain with %s: %s".formatted(idOrName.startsWith("~") ? "id" : "name", idOrName);
     }
 
     private static void setSelectedDataset(TestRunInfo testRunInfo, Matcher matcher, String datasetFullPath) {
@@ -216,7 +216,7 @@ public class TestRunInfoBuilder {
                 if (dataSetList != null) {
                     IDataSet foundDataSet = dataSetList.getDataSet(splittedFullPath[2], testRunInfo.getProjectId());
                     if (foundDataSet != null) {
-                        CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().get(0);
+                        CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().getFirst();
                         for (CallChain callChain :
                                 getCallchainsByIdOrName(matcher.group(ATPActionConstants.CALLCHAIN_INDEX.intValue()),
                                         testRunInfo.getProjectId())) {
@@ -239,7 +239,7 @@ public class TestRunInfoBuilder {
                         + "'%s' isn't found.", splittedFullPath[0]));
             }
         } catch (IllegalArgumentException ex) {
-            throw testRunInfo.reportException(String.format("Exception getting dataset by path '%s': %s %s",
+            throw testRunInfo.reportException("Exception getting dataset by path '%s': %s %s".formatted(
                     datasetFullPath,
                     ex.getMessage(),
                     (ex.getCause() == null) ? "" : "\nCaused by: " + ex.getCause().getMessage()));
@@ -262,8 +262,8 @@ public class TestRunInfoBuilder {
                     List<? extends IDataSet> dataSets =
                             CoreObjectManager.getInstance().getSpecialManager(DataSetList.class,
                                     IDataSetListManager.class).getDataSetsWithLabel(dataSetList, datasetLabel, null);
-                    if (dataSets.size() > 0) {
-                        CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().get(0);
+                    if (!dataSets.isEmpty()) {
+                        CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().getFirst();
                         testRunInfo.getCallchainsToExecute().clear();
                         for (IDataSet dataSet : dataSets) {
                             CallchainRunInfo newRunInfo = new CallchainRunInfo(callchainRunInfo.getCallChain(),
@@ -284,7 +284,7 @@ public class TestRunInfoBuilder {
                         + "'%s' isn't found.", splittedFullPath[0]));
             }
         } catch (IllegalArgumentException ex) {
-            throw testRunInfo.reportException(String.format("Exception getting dataset by path '%s': %s %s",
+            throw testRunInfo.reportException("Exception getting dataset by path '%s': %s %s".formatted(
                     datasetFullPath,
                     ex.getMessage(),
                     (ex.getCause() == null) ? "" : "\nCaused by: " + ex.getCause().getMessage()));
@@ -293,7 +293,7 @@ public class TestRunInfoBuilder {
 
     public static void setDefaultDataset(TestRunInfo testRunInfo, Matcher matcher) {
         try {
-            CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().get(0);
+            CallchainRunInfo callchainRunInfo = testRunInfo.getCallchainsToExecute().getFirst();
             for (CallChain callChain :
                     getCallchainsByIdOrName(matcher.group(ATPActionConstants.CALLCHAIN_INDEX.intValue()),
                             testRunInfo.getProjectId())) {
@@ -303,7 +303,7 @@ public class TestRunInfoBuilder {
                 }
             }
         } catch (Exception ex) {
-            throw testRunInfo.reportException(String.format("Exception getting default dataset: %s %s",
+            throw testRunInfo.reportException("Exception getting default dataset: %s %s".formatted(
                     ex.getMessage(), (ex.getCause() == null) ? "" : "\nCaused by: " + ex.getCause().getMessage()));
         }
     }

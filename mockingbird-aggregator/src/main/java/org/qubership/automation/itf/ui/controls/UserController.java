@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,10 +20,8 @@ package org.qubership.automation.itf.ui.controls;
 import org.qubership.automation.itf.integration.users.UserService;
 import org.qubership.automation.itf.ui.model.LoginInfo;
 import org.qubership.automation.itf.ui.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,7 +29,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -42,7 +39,7 @@ public class UserController {
      * @return object with type {@link User}.
      */
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "/user/current", method = RequestMethod.GET)
+    @GetMapping("/user/current")
     public User getLoggedUser() {
         return userService.getLoggedUser();
     }
@@ -53,7 +50,7 @@ public class UserController {
      * @return token with type {@link String}.
      */
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "/user/token", method = RequestMethod.GET)
+    @GetMapping("/user/token")
     public String getCurrentUserToken() {
         String loggedUserToken = userService.getLoggedUserToken();
         return "Bearer ".concat(loggedUserToken);
@@ -65,7 +62,7 @@ public class UserController {
      * @return boolean result.
      */
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "/user/isSupport", method = RequestMethod.GET)
+    @GetMapping("/user/isSupport")
     public boolean checkUserRole() {
         return userService.checkUserRole();
     }
@@ -76,7 +73,7 @@ public class UserController {
      * @return object with type {@link User}.
      */
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "/user/info", method = RequestMethod.GET)
+    @GetMapping("/user/info")
     public User getCurrentUserInfo() {
         return userService.getCurrentUserInfo();
     }
@@ -87,7 +84,7 @@ public class UserController {
      * @return object with type {@link LoginInfo}.
      */
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "/user/login_info", method = RequestMethod.GET)
+    @GetMapping("/user/login_info")
     public LoginInfo getLoginInfo() {
         LoginInfo loginInfo = userService.getLoginInfo();
         loginInfo.setToken("Bearer ".concat(loginInfo.getToken())); // Backward compatibility with getCurrentUserToken()

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -51,10 +51,7 @@ public class ATPReportUtil {
     public static String getTestingServerUrl(AbstractContainerInstance startedBy) {
         StepContainer stepContainer = startedBy.getStepContainer();
         if (stepContainer instanceof CallChain) {
-            String server = getServerFromStarter(startedBy, stepContainer);
-            if (server != null) {
-                return server;
-            }
+            return getServerFromStarter(startedBy, stepContainer);
         }
         return null;
     }
@@ -73,15 +70,19 @@ public class ATPReportUtil {
             if (!step.isEnabled()) {
                 continue;
             }
-            if (step instanceof IntegrationStep) {
-                return extractUrl(step, startedBy);
-            } else if (step instanceof SituationStep) {
-                return extractUrl(((SituationStep) step).getSituation().getIntegrationStep(), startedBy);
-            } else if (step instanceof EmbeddedStep) {
-                String result = getServerFromStarter(startedBy, ((EmbeddedStep) step).getChain());
-                if (result != null) {
-                    return result;
-                }
+            switch (step) {
+                case IntegrationStep integrationStep:
+                    return extractUrl(step, startedBy);
+                case SituationStep situationStep:
+                    return extractUrl(situationStep.getSituation().getIntegrationStep(), startedBy);
+                case EmbeddedStep embeddedStep:
+                    String result = getServerFromStarter(startedBy, embeddedStep.getChain());
+                    if (result != null) {
+                        return result;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         return null;
@@ -95,7 +96,7 @@ public class ATPReportUtil {
         }
         Server server = environment.getOutbound().get(receiver);
         if (server == null) {
-            return String.format("Server is not defined for system '%s', check your environment '%s'",
+            return "Server is not defined for system '%s', check your environment '%s'".formatted(
                     receiver.getName(), environment.getName());
         }
         return server.getUrl();
@@ -136,19 +137,19 @@ public class ATPReportUtil {
 
     public static String buildRunParamsInfo(CallChainInstance instance) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<div>").append(String.format("Call chain link: <a href=\"%s#/callchain/%s\">%s</a>",
+        sb.append("<div>").append("Call chain link: <a href=\"%s#/callchain/%s\">%s</a>".formatted(
                         Config.getConfig().getRunningUrl(), instance.getStepContainer().getID(),
                         instance.getStepContainer().getName()))
                 .append("</div><div>")
-                .append(String.format("Host Name: %s", Config.getConfig().getRunningUrl()))
+                .append("Host Name: %s".formatted(Config.getConfig().getRunningUrl()))
                 .append("</div><div>")
-                .append(String.format("DataSet: %s",
+                .append("DataSet: %s".formatted(
                         instance.getDatasetName() != null
                                 ? instance.getDatasetName()
                                 : "not set"))
                 .append("</div><div>")
                 .append(
-                        String.format("Environment: %s", instance.getContext().tc() != null
+                        "Environment: %s".formatted(instance.getContext().tc() != null
                                 ? instance.getContext().tc().getEnvironmentById().getName()
                                 : "not set"))
                 .append("</div>");

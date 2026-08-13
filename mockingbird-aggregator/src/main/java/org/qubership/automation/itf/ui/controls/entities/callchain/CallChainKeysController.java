@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -27,8 +27,7 @@ import org.qubership.automation.itf.ui.messages.objects.UIKey;
 import org.qubership.automation.itf.ui.messages.objects.wrap.UIWrapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +38,7 @@ public class CallChainKeysController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/keys", method = RequestMethod.GET)
+    @GetMapping("/callchain/keys")
     @AuditAction(auditAction = "Get Keys for CallChain by id {{#id}} in the project {{#projectUuid}}")
     public UIWrapper<List<UIKey>> getKeys(@RequestParam(value = "id", defaultValue = "0") String id,
                                           @RequestParam(value = "projectUuid") UUID projectUuid) {

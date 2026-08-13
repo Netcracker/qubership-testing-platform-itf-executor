@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import static org.qubership.automation.itf.core.util.converter.IdConverter.toBig
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.ObjectNotFoundException;
@@ -87,6 +86,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Throwables;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -271,8 +271,7 @@ public class HistoryRestoreService {
             if (historyIntegrationStep != null) {
                 IntegrationStep integrationStep = situation.getIntegrationStep();
                 if (integrationStep == null) {
-                    throw new RuntimeException(String.format(
-                            "Situation %s [id=%s] has no integration step. Object cannot be restored.",
+                    throw new RuntimeException("Situation %s [id=%s] has no integration step. Object cannot be restored.".formatted(
                             situation.getName(),
                             situation.getID()));
                 }
@@ -298,7 +297,7 @@ public class HistoryRestoreService {
         if (StringUtils.isNotBlank(id)) {
             reference = getStorable.apply(id);
             if (reference == null) {
-                throw new ObjectNotFoundException(id, clazz.getSimpleName());
+                throw new ObjectNotFoundException((Object)id, clazz.getSimpleName());
             }
         }
         return reference;
@@ -310,9 +309,9 @@ public class HistoryRestoreService {
                 if (mappingContext.getSource().size() != mappingContext.getDestination().size()
                         || !mappingContext.getSource()
                         .stream()
-                        .map(s -> ((HistoryIdentified<?>) s).getId()).collect(Collectors.toList())
+                        .map(s -> ((HistoryIdentified<?>) s).getId()).toList()
                         .containsAll(mappingContext.getDestination().stream()
-                                .map(d -> d.getID()).collect(Collectors.toList()))) {
+                                .map(d -> d.getID()).toList())) {
                     throw new RuntimeException("Cannot restore object because it has different set of triggers.");
                 }
                 modelMapper.map(
@@ -335,7 +334,7 @@ public class HistoryRestoreService {
                                                   UUID projectUuid) {
         try {
             if (HistoryEntityHelper.isNotSupportEntity(itemType)) {
-                String message = String.format("Entity with type %s is skip, because not supported in itf history.",
+                String message = "Entity with type %s is skip, because not supported in itf history.".formatted(
                         itemType.getName());
                 log.warn(message);
                 throw new HistoryRestoreException(message);
@@ -343,8 +342,8 @@ public class HistoryRestoreService {
             Class historyEntityClass = HistoryEntityHelper.getHistoryEntityClass(itemType);
             Optional<Shadow<Object>> optionalShadow = getShadow(objectId, historyEntityClass, revisionId);
             Object shadowObject;
-            if (!optionalShadow.isPresent()) {
-                String errorMessage = String.format("Failed to found shadow with id:%s, class:%s", objectId,
+            if (optionalShadow.isEmpty()) {
+                String errorMessage = "Failed to found shadow with id:%s, class:%s".formatted(objectId,
                         itemType.getName());
                 log.error(errorMessage);
                 throw new EntityNotFoundException(errorMessage);
@@ -352,7 +351,7 @@ public class HistoryRestoreService {
             shadowObject = optionalShadow.get().get();
 
             if (Objects.isNull(shadowObject)) {
-                String errorMessage = String.format("Failed to found shadow with id:%s, class:%s", objectId,
+                String errorMessage = "Failed to found shadow with id:%s, class:%s".formatted(objectId,
                         itemType.getName());
                 log.error(errorMessage);
                 throw new EntityNotFoundException(errorMessage);
@@ -375,18 +374,12 @@ public class HistoryRestoreService {
     private LinkedList<Runnable> doAfter(Storable storable, UUID projectUuid) {
         LinkedList<Runnable> runnableList = new LinkedList<>();
         runnableList.add(storable::store);
-        if (storable instanceof SituationEventTrigger) {
-            runnableList.add(() ->
-                    getMessageToSynchronizeSituationEventTriggers((SituationEventTrigger) storable, projectUuid)
-            );
-        }
-        if (storable instanceof Situation) {
-            Optional<OperationEventTrigger> trigger =
-                    ((Situation) storable).getOperationEventTriggers().stream().findFirst();
+        if (storable instanceof SituationEventTrigger trigger) {
+            runnableList.add(() -> getMessageToSynchronizeSituationEventTriggers(trigger, projectUuid));
+        } else if (storable instanceof Situation situation) {
+            Optional<OperationEventTrigger> trigger = situation.getOperationEventTriggers().stream().findFirst();
             if (trigger.isPresent() && trigger.get().getState().isOn()) {
-                runnableList.add(() ->
-                        getMessageToActivateOperationEventTrigger(trigger.get(), projectUuid)
-                );
+                runnableList.add(() -> getMessageToActivateOperationEventTrigger(trigger.get(), projectUuid));
             }
         }
         return runnableList;
@@ -421,7 +414,6 @@ public class HistoryRestoreService {
         );
         triggerActivationRequest.put("trigger", triggerBriefInfo);
         sendMessageForEventTriggersActivation(triggerActivationRequest, projectUuid, operationEventTrigger);
-
     }
 
     private void sendMessageForEventTriggersActivation(JSONObject triggerActivationRequest,
@@ -444,22 +436,18 @@ public class HistoryRestoreService {
     }
 
     private void postActionsToStorable(Object shadowObject, Storable storable) {
-        if (storable instanceof CallChain) {
+        if (storable instanceof CallChain callChain) {
             HistoryCallChain historyCallChain = (HistoryCallChain) shadowObject;
             List<HistoryStep> historySteps = historyCallChain.getSteps();
-
             if (!historySteps.isEmpty()) {
-                CallChain callChain = (CallChain) storable;
                 List<Step> steps = callChain.getSteps();
                 if (historySteps.size() == steps.size()) {
-
                     List<BigInteger> historyStepIds =
-                            historySteps.stream().map(historyStep -> historyStep.getId()).collect(Collectors.toList());
+                            historySteps.stream().map(historyStep -> historyStep.getId()).toList();
                     List<BigInteger> stepIds =
-                            steps.stream().map(step -> (BigInteger) step.getID()).collect(Collectors.toList());
-
+                            steps.stream().map(step -> (BigInteger) step.getID()).toList();
                     List<Step> restoreStepsByOrder = new ArrayList<>();
-                    if (historyStepIds.containsAll(stepIds)) {
+                    if (new HashSet<>(historyStepIds).containsAll(stepIds)) {
                         for (HistoryStep historyStep : historySteps) {
                             for (Step step : steps) {
                                 if (historyStep.getId().equals(step.getID())) {
@@ -472,9 +460,7 @@ public class HistoryRestoreService {
                     callChain.fillSteps(restoreStepsByOrder);
                 }
             }
-        }
-        if (storable instanceof Operation) {
-            Operation operation = (Operation) storable;
+        } else if (storable instanceof Operation operation) {
             if (operation.getMep().isInboundRequest()) {
                 HistoryOperation historyOperation = (HistoryOperation) shadowObject;
                 Set<Situation> situations = operation.getSituations();
@@ -482,7 +468,7 @@ public class HistoryRestoreService {
                         .stream()
                         .filter(historySituation -> historySituation.getOperationEventTriggers()
                                 .stream().findFirst().isPresent())
-                        .collect(Collectors.toList());
+                        .toList();
                 Map<String, Integer> situationIdAndPriority = historySituations
                         .stream()
                         .filter(historySituation -> historySituation.getOperationEventTriggers()
@@ -503,9 +489,8 @@ public class HistoryRestoreService {
                                             situationIdAndPriority.get(String.valueOf(situation.getID())))));
                 }
             }
-        }
-        if (storable instanceof StubProject) {
-            projectSettingsService.fillCache((StubProject) storable, storable.getStorableProp());
+        } else if (storable instanceof StubProject project) {
+            projectSettingsService.fillCache(project, storable.getStorableProp());
         }
     }
 
@@ -521,7 +506,7 @@ public class HistoryRestoreService {
         List<CdoSnapshot> snapshots = javers.findSnapshots(query);
         QueryBuilder queryBuilder = QueryBuilder.byInstanceId(objectId, clazz).withVersion(version).withScopeDeepPlus();
         if (Objects.nonNull(snapshots) && !snapshots.isEmpty()) {
-            queryBuilder.withCommitId(snapshots.get(0).getCommitId());
+            queryBuilder.withCommitId(snapshots.getFirst().getCommitId());
         }
         List<Shadow<Object>> shadows = javers.findShadows(queryBuilder.build());
         return shadows.stream().findFirst();

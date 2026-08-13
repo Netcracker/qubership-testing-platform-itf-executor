@@ -3,17 +3,13 @@
     <parent>
         <groupId>org.qubership.mockingbird</groupId>
         <artifactId>mockingbird-transports-camel</artifactId>
-        <version>4.4.368-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mockingbird-camel-common</artifactId>
     <name>mockingbird-camel-common</name>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-cxf</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-ftp</artifactId>
@@ -45,10 +41,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -61,7 +53,7 @@
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
                             <excludeGroupIds>
                                 org.springframework,ch.qos.logback,org.apache.sshd,org.apache.httpcomponents,io.github.openfeign,
-                                io.zipkin.brave,io.zipkin.zipkin2,io.zipkin.reporter2,org.keycloak,io.undertow,org.jboss,io.netty,
+                                io.zipkin.brave,io.zipkin.zipkin2,io.zipkin.reporter2,io.undertow,org.jboss,io.netty,
                                 com.netflix.archaius,org.aspectj,com.squareup.okhttp3,com.squareup.okio,jakarta.annotation,org.glassfish,
                                 jakarta.validation,io.reactivex,com.nimbusds,com.netflix.hystrix,org.qubership.atp.auth,
                                 org.bouncycastle,org.hdrhistogram,org.synchronoss.cloud,com.github.ben-manes.caffeine,
@@ -71,7 +63,7 @@
                                 org.openclover,com.netflix.servo,com.netflix.netflix-commons,net.sf.ehcache,org.apache.xmlbeans,org.apache.poi
                             </excludeGroupIds>
                             <excludeArtifactIds>
-                                querydsl-core,logback-classic,pcap4j-core,camel-ssh,camel-http-common,camel-http4,commons-lang,
+                                querydsl-core,logback-classic,pcap4j-core,camel-ssh,camel-http-common,commons-lang,
                                 commons-fileupload,commons-configuration,snakeyaml,reactor-netty,reactor-core,jul-to-slf4j,jcip-annotations,
                                 error_prone_annotations,javax.annotation-api,antlr,dom4j,oss-parent,atp-integration-spring-boot-starter,atp-crypt,
                                 configuration-dataset-excel

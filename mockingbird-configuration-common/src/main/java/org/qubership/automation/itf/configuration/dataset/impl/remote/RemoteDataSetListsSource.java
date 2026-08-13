@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -18,16 +18,18 @@
 package org.qubership.automation.itf.configuration.dataset.impl.remote;
 
 import java.beans.Transient;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.dataset.DataSetList;
 import org.qubership.automation.itf.core.model.dataset.DataSetListsSource;
 import org.qubership.automation.itf.core.model.jpa.folder.Folder;
 import org.qubership.automation.itf.core.model.jpa.storage.AbstractStorable;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RemoteDataSetListsSource extends AbstractStorable implements DataSetListsSource {
 
@@ -38,10 +40,10 @@ public class RemoteDataSetListsSource extends AbstractStorable implements DataSe
             @Nonnull RemoteDataSetListRepository repo,
             @Nonnull Folder<DataSetListsSource> parent, @Nonnull UUID id, @Nonnull String name) {
         this.repo = repo;
-        this.id = id;
-        setID(id.toString());
-        setName(name);
         setParent(parent);
+        setName(name);
+
+        this.id = id;
         setNaturalId(id.toString());
     }
 
@@ -80,5 +82,28 @@ public class RemoteDataSetListsSource extends AbstractStorable implements DataSe
     @Override
     public Object getProjectUuid() {
         return null;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (!this.getClass().isInstance(o)) {
+            return false;
+        } else {
+            return this.getNaturalId() != null && Objects.equals(this.getNaturalId(), ((Storable) o).getNaturalId());
+        }
+    }
+
+    public int hashCode() {
+        return Objects.hash(this.getNaturalId());
+    }
+
+    public String toString() {
+        return "Name: '" + this.getName() + "', ID: '" + this.getNaturalId() + '\'';
+    }
+
+    @Override
+    public String returnDisplayId() {
+        return this.getNaturalId();
     }
 }

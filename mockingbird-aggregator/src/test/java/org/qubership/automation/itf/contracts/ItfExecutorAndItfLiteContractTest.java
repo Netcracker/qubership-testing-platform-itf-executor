@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -36,11 +36,11 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConf
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
@@ -51,10 +51,10 @@ import au.com.dius.pact.provider.junitsupport.loader.PactUrl;
 import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
 
 @Provider("atp-itf-executor")
-@PactUrl(urls = {"classpath:pacts/atp-itf-lite-atp-itf-executor.json"})
+@PactUrl(urls = {"file:src/test/resources/pacts/atp-itf-lite-atp-itf-executor.json"})
 @AutoConfigureMockMvc(addFilters = false, webDriverEnabled = false)
 @WebMvcTest(controllers = {ContextController.class, VelocityController.class})
-@ContextConfiguration(classes = {ItfExecutorAndItfLiteContractTest.TestApp.class})
+@SpringJUnitConfig(classes = {ItfExecutorAndItfLiteContractTest.TestApp.class})
 @EnableAutoConfiguration
 @Import({JacksonAutoConfiguration.class,
         HttpMessageConvertersAutoConfiguration.class,
@@ -66,12 +66,14 @@ public class ItfExecutorAndItfLiteContractTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @MockitoBean
     private ContextController contextController;
-    @MockBean
+    @MockitoBean
     private VelocityController velocityController;
 
     public void beforeAll() throws ParseException, IllegalAccessException, InstantiationException {
+        System.setProperty("pact_do_not_track", "true");
+
         when(contextController.get(any(String.class), any(UUID.class))).thenReturn(getContextResponse());
         when(velocityController.parseContent(any(UIVelocityRequestBody.class), any(), any(UUID.class)))
                 .thenReturn(getResponse());

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 
 package org.qubership.automation.itf.ui.aspects;
 
-import java.util.concurrent.Callable;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.annotation.Aspect;
@@ -29,18 +27,15 @@ import org.slf4j.LoggerFactory;
 public class TransactionAspect implements MethodInterceptor {
 
     public Object invoke(final MethodInvocation methodInvocation) throws Throwable {
-        return TxExecutor.execute(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                try {
-                    return methodInvocation.proceed();
-                } catch (Throwable throwable) {
-                    LoggerFactory.getLogger(TransactionAspect.class).error("Failed to execute Tx method", throwable);
-                    if (throwable instanceof Exception) {
-                        throw (Exception) throwable;
-                    } else {
-                        throw new Exception(throwable);
-                    }
+        return TxExecutor.execute(() -> {
+            try {
+                return methodInvocation.proceed();
+            } catch (Throwable throwable) {
+                LoggerFactory.getLogger(TransactionAspect.class).error("Failed to execute Tx method", throwable);
+                if (throwable instanceof Exception exception) {
+                    throw exception;
+                } else {
+                    throw new Exception(throwable);
                 }
             }
         });

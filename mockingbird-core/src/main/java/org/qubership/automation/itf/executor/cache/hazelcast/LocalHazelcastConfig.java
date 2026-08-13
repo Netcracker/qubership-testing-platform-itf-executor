@@ -25,7 +25,9 @@ import org.springframework.context.annotation.Import;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 @Import(CommonHazelcastConfig.class)
 @ConditionalOnProperty(value = "hazelcast.cache.enabled", havingValue = "false")
@@ -38,11 +40,13 @@ public class LocalHazelcastConfig {
      */
     @Bean(name = "hazelcastClient")
     public HazelcastInstance hazelcastInstance() {
+        log.info("LocalHazelcastConfig#hazelcastClient: Configuring is started");
         Config config = new Config();
         config.setClusterName("local-itf-hazelcast-cluster");
         config.setInstanceName("local-itf-hc-cache-instance");
         HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
         CommonHazelcastConfig.tryToCreateMapConfigsIfNotExist(hazelcastInstance, false);
+        log.info("LocalHazelcastConfig#hazelcastClient: Configuring is completed");
         return hazelcastInstance;
     }
 }

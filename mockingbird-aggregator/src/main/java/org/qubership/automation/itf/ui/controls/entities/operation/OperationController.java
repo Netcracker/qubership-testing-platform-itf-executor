@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
@@ -52,10 +51,12 @@ import org.qubership.automation.itf.ui.messages.objects.eventtrigger.UIEventTrig
 import org.qubership.automation.itf.ui.messages.objects.transport.UITransport;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,7 +67,7 @@ public class OperationController extends AbstractController<UIOperation, Operati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).OPERATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/operation/all", method = RequestMethod.GET)
+    @GetMapping("/operation/all")
     @AuditAction(auditAction = "Get {{#direction}} Operations under System id {{#id}} in the project {{#projectUuid}}")
     public List<? extends UIObject> getAll(@RequestParam(value = "system", required = false) String id,
                                            @RequestParam(value = "displayType", defaultValue = "selectList") String displayType,
@@ -100,7 +101,7 @@ public class OperationController extends AbstractController<UIOperation, Operati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).OPERATION.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/operation", method = RequestMethod.GET)
+    @GetMapping("/operation")
     @AuditAction(auditAction = "Get Operation by id {{#id}} in the project {{#projectUuid}}")
     public UIOperation getById(@RequestParam(value = "id", defaultValue = "0") String id,
                                @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -112,7 +113,7 @@ public class OperationController extends AbstractController<UIOperation, Operati
         through feign client (see MonitoringController)
      */
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/operation/{id}", method = RequestMethod.GET)
+    @GetMapping("/operation/{id}")
     @AuditAction(auditAction = "Get Operation by id {{#id}} via feign")
     public UIOperation feignGetById(@PathVariable(value = "id") String id) {
         return super.getById(id);
@@ -123,7 +124,7 @@ public class OperationController extends AbstractController<UIOperation, Operati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).OPERATION.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/operation", method = RequestMethod.POST)
+    @PostMapping("/operation")
     @AuditAction(auditAction = "Create Operation under System id {{#id}} in the project {{#projectUuid}}")
     public UIOperation create(@RequestParam(value = "system", defaultValue = "0") String id,
                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -134,7 +135,7 @@ public class OperationController extends AbstractController<UIOperation, Operati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).OPERATION.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/operation", method = RequestMethod.PUT)
+    @PutMapping("/operation")
     @AuditAction(auditAction = "Update Operation in the project {{#projectUuid}}")
     public Pair<UIOperation, UIEventTriggerSyncActivationRequest> update(@RequestBody UIOperation uiOperation,
                                                                          @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -149,7 +150,7 @@ public class OperationController extends AbstractController<UIOperation, Operati
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).OPERATION.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/operation", method = RequestMethod.DELETE)
+    @DeleteMapping("/operation")
     @AuditAction(auditAction = "Delete Operations from system id {{#id}} in the project {{#projectUuid}}")
     public Map<String, Object> delete(
             @RequestParam(value = "ignoreUsages", defaultValue = "false") Boolean ignoreUsages,
@@ -160,7 +161,7 @@ public class OperationController extends AbstractController<UIOperation, Operati
         ControllerHelper.throwExceptionIfNull(system, "", id, System.class, "delete operation");
         List<Operation> filteredOperations = system.getOperations().stream().filter(
                 operation -> Arrays.asList(deleteRequest.getIds()).contains(operation.getID().toString())
-        ).collect(Collectors.toList());
+        ).toList();
         Map<String, List<UIObject>> operationsWithTriggers = new HashMap<>();
         Map<String, String> usingOperations = new HashMap<>();
         List<Operation> operationsWithoutTriggers = new ArrayList<>();

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package org.qubership.automation.itf.configuration.dataset.impl;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -87,7 +88,7 @@ public abstract class DeprecatedStorable implements Storable {
 
     @Override
     public Storable copy(Storable newParent) throws CopyException {
-        throw new CopyException(String.format("[%s] is not storable at all", this));
+        throw new CopyException("[%s] is not storable at all".formatted(this));
     }
 
     /**
@@ -141,13 +142,15 @@ public abstract class DeprecatedStorable implements Storable {
         throw new UnsupportedOperationException("Designed as immutable instance");
     }
 
+    // TODO: Change of Object to BigInteger requires careful check and possible refactor.
     @Override
-    public void setNaturalId(Object id) {
+    public void setNaturalId(String id) {
         throw new UnsupportedOperationException("Designed as immutable instance");
     }
 
+    // TODO: Change of Object to BigInteger requires careful check and possible refactor.
     @Override
-    public void setID(Object id) {
+    public void setID(BigInteger id) {
         throw new UnsupportedOperationException("Designed as immutable instance");
     }
 

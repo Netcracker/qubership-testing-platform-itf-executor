@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@
 package org.qubership.automation.itf.configuration.dataset.impl.excel;
 
 import java.beans.Transient;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.dataset.DataSetList;
@@ -31,6 +31,8 @@ import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
 import org.qubership.automation.itf.core.model.jpa.storage.AbstractStorable;
 
 import com.google.common.base.Strings;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ExcelDataSetList extends AbstractStorable implements DataSetList {
 
@@ -41,9 +43,10 @@ public class ExcelDataSetList extends AbstractStorable implements DataSetList {
             @Nonnull DataSetListsSource parent, @Nonnull String id, @Nonnull String name) {
         this.repo = repo;
         setParent(parent);
-        setID(id);
-        setNaturalId(id);
         setName(name);
+
+        setID(generateId(id));
+        setNaturalId(id);
     }
 
     @Override
@@ -109,5 +112,21 @@ public class ExcelDataSetList extends AbstractStorable implements DataSetList {
     @Transient
     public ExcelDataSetListRepository repo() {
         return repo;
+    }
+
+    private static final String ALGORITHM = "SHA-256";
+
+    private static BigInteger generateId(String stringId) {
+        try {
+            MessageDigest md = MessageDigest.getInstance(ALGORITHM);
+            byte[] digest = md.digest(stringId.getBytes(StandardCharsets.UTF_8));
+
+            // signum = 1 ensures positive value
+            return new BigInteger(1, digest);
+
+        } catch (Exception e) {
+            // Fallback: use hashCode as 32-bit unsigned
+            return BigInteger.valueOf(((long) stringId.hashCode()) & 0xffffffffL);
+        }
     }
 }

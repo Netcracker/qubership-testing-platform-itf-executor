@@ -3,7 +3,7 @@
     <parent>
         <artifactId>mockingbird-transports-camel</artifactId>
         <groupId>org.qubership.mockingbird</groupId>
-        <version>4.4.368-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mockingbird-transport-soap-http</artifactId>
@@ -13,10 +13,6 @@
     <build>
         <finalName>mockingbird-transport-soap-http</finalName>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <groupId>org.apache.maven.plugins</groupId>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -29,8 +25,39 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib/${project.build.finalName}</outputDirectory>
-                            <excludeTransitive>true</excludeTransitive>
-                            <excludeArtifactIds>camel-ssh</excludeArtifactIds>
+<!--                            <excludeTransitive>true</excludeTransitive>-->
+<!--                            <excludeArtifactIds>camel-ssh</excludeArtifactIds>-->
+                            <excludeGroupIds>
+                                org.springframework,
+                                org.springframework.boot,
+                                org.springframework.data,
+                                org.springframework.cloud,
+                                org.springdoc,
+                                org.hibernate.orm,
+                                org.hibernate.validator,
+                                org.qubership.atp.auth,
+                                org.qubership.atp.common,
+                                org.javers,
+                                org.liquibase,
+                                com.hazelcast,
+                                org.mongodb,
+                                io.github.openfeign,
+                                io.micrometer,
+                                io.prometheus,
+                                io.zipkin.brave,
+                                io.zipkin.aws,
+                                io.undertow,
+                                io.swagger.core.v3,
+                                org.webjars,
+                                net.javacrumbs.shedlock,
+                                net.bytebuddy,
+                                org.bouncycastle,
+                                com.netflix.eureka,
+                                junit,
+                                org.mockito,
+                                org.junit.jupiter,
+                                org.hamcrest
+                            </excludeGroupIds>
                             <!--if you have NoClassFoundException for this transport then  include needed dependency here-->
                             <includeScope>runtime</includeScope>
                         </configuration>
@@ -43,7 +70,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-cxf</artifactId>
+            <artifactId>camel-cxf-soap</artifactId>
         </dependency>
         <dependency>
             <groupId>org.qubership.mockingbird</groupId>
@@ -61,6 +88,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.neethi</groupId>
             <artifactId>neethi</artifactId>
             <scope>compile</scope>
@@ -68,14 +100,6 @@
         <dependency>
             <groupId>org.apache.ws.xmlschema</groupId>
             <artifactId>xmlschema-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-cxf-transport</artifactId>
         </dependency>
     </dependencies>
 </project>

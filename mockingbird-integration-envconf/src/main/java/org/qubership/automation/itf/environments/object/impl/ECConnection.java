@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -60,20 +60,20 @@ public class ECConnection extends ConvertableECEntity<TransportConfiguration> {
                 }
             }
         } catch (Exception e) {
-            ECIErrorsCache.getInstance().put(eciSessionId, getName(), getClass().getSimpleName(), String.format(
-                            "Error while trying to get the transport type for connection: %s", getName()),
+            ECIErrorsCache.getInstance().put(eciSessionId, getName(), getClass().getSimpleName(),
+                    "Error while trying to get the transport type for connection: %s".formatted(getName()),
                     ValidationLevel.ERROR);
         }
-        ECIErrorsCache.getInstance().put(eciSessionId, getName(), getClass().getSimpleName(), String.format(
-                "Unrecognized type of connection: %s. Please, check the name of connection and its direction.",
-                getName()), ValidationLevel.ERROR);
+        ECIErrorsCache.getInstance().put(eciSessionId, getName(), getClass().getSimpleName(),
+                "Unrecognized type of connection: %s. Please, check the name of connection and its direction."
+                        .formatted(getName()), ValidationLevel.ERROR);
         return null;
     }
 
     public boolean forEnvironment() {
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             if (ECIConstants.CONNECTION_FOR_ENVIRONMENT_PARAMETER.value().equals(entry.getKey().toLowerCase())
-                    && "true".equals(entry.getValue().toLowerCase())) {
+                    && "true".equalsIgnoreCase(entry.getValue())) {
                 return true;
             }
         }

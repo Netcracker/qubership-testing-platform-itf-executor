@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,23 +19,17 @@ package org.qubership.automation.itf.ui.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 @Configuration
 public class UploadFilesConfiguration {
 
     /**
-     * @return {@link CommonsMultipartResolver} with next constraints:
-     * <br>
-     *    - maxUploadSize = 100MB
-     * <br>
-     *    - maxUploadSizePerFile = 100MB.
+     * @return {@link MultipartResolver} bean.
      */
     @Bean
-    public CommonsMultipartResolver commonsMultipartResolver() {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        commonsMultipartResolver.setMaxUploadSize(1024 * 1024 * 100);
-        commonsMultipartResolver.setMaxUploadSizePerFile(1024 * 1024 * 100);
-        return commonsMultipartResolver;
+    public MultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
     }
 }

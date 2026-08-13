@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class BvResponseProcessor {
                 // = BvHelper.getProjectUUID(projectId);
                 String reportLink = BvHelper.normalizeUrl(ApplicationConfig.env.getProperty("atp.catalogue.url",
                                 StringUtils.EMPTY),
-                        String.format(ENDPOINT_FOR_LINK_TO_TR, uuid)) + responseData.getTrId();
+                        ENDPOINT_FOR_LINK_TO_TR.formatted(uuid)) + responseData.getTrId();
                 BvHelper.completeSuccessfully(chainInstance, bvInstance, reportLink, successMessage,
                         responseData.getCompareResult());
                 changeTcContextStatus(chainInstance.getContext().tc(), responseData.getCompareResult());
@@ -113,7 +113,7 @@ public class BvResponseProcessor {
                 // = BvHelper.getProjectUUID(projectId);
                 String reportLink = BvHelper.normalizeUrl(ApplicationConfig.env.getProperty("atp.catalogue.url",
                                 StringUtils.EMPTY),
-                        String.format(ENDPOINT_FOR_LINK_TO_TR, uuid)) + responseData.getTrId();
+                        ENDPOINT_FOR_LINK_TO_TR.formatted(uuid)) + responseData.getTrId();
                 BvHelper.completeSuccessfully(chainInstance, bvInstance, reportLink, successMessage,
                         responseData.getCompareResult());
                 changeTcContextStatus(chainInstance.getContext().tc(), responseData.getCompareResult());
@@ -139,7 +139,7 @@ public class BvResponseProcessor {
             // BvHelper.getProjectUUID(projectId);
             String reportLink = BvHelper.normalizeUrl(ApplicationConfig.env.getProperty("atp.catalogue.url",
                             StringUtils.EMPTY),
-                    String.format(ENDPOINT_FOR_LINK_TO_TR, uuid)) + responseData.getTrId();
+                    ENDPOINT_FOR_LINK_TO_TR.formatted(uuid)) + responseData.getTrId();
             BvHelper.completeSuccessfully(chainInstance, bvInstance, reportLink, successMessage, "Not validated");
             return responseData.getTrId();
         } else {

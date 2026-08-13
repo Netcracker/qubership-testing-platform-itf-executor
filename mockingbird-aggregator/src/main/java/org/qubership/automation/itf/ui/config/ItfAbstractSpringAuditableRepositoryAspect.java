@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -60,7 +60,8 @@ public class ItfAbstractSpringAuditableRepositoryAspect {
 
     protected void onSave(JoinPoint pjp, Object returnedObject, boolean force) {
         if (getRepositoryInterface(pjp).isPresent() || force) {
-            AspectUtil.collectReturnedObjects(returnedObject).forEach(javersCommitAdvice::commitObject);
+            AspectUtil.collectReturnedObjects(returnedObject)
+                    .forEach(domainObject -> javersCommitAdvice.commitObject(pjp, domainObject));
         }
     }
 
@@ -68,7 +69,7 @@ public class ItfAbstractSpringAuditableRepositoryAspect {
         getRepositoryInterface(pjp).ifPresent(i -> {
             RepositoryMetadata metadata = DefaultRepositoryMetadata.getMetadata(i);
             for (Object deletedObject : AspectUtil.collectArguments(pjp)) {
-                handleDelete(metadata, deletedObject);
+                handleDelete(metadata, pjp, deletedObject);
             }
         });
     }
@@ -82,20 +83,19 @@ public class ItfAbstractSpringAuditableRepositoryAspect {
         return Optional.empty();
     }
 
-
-    void handleDelete(RepositoryMetadata repositoryMetadata, Object domainObjectOrId) {
+    void handleDelete(RepositoryMetadata repositoryMetadata, JoinPoint pjp, Object domainObjectOrId) {
         if (isIdClass(repositoryMetadata, domainObjectOrId)) {
             Class<?> domainType = repositoryMetadata.getDomainType();
             if (javers.findSnapshots(QueryBuilder.byInstanceId(domainObjectOrId, domainType).limit(1).build())
                     .isEmpty()) {
                 return;
             }
-            javersCommitAdvice.commitShallowDeleteById(domainObjectOrId, domainType);
+            javersCommitAdvice.commitShallowDeleteById(pjp, domainObjectOrId, domainType);
         } else if (isDomainClass(repositoryMetadata, domainObjectOrId)) {
             if (javers.findSnapshots(QueryBuilder.byInstance(domainObjectOrId).limit(1).build()).isEmpty()) {
                 return;
             }
-            javersCommitAdvice.commitShallowDelete(domainObjectOrId);
+            javersCommitAdvice.commitShallowDelete(pjp, domainObjectOrId);
         } else {
             throw new IllegalArgumentException("Domain object or object id expected");
         }
@@ -109,13 +109,12 @@ public class ItfAbstractSpringAuditableRepositoryAspect {
         return metadata.getIdType().isAssignableFrom(o.getClass());
     }
 
-
     public Commit commit(Object currentVersion) {
         return javers.commit(authorProvider.provide(), currentVersion);
     }
 
-    public void deleteHistoryEntity(Object localId, Class entity) {
-        javersCommitAdvice.commitShallowDeleteById(localId, HistoryEntityHelper.getHistoryEntityClass(entity));
+    public void deleteHistoryEntity(JoinPoint pjp, Object localId, Class entity) {
+        javersCommitAdvice.commitShallowDeleteById(pjp, localId, HistoryEntityHelper.getHistoryEntityClass(entity));
     }
 
     private Commit commitShallowDeleteById(GlobalIdDTO globalId) {

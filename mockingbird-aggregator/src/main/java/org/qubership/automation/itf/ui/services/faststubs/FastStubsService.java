@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +48,6 @@ import org.qubership.automation.itf.integration.users.UserService;
 import org.qubership.automation.itf.ui.controls.FastStubsProcessingException;
 import org.qubership.automation.itf.ui.model.User;
 import org.qubership.automation.itf.ui.util.FileUploadHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -58,13 +58,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class FastStubsService {
 
-    private ObjectMapper objectMapper;
-    private UserService userService;
-    private ExternalDataManagementService externalDataManagementService;
-    private ExecutorToMessageBrokerSender executorToMessageBrokerSender;
+    private final ObjectMapper objectMapper;
+    private final UserService userService;
+    private final ExternalDataManagementService externalDataManagementService;
+    private final ExecutorToMessageBrokerSender executorToMessageBrokerSender;
 //    private EventTriggerActivationService eventTriggerActivationService;
 
-    @Autowired
     public FastStubsService(ExternalDataManagementService externalDataManagementService,
                             ExecutorToMessageBrokerSender executorToMessageBrokerSender,
 //                            EventTriggerActivationService eventTriggerActivationService,
@@ -84,7 +83,7 @@ public class FastStubsService {
                     .getFastStubsCandidates(projectUuid, operationIds);
             return fastStubsCandidates.orElse(new ArrayList<>());
         } catch (Exception e) {
-            String error = String.format("An error occurred while retrieving the list of candidates. %s",
+            String error = "An error occurred while retrieving the list of candidates. %s".formatted(
                     (Objects.nonNull(e.getCause()) ? e.getCause().getMessage() : e.getMessage()));
             log.error(error, e);
             throw new FastStubsProcessingException(error);
@@ -106,21 +105,21 @@ public class FastStubsService {
 
                     TransportConfig trConfig = new TransportConfig();
                     trConfig.setTransportType(transportConfig.getTransportType());
-                    trConfig.setEndpoints(new ArrayList<StubEndpointConfig>() {
+                    trConfig.setEndpoints(new ArrayList<>() {
                         {
                             add(stubEndpointConfig);
                         }
                     });
-                    fastConfig.setTransportConfigs(new ArrayList<TransportConfig>() {
+                    fastConfig.setTransportConfigs(new ArrayList<>() {
                         {
                             add(trConfig);
                         }
                     });
 
                     String configAsString = objectMapper.writeValueAsString(fastConfig);
-                    String fileName = String.format("%s__%s__%s.json",
+                    String fileName = "%s__%s__%s.json".formatted(
                             projectUuid, transportConfig.getTransportType().name(),
-                            URLEncoder.encode(stubEndpointConfig.getConfiguredEndpoint(), "UTF-8"));
+                            URLEncoder.encode(stubEndpointConfig.getConfiguredEndpoint(), StandardCharsets.UTF_8));
                     storeFileAndNotifyInstances(fileName, configAsString, userService.getCurrentUserInfo(),
                             projectUuid);
                     collectAppliedFastConfigs(stubEndpointConfig, fastInfoConfigs);
@@ -152,7 +151,7 @@ public class FastStubsService {
             }
             fastConfigurationResponse.setFastInfoConfigs(fastInfoConfigs);
         } catch (Exception e) {
-            String error = String.format("Error while generate fast stubs configuration. %s",
+            String error = "Error while generate fast stubs configuration. %s".formatted(
                     (Objects.nonNull(e.getCause()) ? e.getCause().getMessage() : e.getMessage()));
             log.error(error, e);
             throw new FastStubsProcessingException(error);

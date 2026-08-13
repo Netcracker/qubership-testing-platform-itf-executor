@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.qubership.automation.itf.core.util.transport.service.report.Report;
 
 public class ReportIntegration {
 
-    private static ReportIntegration instance = new ReportIntegration();
+    private static final ReportIntegration instance = new ReportIntegration();
 
     private ReportIntegration() {
     }
@@ -120,9 +120,9 @@ public class ReportIntegration {
 
     void runAndReportAfterIntegrations(TcContext tcContext) {
         AbstractContainerInstance initiator = tcContext.getInitiator();
-        if (initiator instanceof CallChainInstance) {
-            runAfterIntegrations((CallChainInstance) initiator);
-            reportReportLinks((CallChainInstance) initiator);
+        if (initiator instanceof CallChainInstance chainInstance) {
+            runAfterIntegrations(chainInstance);
+            reportReportLinks(chainInstance);
         }
     }
 

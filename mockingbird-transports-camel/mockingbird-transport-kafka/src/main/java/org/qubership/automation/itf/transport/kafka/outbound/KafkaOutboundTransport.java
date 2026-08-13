@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import java.util.UUID;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.kafka.KafkaComponent;
 import org.apache.camel.component.kafka.KafkaConstants;
 import org.apache.camel.component.kafka.KafkaEndpoint;
@@ -65,7 +66,7 @@ public class KafkaOutboundTransport extends AbstractCamelOutboundTransport {
     protected String key;
     @Parameter(shortName = PropertyConstants.Commons.ENDPOINT_PROPERTIES, longName = "Extra Endpoint Properties",
             description = PropertyConstants.Commons.ENDPOINT_PROPERTIES_DESCRIPTION,
-            forServer = true, forTemplate = false, isDynamic = true, optional = true)
+            isDynamic = true, optional = true)
     protected Map<String, Object> properties;
 
     @Override
@@ -115,10 +116,7 @@ public class KafkaOutboundTransport extends AbstractCamelOutboundTransport {
         Map<String, String> authProps = isAuthParametersValid ? fillAuthParameters(extraProps) : null;
 
         String endpointUri = builder.append(Helper.setExtraProperties(extraProps)).toString();
-        KafkaEndpoint endpoint = new KafkaEndpoint(endpointUri, new KafkaComponent(CAMEL_CONTEXT));
-        endpoint.getConfiguration().setTopic(topic);
-        endpoint.getConfiguration().setBrokers(brokers);
-        endpoint.getConfiguration().setProducerBatchSize(0);
+        KafkaEndpoint endpoint = CAMEL_CONTEXT.getEndpoint(endpointUri, KafkaEndpoint.class);
         endpoint.getConfiguration().setClientId(projectUuid.toString());
         if (isAuthParametersValid) {
             setAuthParameters(endpoint, authProps);
@@ -145,7 +143,7 @@ public class KafkaOutboundTransport extends AbstractCamelOutboundTransport {
 
     private void setAuthParameters(KafkaEndpoint endpoint, Map<String, String> authProps) {
         if (!authProps.isEmpty()) {
-            String saslJaasConfig = String.format("%s required username=\"%s\" password=\"%s\";",
+            String saslJaasConfig = "%s required username=\"%s\" password=\"%s\";".formatted(
                     authProps.get("saslModule"), authProps.get("saslUsername"), authProps.get("saslPassword"));
             endpoint.getConfiguration().setSaslJaasConfig(saslJaasConfig);
             endpoint.getConfiguration().setSaslMechanism(authProps.get("saslMechanism"));

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import org.qubership.atp.integration.configuration.mdc.MdcUtils;
 import org.qubership.automation.itf.core.util.mdc.MdcField;
 import org.qubership.automation.itf.integration.atp2.kafka.dto.ProjectEvent;
 import org.qubership.automation.itf.integration.atp2.kafka.service.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -42,7 +41,6 @@ public class ProjectEventKafkaListener implements ProjectEventListener {
     private final ObjectMapper objectMapper = initMapper();
     private final ProjectService projectService;
 
-    @Autowired
     public ProjectEventKafkaListener(ProjectService projectService) {
         this.projectService = projectService;
     }

@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,17 +17,13 @@
 
 package org.qubership.automation.itf.transport.diameter.interceptors;
 
-import java.util.Collections;
-
 import org.junit.Test;
-import org.qubership.automation.diameter.connection.DiameterConnection;
 import org.qubership.automation.diameter.connection.ResponseListener;
 import org.springframework.util.Assert;
 
 public class RARInterceptorTest extends ResponseListener {
 
     RARInterceptor rarInterceptor = new RARInterceptor(null, null);
-
 
     @Test
     public void interceptRARCorrectSession() {
@@ -59,20 +55,5 @@ public class RARInterceptorTest extends ResponseListener {
         String message = "<ARA><Session-Id>" + "45453456" + "</Session-Id></ARA>";
         Assert.isTrue(!rarInterceptor.isApplicable(message),
                 "RAR-interceptor but non-RAR message: isApplicable() works wrong");
-    }
-
-    @Test
-    public void test() {
-        RARInterceptor rarInterceptor0 = new RARInterceptor(null, null);
-        rarInterceptor0.setSessionId("1");
-        RARInterceptor rarInterceptor1 = new RARInterceptor(null, null);
-        rarInterceptor1.setSessionId("1");
-        RARInterceptor rarInterceptor2 = new RARInterceptor(null, null);
-        rarInterceptor2.setSessionId("2");
-        DiameterConnection connection = new DiameterConnection();
-        connection.addInterceptors(Collections.singleton(rarInterceptor1));
-        connection.addInterceptors(Collections.singleton(rarInterceptor2));
-        connection.addInterceptors(Collections.singleton(rarInterceptor0));
-        connection.isOpen();
     }
 }

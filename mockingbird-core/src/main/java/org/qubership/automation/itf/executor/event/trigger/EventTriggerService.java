@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -40,9 +40,11 @@ public class EventTriggerService {
         SituationInstance situationInstance = event.getSituationInstance();
         List<ConditionParameter> conditionParameters = situationEventTrigger.getConditionParameters();
         InstanceContext instanceContext = situationInstance.getContext();
-        LOGGER.info("Event received by situation [{}], processing under {} {}...", situationInstance.getStepContainer(),
-                parent == null ? "" : parent.getClass().getSimpleName(),
-                parent == null ? "" : parent.getName());
+        boolean isParentNull = parent == null;
+        LOGGER.info("Event received by situation [{}], processing under {} {}...",
+                situationInstance.getStepContainer(),
+                getParentClassName(isParentNull, parent),
+                getParentName(isParentNull, parent));
         if (!instanceContext.tc().isFinished()) {
             if (conditionParameters == null || conditionParameters.isEmpty()
                     || ConditionsHelper.isApplicable(instanceContext, conditionParameters)) {
@@ -50,25 +52,33 @@ public class EventTriggerService {
                     LOGGER.info("Condition is empty, applicable anyway");
                 } else {
                     LOGGER.info("Conditions are applicable, handling under {} {}...",
-                            parent == null ? "" : parent.getClass().getSimpleName(),
-                            parent == null ? "" : parent.getName());
+                            getParentClassName(isParentNull, parent),
+                            getParentName(isParentNull, parent));
                 }
-                if (parent != null) {
+                if (!isParentNull) {
                     try {
                         ExecutionServices.getSituationExecutorService().execute(parent, instanceContext);
                     } catch (Exception e) {
-                        LOGGER.error(String.format("Error executing situation %s", parent), e);
+                        LOGGER.error("Error executing situation {}", parent, e);
                     }
                 } else {
                     LOGGER.warn("Run situation handler was called, but situation to execute is null");
                 }
             } else {
                 LOGGER.info("Condition property is not applicable, skip under {} {}",
-                        parent == null ? "" : parent.getClass().getSimpleName(),
-                        parent == null ? "" : parent.getName());
+                        getParentClassName(isParentNull, parent),
+                        getParentName(isParentNull, parent));
             }
         } else {
             LOGGER.info("Event was rejected due to context '{}' is closed", instanceContext.tc().getName());
         }
+    }
+
+    private static String getParentClassName(boolean isParentNull, Situation parent) {
+        return isParentNull ? "" : parent.getClass().getSimpleName();
+    }
+
+    private static String getParentName(boolean isParentNull, Situation parent) {
+        return isParentNull ? "" : parent.getName();
     }
 }

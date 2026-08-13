@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -193,7 +193,7 @@ public class ControllerHelper extends UIHelper {
     public static void addInterceptorConfiguration(Interceptor interceptor, String transportName,
                                                    Map<String, String> configuration) {
         List<InterceptorParams> paramsList = interceptor.getInterceptorParams();
-        InterceptorParams parameters = paramsList.isEmpty() ? new InterceptorParams() : paramsList.get(0);
+        InterceptorParams parameters = paramsList.isEmpty() ? new InterceptorParams() : paramsList.getFirst();
         parameters.setParent(interceptor);
         parameters.setTransportName(transportName);
         parameters.update(configuration);
@@ -224,8 +224,8 @@ public class ControllerHelper extends UIHelper {
         for (UIEventTrigger uiEventTrigger : triggersToAdd) {
             EventTrigger trigger = EventTriggerHelper.create(parent, uiEventTrigger.getType());
             uiEventTrigger.fillTrigger(trigger);
-            if (trigger instanceof OperationEventTrigger) {
-                parent.getOperationEventTriggers().add((OperationEventTrigger) trigger);
+            if (trigger instanceof OperationEventTrigger eventTrigger) {
+                parent.getOperationEventTriggers().add(eventTrigger);
             } else {
                 parent.getSituationEventTriggers().add((SituationEventTrigger) trigger);
             }

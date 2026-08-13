@@ -22,7 +22,7 @@
 -DITF_EXECUTOR_DB_PASSWORD=
 -DHTTP_PORT=
 -DKEYSTORE_PASSWORD=
--DSPRING_PROFILES=
+-DACTIVE_PROFILES_SPRING=
 -DKEYCLOAK_ENABLED=
 -DKEYCLOAK_CLIENT_NAME=
 -DKEYCLOAK_SECRET=
@@ -82,7 +82,7 @@
 | `ATP_SERVICE_PUBLIC`                                   | No        | true                                                                                                           | Enable or disable public integration with ATP                     |
 | `ATP_SERVICE_INTERNAL`                                 | No        | true                                                                                                           | Enable or disable internal integration with ATP                   |
 | `ATP_SERVICE_PATH`                                     | No        | /api/atp-itf-stubs/v1/**                                                                                       | Service path                                                      |
-| `SPRING_PROFILES`                                      | Yes       | default                                                                                                        | Spring active profiles                                            |
+| `ACTIVE_PROFILES_SPRING`                               | Yes       | default                                                                                                        | Spring active profiles                                            |
 | `KEYCLOAK_ENABLED`                                     | Yes       | false                                                                                                          | Enable or disable Keycloak integration                            |
 | `KEYCLOAK_CLIENT_NAME`                                 | Yes       | atp2                                                                                                           | Keycloak resource name                                            |
 | `KEYCLOAK_SECRET`                                      | Yes       | f3e17149-94d0-47ed-a5b7-744c332fdf66                                                                           | keycloak secret value                                             |
@@ -163,7 +163,7 @@
 | `EXECUTOR_STUBS_OUTGOING_MESSAGES_TTL`                 | No        | 90000                                                                                                          | Executor stubs outgoing response message time-to-live value       |
 | `REPORTS_MESSAGES_TTL`                                 | No        | 1800000                                                                                                        | Reports message time-to-live value                                |
 | `REPORT_USE_COMPRESSION`                               | No        | true                                                                                                           | Reports use compression                                           |
-| `REPORT_USE_ASYNC_SEND`                                | No        | true                                                                                                           | Reports use async send                                            |
+| `REPORT_USE_ASYNC_SEND`                                |           | true                                                                                                           | Reports use async send                                            |
 | `REPORT_MAX_THREAD_POOL_SIZE`                          | No        | 1200                                                                                                           | Reports max thread pool size value                                |
 | `STUBS_EXECUTOR_CONCURRENCY`                           | No        | 120-900                                                                                                        | Stubs executor listener container factory concurrency             |
 | `STUBS_EXECUTOR_MAX_MESSAGES_PER_TASK`                 | No        | -1                                                                                                             | Stubs executor listener container factory max messages per task   |

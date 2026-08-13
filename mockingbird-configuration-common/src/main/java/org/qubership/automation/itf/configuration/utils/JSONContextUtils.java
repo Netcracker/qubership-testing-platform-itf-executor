@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,21 +24,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class JSONContextUtils {
 
     public static JsonContext convert(@Nonnull ObjectNode from, @Nonnull ObjectMapper mapper) throws IOException {
         JsonContext to = new JsonContext();
         LeafsIterator<Map.Entry<String, JsonNode>> leafsIter =
-                new LeafsIterator<Map.Entry<String, JsonNode>>(from.fields()) {
+                new LeafsIterator<>(from.fields()) {
                     @Nullable
                     @Override
                     protected Iterator<? extends Map.Entry<String, JsonNode>> getChildren(
@@ -52,7 +51,7 @@ public class JSONContextUtils {
                 };
         while (leafsIter.hasNext()) {
             List<Map.Entry<String, JsonNode>> path = leafsIter.next();
-            Map.Entry<String, JsonNode> leaf = path.get(path.size() - 1);//last one
+            Map.Entry<String, JsonNode> leaf = path.getLast();//last one
             Stream<Map.Entry<String, JsonNode>> pathToLeaf = path.stream().limit(path.size() - 1);//except leaf
             JsonNode leafNode = leaf.getValue();
             String paramKey = leaf.getKey();

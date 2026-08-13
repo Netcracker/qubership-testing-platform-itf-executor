@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ public class LoadPart extends Directive {
                 .getFirstPartByNameAndProjectId(templateIdentifier, projectId);
         if (templates.size() > 1) {
             throw new IllegalArgumentException(
-                    String.format("More than one template found by name '%s' in the project id %s",
+                    "More than one template found by name '%s' in the project id %s".formatted(
                             templateIdentifier, projectId));
         } else if (templates.isEmpty()) {
             log.error("Template isn't found by name '{}' in project id {}", templateIdentifier, projectId);

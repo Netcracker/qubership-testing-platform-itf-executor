@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,27 +19,25 @@ package org.qubership.automation.itf.transport.camel;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.LoggingErrorHandlerBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.support.ServiceSupport;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public interface CamelContextProvider {
+    Logger LOGGER = LoggerFactory.getLogger(CamelContextProvider.class);
     CamelContext CAMEL_CONTEXT = new DefaultCamelContext();
     ProducerTemplate template = CAMEL_CONTEXT.createProducerTemplate();
 
     default void start() {
-        if (!((ServiceSupport) CAMEL_CONTEXT).isStarted()) {
+        if (!CAMEL_CONTEXT.isStarted()) {
             try {
                 synchronized (CAMEL_CONTEXT) {
-                    if (!((ServiceSupport) CAMEL_CONTEXT).isStarted()) {
-                        CAMEL_CONTEXT.setErrorHandlerBuilder(
-                                new LoggingErrorHandlerBuilder(LoggerFactory.getLogger(CamelContextProvider.class)));
+                    if (!CAMEL_CONTEXT.isStarted()) {
                         CAMEL_CONTEXT.start();
                     }
                 }
             } catch (Exception e) {
-                LoggerFactory.getLogger(CamelContextProvider.class).error("Failed starting of CamelContext", e);
+                LOGGER.error("Failed starting of CamelContext", e);
             }
         }
     }

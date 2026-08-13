@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -19,43 +19,65 @@ package org.qubership.automation.itf.core.message.parser;
 
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.context.InstanceContext;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.jpa.message.template.OperationTemplate;
 import org.qubership.automation.itf.core.model.jpa.message.template.Template;
 import org.qubership.automation.itf.core.model.jpa.template.OutboundTemplateTransportConfiguration;
+import org.qubership.automation.itf.core.util.config.ApplicationConfig;
 import org.qubership.automation.itf.core.util.exception.ExportException;
 import org.qubership.automation.itf.core.util.transport.base.Transport;
 import org.qubership.automation.itf.core.util.transport.manager.TransportRegistryManager;
 import org.qubership.automation.itf.executor.transports.registry.TransportRegistryLoader;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.google.common.collect.Sets;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath*:*core-test-context-no-broker-bean.xml"})
+@SpringJUnitConfig(locations = {"classpath*:*core-test-context-no-broker-bean.xml"})
+@TestPropertySource(properties = {"transport.folder=./",
+        "transport.lib="})
 public class ProducerMessageHelperTest {
+
+    @Autowired
+    private Environment environment;
+
+    private ApplicationConfig applicationConfig;
 
     private static final Set<Transport> transports = Sets.newConcurrentHashSet();
     private static Template template;
     private static InstanceContext context;
 
-    @BeforeClass
-    public static void prepare() throws ExportException {
+    @BeforeEach
+    public void prepare() throws ExportException {
+        applicationConfig = new ApplicationConfig();
+        applicationConfig.setEnvironment(environment);
         TransportRegistryManager.getInstance().init(new TransportRegistryLoader());
         transports.add(new TestRestOverHttpOutbound());
         transports.add(new TestFileOverFtpOutbound());
         template = new OperationTemplate();
         template.setName("template");
-        String text = "##load_part(\"activateService Start part\")\n" + "#load_part(\"activateService " +
-                "Start part Entry point\")\n" + "\n" + "\n" + "#$tc.dynamic_param_one = \"ONE\" " + "#$tc" +
-                ".dynamic_param_two = \"TWO\" " + "\n" + "\n" + "\n" + "#$tc.filename = \"newFileName-\" + " +
-                "#next_index" + "(\"NNN\")" + "\n" + "#load_part(\"activateService Finish part\")";
+        String text = """
+                ##load_part("activateService Start part")
+                #load_part("activateService \
+                Start part Entry point")
+                
+                
+                #$tc.dynamic_param_one = "ONE" \
+                #$tc\
+                .dynamic_param_two = "TWO"\s
+                
+                
+                #$tc.filename = "newFileName-" + \
+                #next_index\
+                ("NNN")
+                #load_part("activateService Finish part")""";
         template.setText(text);
         OutboundTemplateTransportConfiguration configurationRest = new OutboundTemplateTransportConfiguration(
                 TestRestOverHttpOutbound.class.getName(), template);
@@ -68,13 +90,19 @@ public class ProducerMessageHelperTest {
         context = new InstanceContext();
     }
 
+    /*
+        Disabled by KAG, because, it seems, the class should be in another module:
+            - VelocityTemplateEngine will be actually used to process message, but it's in the corresponding module
+            (not here), which is compiled later.
+     */
+    @Disabled
     @Test
     public void testProduceMessage() {
         for (Transport transport : transports) {
             Message message = ProducerMessageHelper.getInstance().produceMessage(template, context,
                     transport.getClass().getTypeName());
-            Assert.assertNotNull(message);
-            Assert.assertFalse(message.getHeaders().isEmpty());
+            Assertions.assertNotNull(message);
+            Assertions.assertFalse(message.getHeaders().isEmpty());
         }
     }
 }

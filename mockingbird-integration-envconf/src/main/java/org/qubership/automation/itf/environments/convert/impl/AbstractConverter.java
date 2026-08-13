@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -54,10 +54,10 @@ abstract class AbstractConverter<T extends EciConfigurable, V extends ECEntity<?
     }
 
     public T getConfigurableEntity(V objectToConvert) {
-        return (objectToConvert instanceof ECServer)
+        return (objectToConvert instanceof ECServer ecs)
                 ? (T) CoreObjectManager.getInstance().getSpecialManager(objectToConvert.getGenericType(),
                 EnvConfigurationManager.class).getByEcId(objectToConvert.getEcId(), objectToConvert.getName(),
-                ((ECServer) objectToConvert).getUrl())
+                ecs.getUrl())
                 : (T) CoreObjectManager.getInstance().getSpecialManager(objectToConvert.getGenericType(),
                 EnvConfigurationManager.class).getByEcId(objectToConvert.getEcId());
     }

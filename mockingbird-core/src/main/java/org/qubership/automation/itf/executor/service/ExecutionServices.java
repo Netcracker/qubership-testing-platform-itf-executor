@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import java.util.Map;
 import org.qubership.automation.itf.core.instance.situation.SituationExecutorService;
 import org.qubership.automation.itf.core.instance.testcase.chain.CallChainExecutorService;
 import org.qubership.automation.itf.core.instance.testcase.execution.ExecutionProcessManagerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,7 +35,6 @@ public class ExecutionServices {
 
     private static final Map<String, Object> executorServiceMap = new HashMap<>();
 
-    @Autowired
     public ExecutionServices(CallChainExecutorService callChainExecutorService,
                              SituationExecutorService situationExecutorService,
                              ExecutionProcessManagerService executionProcessManagerService,

@@ -35,7 +35,7 @@ public class ModulesInitializer {
         Set<Class<?>> classes = Reflection.getReflections().getTypesAnnotatedWith(Initializer.class);
         for (Class<?> aClass : classes) {
             try {
-                aClass.newInstance();
+                aClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 LOGGER.error("Error in initializer {}", aClass.getName(), e);
             }

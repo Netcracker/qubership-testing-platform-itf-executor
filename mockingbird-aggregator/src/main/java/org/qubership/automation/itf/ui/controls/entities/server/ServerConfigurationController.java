@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package org.qubership.automation.itf.ui.controls.entities.server;
 import static org.qubership.automation.itf.ui.controls.util.ControllerHelper.getManager;
 
 import java.math.BigInteger;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -33,16 +32,20 @@ import java.util.UUID;
 import org.json.simple.JSONObject;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.hibernate.spring.managers.custom.SearchByProjectIdManager;
+import org.qubership.automation.itf.core.hibernate.spring.managers.executor.ServerObjectManager;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.communication.TriggerSample;
 import org.qubership.automation.itf.core.model.communication.message.ServerTriggerSyncRequest;
 import org.qubership.automation.itf.core.model.jpa.environment.Environment;
 import org.qubership.automation.itf.core.model.jpa.environment.InboundTransportConfiguration;
+import org.qubership.automation.itf.core.model.jpa.environment.OutboundTransportConfiguration;
 import org.qubership.automation.itf.core.model.jpa.environment.TriggerConfiguration;
 import org.qubership.automation.itf.core.model.jpa.server.Server;
 import org.qubership.automation.itf.core.model.jpa.system.System;
 import org.qubership.automation.itf.core.model.jpa.transport.Configuration;
+import org.qubership.automation.itf.core.util.Pair;
 import org.qubership.automation.itf.core.util.constants.TriggerState;
+import org.qubership.automation.itf.core.util.helper.ServerUtils;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.ui.controls.entities.util.ConfigurationControllerHelper;
 import org.qubership.automation.itf.ui.controls.entities.util.ResponseCacheHelper;
@@ -59,9 +62,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -95,7 +98,7 @@ public class ServerConfigurationController {
     @Transactional(readOnly = true)
     @Modifying
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/server/outbound", method = RequestMethod.GET)
+    @GetMapping("/server/outbound")
     @Operation(summary = "GetOutbound",
             description = "Retrieve outbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_QUERY_API})
@@ -117,7 +120,7 @@ public class ServerConfigurationController {
     @Transactional(readOnly = true)
     @Modifying
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/server/inbound", method = RequestMethod.GET)
+    @GetMapping("/server/inbound")
     @Operation(summary = "GetInbound",
             description = "Retrieve inbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_QUERY_API})
@@ -138,7 +141,46 @@ public class ServerConfigurationController {
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/server/outbound", method = RequestMethod.PUT)
+    @PutMapping("/server/outbound_old")
+    @Operation(summary = "SetOutbound",
+            description = "Set outbound for system by server id, system id",
+            tags = {SwaggerConstants.SERVER_CONFIGURATION_COMMAND_API})
+    @AuditAction(auditAction = "Setup Outbounds for System id {{#systemId}} and Server id {{#serverId}} in the "
+            + "project {{#projectUuid}}")
+    public void setupOutboundOld(
+            @RequestParam(value = "serverId", defaultValue = "0") String serverId,
+            @RequestParam(value = "systemId", defaultValue = "0") String systemId,
+            @RequestBody UIServerOutbound serverOutbound,
+            @RequestParam(value = "projectId") BigInteger projectId,
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
+        String operation = "set outbound for system by server id, system id";
+        Server server = (Server) getAndCheckObject(serverId, Server.class, operation);
+        System system = (System) getAndCheckObject(systemId, System.class, operation);
+        List<Pair<UIConfiguration, Configuration>> pairs = new ArrayList<>();
+        if (serverOutbound.getConfigurations() != null) {
+            for (UIConfiguration uiConfiguration : serverOutbound.getConfigurations()) {
+                Configuration configuration = server.getOutbound(system, uiConfiguration.getType());
+                pairs.add(new Pair<>(uiConfiguration, configuration));
+            }
+            for(Pair<UIConfiguration, Configuration> pair : pairs) {
+                UIConfiguration uiConfiguration = pair.getKey();
+                Configuration configuration = pair.getValue();
+                if ("Outbound REST Synchronous".equals(uiConfiguration.getUserTypeName())
+                        || "Outbound SOAP Over HTTP Synchronous".equals(uiConfiguration.getUserTypeName())) {
+                    ResponseCacheHelper.beforeUpdatedForRestAndSoapTransport(configuration, uiConfiguration, projectId);
+                }
+                for (UIProperty uiProperty : uiConfiguration.getProperties()) {
+                    configurationControllerHelper.setProperty(configuration, uiProperty, projectUuid);
+                }
+            }
+        }
+        server.setUrl(serverOutbound.getUrl());
+        server.store();
+    }
+
+    @Transactional
+    @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
+    @PutMapping("/server/outbound")
     @Operation(summary = "SetOutbound",
             description = "Set outbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_COMMAND_API})
@@ -149,29 +191,36 @@ public class ServerConfigurationController {
             @RequestParam(value = "systemId", defaultValue = "0") String systemId,
             @RequestBody UIServerOutbound serverOutbound,
             @RequestParam(value = "projectId") BigInteger projectId,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         String operation = "set outbound for system by server id, system id";
-        Server server = (Server) getAndCheckObject(serverId, Server.class, operation);
         System system = (System) getAndCheckObject(systemId, System.class, operation);
-        server.setUrl(serverOutbound.getUrl());
-        if (serverOutbound.getConfigurations() != null) {
-            for (UIConfiguration uiConfiguration : serverOutbound.getConfigurations()) {
-                Configuration configuration = server.getOutbound(system, uiConfiguration.getType());
-                if ("Outbound REST Synchronous".equals(uiConfiguration.getUserTypeName())
-                        || "Outbound SOAP Over HTTP Synchronous".equals(uiConfiguration.getUserTypeName())) {
-                    ResponseCacheHelper.beforeUpdatedForRestAndSoapTransport(configuration, uiConfiguration, projectId);
-                }
-                for (UIProperty uiProperty : uiConfiguration.getProperties()) {
-                    configurationControllerHelper.setProperty(configuration, uiProperty, projectUuid);
+        Server server = (Server) getAndCheckObject(serverId, Server.class, operation);
+        server = ServerUtils.syncOutbounds(server, system);
+        Iterable<OutboundTransportConfiguration> configurations = ServerObjectManager.INSTANCE
+                .getOutbounds(server, system);
+        if (configurations != null) {
+            for (OutboundTransportConfiguration conf : configurations) {
+                for (UIConfiguration uiConfiguration : serverOutbound.getConfigurations()) {
+                    if (conf.getTypeName().equals(uiConfiguration.getType())) {
+                        if ("Outbound REST Synchronous".equals(uiConfiguration.getUserTypeName())
+                                || "Outbound SOAP Over HTTP Synchronous".equals(uiConfiguration.getUserTypeName())) {
+                            ResponseCacheHelper.beforeUpdatedForRestAndSoapTransport(conf, uiConfiguration, projectId);
+                        }
+                        for (UIProperty uiProperty : uiConfiguration.getProperties()) {
+                            configurationControllerHelper.setProperty(conf, uiProperty, projectUuid);
+                        }
+                        break;
+                    }
                 }
             }
         }
+        server.setUrl(serverOutbound.getUrl());
         server.store();
     }
 
     @Transactional
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"UPDATE\")")
-    @RequestMapping(value = "/server/inbound", method = RequestMethod.PUT)
+    @PutMapping("/server/inbound")
     @Operation(summary = "SetInbound",
             description = "Set inbound for system by server id, system id",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_COMMAND_API})
@@ -182,12 +231,11 @@ public class ServerConfigurationController {
             @RequestParam(value = "systemId", defaultValue = "0") String systemId,
             @RequestParam(value = "quickSave", defaultValue = "false") boolean quickSave,
             @RequestBody UIServerInbound serverInbound,
-            @RequestParam(value = "projectUuid") UUID projectUuid) throws Exception {
+            @RequestParam(value = "projectUuid") UUID projectUuid) {
         ServerTriggerSyncRequest serverTriggerSyncRequest = new ServerTriggerSyncRequest();
         String operation = "set inbound for system by server id, system id";
         Server server = (Server) getAndCheckObject(serverId, Server.class, operation);
         System system = (System) getAndCheckObject(systemId, System.class, operation);
-        server.setUrl(serverInbound.getUrl());
         Collection<InboundTransportConfiguration> inbound = server.getInbounds(system);
         if (serverInbound.getConfigurations() != null) {
             for (UIInboundConfiguration configuration : serverInbound.getConfigurations()) {
@@ -208,13 +256,14 @@ public class ServerConfigurationController {
                 }
             }
         }
+        server.setUrl(serverInbound.getUrl());
         server.store();
         return serverTriggerSyncRequest;
     }
 
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "server/checkSystemServerDuplications", method = RequestMethod.GET)
+    @GetMapping("server/checkSystemServerDuplications")
     @Operation(summary = "CheckDuplicates",
             description = "Check for System-Server duplicates",
             tags = {SwaggerConstants.SERVER_CONFIGURATION_QUERY_API})
@@ -230,7 +279,7 @@ public class ServerConfigurationController {
                         .getByProjectId(projectId);
         for (Environment env1 : environments) {
             for (Environment env2 : environments) {
-                if (env1.getID() != env2.getID()) {
+                if (!Objects.equals(env1.getID(), env2.getID())) {
                     res.append(findDuplications(env1, env2, INBOUND));
                     res.append(findDuplications(env1, env2, OUTBOUND));
                 }

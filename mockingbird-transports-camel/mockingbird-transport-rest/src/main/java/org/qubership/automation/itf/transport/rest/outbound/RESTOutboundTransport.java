@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -24,12 +24,13 @@ import java.util.UUID;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.http4.HttpComponent;
-import org.apache.camel.component.http4.HttpEndpoint;
-import org.apache.camel.http.common.HttpOperationFailedException;
-import org.apache.commons.httpclient.HttpStatus;
+import org.apache.camel.component.http.HttpComponent;
+import org.apache.camel.component.http.HttpEndpoint;
+import org.apache.camel.http.base.HttpOperationFailedException;
+//import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.HttpStatus;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;
@@ -60,14 +61,14 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
 
     @Override
     protected Exchange createRequestExchange(Message message, ProducerTemplate template, Map<String, Object> headers,
-                                             String endpoint, HttpComponent httpComponent) throws Exception {
+                                             String endpoint, HttpComponent httpComponent) {
         int loopIndex = 0;
         boolean autoRedirect = checkRemoveFollowRedirectsHeader(headers);
         return createRequestExchange(message, template, headers, endpoint, autoRedirect, loopIndex, httpComponent);
     }
 
     @Override
-    protected org.apache.camel.Message composeBody(org.apache.camel.Message camelMessage, Message itfMessage) throws Exception {
+    protected org.apache.camel.Message composeBody(org.apache.camel.Message camelMessage, Message itfMessage) {
         return Helper.composeBodyForREST(camelMessage, itfMessage);
     }
 
@@ -84,6 +85,11 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
             resp = template.request(endpoint, fillOutputExchange(message, headers));
         } else {
             String randomUuid = "out" + UUID.randomUUID();
+            boolean disableRedirects = getBooleanValue(headers.get("disableRedirects"));
+            if (disableRedirects) {
+                httpComponent.setFollowRedirects(false);
+                httpComponent.setRedirectHandlingDisabled(true);
+            }
             CAMEL_CONTEXT.addComponent(randomUuid, httpComponent);
             HttpEndpoint endpointObj;
             try {
@@ -95,6 +101,9 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
                 if (endpoint.contains("deleteWithBody=true")) {
                     endpointObj.setDeleteWithBody(true);
                 }
+                if (disableRedirects) {
+                    endpointObj.setThrowExceptionOnFailure(false);
+                }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -103,8 +112,7 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
         }
 
         //Auto Redirect when status code 302 for REST Sync (POST), see NITP-4451
-        if (resp.getException() instanceof HttpOperationFailedException) {
-            HttpOperationFailedException ex = (HttpOperationFailedException) resp.getException();
+        if (resp.getException() instanceof HttpOperationFailedException ex) {
             int statusCode = ex.getStatusCode();
             if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY) {
                 if (getOrDefault(message.getConnectionProperties(), HTTPConstants.METHOD, method).equals("POST") &&
@@ -138,13 +146,15 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
 
     private void logRedirect(String endpoint, Exchange resp, int loopIndex) {
         HttpOperationFailedException ex = (HttpOperationFailedException) resp.getException();
-        LOGGER.debug("Redirection attempt #{}, original endpoint '{}': Response status: {}\n"
-                        + " Response:\n"
-                        + "   Exception: {}\n" +
-                        "   - URI: {}\n" +
-                        "   - RedirectLocation: {}\n" +
-                        "   - ResponseBody: {}\n" +
-                        "   - ResponseHeaders: {}\n",
+        LOGGER.debug("""
+                        Redirection attempt #{}, original endpoint '{}': Response status: {}
+                         Response:
+                           Exception: {}
+                           - URI: {}
+                           - RedirectLocation: {}
+                           - ResponseBody: {}
+                           - ResponseHeaders: {}
+                        """,
                 loopIndex, endpoint, ex.getStatusCode(), ex,
                 ex.getUri(),
                 ex.getRedirectLocation(),

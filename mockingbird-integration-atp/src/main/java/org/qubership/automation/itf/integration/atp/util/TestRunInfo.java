@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ import org.qubership.automation.itf.core.util.constants.StartedFrom;
 import org.qubership.automation.itf.core.util.constants.Status;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.core.util.transport.service.report.Report;
+import org.qubership.automation.itf.executor.service.ExecutionServices;
 import org.qubership.automation.itf.integration.atp.action.ATPActionFactory;
 import org.qubership.automation.itf.integration.atp.action.model.impl.AbstractAtpAction;
 import org.qubership.automation.itf.integration.atp.model.ActionEntity;
@@ -92,7 +94,7 @@ public class TestRunInfo {
     private ConfigurationEntity configuration;
     private List<CallchainRunInfo> callchainsToExecute = new ArrayList<>();
     private Environment environment;
-    private Map<String, Set<System>> systems = new HashMap<>();
+    private final Map<String, Set<System>> systems = new HashMap<>();
     private Map<String, String> tcpDumpOptions = null;
     private String bvAction = null;
     private TestRunContext ramTestRunContext;
@@ -211,20 +213,21 @@ public class TestRunInfo {
         tcContextRamExtension.setAsync(false);
         tcContextRamExtension.setRunId(getTestRunId());
         tcContextRamExtension.setRunContext(ramTestRunContext);
-        TcContext tc = new TcContext();
+
+        TcContext tc = ExecutionServices.getTCContextService().createInMemory(projectId, projectUuid);
         if (ramTestRunContext.getAtpCompaund() != null) {
-            tc.setID(ramTestRunContext.getAtpCompaund().getSectionId());
+            tc.setNaturalId(ramTestRunContext.getAtpCompaund().getSectionId());
         }
         tc.setStartedFrom(startedFrom);
-        tc.setProjectId(projectId);
-        tc.setProjectUuid(projectUuid);
         tc.setNeedToReportToAtp(true);
         tc.extend(tcContextRamExtension);
+
         InstanceRamExtension extension = new InstanceRamExtension();
         extension.setSectionId(getLogRecordId());
+
         CallChainInstance instance = new CallChainInstance();
         instance.setName("Errors");
-        instance.setID(BigInteger.valueOf(1000 + (int) (Math.random() * (999001))));
+        instance.setID(BigInteger.valueOf(1000 + (int) (ThreadLocalRandom.current().nextDouble() * (999001))));
         instance.getContext().setTC(tc);
         instance.extend(extension);
         tc.setInitiator(instance);
@@ -347,22 +350,19 @@ public class TestRunInfo {
             currentObject = (JSONObject) currentObject.get(element);
         }
         element = arrayOfElements[arrayOfElements.length - 1]; //last element
-        if ((itemValue instanceof String && StringUtils.isEmpty((String) itemValue)) || Objects.isNull(itemValue)) {
+        if ((itemValue instanceof String string && StringUtils.isEmpty(string)) || Objects.isNull(itemValue)) {
             currentObject.putIfAbsent(element, itemValue);
-        } else if (itemValue instanceof JSONObject) {
-            JSONObject childJsonObject = (JSONObject) itemValue;
+        } else if (itemValue instanceof JSONObject childJsonObject) {
             JSONObject newChildJsonObject = new JSONObject();
             performContext(childJsonObject, newChildJsonObject);
             if (currentObject.containsKey(element) && "".equals(currentObject.get(element))) {
                 currentObject.remove(element);
             }
             currentObject.putIfAbsent(element, newChildJsonObject);
-        } else if (itemValue instanceof JSONArray) {
-            JSONArray childJsonArray = (JSONArray) itemValue;
+        } else if (itemValue instanceof JSONArray childJsonArray) {
             JSONArray newChildJsonArray = new JSONArray();
             for (Object obj : childJsonArray) {
-                if (obj instanceof JSONObject) {
-                    JSONObject childJsonObject = (JSONObject) obj;
+                if (obj instanceof JSONObject childJsonObject) {
                     JSONObject newChildJsonObject = new JSONObject();
                     performContext(childJsonObject, newChildJsonObject);
                     newChildJsonArray.add(newChildJsonObject);
@@ -391,8 +391,7 @@ public class TestRunInfo {
             JSONArray newChildJsonArray = new JSONArray();
 
             for (Object obj : childJsonArray) {
-                if (obj instanceof JSONObject) {
-                    JSONObject childJsonObject = (JSONObject) obj;
+                if (obj instanceof JSONObject childJsonObject) {
                     JSONObject newChildJsonObject = new JSONObject();
                     performContext(childJsonObject, newChildJsonObject);
                     newChildJsonArray.add(newChildJsonObject);
@@ -421,7 +420,7 @@ public class TestRunInfo {
                     Environment env = CoreObjectManager.getInstance()
                             .getSpecialManager(Environment.class, EnvironmentManager.class)
                             .findByServerAndSystems(
-                                    (BigInteger) servers.get(0).getID(),
+                                    (BigInteger) servers.getFirst().getID(),
                                     getIds(systems.get(OUTBOUND)));
                     if (env != null) {
                         environment = env;
@@ -613,7 +612,7 @@ public class TestRunInfo {
                 BigInteger internalProjectId = CoreObjectManager.getInstance().getSpecialManager(StubProject.class,
                         SearchManager.class).getEntityInternalIdByUuid(projectUuid);
                 if (internalProjectId == null) {
-                    String error = String.format("ITF-project was not found by UUID = %s", projectUuid);
+                    String error = "ITF-project was not found by UUID = %s".formatted(projectUuid);
                     LOGGER.error(error);
                     throw new IllegalArgumentException(error);
                 } else {

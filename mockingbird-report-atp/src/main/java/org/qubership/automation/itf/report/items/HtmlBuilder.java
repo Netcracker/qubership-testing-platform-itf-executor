@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 package org.qubership.automation.itf.report.items;
 
 public class HtmlBuilder {
-    private static String bvHighlighterBulkValidatorStyles = " .IDENTICAL { color:black;  background-color: "
+    private static final String bvHighlighterBulkValidatorStyles = " .IDENTICAL { color:black;  background-color: "
             + "lightgreen; } .SIMILAR { color: #000000; background-color: #FFFF77; } .NORMAL { color:blue; } .CHANGED {"
             + " color:#ff9999; } .MODIFIED { background-color:#ff9999; } .EXTRA { background-color: orange; } .MISSED {"
             + " background-color: #C7EDFC; } .ERROR { background-color:yellow; color:red } .highlight-container "
@@ -94,7 +94,7 @@ public class HtmlBuilder {
             "    background: lightgrey;\n" +
             "}";
     */
-    private StringBuilder builder = new StringBuilder();
+    private final StringBuilder builder = new StringBuilder();
 
     public HtmlBuilder() {
         builder.append("<html>");
@@ -113,10 +113,12 @@ public class HtmlBuilder {
                 .append(bvHighlighterBulkValidatorStyles)
                 //.append(bvHighlighterItfStyles)
                 .append("</style>");
-        builder.append("<script type='application/javascript'>").append("function toggle(root) {\n" +
-                "\tjQuery(root).parent().find('pre').toggle();\n" +
-                "\tjQuery(root).text(jQuery(root).text() == 'Collapse'?'Expand':'Collapse');\n" +
-                "}").append("</script>");
+        builder.append("<script type='application/javascript'>").append("""
+                function toggle(root) {
+                	jQuery(root).parent().find('pre').toggle();
+                	jQuery(root).text(jQuery(root).text() == 'Collapse'?'Expand':'Collapse');
+                }\
+                """).append("</script>");
     }
 
     public HtmlBuilder beginTable(String title) {

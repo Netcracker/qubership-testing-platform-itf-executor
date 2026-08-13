@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -27,9 +27,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Triple;
 import org.qubership.automation.itf.configuration.dataset.impl.excel.ExcelDataSetListRepository;
@@ -52,6 +49,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.ImmutableList;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @Component
 public class BaseDataSetListManager implements IDataSetListManager, ApplicationListener<HttpClientReadyEvent> {
@@ -60,7 +59,7 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseDataSetListManager.class);
     private final BigInteger folderId = new BigInteger("7");
     private Collection<DataSetListRepository> repos;
-    private final Folder<DataSetListsSource> folder = new Folder<DataSetListsSource>(DataSetListsSource.class) {
+    private final Folder<DataSetListsSource> folder = new Folder<>(DataSetListsSource.class) {
         @Override
         public List<DataSetListsSource> getObjects() {
             return ImmutableList.copyOf(BaseDataSetListManager.this.getAllSources());
@@ -72,7 +71,7 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
         }
 
         @Override
-        public Object getID() {
+        public BigInteger getID() {
             return folderId;
         }
     };
@@ -126,7 +125,7 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
     }
 
     @Override
-    public List<? extends DataSetList> getByNatureId(@Nonnull Object id, Object projectId) {
+    public List<? extends DataSetList> getByNatureId(@Nonnull String id, Object projectId) {
         ArrayList<DataSetList> ds = new ArrayList<>();
         if (isUuid(id)) {
             ds.add(remoteRepo.map(repo -> repo.getByNatureId(id, projectId)).orElse(null));
@@ -187,11 +186,11 @@ public class BaseDataSetListManager implements IDataSetListManager, ApplicationL
 
     @Override
     public DataSetList getById(@Nonnull Object id) {
-        return getByNatureId(id, null).get(0);
+        return getByNatureId(id.toString(), null).getFirst();
     }
 
     public DataSetList getById(@Nonnull Object id, Object projectId) {
-        return getByNatureId(id, projectId).get(0);
+        return getByNatureId(id.toString(), projectId).getFirst();
     }
 
     @Override

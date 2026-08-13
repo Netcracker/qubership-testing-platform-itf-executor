@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@
 
 package org.qubership.automation.itf;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.qubership.atp.auth.springbootstarter.config.FeignConfiguration;
 import org.qubership.atp.datasets.dto.AbstractParameterDto;
 import org.qubership.atp.datasets.dto.AttributeTypeDto;
@@ -36,6 +36,7 @@ import org.qubership.atp.datasets.dto.DataSetListCreatedModifiedViewDto;
 import org.qubership.atp.datasets.dto.DataSetTreeDto;
 import org.qubership.atp.datasets.dto.TestPlanCreatedModifiedViewDto;
 import org.qubership.atp.datasets.dto.VisibilityAreaFlatModelDto;
+import org.qubership.automation.itf.core.util.OffsetDateTimeAdapter;
 import org.qubership.automation.itf.core.util.feign.impl.DatasetsAttachmentFeignClient;
 import org.qubership.automation.itf.core.util.feign.impl.DatasetsAttributeFeignClient;
 import org.qubership.automation.itf.core.util.feign.impl.DatasetsDatasetFeignClient;
@@ -50,38 +51,38 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import au.com.dius.pact.consumer.dsl.DslPart;
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.consumer.dsl.PactDslResponse;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.consumer.junit.PactProviderRule;
-import au.com.dius.pact.consumer.junit.PactVerification;
+import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
+import au.com.dius.pact.consumer.junit5.PactTestFor;
+import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-@RunWith(SpringRunner.class)
 @EnableFeignClients(clients = {DatasetsDatasetFeignClient.class, DatasetsAttachmentFeignClient.class,
         DatasetsAttributeFeignClient.class, DatasetsDatasetListFeignClient.class,
         DatasetsVisibilityAreaFeignClient.class})
-@ContextConfiguration(classes = {DatasetsFeignClientPactUnitTest.TestApp.class})
+@ExtendWith(PactConsumerTestExt.class)
+@SpringJUnitConfig(classes = {DatasetsFeignClientPactUnitTest.TestApp.class})
 @Import({JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class,
         FeignConfiguration.class, FeignAutoConfiguration.class})
 @TestPropertySource(properties = {"feign.atp.datasets.name=atp-datasets", "feign.atp.datasets.route=",
         "feign.atp.datasets.url=http://localhost:8888", "feign.httpclient.enabled=false"})
+@PactTestFor(providerName = "atp-datasets", port = "8888", pactVersion = PactSpecVersion.V3)
 public class DatasetsFeignClientPactUnitTest {
 
     private final UUID attachmentUuid = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9701");
     private final UUID dataSetId = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9702");
     private final UUID dataSetListId = UUID.fromString("7c9dafe9-2cd1-4ffc-ae54-45867f2b9703");
     private final String body = "";
-    @Rule
-    public PactProviderRule mockProvider
-            = new PactProviderRule("atp-datasets", "localhost", 8888, this);
+
     @Autowired
     private DatasetsDatasetFeignClient dsDatasetFeignClient;
     @Autowired
@@ -94,60 +95,70 @@ public class DatasetsFeignClientPactUnitTest {
     private DatasetsVisibilityAreaFeignClient dsVisibilityAreaFeignClient;
 
     @Test
-    @PactVerification()
+    @PactTestFor(pactMethod = "createPact")
     public void allPass() {
         ResponseEntity<Resource> result1 = dsAttachmentFeignClient.getAttachmentByParameterId(attachmentUuid);
-        Assert.assertEquals(200, result1.getStatusCode().value());
-        Assert.assertTrue(result1.getHeaders().get("Content-Disposition").contains("attachment; filename=\"name\""));
+        Assertions.assertEquals(200, result1.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result1.getHeaders().get("Content-Disposition"))
+                .contains("attachment; filename=\"name\""));
 
         ResponseEntity<String> result2 = dsDatasetFeignClient.getItfContext(dataSetId);
-        Assert.assertEquals(200, result2.getStatusCode().value());
-        Assert.assertTrue(result2.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertNotNull(result2.getBody());
+        Assertions.assertEquals(200, result2.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result2.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertNotNull(result2.getBody());
 
         ResponseEntity<DataSetTreeDto> result3 = dsDatasetFeignClient.getAtpContextFull(dataSetId, "true", body);
-        Assert.assertEquals(200, result3.getStatusCode().value());
-        Assert.assertTrue(result3.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3_4_5_6(), result3.getBody());
+        Assertions.assertEquals(200, result3.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result3.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(getResponseBody3_4_5_6(), result3.getBody());
 
         ResponseEntity<DataSetTreeDto> result4 = dsDatasetFeignClient.getAtpContextObject(dataSetId, "true", body);
-        Assert.assertEquals(200, result4.getStatusCode().value());
-        Assert.assertTrue(result4.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3_4_5_6(), result4.getBody());
+        Assertions.assertEquals(200, result4.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result4.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(getResponseBody3_4_5_6(), result4.getBody());
 
         ResponseEntity<DataSetTreeDto> result5
                 = dsDatasetFeignClient.getAtpContextObjectExtended(dataSetId, "true", body);
-        Assert.assertEquals(200, result5.getStatusCode().value());
-        Assert.assertTrue(result5.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3_4_5_6(), result5.getBody());
+        Assertions.assertEquals(200, result5.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result5.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(getResponseBody3_4_5_6(), result5.getBody());
 
         ResponseEntity<DataSetTreeDto> result6
                 = dsDatasetFeignClient.getAtpContextOptimized(dataSetId, "true", body);
-        Assert.assertEquals(200, result6.getStatusCode().value());
-        Assert.assertTrue(result6.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody3_4_5_6(), result6.getBody());
+        Assertions.assertEquals(200, result6.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result6.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(getResponseBody3_4_5_6(), result6.getBody());
 
         ResponseEntity<List<VisibilityAreaFlatModelDto>> result7 = dsVisibilityAreaFeignClient.getVisibilityAreas();
-        Assert.assertEquals(200, result7.getStatusCode().value());
-        Assert.assertTrue(result7.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody7(), result7.getBody());
+        Assertions.assertEquals(200, result7.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result7.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(getResponseBody7(), result7.getBody());
 
         ResponseEntity<List<DataSetListCreatedModifiedViewDto>> result8
                 = dsDatasetListFeignClient.getDataSetListsByVaId(dataSetListId, null);
-        Assert.assertEquals(200, result8.getStatusCode().value());
-        Assert.assertTrue(result8.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody8(), result8.getBody());
+        Assertions.assertEquals(200, result8.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result8.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(getResponseBody8(), result8.getBody());
 
         ResponseEntity<List<DataSetDto>> result9
                 = dsDatasetListFeignClient.getDataSets(dataSetListId, null, "label");
-        Assert.assertEquals(200, result9.getStatusCode().value());
-        Assert.assertTrue(result9.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody9(), result9.getBody());
+        Assertions.assertEquals(200, result9.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result9.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(getResponseBody9(), result9.getBody());
 
         ResponseEntity<Object> result10 = dsAttributeFeignClient.getAttributesInItfFormat(dataSetListId);
-        Assert.assertEquals(200, result10.getStatusCode().value());
-        Assert.assertTrue(result10.getHeaders().get("Content-Type").contains("application/json"));
-        Assert.assertEquals(getResponseBody10(), result10.getBody());
+        Assertions.assertEquals(200, result10.getStatusCode().value());
+        Assertions.assertTrue(Objects.requireNonNull(result10.getHeaders().get("Content-Type"))
+                .contains("application/json"));
+        Assertions.assertEquals(getResponseBody10(), result10.getBody());
     }
 
     @Pact(consumer = "atp-itf-executor")
@@ -290,7 +301,7 @@ public class DatasetsFeignClientPactUnitTest {
     }
 
     private List<VisibilityAreaFlatModelDto> getResponseBody7() {
-        return Arrays.asList(getVisibilityAreaFlatModelDto());
+        return List.of(getVisibilityAreaFlatModelDto());
     }
 
     private DataSetListCreatedModifiedViewDto getDataSetList() {
@@ -306,7 +317,7 @@ public class DatasetsFeignClientPactUnitTest {
     }
 
     private List<DataSetListCreatedModifiedViewDto> getResponseBody8() {
-        return Arrays.asList(getDataSetList());
+        return List.of(getDataSetList());
     }
 
     private DataSetDto getDataSet() {
@@ -317,7 +328,7 @@ public class DatasetsFeignClientPactUnitTest {
     }
 
     private List<DataSetDto> getResponseBody9() {
-        return Arrays.asList(getDataSet());
+        return List.of(getDataSet());
     }
 
     private List<String> getResponseBody10() {
@@ -328,7 +339,10 @@ public class DatasetsFeignClientPactUnitTest {
     }
 
     private String objectToString(Object obj) {
-        return new Gson().toJson(obj);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(OffsetDateTime.class, new OffsetDateTimeAdapter())
+                .create();
+        return gson.toJson(obj);
     }
 
     @Configuration

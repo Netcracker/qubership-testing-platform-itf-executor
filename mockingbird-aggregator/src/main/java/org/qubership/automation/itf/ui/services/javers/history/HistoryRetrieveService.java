@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -37,8 +37,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
@@ -78,6 +76,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,22 +89,22 @@ public class HistoryRetrieveService {
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm:ss")
             .withLocale(Locale.US);
     private static final Map<String, Set<String>> toSkip =
-            new HashMap<String, Set<String>>() {
+            new HashMap<>() {
                 {
-                    put(HistorySituation.class.getName(), new HashSet<String>() {{
+                    put(HistorySituation.class.getName(), new HashSet<>() {{
                         add("integrationStep.name");
                     }});
                 }
             };
     private static final Set<String> childrenToIncludeInParentChanges =
-            new HashSet<String>() {
+            new HashSet<>() {
                 {
                     add(HistoryIntegrationStep.class.getName());
                 }
 
             };
     private final Javers javers;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public HistoryItemResponse getAllHistory(BigInteger objectId,
                                              Class<? extends Storable> itemType,
@@ -140,16 +139,16 @@ public class HistoryRetrieveService {
 
             List<Long> historyItemVersionsWithChanges = historyItemList.stream()
                     .map(historyItem -> Long.valueOf(historyItem.getVersion()))
-                    .collect(Collectors.toList());
+                    .toList();
 
             List<CdoSnapshot> snapshotsWithNoChanges = snapshots.stream()
                     .filter(cdoSnapshot -> !historyItemVersionsWithChanges.contains(cdoSnapshot.getVersion()))
-                    .collect(Collectors.toList());
+                    .toList();
 
             List<HistoryItem> simpleHistoryItemList = snapshotsWithNoChanges
                     .stream()
                     .map(cdoSnapshot -> createSimpleHistoryItem(cdoSnapshot, historyEntityClass))
-                    .collect(Collectors.toList());
+                    .toList();
 
             historyItemList.addAll(simpleHistoryItemList);
             historyItemList.sort(Comparator.comparingInt(HistoryItem::getVersion).reversed());
@@ -235,14 +234,14 @@ public class HistoryRetrieveService {
                 .stream()
                 .filter(change ->
                         !(toSkip.get(entityClass.getTypeName()) != null
-                                && change instanceof ValueChange
+                                && change instanceof ValueChange vc
                                 && toSkip.get(entityClass.getTypeName())
-                                .contains(((ValueChange) change).getPropertyNameWithPath())))
+                                .contains(vc.getPropertyNameWithPath())))
                 .map(change -> {
                     if (!entityClass.getTypeName().equals(change.getAffectedGlobalId().getTypeName())
-                            && change instanceof ValueChange
+                            && change instanceof ValueChange valueChange
                             && !childrenToIncludeInParentChanges.contains(change.getAffectedGlobalId().getTypeName())) {
-                        String propertyNameWithPath = ((ValueChange) change).getPropertyNameWithPath();
+                        String propertyNameWithPath = valueChange.getPropertyNameWithPath();
                         return propertyNameWithPath.split("/")[0].split("\\.")[0];
                     } else {
                         return ((PropertyChange) change).getPropertyName();
@@ -307,7 +306,7 @@ public class HistoryRetrieveService {
         if (entity.isPresent()) {
             return buildCompareEntity(objectId, entityClass, entity.get(), version);
         } else {
-            throw new EntityNotFoundException(String.format("Failed to found shadow with id:%s, class:%s",
+            throw new EntityNotFoundException("Failed to found shadow with id:%s, class:%s".formatted(
                     objectId, entityClass));
         }
     }
@@ -322,7 +321,7 @@ public class HistoryRetrieveService {
         QueryBuilder queryBuilder = QueryBuilder.byInstanceId(objectId, entityClass)
                 .withVersion(version).withScopeDeepPlus();
         if (Objects.nonNull(snapshots) && !snapshots.isEmpty()) {
-            queryBuilder.withCommitId(snapshots.get(0).getCommitId());
+            queryBuilder.withCommitId(snapshots.getFirst().getCommitId());
         }
         List<Shadow<Object>> shadows = javers.findShadows(queryBuilder.build());
         return shadows.stream().findFirst();
@@ -332,7 +331,7 @@ public class HistoryRetrieveService {
                                                     Shadow<Object> entity, Long revision) {
         Object object = entity.get();
         if (Objects.isNull(object)) {
-            throw new EntityNotFoundException(String.format("Shadow object is null with id:%s." + objectId));
+            throw new EntityNotFoundException("Shadow object is null with id: %s.".formatted(objectId));
         }
         HistoryCompareEntity historyCompareEntity = new HistoryCompareEntity();
         historyCompareEntity.setRevision(revision.toString());
@@ -457,7 +456,7 @@ public class HistoryRetrieveService {
                 .build());
 
         if (Objects.nonNull(snapshots) && !snapshots.isEmpty()) {
-            CommitMetadata initialCommitMetadata = snapshots.get(0).getCommitMetadata();
+            CommitMetadata initialCommitMetadata = snapshots.getFirst().getCommitMetadata();
             destination.put("createdBy",
                     StringUtils.defaultIfEmpty(initialCommitMetadata.getAuthor(), StringUtils.EMPTY));
             destination.put("createdWhen",
@@ -466,7 +465,7 @@ public class HistoryRetrieveService {
     }
 
     private Map<String, Object> convertObjectToMap(Object object) {
-        return objectMapper.convertValue(object, new TypeReference<Map<String, Object>>() {
+        return objectMapper.convertValue(object, new TypeReference<>() {
         });
     }
 

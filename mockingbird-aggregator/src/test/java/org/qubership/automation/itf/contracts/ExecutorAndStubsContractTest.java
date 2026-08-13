@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -43,11 +43,11 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConf
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
@@ -59,10 +59,10 @@ import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
 import lombok.extern.slf4j.Slf4j;
 
 @Provider("atp-itf-executor")
-@PactUrl(urls = {"classpath:pacts/atp-itf-stubs-atp-itf-executor.json"})
+@PactUrl(urls = {"file:src/test/resources/pacts/atp-itf-stubs-atp-itf-executor.json"})
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = {ItfStubsRequestsController.class})
-@ContextConfiguration(classes = {ExecutorAndStubsContractTest.TestApp.class})
+@SpringJUnitConfig(classes = {ExecutorAndStubsContractTest.TestApp.class})
 @EnableAutoConfiguration
 @Import({JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class,
         ItfStubsRequestsController.class})
@@ -75,10 +75,12 @@ public class ExecutorAndStubsContractTest {
     private final String xProjectId = "3d6a138d-057b-4e35-8348-17aee2f2b0f8";
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @MockitoBean
     private ItfStubsRequestsController itfStubsRequestsController;
 
     public void beforeAll() {
+        System.setProperty("pact_do_not_track", "true");
+
         log.info("ExecutorAndStubsContractTest tests started");
         when(itfStubsRequestsController.getAllActiveTriggers()).thenReturn(getResponseBody1());
         when(itfStubsRequestsController.getTriggerById(any(BigInteger.class))).thenReturn(getResponseBody2());

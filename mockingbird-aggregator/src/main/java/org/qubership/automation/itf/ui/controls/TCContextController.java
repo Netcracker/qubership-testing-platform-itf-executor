@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.core.util.config.Config;
@@ -37,8 +35,7 @@ import org.qubership.automation.itf.ui.messages.objects.UITCContext;
 import org.qubership.automation.itf.ui.messages.objects.UITCContextList;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,6 +43,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nullable;
 
 @RestController
 public class TCContextController extends ControllerHelper {
@@ -62,7 +60,7 @@ public class TCContextController extends ControllerHelper {
      */
     @Transactional(readOnly = true)
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/starter/tccontexts", method = RequestMethod.GET)
+    @GetMapping("/starter/tccontexts")
     @AuditAction(auditAction = "Get TCContexts in the project {{#projectId}} [Deprecated, to be deleted]")
     public UITCContextList getTcContexts(@RequestParam(value = "projectUuid") UUID projectUuid) {
         UITCContextList uiContexts = new UITCContextList();
@@ -74,7 +72,7 @@ public class TCContextController extends ControllerHelper {
             @Override
             public UITCContext apply(TcContext input) {
                 UITCContext uiTcContext = new UITCContext();
-                uiTcContext.setName(String.format("%s %s [%s]", input.getName(),
+                uiTcContext.setName("%s %s [%s]".formatted(input.getName(),
                         input.getStartTime().toInstant().atZone(ZoneId.systemDefault()).format(dateTimeFormatter),
                         input.getStatus().toString()));
                 uiTcContext.setId(input.getID().toString());

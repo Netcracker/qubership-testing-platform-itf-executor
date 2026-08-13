@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 package org.qubership.automation.itf.ui.config;
 
-import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
 import org.qubership.automation.itf.executor.service.ProjectSettingsService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import com.hazelcast.core.HazelcastInstance;
 
@@ -29,9 +29,9 @@ import com.hazelcast.core.HazelcastInstance;
 public class ExecutorProjectSettingsServiceConfiguration {
 
     @Bean
+    @Primary
     public ProjectSettingsService projectSettingsService(
-            @Qualifier("hazelcastClient") HazelcastInstance hazelcastClient,
-            CoreObjectManager coreObjectManager) {
-        return new ProjectSettingsService(hazelcastClient, coreObjectManager);
+            @Qualifier("hazelcastClient") HazelcastInstance hazelcastClient) {
+        return new ProjectSettingsService(hazelcastClient);
     }
 }

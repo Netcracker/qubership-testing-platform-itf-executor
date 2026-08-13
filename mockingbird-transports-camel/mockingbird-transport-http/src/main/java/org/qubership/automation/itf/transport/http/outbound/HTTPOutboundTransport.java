@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -20,37 +20,35 @@ package org.qubership.automation.itf.transport.http.outbound;
 import static org.qubership.automation.itf.core.util.constants.PropertyConstants.Http.PROPERTIES;
 import static org.qubership.automation.itf.core.util.constants.PropertyConstants.Http.PROPERTIES_DESCRIPTION;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.http.SSLContextParametersSecureProtocolSocketFactory;
-import org.apache.camel.component.http4.CompositeHttpConfigurer;
-import org.apache.camel.component.http4.HttpClientConfigurer;
-import org.apache.camel.component.http4.HttpComponent;
-import org.apache.camel.component.http4.ProxyHttpClientConfigurer;
-import org.apache.camel.http.common.HttpOperationFailedException;
-import org.apache.camel.impl.DefaultHeaderFilterStrategy;
-import org.apache.camel.util.jsse.KeyManagersParameters;
-import org.apache.camel.util.jsse.KeyStoreParameters;
-import org.apache.camel.util.jsse.SSLContextParameters;
-import org.apache.camel.util.jsse.TrustManagersParameters;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.apache.camel.component.http.CompositeHttpConfigurer;
+import org.apache.camel.component.http.HttpClientConfigurer;
+import org.apache.camel.component.http.HttpComponent;
+import org.apache.camel.component.http.ProxyHttpClientConfigurer;
+import org.apache.camel.http.base.HttpOperationFailedException;
+import org.apache.camel.support.DefaultHeaderFilterStrategy;
+import org.apache.camel.support.jsse.KeyManagersParameters;
+import org.apache.camel.support.jsse.KeyStoreParameters;
+import org.apache.camel.support.jsse.SSLContextParameters;
+import org.apache.camel.support.jsse.TrustManagersParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.http.HttpVersion;
-import org.apache.http.conn.HttpHostConnectException;
+import org.apache.hc.client5.http.HttpHostConnectException;
+import org.apache.hc.core5.http.HttpVersion;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;
 import org.qubership.automation.itf.core.util.annotation.Options;
@@ -79,8 +77,8 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                     .expireAfterAccess(1, TimeUnit.HOURS).build();
 
     static {
-        ITFHeaderFilterStrategy.setOutFilter(null);
-        ITFHeaderFilterStrategy.setInFilter(null);
+        ITFHeaderFilterStrategy.setOutFilter((String) null);
+        ITFHeaderFilterStrategy.setInFilter((String) null);
     }
 
     @Parameter(shortName = HTTPConstants.METHOD,
@@ -248,7 +246,7 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                                                             org.qubership.automation.itf.core.model.jpa.message.Message itfMessage)
             throws Exception;
 
-    private boolean getBooleanValue(Object obj) {
+    protected boolean getBooleanValue(Object obj) {
         if (obj == null) {
             return false;
         }
@@ -266,12 +264,10 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
         if (!disableRedirects && !trustAll) {
             return;
         }
-        String key = getCacheKey(String.valueOf(disableRedirects), String.valueOf(trustAll));
+
         DynamicHttpClientConfigurer dynamicHttpClientConfigurer =
-                DYNAMIC_HTTP_CLIENT_CONFIGURER_CACHE.getIfPresent(key);
-        if (dynamicHttpClientConfigurer == null) {
-            dynamicHttpClientConfigurer = createDynamicHttpClientConfigurer(disableRedirects, trustAll, key);
-        }
+                getOrCreateDynamicHttpClientConfigurer(disableRedirects, trustAll);
+
         HttpClientConfigurer httpClientConfigurer = httpComponent.getHttpClientConfigurer();
         if (httpClientConfigurer == null) {
             httpComponent.setHttpClientConfigurer(dynamicHttpClientConfigurer);
@@ -303,16 +299,9 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                 String domain = properties.get("proxyAuthDomain");
                 String ntHost = properties.get("proxyAuthNtHost");
                 String portString = properties.get("proxyAuthPort");
-                int port = (StringUtils.isBlank(portString))
-                        ? -1
-                        : Integer.parseInt(portString);
-                String key = getCacheKey(host, String.valueOf(port), scheme, username, password, domain, ntHost);
-                ProxyHttpClientConfigurer proxyHttpClientConfigurer =
-                        PROXY_HTTP_CLIENT_CONFIGURER_CACHE.getIfPresent(key);
-                if (proxyHttpClientConfigurer == null) {
-                    proxyHttpClientConfigurer = createProxyHttpClientConfigurer(host, port, scheme, username, password,
-                            domain, ntHost, key);
-                }
+                int port = (StringUtils.isBlank(portString)) ? -1 : Integer.parseInt(portString);
+                ProxyHttpClientConfigurer proxyHttpClientConfigurer = getOrCreateProxyHttpClientConfigurer(host, port,
+                        scheme, username, password, domain, ntHost);
                 httpComponent.setHttpClientConfigurer(proxyHttpClientConfigurer);
             }
         }
@@ -323,10 +312,10 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
     }
 
     private HttpComponent prepareHttpComponent(boolean isSecure, Message message) {
-        HttpComponent httpComponent = new org.apache.camel.component.http4.HttpComponent();
+        HttpComponent httpComponent = new HttpComponent();
         if (isSecure) {
-            registerSecureComponent(httpComponent, message); // There must be parameters configured in the
-            // config.properties file
+            // There should be parameters configured in application.properties file
+            registerSecureComponent(httpComponent, message);
         }
         return httpComponent;
     }
@@ -337,10 +326,23 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
                         "/keystore/keystore.jks");
         String keyStorePassword = ApplicationConfig.env.getProperty("keystore.password");
         String secProtocol = (String) message.getConnectionProperties().get(HTTPConstants.SECURE_PROTOCOL);
-        String sslContextCacheKey = getCacheKey(keyStoreFile, keyStorePassword, secProtocol);
-        SSLContextParameters sslContext = SSL_CONTEXT_PARAMETERS_CACHE.getIfPresent(sslContextCacheKey);
-        if (sslContext == null) {
-            sslContext = createSSLContextParameters(keyStoreFile, keyStorePassword, secProtocol, sslContextCacheKey);
+        String sslContextCacheKey = getCacheKey(keyStoreFile, secProtocol);
+
+        SSLContextParameters sslContext;
+        try {
+            sslContext = SSL_CONTEXT_PARAMETERS_CACHE.get(sslContextCacheKey, () -> {
+                SSLContextParameters sslContextParameters =
+                        createSSLContextParameters(keyStoreFile, keyStorePassword, secProtocol);
+
+                HttpComponent secureHttpsComponent = new HttpComponent();
+                secureHttpsComponent.setSslContextParameters(sslContextParameters);
+                if (CAMEL_CONTEXT.hasComponent(sslContextCacheKey) == null) {
+                    CAMEL_CONTEXT.addComponent(sslContextCacheKey, secureHttpsComponent);
+                }
+                return sslContextParameters;
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating HTTPS component with SSL", e);
         }
         httpComponent.setSslContextParameters(sslContext);
     }
@@ -395,16 +397,12 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
             int pos1 = pair.indexOf("=");
             if (pos1 > -1) {
                 String val = pair.substring(pos1 + 1);
-                try {
-                    encodedEndpoint.append(((count == 0)
-                            ? ""
-                            : "&")).append(pair, 0, pos1).append("=").append(URLEncoder.encode(val, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                }
+                encodedEndpoint.append(((count == 0) ? "" : "&"))
+                        .append(pair, 0, pos1)
+                        .append("=")
+                        .append(URLEncoder.encode(val, StandardCharsets.UTF_8));
             } else {
-                encodedEndpoint.append(((count == 0)
-                        ? ""
-                        : "&")).append(pair);
+                encodedEndpoint.append(((count == 0) ? "" : "&")).append(pair);
             }
             count++;
         }
@@ -425,8 +423,9 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
     protected Message buildMessage(Exchange exchange,
                                    int responseHttpCode,
                                    boolean codeAllowed) {
-        Message message = new Message(exchange.getOut().getBody(String.class));
-        message.convertAndSetHeaders(exchange.getOut().getHeaders());
+        org.apache.camel.Message responseCamelMessage = exchange.getMessage();
+        Message message = new Message(responseCamelMessage.getBody(String.class));
+        message.convertAndSetHeaders(responseCamelMessage.getHeaders());
         if (codeAllowed) {
             /* Special case... I'm not sure that it's correct behaviour but
                 - if there is an empty message in case of success (due to code is in the allowed range),
@@ -454,8 +453,9 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
      *       - otherwise step is Passed.
      */
     protected Message buildMessage(Exchange exchange) {
-        Message message = new Message(exchange.getOut().getBody(String.class));
-        message.convertAndSetHeaders(exchange.getOut().getHeaders());
+        org.apache.camel.Message responseCamelMessage = exchange.getMessage();
+        Message message = new Message(responseCamelMessage.getBody(String.class));
+        message.convertAndSetHeaders(responseCamelMessage.getHeaders());
         if (exchange.isFailed()) {
             exchangeExceptionProcess(exchange, message);
         } else {
@@ -464,26 +464,39 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
         return message;
     }
 
-    private DynamicHttpClientConfigurer createDynamicHttpClientConfigurer(boolean disableRedirects, boolean trustAll,
-                                                                          String key) {
-        DynamicHttpClientConfigurer dynamicHttpClientConfigurer = new DynamicHttpClientConfigurer();
-        dynamicHttpClientConfigurer.setDisableRedirects(disableRedirects);
-        dynamicHttpClientConfigurer.setTrustAll(trustAll);
-        DYNAMIC_HTTP_CLIENT_CONFIGURER_CACHE.put(key, dynamicHttpClientConfigurer);
-        return dynamicHttpClientConfigurer;
+    private DynamicHttpClientConfigurer getOrCreateDynamicHttpClientConfigurer(boolean disableRedirects,
+                                                                               boolean trustAll) {
+        String key = getCacheKey(String.valueOf(disableRedirects), String.valueOf(trustAll));
+        try {
+            return DYNAMIC_HTTP_CLIENT_CONFIGURER_CACHE.get(key, () -> {
+                DynamicHttpClientConfigurer dynamicHttpClientConfigurer = new DynamicHttpClientConfigurer();
+                dynamicHttpClientConfigurer.setDisableRedirects(disableRedirects);
+                dynamicHttpClientConfigurer.setTrustAll(trustAll);
+                return dynamicHttpClientConfigurer;
+            });
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Failed to create dynamic http configurer for key: " + key, e.getCause());
+        }
     }
 
-    private ProxyHttpClientConfigurer createProxyHttpClientConfigurer(String host, Integer port, String scheme,
-                                                                      String username, String password, String domain,
-                                                                      String ntHost, String key) {
-        ProxyHttpClientConfigurer httpClientConfigurer = new ProxyHttpClientConfigurer(host, port, scheme, username,
-                password, domain, ntHost);
-        PROXY_HTTP_CLIENT_CONFIGURER_CACHE.put(key, httpClientConfigurer);
-        return httpClientConfigurer;
+    private ProxyHttpClientConfigurer getOrCreateProxyHttpClientConfigurer(String host, Integer port,
+                                                                           String scheme, String username,
+                                                                           String password, String domain,
+                                                                           String ntHost) {
+        String key = getCacheKey(host, String.valueOf(port), scheme, username, domain, ntHost);
+        try {
+            return PROXY_HTTP_CLIENT_CONFIGURER_CACHE.get(key, () ->
+                    new ProxyHttpClientConfigurer(host, port, scheme, username,
+                            password, domain, ntHost, null, null)
+            );
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Failed to create proxy configurer for key: " + key, e.getCause());
+        }
     }
 
-    private SSLContextParameters createSSLContextParameters(String keyStoreFile, String keyStorePassword,
-                                                            String secProtocol, String key) {
+    private SSLContextParameters createSSLContextParameters(String keyStoreFile,
+                                                            String keyStorePassword,
+                                                            String secProtocol) {
         KeyStoreParameters keyStoreParameters = new KeyStoreParameters();
         if (!StringUtils.isBlank(keyStoreFile)) {
             keyStoreParameters.setResource(keyStoreFile);
@@ -501,16 +514,8 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
         sslContext.setTrustManagers(trustManagersParameters);
         //set protocol
         sslContext.setSecureSocketProtocol(secProtocol);
-        //register http4 protocol
-        try {
-            ProtocolSocketFactory factory = new SSLContextParametersSecureProtocolSocketFactory(sslContext,
-                    CAMEL_CONTEXT);
-            Protocol.registerProtocol(HTTPConstants.HTTPS, new Protocol(HTTPConstants.HTTPS, factory, 6443));
-            SSL_CONTEXT_PARAMETERS_CACHE.put(key, sslContext);
-            return sslContext;
-        } catch (Exception e) {
-            throw new RuntimeException("Error while register http4(https) protocol ", e);
-        }
+
+        return sslContext;
     }
 
     private String getCacheKey(String... keys) {
@@ -602,11 +607,12 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
     }
 
     private int getResponseCode(Exchange exchange) {
-        if (exchange.hasOut()) {
-            if (exchange.getOut().hasHeaders()) {
-                Object strResponseCode = exchange.getOut().getHeader("CamelHttpResponseCode");
-                if (strResponseCode instanceof Integer) {
-                    return (int) strResponseCode;
+        org.apache.camel.Message responseCamelMessage = exchange.getMessage();
+        if (responseCamelMessage != null) {
+            if (responseCamelMessage.hasHeaders()) {
+                Object strResponseCode = responseCamelMessage.getHeader("CamelHttpResponseCode");
+                if (strResponseCode instanceof Integer integer) {
+                    return integer;
                 } else {
                     try {
                         return Integer.parseInt((String) strResponseCode);
@@ -616,8 +622,8 @@ public abstract class HTTPOutboundTransport extends AbstractCamelOutboundTranspo
             }
         } else if (exchange.isFailed()) {
             Exception ex = exchange.getException();
-            if (ex instanceof HttpOperationFailedException) {
-                return ((HttpOperationFailedException) ex).getStatusCode();
+            if (ex instanceof HttpOperationFailedException exception) {
+                return exception.getStatusCode();
             }
         }
         return 0;

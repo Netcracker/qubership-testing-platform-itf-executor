@@ -17,18 +17,17 @@
 
 package org.qubership.automation.itf.integration.reports;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.assertj.core.util.Sets;
 import org.qubership.automation.itf.executor.service.TCContextService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -41,18 +40,14 @@ public class ReportsService {
 
     private final ReportsFeignClient reportsFeignClient;
     private final TCContextService tcContextService;
-    private final ScheduledExecutorService refreshPartitionsService = initRefreshPartitionsService();
 
-    private ScheduledExecutorService initRefreshPartitionsService() {
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleWithFixedDelay(() -> {
-            try {
-                tcContextService.refreshPartitionNumbers(getCurrentPartitionNumbers());
-            } catch (Throwable t) {
-                log.error("Error while refreshing of current partition numbers from reporting service", t);
-            }
-        }, 5, 3600, TimeUnit.SECONDS);
-        return service;
+    @Scheduled(initialDelay = 5, fixedDelay = 3600, timeUnit = TimeUnit.SECONDS)
+    public void refreshPartitions() {
+        try {
+            tcContextService.refreshPartitionNumbers(getCurrentPartitionNumbers());
+        } catch (Throwable t) {
+            log.error("Error while refreshing of current partition numbers from reporting service", t);
+        }
     }
 
     public List<Object[]> getContextProperties(String contextId, UUID projectUuid) {
@@ -68,7 +63,8 @@ public class ReportsService {
     }
 
     public Set<String> getKeys(String contextId, UUID projectUuid) {
-        return Sets.newHashSet(reportsFeignClient.getKeys(contextId, projectUuid).getBody());
+        Set<String> keys = reportsFeignClient.getKeys(contextId, projectUuid).getBody();
+        return keys == null ? new HashSet<>() : new HashSet<>(keys);
     }
 
     public Map<String, Integer> getCurrentPartitionNumbers() {

@@ -5,7 +5,12 @@
     <springProperty name="GRAYLOG_HOST" source="log.graylog.host"/>
     <springProperty name="GRAYLOG_PORT" source="log.graylog.port"/>
     <springProperty name="LOG_LEVEL_ROOT" source="logging.level.root"/>
-    <if condition='property("GRAYLOG_ON").equals("true")'>
+
+    <condition class="ch.qos.logback.core.boolex.PropertyEqualityCondition">
+        <key>GRAYLOG_ON</key>
+        <value>true</value>
+    </condition>
+    <if>
         <then>
             <appender name="GELF"
                       class="org.qubership.atp.integration.configuration.logging.gelf.logback.FailSafeGelfLogbackAppender">
@@ -76,7 +81,7 @@
             <logger name="com.hazelcast.hibernate" level="WARN" additivity="false">
                 <appender-ref ref="ASYNC_GELF"/>
             </logger>
-            <logger name="org.qubership.automation.itf.core.template.velocity.log.Slf4jLogChute" level="ERROR" additivity="false">
+            <logger name="org.apache.velocity" level="ERROR" additivity="false">
                 <appender-ref ref="ASYNC_GELF"/>
             </logger>
 
@@ -428,7 +433,7 @@
                 <appender-ref ref="ConsoleAppender"/>
                 <appender-ref ref="DiameterAppender"/>
             </logger>
-            <logger name="org.qubership.automation.itf.core.template.velocity.log.Slf4jLogChute" level="ERROR" additivity="false">
+            <logger name="org.apache.velocity" level="ERROR" additivity="false">
                 <appender-ref ref="ConsoleAppender"/>
                 <appender-ref ref="ITFAppender"/>
             </logger>

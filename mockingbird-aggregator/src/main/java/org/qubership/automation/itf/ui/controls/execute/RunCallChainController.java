@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -32,8 +32,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
@@ -83,10 +81,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -97,6 +95,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 
 @Transactional(readOnly = true)
@@ -151,7 +150,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'EXECUTE')")
-    @RequestMapping(value = "/callchain/run", method = RequestMethod.POST)
+    @PostMapping("/callchain/run")
     @AuditAction(auditAction = "Run CallChain (name {{#name}}, id {{#id}}) on the environment (name {{#environment}}, "
             + "id {{#environmentId}}), project {{#projectId}}/{{#projectUuid}}")
     public List<UISendRun> runEx(
@@ -214,7 +213,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'EXECUTE')")
-    @RequestMapping(value = "/callchain/run/simple", method = RequestMethod.GET)
+    @GetMapping("/callchain/run/simple")
     @AuditAction(auditAction = "Run (simple) CallChain id {{#id}} with dataset (name {{#dataset}}, id {{#datasetid}}), "
             + "environment {{#environment}}, bvAction {{#bvAction}} in the project {{#projectId}}/{{#projectUuid}}")
     public UISendRun runSimpleGet(
@@ -236,7 +235,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'EXECUTE')")
-    @RequestMapping(value = "/callchain/run/simple", method = RequestMethod.POST)
+    @PostMapping("/callchain/run/simple")
     @AuditAction(auditAction = "Run (simple) CallChain id {{#id}} with dataset (name {{#dataset}}, id {{#datasetid}}), "
             + "environment {{#environment}}, bvAction {{#bvAction}} in the project {{#projectId}}/{{#projectUuid}}")
     public UISendRun runSimple(
@@ -276,7 +275,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/callchain/datasets/ds", method = RequestMethod.GET)
+    @GetMapping("/callchain/datasets/ds")
     @AuditAction(auditAction = "Get Datasets under DSL id {{#id}} for CallChain id {{#chainId}} in the project "
             + "{{#projectId}}/{{#projectUuid}}")
     public List<UIDataSet> getDataSets(
@@ -322,7 +321,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
                         String dsId = dataSet.getIdDs();
                         ds.setId(dsId);
                         ds.setDsLink(dssUiUrl + concatWithSlashIfNeeded(dssUiUrl,
-                                String.format(CATALOGUE_LINK_PATTERN_FOR_DS_TOOL, vaId, dslId)));
+                                CATALOGUE_LINK_PATTERN_FOR_DS_TOOL.formatted(vaId, dslId)));
                     }
                     result.add(ds);
                 }
@@ -341,7 +340,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).CALLCHAIN.getName(),"
             + "#projectUuid, 'EXECUTE')")
-    @RequestMapping(value = "/callchain/run/terminateContext", method = RequestMethod.GET)
+    @GetMapping("/callchain/run/terminateContext")
     @AuditAction(auditAction = "Terminate context with id {{#contextId}} in the project {{#projectUuid}}")
     public void terminateContext(@RequestParam(value = "contextId") BigInteger contextId,
                                  @RequestParam(value = "projectUuid") UUID projectUuid,
@@ -367,7 +366,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
         JsonContext customDataset = toJSONContext(customizedDataset);
         if (StringUtils.isNotBlank(id)) {
             return startChain(dataset, datasetId, customDataset, environment, environmentId, id,
-                    format("Can't find call chain with id [%s].", id), runBvCase, false, 40, false, bvAction,
+                    "Can't find call chain with id [%s].".formatted(id), runBvCase, false, 40, false, bvAction,
                     needToLogInATP, tcpDumpParams, runValidation, runStepByStep, projectId, standalone, projectUuid);
         } else {
             UISendRun uiSendRun = new UISendRun();
@@ -514,7 +513,7 @@ public class RunCallChainController extends ExecutorControllerHelper {
     }
 
     private void setStatus(UISendRun uiSendRun, String format, CallChain entity, String dataset) {
-        uiSendRun.setStatus(String.format(format, entity.getName(), dataset));
+        uiSendRun.setStatus(format.formatted(entity.getName(), dataset));
     }
 
     private String concatWithSlashIfNeeded(String left, String right) {

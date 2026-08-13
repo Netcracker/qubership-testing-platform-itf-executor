@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nonnull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.annotation.Nonnull;
 
 public class DaemonThreadPoolFactory {
 
@@ -38,7 +38,7 @@ public class DaemonThreadPoolFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(DaemonThreadPoolFactory.class);
     private static final Thread.UncaughtExceptionHandler HANDLER = (thread, exception) -> LOGGER.error("Uncaught "
             + "exception in thread {}", thread.getName(), exception);
-    private WeakHashMap<ExecutorService, Object> weakHashMap = new WeakHashMap<>();
+    private final WeakHashMap<ExecutorService, Object> weakHashMap = new WeakHashMap<>();
 
     private DaemonThreadPoolFactory() {
     }
@@ -79,8 +79,8 @@ public class DaemonThreadPoolFactory {
 
     private static class DaemonThreadFactory implements ThreadFactory {
 
-        private AtomicInteger threadCounter = new AtomicInteger(0);
-        private String namePrefix;
+        private final AtomicInteger threadCounter = new AtomicInteger(0);
+        private final String namePrefix;
 
         public DaemonThreadFactory(String namePrefix) {
             this.namePrefix = namePrefix;

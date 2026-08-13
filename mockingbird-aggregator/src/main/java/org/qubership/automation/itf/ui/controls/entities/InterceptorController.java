@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -48,12 +48,13 @@ import org.qubership.automation.itf.ui.messages.objects.transport.interceptor.UI
 import org.qubership.automation.itf.ui.messages.objects.transport.interceptor.UIInterceptorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,7 +65,6 @@ public class InterceptorController extends ControllerHelper {
 
     private final ApplicabilityParamsController applicabilityParamsController;
 
-    @Autowired
     public InterceptorController(ApplicabilityParamsController applicabilityParamsController) {
         this.applicabilityParamsController = applicabilityParamsController;
     }
@@ -73,7 +73,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/interceptors/bytransport", method = RequestMethod.GET)
+    @GetMapping("/interceptors/bytransport")
     @AuditAction(auditAction = "Get Interceptors by transport name {{#transportName}} and interceptor group " +
             "{{#interceptorGroup}} in the project {{#projectUuid}}")
     public UIInterceptorChain getInterceptorsByTransportName(
@@ -101,7 +101,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/interceptors/transport_by_provider", method = RequestMethod.GET)
+    @GetMapping("/interceptors/transport_by_provider")
     @AuditAction(auditAction = "Get Transport types with Interceptors by interceptor provider id " +
             "{{#interceptorProviderId}} in the project {{#projectUuid}}")
     public UIListImpl getTransportTypesWithInterceptors(
@@ -127,7 +127,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'READ')")
-    @RequestMapping(value = "/interceptors/by_provider_transport", method = RequestMethod.GET)
+    @GetMapping("/interceptors/by_provider_transport")
     @AuditAction(auditAction = "Get Interceptors by interceptor provider id {{#interceptorProviderId}} and Transport " +
             "{{#transportName}} name in the project {{#projectUuid}}")
     public UIInterceptorChain getInterceptorsByProviderAndTransport(
@@ -144,9 +144,10 @@ public class InterceptorController extends ControllerHelper {
                         uiInterceptorChain.getInterceptorChain().add(new UIInterceptor(interceptor));
                         uiInterceptorChain.setParentVersion(interceptorProvider.getVersion().toString());
                     } catch (Exception e) {
-                        LOGGER.error("Cannot instantiate the \"{}\" interceptor. Check if the appropriate "
-                                + "interceptor's implementation was added and interceptor was successfully registered"
-                                + ".\nStacktrace: ", interceptor.getName(), e);
+                        LOGGER.error("""
+                                Cannot instantiate the "{}" interceptor. Check if the appropriate \
+                                interceptor's implementation was added and interceptor was successfully registered.
+                                Stacktrace:""", interceptor.getName(), e);
                     }
                 }
             }
@@ -158,7 +159,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'CREATE')")
-    @RequestMapping(value = "/interceptors", method = RequestMethod.POST)
+    @PostMapping("/interceptors")
     @AuditAction(auditAction = "Create Interceptors by interceptor provider id {{#interceptorProviderId}} in the " +
             "project {{#projectUuid}}")
     public List<UIInterceptor> addInterceptors(
@@ -169,11 +170,11 @@ public class InterceptorController extends ControllerHelper {
         int maxOrder = getInterceptorsMaxOrder(interceptorProvider.getInterceptors());
         for (UIInterceptor uiInterceptor : uiInterceptorChain.getInterceptorChain()) {
             Interceptor interceptor = createInterceptorByProvider(interceptorProvider);
-            if (interceptorProvider instanceof Template) {
-                uiInterceptor.setParent(new UITemplate((Template) interceptorProvider));
+            if (interceptorProvider instanceof Template template) {
+                uiInterceptor.setParent(new UITemplate(template));
             }
-            if (interceptorProvider instanceof TransportConfiguration) {
-                uiInterceptor.setParent(new UITransport((TransportConfiguration) interceptorProvider));
+            if (interceptorProvider instanceof TransportConfiguration configuration) {
+                uiInterceptor.setParent(new UITransport(configuration));
             }
             fillInterceptorParams(interceptor, interceptorProvider, uiInterceptor);
             addInterceptorConfiguration(interceptor, uiInterceptor.getTransportName(),
@@ -190,7 +191,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/interceptor", method = RequestMethod.PUT)
+    @PutMapping("/interceptor")
     @AuditAction(auditAction = "Save Interceptor with id {{#uiInterceptor.id}} and Interceptor provider id " +
             "{{#interceptorProviderId}} in the project {{#projectUuid}}")
     public UIResult saveInterceptor(
@@ -229,7 +230,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/interceptor/state", method = RequestMethod.PUT)
+    @PutMapping("/interceptor/state")
     @AuditAction(auditAction = "Change state of the Interceptor with id {{#uiInterceptor.id}} and Interceptor " +
             "provider id {{#interceptorProviderId}} in the project {{#projectUuid}}")
     public UIResult changeState(
@@ -267,7 +268,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/interceptor/order", method = RequestMethod.PUT)
+    @PutMapping("/interceptor/order")
     @AuditAction(auditAction = "Change order of Interceptors under Interceptor provider id {{#interceptorProviderId}}" +
             " in the project {{#projectUuid}}")
     public void changeOrder(
@@ -289,7 +290,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'DELETE')")
-    @RequestMapping(value = "/interceptors", method = RequestMethod.DELETE)
+    @DeleteMapping("/interceptors")
     @AuditAction(auditAction = "Delete Interceptors under Interceptor provider id {{#interceptorProviderId}} in the " +
             "project {{#projectUuid}}")
     public UIInterceptorChain deleteInterceptor(
@@ -330,7 +331,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/interceptors/refresh_interceptor_holder", method = RequestMethod.GET)
+    @GetMapping("/interceptors/refresh_interceptor_holder")
     @AuditAction(auditAction = "Refresh Interceptors Holder, project {{#projectUuid}}")
     public void refreshInterceptorHolder(@RequestParam(value = "projectUuid") UUID projectUuid) {
         InterceptorHolder.getInstance().clearInterceptorHolder();
@@ -341,7 +342,7 @@ public class InterceptorController extends ControllerHelper {
     @PreAuthorize("@entityAccess.checkAccess("
             + "T(org.qubership.automation.itf.ui.util.UserManagementEntities).INTERCEPTOR.getName(),"
             + "#projectUuid, 'UPDATE')")
-    @RequestMapping(value = "/interceptors/refresh_active_interceptor_holder", method = RequestMethod.GET)
+    @GetMapping("/interceptors/refresh_active_interceptor_holder")
     @AuditAction(auditAction = "Refresh active Interceptors Holder, project {{#projectUuid}}")
     public void refreshActiveInterceptorHolder(@RequestParam(value = "projectUuid") UUID projectUuid) {
         //TODO: Should be changed for multi-tenancy, because below code will clear all,

@@ -77,7 +77,7 @@ public class TransportHolder {
                             continue;
                         }
                     }
-                    Transport transport = (Transport) aClass.newInstance();
+                    Transport transport = (Transport) aClass.getDeclaredConstructor().newInstance();
                     transports.add(transport);
                     transportNames.put(aClass.getName(), transport.getShortName());
                 } catch (Exception e) {

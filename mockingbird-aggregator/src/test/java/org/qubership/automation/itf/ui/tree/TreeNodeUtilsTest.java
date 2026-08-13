@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -17,31 +17,35 @@
 
 package org.qubership.automation.itf.ui.tree;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.math.BigInteger;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.report.ReportObject;
 
 import com.google.common.collect.Lists;
 
 public class TreeNodeUtilsTest extends TreeNodeUtils {
 
-    @Ignore
+    @Disabled
     @Test
     public void getReportObjectTest() {
         Object[] objects = new Object[8];
         objects[6] = "TEST";
         ReportObject reportObject = getReportObject(objects);
-        Assert.assertEquals("TEST", reportObject.getStatus());
+        Assertions.assertEquals("TEST", reportObject.getStatus());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getReportObjectExceptionTest() {
-        Object[] objects = new Object[7];
-        getReportObject(objects);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Object[] objects = new Object[7];
+            getReportObject(objects);
+        });
     }
 
     @Test
@@ -73,7 +77,7 @@ public class TreeNodeUtilsTest extends TreeNodeUtils {
         objects.add(reportObject7);
         objects = cutExcess(objects, TreeNodeTypes.SITUATION_INSTANCE.toString(),
                 TreeNodeTypes.STEP_INSTANCE.toString());
-        Assert.assertEquals(2, objects.size());
+        Assertions.assertEquals(2, objects.size());
     }
 
     @Test
@@ -89,7 +93,7 @@ public class TreeNodeUtilsTest extends TreeNodeUtils {
                 "InstanceContext", "send", "", 2, "PASSED", "01.069");
         objects.add(reportObject2);
         setCorrectParent(objects, reportObject1);
-        Assert.assertEquals(new BigInteger("60420003267"), reportObject2.getParent());
+        Assertions.assertEquals(new BigInteger("60420003267"), reportObject2.getParent());
     }
 
     @Test
@@ -110,7 +114,7 @@ public class TreeNodeUtilsTest extends TreeNodeUtils {
         objects.add(reportObject3);
         moveToSavedCollectionIfHasType(objects, savedObjects,
                 Lists.newArrayList(TreeNodeTypes.STEP_INSTANCE.toString()));
-        Assert.assertEquals(1, savedObjects.size());
+        Assertions.assertEquals(1, savedObjects.size());
 //        Assert.assertEquals(1, savedObjects.stream().findFirst().get().getParent());
     }
 
@@ -145,7 +149,7 @@ public class TreeNodeUtilsTest extends TreeNodeUtils {
                 TreeNodeTypes.SITUATION_INSTANCE.toString(), TreeNodeTypes.STEP_INSTANCE.toString(),
                 TreeNodeTypes.OUTGOING_MESSAGE.toString());
 
-        Assert.assertEquals(1, treeNodesByReport.size());
+        Assertions.assertEquals(1, treeNodesByReport.size());
 //        Assert.assertTrue(Objects.nonNull(treeNodesByReport.stream().findFirst().get().getNodes().stream()
 //        .findFirst().get().getOutgoingMessage()));
 
@@ -205,7 +209,7 @@ public class TreeNodeUtilsTest extends TreeNodeUtils {
                 TreeNodeTypes.SITUATION_INSTANCE.toString(), TreeNodeTypes.STEP_INSTANCE.toString(),
                 TreeNodeTypes.OUTGOING_MESSAGE.toString(), TreeNodeTypes.INCOMING_MESSAGE.toString());
 
-        Assert.assertEquals(2, treeNodesByReport.size());
+        Assertions.assertEquals(2, treeNodesByReport.size());
 //        Assert.assertTrue(Objects.nonNull(treeNodesByReport.stream().findFirst().get().getNodes().stream()
 //        .findFirst().get().getOutgoingMessage()));
 

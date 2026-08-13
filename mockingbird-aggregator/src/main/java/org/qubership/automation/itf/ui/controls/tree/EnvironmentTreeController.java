@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.configuration.AuditAction;
 import org.qubership.automation.itf.core.exceptions.common.ObjectNotFoundException;
@@ -39,12 +36,13 @@ import org.qubership.automation.itf.ui.messages.objects.UITreeElement;
 import org.qubership.automation.itf.ui.messages.tree.UITreeData;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Sets;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @RestController
 @Transactional(readOnly = true)
@@ -71,7 +69,7 @@ public class EnvironmentTreeController extends AbstractTreeBuilder<Environment, 
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/environment/folder", method = RequestMethod.GET)
+    @GetMapping("/environment/folder")
     @AuditAction(auditAction = "Get Environment Tree under Folder id {{#id}} in the project {{#projectUuid}}")
     public UITreeData getTree(@RequestParam(required = false) String id,
                               @RequestParam(value = "projectUuid") UUID projectUuid) {
@@ -79,7 +77,7 @@ public class EnvironmentTreeController extends AbstractTreeBuilder<Environment, 
     }
 
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/environment/tree/node", method = RequestMethod.GET)
+    @GetMapping("/environment/tree/node")
     @AuditAction(auditAction = "Get Environment Tree for current id {{#id}} or parent id {{#parentId}} in the project"
             + " {{#projectUuid}}")
     public UITreeData getTreeFromNode(
@@ -97,7 +95,7 @@ public class EnvironmentTreeController extends AbstractTreeBuilder<Environment, 
 
     @Override
     @PreAuthorize("@entityAccess.checkAccess(#projectUuid, \"READ\")")
-    @RequestMapping(value = "/environment/tree/node/name", method = RequestMethod.GET)
+    @GetMapping("/environment/tree/node/name")
     @AuditAction(auditAction = "Get Environment Tree for node by name {{#value}} and parent id {{#parentId}} in the "
             + "project {{#projectId}}/{{#projectUuid}}")
     public UITreeData getTreeFromNodeByName(

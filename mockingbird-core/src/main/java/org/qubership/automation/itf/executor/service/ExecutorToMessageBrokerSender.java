@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.activemq.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.qubership.atp.integration.configuration.annotation.AtpJaegerLog;
@@ -37,6 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -139,12 +138,12 @@ public class ExecutorToMessageBrokerSender {
         String queueName = env.getProperty(queueNameParameterName);
         if (queueName == null) {
             throw new ConfigurationException(
-                    String.format("Parameter \"%s\" not found in application.properties", queueNameParameterName));
+                    "Parameter \"%s\" not found in application.properties".formatted(queueNameParameterName));
         }
         AtpJmsTemplate jmsTemplate = jmsTemplateMap.get(queueType);
         if (jmsTemplate == null) {
             throw new ConfigurationException(
-                    String.format("Type \"%s\" cannot be processed, supported types: \"topic\", \"queue\".",
+                    "Type \"%s\" cannot be processed, supported types: \"topic\", \"queue\".".formatted(
                             queueType));
         }
         jmsTemplate.convertAndSend(queueName, message, Collections.singletonMap(CustomHeader.X_PROJECT_ID, tenantId));
