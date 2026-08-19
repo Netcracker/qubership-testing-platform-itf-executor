@@ -59,6 +59,9 @@ import com.google.inject.Inject;
 public class VelocityTemplateEngine implements TemplateEngine {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VelocityTemplateEngine.class);
+    private static final String BACKWARD_COMPATIBILITY_PROPERTY = "velocity.backward.compatibility";
+    private static final String BACKWARD_COMPATIBILITY_DEFAULT_VERSION = "2.0";
+
     private final VelocityEngine engine;
     private final ToolManager toolManager;
 
@@ -73,8 +76,19 @@ public class VelocityTemplateEngine implements TemplateEngine {
             engine = new VelocityEngine();
         }
         engine.setProperty(RuntimeConstants.VM_PERM_ALLOW_INLINE_REPLACE_GLOBAL, "true");
-        /* Commented; it looks to be deleted:
-        engine.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "full-path-to-class");*/
+
+        String backwardCompatibilityVersion = Config.getConfig()
+                .getStringOrDefault(BACKWARD_COMPATIBILITY_PROPERTY, BACKWARD_COMPATIBILITY_DEFAULT_VERSION);
+        if (BACKWARD_COMPATIBILITY_DEFAULT_VERSION.equals(backwardCompatibilityVersion)) {
+            // Start - Block of properties to provide backward-compatibility to Velocity 1.7 + Velocity Tools 2.0
+            engine.setProperty(RuntimeConstants.CONVERSION_HANDLER_CLASS, "none");
+            engine.setProperty(RuntimeConstants.SPACE_GOBBLING, "bc");
+            engine.setProperty(RuntimeConstants.CHECK_EMPTY_OBJECTS, false);
+            engine.setProperty(RuntimeConstants.PARSER_HYPHEN_ALLOWED, true);
+            engine.setProperty("velocimacro.arguments.preserve_literals", true);
+            // End - Block of properties to provide backward-compatibility to Velocity 1.7 + Velocity Tools 2.0
+        }
+
         engine.setProperty("console.logsystem.max.level", "WARN");
         engine.setProperty("runtime.log.logsystem.max.level", "WARN");
         engine.init();
@@ -116,7 +130,7 @@ public class VelocityTemplateEngine implements TemplateEngine {
 
     private static FactoryConfiguration makeGenericFactoryConfig() {
         FactoryConfiguration factoryConfiguration = new FactoryConfiguration();
-        factoryConfiguration.addData(fillData("number", "TOOLS_VERSION", "2.0"));
+        factoryConfiguration.addData(fillData("number", "TOOLS_VERSION", "3.1"));
         factoryConfiguration.addData(fillData("boolean", "GENERIC_TOOLS_AVAILABLE", "true"));
 
         ToolboxConfiguration applicationToolboxConfiguration = new ToolboxConfiguration();
@@ -124,25 +138,29 @@ public class VelocityTemplateEngine implements TemplateEngine {
         applicationToolboxConfiguration.setTools(makeToolsList(
                 "org.apache.velocity.tools.generic.AlternatorTool",
                 "org.apache.velocity.tools.generic.ClassTool",
+                "org.apache.velocity.tools.generic.CollectionTool" /* 3.1 */,
                 "org.apache.velocity.tools.generic.ComparisonDateTool",
                 "org.apache.velocity.tools.generic.ConversionTool",
                 "org.apache.velocity.tools.generic.DisplayTool",
                 "org.apache.velocity.tools.generic.EscapeTool",
                 "org.apache.velocity.tools.generic.FieldTool",
+                "org.apache.velocity.tools.generic.LogTool" /* 3.1 */,
                 "org.apache.velocity.tools.generic.MathTool",
                 "org.apache.velocity.tools.generic.NumberTool",
                 "org.apache.velocity.tools.generic.ResourceTool",
-                "org.apache.velocity.tools.generic.SortTool",
-                "org.apache.velocity.tools.generic.XmlTool"));
+                "org.apache.velocity.tools.generic.SortTool"));
         factoryConfiguration.addToolbox(applicationToolboxConfiguration);
 
         ToolboxConfiguration requestToolboxConfiguration = new ToolboxConfiguration();
         requestToolboxConfiguration.setScope("request");
         requestToolboxConfiguration.setTools(makeToolsList(
                 "org.apache.velocity.tools.generic.ContextTool",
+                "org.apache.velocity.tools.generic.ImportTool" /* 3.1 */,
+                "org.apache.velocity.tools.generic.JsonTool" /* 3.1 */,
                 "org.apache.velocity.tools.generic.LinkTool",
                 "org.apache.velocity.tools.generic.LoopTool",
-                "org.apache.velocity.tools.generic.RenderTool"));
+                "org.apache.velocity.tools.generic.RenderTool",
+                "org.apache.velocity.tools.generic.XmlTool" /* 3.1, moved from application */));
         factoryConfiguration.addToolbox(requestToolboxConfiguration);
         return factoryConfiguration;
     }
