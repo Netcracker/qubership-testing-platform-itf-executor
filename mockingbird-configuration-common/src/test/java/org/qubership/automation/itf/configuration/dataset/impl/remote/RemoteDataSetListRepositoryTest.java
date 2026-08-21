@@ -284,8 +284,6 @@ public class RemoteDataSetListRepositoryTest {
         }
     }
 
-    /// //////////
-
     @Test
     @DisplayName("getAllSources should return all sources from DSS")
     void testGetAllSources() {
@@ -784,7 +782,7 @@ public class RemoteDataSetListRepositoryTest {
             DatasetsAttributeFeignClient attributeFeignClient = mock(DatasetsAttributeFeignClient.class);
             when(HttpClientFactory.getDatasetsAttributeFeignClient()).thenReturn(attributeFeignClient);
 
-            // Возвращаем Object, который не является List
+            // Return Object, which is not List
             ResponseEntity<Object> responseEntity =
                     new ResponseEntity<>("Not a list", HttpStatus.OK);
             when(attributeFeignClient.getAttributesInItfFormat(eq(datasetListId)))
