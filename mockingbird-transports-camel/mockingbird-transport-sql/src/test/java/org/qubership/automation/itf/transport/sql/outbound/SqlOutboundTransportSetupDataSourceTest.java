@@ -278,20 +278,20 @@ class SqlOutboundTransportSetupDataSourceTest {
         ConnectionProperties props = new ConnectionProperties();
         props.put("typeDB", "PostgreSQL");
         props.put("jdbcUrl", "jdbc:postgresql://localhost:5432/testdb");
-        props.put("user", "user@domain.com");
+        props.put("user", "example@example.com");
         props.put("pass", "p@ssw0rd!;'\"");
 
         DataSource ds = invokeSetupDataSourceAndTrack(props);
         BasicDataSource bds = (BasicDataSource) ds;
 
-        assertEquals("user@domain.com", bds.getUsername());
+        assertEquals("example@example.com", bds.getUsername());
         assertEquals("p@ssw0rd!;'\"", bds.getPassword());
     }
 
     // ==================== 7. Test to identify libraries versions mismatch ====================
 
     @Test
-    void setupDataSource_ShouldNotThrowNoSuchFieldError() throws Exception {
+    void setupDataSource_ShouldNotThrowNoSuchFieldError() {
         // Check that there is no error thrown while DataSource creation.
         // NoSuchFieldError could be due to libraries versions mismatch.
         // Especially it's about commons-dbcp2 and commons-pool2 versions.

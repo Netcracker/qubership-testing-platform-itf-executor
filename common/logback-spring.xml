@@ -81,7 +81,7 @@
             <logger name="com.hazelcast.hibernate" level="WARN" additivity="false">
                 <appender-ref ref="ASYNC_GELF"/>
             </logger>
-            <logger name="org.apache.velocity" level="ERROR" additivity="false">
+            <logger name="org.qubership.automation.itf.core.template.velocity.log.Slf4jLogChute" level="ERROR" additivity="false">
                 <appender-ref ref="ASYNC_GELF"/>
             </logger>
 
@@ -433,7 +433,7 @@
                 <appender-ref ref="ConsoleAppender"/>
                 <appender-ref ref="DiameterAppender"/>
             </logger>
-            <logger name="org.apache.velocity" level="ERROR" additivity="false">
+            <logger name="org.qubership.automation.itf.core.template.velocity.log.Slf4jLogChute" level="ERROR" additivity="false">
                 <appender-ref ref="ConsoleAppender"/>
                 <appender-ref ref="ITFAppender"/>
             </logger>

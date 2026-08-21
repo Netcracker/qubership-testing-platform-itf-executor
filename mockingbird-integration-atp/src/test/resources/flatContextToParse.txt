@@ -1133,7 +1133,7 @@
     "Quote_Modify.Quote_Modify_1.TLOs.TLO_1.product.name": "Digital Internet 5G - 100 Mbps",
     "testScopeSection": "EXECUTION",
     "Quote.market": "Common",
-    "Customer.email": "some_email@testmail.some-domain",
+    "Customer.email": "example@example.com",
     "testCaseName": "SVKL TEST  Unassisted Channels [E2E_Ph1_R2C_O2A_MODIFY_07]",
     "Quote.TLO.TLO_1.SLO.SLO_2.product.characteristicList.Item_3.type": "ProductOfferingCharacteristic",
     "Quote.TLO.TLO_1.product.characteristicList.Item_2.type": "ProductOfferingCharacteristic",
