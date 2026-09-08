@@ -143,7 +143,7 @@ jobs:
       ))
     uses: netcracker/qubership-testing-platform-helm-hook-helper/.github/workflows/deploy-run-tests.yaml@main
     with:
-      repository_name: 'qubership-testing-platform-itf-executor'
+      repository_name: ${{ github.event.repository.name }}
       service_name: 'atp-itf-executor'
       namespace: 'executor'
       pipeline_branch: ${{ github.ref }}
