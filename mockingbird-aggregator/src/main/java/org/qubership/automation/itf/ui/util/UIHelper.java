@@ -257,7 +257,7 @@ public class UIHelper {
     /**
      * Create UIList with provided content using func to transform values.
      *
-     * @see #fillUIList(Collection, UIList, Function).
+     * @see #fillUIList(Collection, UIList, Function)
      */
     @Nonnull
     public static <I extends Storable, O extends UIObject> UIList<O> getUIList(
