@@ -5,6 +5,7 @@ java -cp "lib/*" ^
 --add-opens=java.base/sun.util.calendar=ALL-UNNAMED ^
 --add-opens java.management/sun.management=ALL-UNNAMED ^
 --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED ^
+--add-opens=java.base/java.io=ALL-UNNAMED ^
 -Dserver.port=8180 ^
 -Dspring.config.location=application.properties ^
 -Dspring.cloud.bootstrap.location=bootstrap.properties ^
