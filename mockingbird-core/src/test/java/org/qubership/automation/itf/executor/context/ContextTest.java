@@ -17,12 +17,12 @@
 
 package org.qubership.automation.itf.executor.context;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.InvocationTargetException;
 
 import org.json.simple.parser.ParseException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.context.JsonContext;
 import org.qubership.automation.itf.core.model.jpa.context.JsonStorable;
 

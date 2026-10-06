@@ -26,26 +26,24 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import com.beust.jcommander.internal.Maps;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
+@WireMockTest(httpPort = 8080)
 public class RESTOutboundTransportTestSender {
 
     private static final CamelContext CAMEL_CONTEXT = new DefaultCamelContext();
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8080);
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         stubFor(post(urlEqualTo("/test/post/"))/*.withRequestBody(matching("test"))
          */.willReturn(aResponse().withBody("success").withStatus(200)));
@@ -58,7 +56,7 @@ public class RESTOutboundTransportTestSender {
     @Test
     public void testSendRequestToGoogleWithApacheCamel() throws IOException {
         ProducerTemplate template = CAMEL_CONTEXT.createProducerTemplate();
-        Map<String, Object> headers = Maps.newHashMap();
+        Map<String, Object> headers = new HashMap<>();
         headers.put(Exchange.HTTP_METHOD, "GET");
         String response = template.requestBodyAndHeaders("http://localhost:8080/test/post/", null, headers,
                 String.class);

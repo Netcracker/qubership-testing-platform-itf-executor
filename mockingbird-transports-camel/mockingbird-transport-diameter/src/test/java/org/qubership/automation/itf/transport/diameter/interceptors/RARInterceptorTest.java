@@ -17,7 +17,7 @@
 
 package org.qubership.automation.itf.transport.diameter.interceptors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.diameter.connection.ResponseListener;
 import org.springframework.util.Assert;
 
