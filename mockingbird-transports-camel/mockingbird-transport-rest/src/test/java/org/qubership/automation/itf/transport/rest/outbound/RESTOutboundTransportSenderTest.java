@@ -1,5 +1,5 @@
 /*
- * # Copyright 2024-2025 NetCracker Technology Corporation
+ * # Copyright 2024-2026 NetCracker Technology Corporation
  * #
  * # Licensed under the Apache License, Version 2.0 (the "License");
  * # you may not use this file except in compliance with the License.
@@ -56,12 +56,11 @@ public class RESTOutboundTransportSenderTest {
     }
 
     @BeforeEach
-    public void setUp() throws Exception {
-        stubFor(post(urlEqualTo("/test/post/"))/*.withRequestBody(matching("test"))
-         */.willReturn(aResponse().withBody("success").withStatus(200)));
+    public void setUp() {
+        stubFor(post(urlEqualTo("/test/post/")).willReturn(aResponse().withBody("success").withStatus(200)));
         stubFor(get(urlEqualTo("/test/get/")).willReturn(aResponse().withBody("success").withStatus(200)));
-        stubFor(delete(urlEqualTo("/test/del/")).withRequestBody(matching("test")).willReturn(aResponse().withBody(
-                "success").withStatus(200)));
+        stubFor(delete(urlEqualTo("/test/del/")).withRequestBody(matching("test")).willReturn(aResponse()
+                .withBody("success").withStatus(200)));
         stubFor(delete(urlEqualTo("/test/put/")).willReturn(aResponse().withBody("success").withStatus(200)));
     }
 
@@ -70,8 +69,8 @@ public class RESTOutboundTransportSenderTest {
         ProducerTemplate template = CAMEL_CONTEXT.createProducerTemplate();
         Map<String, Object> headers = new HashMap<>();
         headers.put(Exchange.HTTP_METHOD, "GET");
-        String response = template.requestBodyAndHeaders("http://localhost:8080/test/get/", null, headers,
-                String.class);
+        String response = template.requestBodyAndHeaders("http://localhost:8080/test/get/", null,
+                headers, String.class);
         assertEquals("success", response);
     }
 }
