@@ -27,7 +27,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.integration.atp.model.ContextEntity;
 import org.qubership.automation.itf.integration.atp.model.DataSetEntity;
 import org.qubership.automation.itf.integration.atp.model.DataSetItem;
@@ -56,7 +56,7 @@ public class TestRunInfoTest {
 
         JSONObject actualContext = new JSONObject();
         runInfo.performContext(flatContext, actualContext);
-        org.junit.Assert.assertEquals(expectedContext, actualContext);
+        org.junit.jupiter.api.Assertions.assertEquals(expectedContext, actualContext);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class TestRunInfoTest {
 
         JSONObject actualContext = new JSONObject();
         runInfo.performContext(flatContext, actualContext);
-        org.junit.Assert.assertEquals(expectedContext, actualContext);
+        org.junit.jupiter.api.Assertions.assertEquals(expectedContext, actualContext);
     }
 
     private static String sanitizePathTraversal(String filename) {

@@ -1,3 +1,4 @@
 [codespell]
 # TestNG is a test framework name, not a typo of "testing".
-ignore-words-list = testng
+# AfterAll is a test annotation name, not a typo of "After all".
+ignore-words-list = testng,AfterAll

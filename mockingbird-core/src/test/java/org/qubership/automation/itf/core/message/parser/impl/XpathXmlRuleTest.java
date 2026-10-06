@@ -17,9 +17,9 @@
 
 package org.qubership.automation.itf.core.message.parser.impl;
 
-import static org.testng.AssertJUnit.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.context.InstanceContext;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
