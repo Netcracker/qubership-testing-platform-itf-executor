@@ -22,30 +22,28 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.transport.http.HTTPConstants;
 import org.qubership.automation.itf.transport.http.outbound.HTTPOutboundTransport;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
+@WireMockTest(httpPort = 8083)
 public class RESTOutboundTransportTest {
 
     private static final String RESPONSE_BODY = "success";
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8083);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         stubFor(post(urlEqualTo("/test/post/"))
                 .withRequestBody(matching("test_post"))

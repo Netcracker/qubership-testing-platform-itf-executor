@@ -18,10 +18,10 @@
 package org.qubership.automation.itf.core.template.velocity.directives;
 
 import static org.mockito.Mockito.mock;
-import static org.testng.AssertJUnit.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.common.Storable;
 import org.qubership.automation.itf.core.model.jpa.context.TcContext;
 import org.qubership.automation.itf.core.template.velocity.VelocityTemplateEngine;
@@ -33,7 +33,7 @@ public class JsonPathDirectiveTest {
     private static VelocityTemplateEngine engine;
     private String json = "{\n" + "\t'id':123,\n" + "\t'name':'JsonName'\n" + "}";
 
-    @BeforeClass
+    @BeforeAll
     public static void prepareTemplate() {
         engine = new VelocityTemplateEngine();
     }

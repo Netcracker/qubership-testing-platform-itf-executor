@@ -24,8 +24,8 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.component.jms.JmsEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.transport.jms.InitialContextBuilder;
 
 import jakarta.jms.ConnectionFactory;
@@ -39,7 +39,7 @@ public class JMSOutboundTransportTest {
     It DOST'T TEST any functional
      */
 
-    @Ignore
+    @Disabled
     @Test
     public void testSendJMSMessage() throws Exception {
         InitialContext initialContext = initialContextBuilder.createContext();

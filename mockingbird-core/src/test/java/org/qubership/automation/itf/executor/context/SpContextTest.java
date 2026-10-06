@@ -17,15 +17,15 @@
 
 package org.qubership.automation.itf.executor.context;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.context.SpContext;
 import org.qubership.automation.itf.core.model.jpa.message.parser.MessageParameter;
 
@@ -33,7 +33,7 @@ public class SpContextTest {
     private static final MessageParameter MESSAGE_PARAMETER = mock(MessageParameter.class);
     private SpContext context;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         context = new SpContext();
         List<MessageParameter> messageParams = Collections.singletonList(MESSAGE_PARAMETER);

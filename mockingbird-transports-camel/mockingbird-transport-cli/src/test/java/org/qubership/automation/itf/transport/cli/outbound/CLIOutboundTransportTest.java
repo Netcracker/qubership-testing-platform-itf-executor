@@ -17,8 +17,8 @@
 
 package org.qubership.automation.itf.transport.cli.outbound;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -41,10 +41,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.logging.log4j.util.Strings;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.qubership.automation.itf.core.model.jpa.message.Message;
 import org.qubership.automation.itf.core.model.transport.ConnectionProperties;
 import org.qubership.automation.itf.core.util.constants.PropertyConstants;
@@ -115,17 +114,17 @@ public class CLIOutboundTransportTest {
         return tmpfile;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         executorService.shutdownNow();
     }
 
-    @Test()
+    @Test
     public void testConnectionTCP() throws Exception {
         executorService.execute(listener());
         CLIOutboundTransport transport = new CLIOutboundTransport();
@@ -179,7 +178,7 @@ public class CLIOutboundTransportTest {
         exchange.getIn().setBody("pwd");
         exchange = template.send(endPoint, exchange);
         Message response = getMessageFromBytes(exchange);
-        Assert.assertEquals("/home/some-dir\n", response.getText());
+        assertEquals("/home/some-dir\n", response.getText());
     }
 
     private String resolveEndpoint(ConnectionProperties properties) throws IllegalArgumentException, IOException {
