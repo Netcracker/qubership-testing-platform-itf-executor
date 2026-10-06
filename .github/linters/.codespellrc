@@ -1,0 +1,3 @@
+[codespell]
+# TestNG is a test framework name, not a typo of "testing".
+ignore-words-list = testng
