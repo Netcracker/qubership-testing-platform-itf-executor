@@ -95,6 +95,11 @@ public class RESTOutboundTransport extends HTTPOutboundTransport {
                 if (endpoint.contains("deleteWithBody=true")) {
                     endpointObj.setDeleteWithBody(true);
                 }
+                if (Boolean.parseBoolean(String.valueOf(headers.get("disableRedirects")))) {
+                    // A non-followed 3xx response must not become HttpOperationFailedException: its header map
+                    // keeps only the last of the same-named headers (e.g. Set-Cookie).
+                    endpointObj.setThrowExceptionOnFailure(false);
+                }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
