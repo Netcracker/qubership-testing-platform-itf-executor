@@ -23,7 +23,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.23/community/" >/etc/apk/repo
         jq=1.8.2-r0 \
         libpng=1.6.59-r0 \
         libcrypto3=3.5.9-r0 \
-        libexpat=2.8.5-r0 \
+        libexpat=2.9.0-r0 \
         libssl3=3.5.9-r0 \
         musl=1.2.5-r23 \
         musl-utils=1.2.5-r23 \
@@ -37,7 +37,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.23/community/" >/etc/apk/repo
         wget=1.25.0-r2 \
         xz-libs=5.8.4-r0 \
         zip=3.0-r13 \
-        zlib=1.3.2-r0 && \
+        zlib=1.3.2-r1 && \
       rm -rf /var/cache/apk/*
 
 COPY deployments/install deployments/install
