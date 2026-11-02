@@ -25,8 +25,8 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.23/community/" >/etc/apk/repo
         libcrypto3=3.5.9-r0 \
         libexpat=2.9.0-r0 \
         libssl3=3.5.9-r0 \
-        musl=1.2.5-r23 \
-        musl-utils=1.2.5-r23 \
+        musl=1.2.5-r24 \
+        musl-utils=1.2.5-r24 \
         net-tools=2.10-r3 \
         nss_wrapper=1.1.12-r1 \
         pcre2=10.49-r0 \
