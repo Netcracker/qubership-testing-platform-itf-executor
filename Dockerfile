@@ -37,7 +37,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.23/community/" >/etc/apk/repo
         wget=1.25.0-r2 \
         xz-libs=5.8.4-r0 \
         zip=3.0-r13 \
-        zlib=1.3.2-r1 && \
+        zlib=1.4-r0 && \
       rm -rf /var/cache/apk/*
 
 COPY deployments/install deployments/install
