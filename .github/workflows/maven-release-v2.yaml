@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Build and Publish current SNAPSHOT (dry run)"
-        uses: netcracker/qubership-workflow-hub/actions/maven-release@b6bee6f61fdc8b367777c1173fc852a58878a6a7 #v2.5.0
+        uses: netcracker/qubership-workflow-hub/actions/maven-release@e6afd0a6bcc4f24d73e3e4d5fb9a31ada009e3f1 #v2.8.2
         with:
           java-version: "8"
           version-type: ${{ github.event.inputs.version-type }}
@@ -88,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Prepare app token"
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 #v3.2.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 #v3.3.0
         id: app-token
         with:
           app-id: ${{ vars.GH_BUMP_VERSION_APP_ID }}
@@ -96,7 +96,7 @@ jobs:
       - name: "Build and Publish"
         id: build-and-publish
 
-        uses: netcracker/qubership-workflow-hub/actions/maven-release@b6bee6f61fdc8b367777c1173fc852a58878a6a7 #v2.5.0
+        uses: netcracker/qubership-workflow-hub/actions/maven-release@e6afd0a6bcc4f24d73e3e4d5fb9a31ada009e3f1 #v2.8.2
         with:
           java-version: "8"
           version-type: ${{ github.event.inputs.version-type }}
@@ -113,7 +113,7 @@ jobs:
           dry-run: 'false'
 
       - name: Upload all Maven target directories
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: qubership-testing-platform-itf-executor
           path: '${{ github.event.repository.name }}/**/target'
@@ -168,7 +168,7 @@ jobs:
     steps:
       - name: "Docker Build"
         id: docker_build
-        uses: netcracker/qubership-workflow-hub/actions/docker-action@b6bee6f61fdc8b367777c1173fc852a58878a6a7 #v2.5.0
+        uses: netcracker/qubership-workflow-hub/actions/docker-action@e6afd0a6bcc4f24d73e3e4d5fb9a31ada009e3f1 #v2.8.2
         with:
           ref: v${{ needs.deploy.outputs.release-version }}
           download-artifact: true
@@ -183,7 +183,7 @@ jobs:
   github-release:
     needs: [deploy]
     if: ${{ needs.deploy.result == 'success' }}
-    uses: netcracker/qubership-workflow-hub/.github/workflows/release-drafter.yml@b6bee6f61fdc8b367777c1173fc852a58878a6a7 #v2.5.0
+    uses: netcracker/qubership-workflow-hub/.github/workflows/release-drafter.yml@e6afd0a6bcc4f24d73e3e4d5fb9a31ada009e3f1 #v2.8.2
     with:
       version: ${{ needs.deploy.outputs.release-version }}
       publish: true
@@ -193,10 +193,10 @@ jobs:
     if: ${{ needs.docker-build.result == 'success' }}
     uses: netcracker/qubership-testing-platform-helm-hook-helper/.github/workflows/deploy-run-tests.yaml@main
     with:
-      repository_name: 'qubership-testing-platform-itf-executor'
+      repository_name: ${{ github.event.repository.name }}
       service_name: 'atp-itf-executor'
       namespace: 'executor'
-      pipeline_branch: 'main'
+      pipeline_branch: ${{ github.ref }}
       postgres: enable
       activemq: enable
       enable_test: enable
