@@ -18,7 +18,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.23/community/" >/etc/apk/repo
         fontconfig=2.17.1-r0 \
         gcompat=1.1.0-r4 \
         gettext=0.24.1-r1 \
-        git=2.52.0-r0 \
+        git=2.52.1-r0 \
         htop=3.4.1-r2 \
         jq=1.8.2-r0 \
         libpng=1.6.59-r0 \
