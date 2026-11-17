@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>Netcracker/renovate-config:org-inherited-config",
+    "github>Netcracker/renovate-config:automerge"
+  ],
+  "enabledManagers": [
+    "github-actions"
+  ],
+  "github-actions": {
+    "managerFilePatterns": [
+      "/^\\.github/workflows/[^/]+\\.ya?ml$/"
+    ]
+  },
+  "platformAutomerge": false,
+  "packageRules": [
+    {
+      "description": "Update GitHub Actions references in workflows, wait 3 days after a release, and merge the PR once all checks are green",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "minimumReleaseAge": "3 days",
+      "automerge": true
+    },
+    {
+      "description": "Group all Qubership workflow-hub action updates into one PR",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "netcracker/qubership-workflow-hub/**",
+        "Netcracker/qubership-workflow-hub/**"
+      ],
+      "groupName": "workflow-hub-updates"
+    }
+  ]
+}
