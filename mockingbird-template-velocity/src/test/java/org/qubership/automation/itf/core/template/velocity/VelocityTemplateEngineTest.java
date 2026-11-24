@@ -51,7 +51,6 @@ import org.qubership.automation.itf.core.model.jpa.server.Server;
 import org.qubership.automation.itf.core.model.jpa.system.operation.Operation;
 import org.qubership.automation.itf.core.util.engine.TemplateEngine;
 import org.qubership.automation.itf.core.util.manager.CoreObjectManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.google.common.collect.Maps;
@@ -118,6 +117,26 @@ public class VelocityTemplateEngineTest {
         System.out.println(process);
     }
 
+    @Test
+    public void testComplexVelocityScript() {
+        String sourceString =
+                """
+                        #set($str = 'a')
+                        #set($random = $str.getClass().forName("java.security.SecureRandom").newInstance())
+                        #set($alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!%&()*+,-./:;<=>?@[]^_{|}~')
+                        #set($len = $alphabet.length())
+                        #set($secret = "")
+                        #foreach($i in [1..32])
+                        #set($idx = $random.nextInt($len))
+                        #set($secret = "$secret$alphabet.charAt($idx)")
+                        #end
+                        Random: $secret
+                        Encoded: #encode_base64($secret)""";
+        String process = engine.process(mock(Server.class), sourceString, InstanceContext.from(null, null));
+        Assertions.assertNotEquals(sourceString, process);
+        System.out.println(process);
+    }
+
     @Disabled
     @Test
     public void testLoadPartThrowsExceptionIfTemplateNotFound() {
@@ -132,9 +151,8 @@ public class VelocityTemplateEngineTest {
         engine.process(firstTemplate, source, InstanceContext.from(null, null));
 
         // Execute & Assert
-        VelocityException exception = assertThrows(VelocityException.class, () -> {
-            engine.process(firstTemplate, source, InstanceContext.from(null, null));
-        });
+        VelocityException exception = assertThrows(VelocityException.class,
+                () -> engine.process(firstTemplate, source, InstanceContext.from(null, null)));
 
         // Verify the exception message
         assertThat(exception.getMessage(), containsString("template not found"));
