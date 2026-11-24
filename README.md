@@ -2,6 +2,10 @@
 
 **Qubership Testing Platform ITF-EXECUTOR** (QSTP-ITF-EXECUTOR) is a backend component of `Integrations Testing Framework`
 
+> **Two release lines.** `main` is the Spring Boot 3.5.x line (`v5.x`). Production also runs the pre-upgrade line
+> (`v4.4.x`), which is maintained on the `old-main-before-springboot-upgrade` branch. See
+> [Branches and releases](CONTRIBUTING.md#branches-and-releases) before you start a change.
+
 ## Problem statement
 When some complex application systems are integrated, they are on the different life cycle stages at the moment.
 
