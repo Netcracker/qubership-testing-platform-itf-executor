@@ -141,7 +141,7 @@ jobs:
         github.event_name == 'pull_request' ||
         (github.event_name == 'push' && github.ref == 'refs/heads/main')
       ))
-    uses: netcracker/qubership-testing-platform-helm-hook-helper/.github/workflows/deploy-run-tests.yaml@main
+    uses: netcracker/qubership-testing-platform-helm-hook-helper/.github/workflows/deploy-run-tests.yaml@3d50064056b500aa974251fe059e19381947e33d # main
     with:
       repository_name: ${{ github.event.repository.name }}
       service_name: 'atp-itf-executor'
