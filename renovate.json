@@ -15,6 +15,17 @@
   "platformAutomerge": false,
   "packageRules": [
     {
+      "description": "Pin GitHub Actions digests without release age delay and automerge immediately",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "pin"
+      ],
+      "minimumReleaseAge": null,
+      "automerge": true
+    },
+    {
       "description": "Update GitHub Actions references in workflows, wait 3 days after a release, and merge the PR once all checks are green",
       "matchManagers": [
         "github-actions"
